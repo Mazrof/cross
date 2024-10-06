@@ -1,0 +1,84 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related (optional, uncomment if needed)
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio build artifacts
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Linux build artifacts (if any)
+*.out
+*.o
+*.a
+*.so
+*.d
+*.gcda
+*.gcno
+*.gcov
+
+# macOS build artifacts (if any)
+*.dSYM/
+*.xcuserstate
+*.xcworkspace/
+*.xcscheme
+*.xcuserdatad/
+*.xcuserdata/
+*.hmap
+*.h
+
+# Flutter macOS build artifacts
+macos/Flutter/Flutter.framework
+macos/Flutter/Flutter.podspec
+macos/Flutter/Flutter.podspec.json
+macos/Flutter/Generated.xcconfig
+macos/Flutter/Flutter.xcconfig
+macos/Flutter/Debug.xcconfig
+macos/Flutter/Release.xcconfig
+macos/Flutter/Flutter.build/
+macos/Flutter/Flutter.xcarchive/
+macos/Flutter/Flutter.xcresult/
+macos/Flutter/*.dSYM
+android/local.properties
+.dart_tool/package_config.json
+pubspec.lock
+.flutter-plugins-dependencies
+ios/Runner/GeneratedPluginRegistrant.m
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+.dart_tool/package_config.json
+pubspec.lock
+.flutter-plugins-dependencies
