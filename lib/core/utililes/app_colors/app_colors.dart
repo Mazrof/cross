@@ -6,11 +6,8 @@ class AppColors {
   static const Color errorColor = Colors.red;
   static const Color whiteColor = Colors.white;
   static const Color blackColor = Colors.black;
+  static const Color blackColor12 = Colors.black12;
   static const Color greyColor = Colors.grey;
   static const Color orangeColor = Colors.orange;
   static const Color darkBackgroundColor = Color(0xff1d2733);
-
-
-
-
 }
