@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+
+class CInputBar extends StatelessWidget {
+  const CInputBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSizes.sm),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.blackColor12,
+              spreadRadius: 2,
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.emoji_emotions_outlined),
+              iconSize: AppSizes.iconMd,
+              color: AppColors.greyColor,
+              onPressed: () {},
+            ),
+            Expanded(
+              child: TextField(
+                maxLines:
+                    5, // Max number of lines before field starts scrolling
+                minLines: 1, // Minimum number of lines field will start with
+                decoration: const InputDecoration(
+                  hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                  hintText: "Message",
+                  border: InputBorder.none,
+                ),
+                onChanged: (text) {},
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.attach_file),
+              color: AppColors.greyColor,
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.mic),
+              color: AppColors.greyColor,
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
