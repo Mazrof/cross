@@ -8,8 +8,8 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 10),
-      width: 60,
-      height: 60,
+      width: 50,
+      height: 50,
       decoration: BoxDecoration(
         image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.fill),
         // color: Colors.white,

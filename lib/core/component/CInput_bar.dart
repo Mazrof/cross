@@ -11,7 +11,7 @@ class CInputBar extends StatelessWidget {
       padding: const EdgeInsets.all(AppSizes.sm),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
+          color: AppColors.darkBackgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
           boxShadow: const [
             BoxShadow(
@@ -31,11 +31,13 @@ class CInputBar extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                style: TextStyle(color: AppColors.whiteColor),
                 maxLines:
                     5, // Max number of lines before field starts scrolling
                 minLines: 1, // Minimum number of lines field will start with
                 decoration: const InputDecoration(
-                  hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                  hintStyle: TextStyle(
+                      fontWeight: FontWeight.w300, color: AppColors.greyColor),
                   hintText: "Message",
                   border: InputBorder.none,
                 ),
