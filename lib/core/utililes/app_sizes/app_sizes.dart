@@ -1,5 +1,4 @@
 class AppSizes {
-
   //padding and margin
   static const double xs = 4;
   static const double sm = 8;
@@ -20,10 +19,8 @@ class AppSizes {
   static const double inputFieldR = 12;
   static const double spaceBetweenInputField = 16;
 
-
   //loading indicator size
   static const double loadingIndicatorSize = 24;
-
 
   //icon size
   static const double iconXs = 12;
@@ -40,7 +37,6 @@ class AppSizes {
   static const double textFieldPaddingH = 20;
   static const double textFieldPaddingV = 16;
 
-
   //bottom sheet
   static const double bottomSheetPadding = 16;
 
@@ -54,7 +50,7 @@ class AppSizes {
   static const double fontSizeSm = 14;
   static const double fontSizeMd = 16;
   static const double fontSizeLg = 18;
-
+  static const double fontSizeVLg = 20;
 
   //default spaces between sections
 
@@ -69,5 +65,4 @@ class AppSizes {
   static const double spaceBetweenSections = 32;
 
   static const double iconSize = 30;
-
 }
