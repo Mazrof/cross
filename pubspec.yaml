@@ -50,6 +50,7 @@ dependencies:
   palette_generator: ^0.3.3+4
   iconsax: ^0.0.8
   flutter_native_splash: ^2.4.1
+  pin_code_fields: ^8.0.1
 
 dev_dependencies:
   flutter_test:
