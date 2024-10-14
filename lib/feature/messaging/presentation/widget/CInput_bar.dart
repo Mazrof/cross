@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
-class CInputBar extends StatelessWidget {
-  const CInputBar({super.key});
+class CInputBar extends StatefulWidget {
+  final TextEditingController controller;
+  final VoidCallback sendMessage;
+  const CInputBar(
+      {required this.controller, super.key, required this.sendMessage});
+
+  @override
+  State<CInputBar> createState() => _CInputBarState();
+}
+
+class _CInputBarState extends State<CInputBar> {
+  bool _isSendIcon = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +41,7 @@ class CInputBar extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
-                style: TextStyle(color: AppColors.whiteColor),
+                style: const TextStyle(color: AppColors.whiteColor),
                 maxLines:
                     5, // Max number of lines before field starts scrolling
                 minLines: 1, // Minimum number of lines field will start with
@@ -41,7 +51,12 @@ class CInputBar extends StatelessWidget {
                   hintText: "Message",
                   border: InputBorder.none,
                 ),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  setState(() {
+                    _isSendIcon = text.isNotEmpty;
+                  });
+                },
+                controller: widget.controller,
               ),
             ),
             IconButton(
@@ -50,9 +65,9 @@ class CInputBar extends StatelessWidget {
               onPressed: () {},
             ),
             IconButton(
-              icon: const Icon(Icons.mic),
+              icon: _isSendIcon ? Icon(Icons.send) : Icon(Icons.mic),
               color: AppColors.greyColor,
-              onPressed: () {},
+              onPressed: widget.sendMessage,
             ),
           ],
         ),

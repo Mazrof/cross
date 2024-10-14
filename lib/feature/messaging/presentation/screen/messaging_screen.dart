@@ -1,13 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:telegram/feature/messaging/presentation/Data/Model/message.dart';
 import 'package:telegram/feature/messaging/presentation/widget/CInput_bar.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/feature/messaging/presentation/widget/message_date.dart';
+import 'package:telegram/feature/messaging/presentation/widget/message_list.dart';
 import 'package:telegram/feature/messaging/presentation/widget/reciever_details.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
-class MessagingScreen extends StatelessWidget {
+class MessagingScreen extends StatefulWidget {
+  @override
+  State<MessagingScreen> createState() => _MessagingScreenState();
+}
+
+class _MessagingScreenState extends State<MessagingScreen> {
+  List<Message> messages = [];
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getMessage();
+  }
+
+  void getMessage() {
+    // Get messages from backend
+
+    // Just hardcode it for now
+    messages = [Message(content: "Hello", time: "9:05", sender: "ME")];
+  }
+
+  void sendMessage() {
+    print("TEST");
+    // Validate
+
+    // Send to backend
+
+    // Add to frontent
+    setState(() {
+      messages.add(
+        Message(
+            sender: "ME",
+            content: controller.text,
+            time: DateFormat("HH:MM").format(DateTime.now())),
+      );
+      controller.text = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,41 +91,11 @@ class MessagingScreen extends StatelessWidget {
           Column(
             children: [
               Expanded(
-                child: ListView(
-                  reverse: true,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        margin: const EdgeInsets.all(8.0),
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.messageBackgroundColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: const Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'hello how are ferfergf few fewa ',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: AppSizes.fontSizeMd),
-                            ),
-                            Text(
-                              '9:57 PM',
-                              style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: AppSizes.fontSizeSm),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                child: MessageList(
+                  messages: messages,
                 ),
               ),
-              const CInputBar(),
+              CInputBar(controller: controller, sendMessage: sendMessage),
             ],
           ),
         ],
@@ -89,3 +103,32 @@ class MessagingScreen extends StatelessWidget {
     );
   }
 }
+
+										// Align(
+										//   alignment: Alignment.centerRight,
+										//   child: Container(
+										//     margin: const EdgeInsets.all(8.0),
+										//     padding: const EdgeInsets.all(10.0),
+										//     decoration: BoxDecoration(
+										//       color: AppColors.messageBackgroundColor,
+										//       borderRadius: BorderRadius.circular(10.0),
+										//     ),
+										//     child: const Column(
+										//       crossAxisAlignment: CrossAxisAlignment.end,
+										//       children: [
+										//         Text(
+										//           'hello how are ferfergf few fewa ',
+										//           style: TextStyle(
+										//               color: Colors.white,
+										//               fontSize: AppSizes.fontSizeMd),
+										//         ),
+										//         Text(
+										//           '9:57 PM',
+										//           style: TextStyle(
+										//               color: Colors.white70,
+										//               fontSize: AppSizes.fontSizeSm),
+										//         ),
+										//       ],
+										//     ),
+										//   ),
+										// ),

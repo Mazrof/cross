@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/core/component/app_drawer.dart';
+import 'package:telegram/feature/main/presentation/widget/app_drawer.dart';
 import 'package:telegram/core/component/contact_list/contact_list.dart';
 
 class MainScreen extends StatelessWidget {
