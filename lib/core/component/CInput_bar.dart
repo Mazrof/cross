@@ -26,7 +26,7 @@ class CInputBar extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.emoji_emotions_outlined),
               iconSize: AppSizes.iconMd,
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: () {},
             ),
             Expanded(
@@ -44,12 +44,12 @@ class CInputBar extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.attach_file),
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: () {},
             ),
             IconButton(
               icon: const Icon(Icons.mic),
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: () {},
             ),
           ],

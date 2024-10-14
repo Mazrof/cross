@@ -2,9 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:telegram/core/device/device.dart';
-import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
-import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CAppBar(
@@ -29,7 +27,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: showBackButton
           ? IconButton(
-              icon:  Icon(Iconsax.arrow_left,
+              icon:  const Icon(Iconsax.arrow_left,
                   color:AppColors.whiteColor),
 
               onPressed: () {},
