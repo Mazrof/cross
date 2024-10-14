@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/core/component/welcome_screen_widgets/welcome_scroll_item.dart';
+import 'package:telegram/feature/welcome/presentation/widget/welcome_scroll_item.dart';
 
 class WelcomeScroll extends StatelessWidget {
   final List<dynamic> items = [

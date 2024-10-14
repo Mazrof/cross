@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/core/screens/main_screen.dart';
-import 'package:telegram/core/screens/messaging_screen.dart';
+import 'package:telegram/feature/main/presentation/screen/main_screen.dart';
+import 'package:telegram/feature/messaging/presentation/screen/messaging_screen.dart';
 
 void main() {
   runApp(const MyApp());
