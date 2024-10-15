@@ -50,6 +50,7 @@ class AppSizes {
   static const double fontSizeSm = 14;
   static const double fontSizeMd = 16;
   static const double fontSizeLg = 18;
+
   static const double fontSizeVLg = 20;
 
   //default spaces between sections
@@ -65,4 +66,7 @@ class AppSizes {
   static const double spaceBetweenSections = 32;
 
   static const double iconSize = 30;
+
+  static const double verifyPadding = 24;
+
 }

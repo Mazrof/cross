@@ -11,8 +11,8 @@ class AppButtonTheme {
       elevation: 0,
       foregroundColor: AppColors.whiteColor,
       backgroundColor: AppColors.primaryColor,
-      disabledBackgroundColor: AppColors.greyColor,
-      disabledForegroundColor: AppColors.greyColor,
+      disabledBackgroundColor: AppColors.grey,
+      disabledForegroundColor: AppColors.grey,
       side: const BorderSide(color: AppColors.primaryColor),
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
 
@@ -35,8 +35,8 @@ class AppButtonTheme {
         elevation: 0,
         foregroundColor: AppColors.whiteColor,
         backgroundColor: AppColors.primaryColor,
-        disabledBackgroundColor:  AppColors.greyColor,
-        disabledForegroundColor:  AppColors.greyColor,
+        disabledBackgroundColor:  AppColors.grey,
+        disabledForegroundColor:  AppColors.grey,
         side: const BorderSide(color: AppColors.primaryColor),
         padding: const EdgeInsets.symmetric(horizontal: 18,vertical: 12),
 

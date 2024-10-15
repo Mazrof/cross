@@ -1,20 +1,17 @@
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:telegram/core/device/device.dart';
-import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
-import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class CAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CAppBar({
-    super.key,
-    this.title,
-    this.showBackButton = false,
-    this.leadingIcon,
-    this.actions,
-    required this.onLeadingTap,
-  });
-
+  const CAppBar(
+      {super.key,
+      this.title,
+      this.showBackButton = false,
+      this.leadingIcon,
+      this.actions,
+      required this.onLeadingTap});
   final Widget? title;
   final bool showBackButton;
   final IconData? leadingIcon;
@@ -24,22 +21,21 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.darkBackgroundColor,
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleLarge!
-          .apply(color: AppColors.whiteColor),
+      backgroundColor: AppColors.primaryColor,
+      titleTextStyle: Theme.of(context).textTheme.titleLarge!.apply(color: AppColors.whiteColor),
       title: title,
-      elevation: 50,
-      titleSpacing: -10,
+      elevation: 0,
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(Iconsax.arrow_left, color: AppColors.whiteColor),
+              icon:  const Icon(Iconsax.arrow_left,
+                  color:AppColors.whiteColor),
+
               onPressed: () {},
             )
           : leadingIcon != null
               ? IconButton(
-                  icon: Icon(leadingIcon, color: AppColors.whiteColor),
+                  icon: Icon(leadingIcon,
+                      color:   AppColors.whiteColor ),
                   onPressed: () => onLeadingTap,
                 )
               : null,

@@ -9,7 +9,7 @@ class TAppBarTheme {
   static AppBarTheme lightAppBarTheme = const AppBarTheme(
     centerTitle: false,
     scrolledUnderElevation: 0,
-    backgroundColor: AppColors.primaryColor,
+    backgroundColor: Colors.transparent,
     titleSpacing: 0,
 
     elevation: 0,
@@ -30,7 +30,7 @@ class TAppBarTheme {
   static AppBarTheme darkAppBarTheme = const AppBarTheme(
     centerTitle: false,
     scrolledUnderElevation: 0,
-    backgroundColor: AppColors.darkBackgroundColor,
+    backgroundColor: Colors.transparent,
     elevation: 0,
     titleTextStyle: TextStyle(
         fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),

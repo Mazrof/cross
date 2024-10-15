@@ -23,7 +23,7 @@ class CacheHelper {
       key: key,
       aOptions: _getAndroidOptions(),
       iOptions: _getIOSOptions(),
-      webOptions: _getWebOptions(),
+
     );
     log('Read value: $value');
     return value;
@@ -37,7 +37,7 @@ class CacheHelper {
       value: value,
       aOptions: _getAndroidOptions(),
       iOptions: _getIOSOptions(),
-      webOptions: _getWebOptions(),
+
     );
   }
 
@@ -47,7 +47,7 @@ class CacheHelper {
       key: key,
       aOptions: _getAndroidOptions(),
       iOptions: _getIOSOptions(),
-      webOptions: _getWebOptions(),
+
     );
   }
 

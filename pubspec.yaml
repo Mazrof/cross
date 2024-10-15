@@ -1,5 +1,5 @@
 name: telegram
-description: "A new Flutter project."
+description: "Your World is just one Chat Away!"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -49,8 +49,18 @@ dependencies:
   palette_generator: ^0.3.3+4
   iconsax: ^0.0.8
   flutter_native_splash: ^2.4.1
+
+  connectivity_plus: ^6.0.5
+  device_preview: ^1.2.0
+  flutter_screenutil: ^5.9.3
+  flutter_gcaptcha_v3: ^2.1.1
+  flutter_launcher_icons: ^0.14.1
+
   pin_code_fields: ^8.0.1
 
+
+  http: any
+  bloc: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +72,17 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
 
+flutter_icons:
+  image_path: "assets/logos/app_logo.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_maskable: true
+  adaptive_icon_foreground: "assets/logos/app_logo.png"
+
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -72,10 +93,15 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logos/
     - assets/animations/
+    - assets/web_pages/
+    - assets/gif/
+    - assets/onbording/
     - assets/images/
 
   fonts:
@@ -107,5 +133,21 @@ flutter:
         - asset: assets/fonts/Roboto_Black.ttf
           weight: 900
         - asset: assets/fonts/Roboto_BlackItalic.ttf
+          weight: 900
+          style: italic
+
+    - family: Aboreto
+      fonts:
+        - asset: assets/fonts/Aboreto.ttf
+        - asset: assets/fonts/Aboreto.ttf
+          style: italic
+        - asset: assets/fonts/Aboreto.ttf
+          weight: 700
+        - asset: assets/fonts/Aboreto.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/Aboreto.ttf
+          weight: 900
+        - asset: assets/fonts/Aboreto.ttf
           weight: 900
           style: italic

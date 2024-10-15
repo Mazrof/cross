@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>reCAPTCHA</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </head>
+  <body style='background-color: aqua;'>
+    <div style='height: 60px;'></div>
+    <form action="?" method="POST">
+      <div class="g-recaptcha"
+        data-sitekey="YOUR-SITE-KEY"
+        data-callback="captchaCallback"></div>
+
+    </form>
+    <script>
+      function captchaCallback(response){
+        //console.log(response);
+        if(typeof Captcha!=="undefined"){
+          Captcha.postMessage(response);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+//android 6LcjcF8qAAAAAMhZR5SmEDVO18FpjFWtIS9hgoX2
+// ios 6LcmcF8qAAAAABgf0NvTZ3O_Rp6AKdSp1vtWOICA
