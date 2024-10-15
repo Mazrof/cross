@@ -33,7 +33,7 @@ class RecieverDetails extends StatelessWidget {
               Text(state,
                   style: const TextStyle(
                     fontSize: AppSizes.fontSizeSm - 1,
-                    color: AppColors.greyColor,
+                    color: AppColors.grey,
                   )),
             ],
           )

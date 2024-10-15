@@ -36,7 +36,7 @@ class _CInputBarState extends State<CInputBar> {
             IconButton(
               icon: const Icon(Icons.emoji_emotions_outlined),
               iconSize: AppSizes.iconMd,
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: () {},
             ),
             Expanded(
@@ -47,7 +47,7 @@ class _CInputBarState extends State<CInputBar> {
                 minLines: 1, // Minimum number of lines field will start with
                 decoration: const InputDecoration(
                   hintStyle: TextStyle(
-                      fontWeight: FontWeight.w300, color: AppColors.greyColor),
+                      fontWeight: FontWeight.w300, color: AppColors.grey),
                   hintText: "Message",
                   border: InputBorder.none,
                 ),
@@ -61,12 +61,12 @@ class _CInputBarState extends State<CInputBar> {
             ),
             IconButton(
               icon: const Icon(Icons.attach_file),
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: () {},
             ),
             IconButton(
               icon: _isSendIcon ? Icon(Icons.send) : Icon(Icons.mic),
-              color: AppColors.greyColor,
+              color: AppColors.grey,
               onPressed: widget.sendMessage,
             ),
           ],

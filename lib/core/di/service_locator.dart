@@ -10,7 +10,7 @@ import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.
 import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
-import 'package:telegram/night_mode/presentation/controller/night_mode_cubit.dart';
+import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
 final sl = GetIt.instance;
 
