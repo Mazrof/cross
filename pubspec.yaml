@@ -2,7 +2,7 @@ name: telegram
 description: "Your World is just one Chat Away!"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -50,11 +49,13 @@ dependencies:
   palette_generator: ^0.3.3+4
   iconsax: ^0.0.8
   flutter_native_splash: ^2.4.1
+
   connectivity_plus: ^6.0.5
   device_preview: ^1.2.0
   flutter_screenutil: ^5.9.3
   flutter_gcaptcha_v3: ^2.1.1
   flutter_launcher_icons: ^0.14.1
+
   pin_code_fields: ^8.0.1
 
 
@@ -87,7 +88,6 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -102,6 +102,7 @@ flutter:
     - assets/web_pages/
     - assets/gif/
     - assets/onbording/
+    - assets/images/
 
   fonts:
     - family: Roboto

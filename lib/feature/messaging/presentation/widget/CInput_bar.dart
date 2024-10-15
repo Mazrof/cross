@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
-class CInputBar extends StatelessWidget {
-  const CInputBar({super.key});
+class CInputBar extends StatefulWidget {
+  final TextEditingController controller;
+  final VoidCallback sendMessage;
+  const CInputBar(
+      {required this.controller, super.key, required this.sendMessage});
+
+  @override
+  State<CInputBar> createState() => _CInputBarState();
+}
+
+class _CInputBarState extends State<CInputBar> {
+  bool _isSendIcon = false;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +21,7 @@ class CInputBar extends StatelessWidget {
       padding: const EdgeInsets.all(AppSizes.sm),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
+          color: AppColors.darkBackgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
           boxShadow: const [
             BoxShadow(
@@ -26,31 +36,38 @@ class CInputBar extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.emoji_emotions_outlined),
               iconSize: AppSizes.iconMd,
-              color: AppColors.grey,
+              color: AppColors.greyColor,
               onPressed: () {},
             ),
             Expanded(
               child: TextField(
+                style: const TextStyle(color: AppColors.whiteColor),
                 maxLines:
                     5, // Max number of lines before field starts scrolling
                 minLines: 1, // Minimum number of lines field will start with
                 decoration: const InputDecoration(
-                  hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                  hintStyle: TextStyle(
+                      fontWeight: FontWeight.w300, color: AppColors.greyColor),
                   hintText: "Message",
                   border: InputBorder.none,
                 ),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  setState(() {
+                    _isSendIcon = text.isNotEmpty;
+                  });
+                },
+                controller: widget.controller,
               ),
             ),
             IconButton(
               icon: const Icon(Icons.attach_file),
-              color: AppColors.grey,
+              color: AppColors.greyColor,
               onPressed: () {},
             ),
             IconButton(
-              icon: const Icon(Icons.mic),
-              color: AppColors.grey,
-              onPressed: () {},
+              icon: _isSendIcon ? Icon(Icons.send) : Icon(Icons.mic),
+              color: AppColors.greyColor,
+              onPressed: widget.sendMessage,
             ),
           ],
         ),
