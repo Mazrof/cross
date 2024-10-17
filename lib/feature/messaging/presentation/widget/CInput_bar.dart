@@ -2,24 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
-class CInputBar extends StatefulWidget {
+class CInputBar extends StatelessWidget {
+  const CInputBar({required this.controller, super.key});
+
   final TextEditingController controller;
-  final VoidCallback sendMessage;
-  const CInputBar(
-      {required this.controller, super.key, required this.sendMessage});
-
-  @override
-  State<CInputBar> createState() => _CInputBarState();
-}
-
-class _CInputBarState extends State<CInputBar> {
-  bool _isSendIcon = false;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(AppSizes.sm),
       child: Container(
+        height: AppSizes.inputFieldH,
         decoration: BoxDecoration(
           color: AppColors.darkBackgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -51,12 +44,8 @@ class _CInputBarState extends State<CInputBar> {
                   hintText: "Message",
                   border: InputBorder.none,
                 ),
-                onChanged: (text) {
-                  setState(() {
-                    _isSendIcon = text.isNotEmpty;
-                  });
-                },
-                controller: widget.controller,
+                onChanged: (text) {},
+                controller: controller,
               ),
             ),
             IconButton(
@@ -65,9 +54,11 @@ class _CInputBarState extends State<CInputBar> {
               onPressed: () {},
             ),
             IconButton(
-              icon: _isSendIcon ? Icon(Icons.send) : Icon(Icons.mic),
+              icon: Icon(Icons.send),
               color: AppColors.grey,
-              onPressed: widget.sendMessage,
+              onPressed: () {
+                // Todo
+              },
             ),
           ],
         ),

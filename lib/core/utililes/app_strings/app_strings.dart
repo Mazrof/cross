@@ -73,13 +73,13 @@ class AppStrings {
   static const String skip = 'skip';
   static const String start = 'start';
 
-
   //verify mail
   static const String checkYourEmail = 'Check your mail';
-  static const String weSentYouAnEmail = 'Please Enter code we sent you on your email';
+  static const String weSentYouAnEmail =
+      'Please Enter code we sent you on your email';
   static const String verify = 'Verify';
   static const String resendCode = 'Resend';
 
-
-
+  //messaging
+  static const String waitingInternet = 'Waiting for Internet';
 }
