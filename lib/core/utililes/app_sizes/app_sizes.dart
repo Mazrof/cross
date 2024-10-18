@@ -1,5 +1,6 @@
 class AppSizes {
   //padding and margin
+  static const double xxs = 3;
   static const double xs = 4;
   static const double sm = 8;
   static const double md = 16;
@@ -16,7 +17,7 @@ class AppSizes {
   static const double dividerH = 1;
 
   //input field
-  static const double inputFieldH = 48;
+  static const double inputFieldH = 45;
   static const double inputFieldR = 12;
   static const double spaceBetweenInputField = 16;
 

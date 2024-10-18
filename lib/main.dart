@@ -51,7 +51,7 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.lightTheme,
+                  theme: TAppTheme.darkTheme,
                   darkTheme: TAppTheme.darkTheme,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
@@ -64,6 +64,7 @@ class App extends StatelessWidget {
     );
   }
 }
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

@@ -33,19 +33,26 @@ class CInputBar extends StatelessWidget {
               onPressed: () {},
             ),
             Expanded(
-              child: TextField(
-                style: const TextStyle(color: AppColors.whiteColor),
-                maxLines:
-                    5, // Max number of lines before field starts scrolling
-                minLines: 1, // Minimum number of lines field will start with
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(
-                      fontWeight: FontWeight.w300, color: AppColors.grey),
-                  hintText: "Message",
-                  border: InputBorder.none,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    bottom: AppSizes.xxs, top: AppSizes.xxs),
+                child: TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  maxLines:
+                      5, // Max number of lines before field starts scrolling
+                  minLines: 1, // Minimum number of lines field will start with
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    hintStyle: TextStyle(
+                        fontWeight: FontWeight.w300, color: AppColors.grey),
+                    hintText: "Message",
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                  ),
+                  onChanged: (text) {},
+                  controller: controller,
                 ),
-                onChanged: (text) {},
-                controller: controller,
               ),
             ),
             IconButton(
