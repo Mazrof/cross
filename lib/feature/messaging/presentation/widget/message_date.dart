@@ -8,16 +8,28 @@ class MessageDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.all(AppSizes.sm),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-      child: Text(
-        date,
-        style: const TextStyle(
-          color: AppColors.whiteColor,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(
+            top: AppSizes.xs,
+            bottom: AppSizes.xs,
+            left: AppSizes.xxs,
+            right: AppSizes.xxs,
+          ),
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(AppSizes.sm),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.xl),
+            color: Theme.of(context).dialogBackgroundColor,
+          ),
+          child: Text(
+            date,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
-      ),
+      ],
     );
   }
 }

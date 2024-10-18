@@ -28,7 +28,7 @@ class AppSizes {
   static const double iconXs = 12;
   static const double iconSm = 16;
   static const double iconMd = 24;
-  static const double iconLg = 32;
+  static const double iconLg = 45;
 
   //button
   static const double buttonH = 18;
@@ -70,4 +70,7 @@ class AppSizes {
   static const double iconSize = 30;
 
   static const double verifyPadding = 24;
+
+  // Other Constant Sizes
+  static const double receiverDetailsWidth = 300;
 }

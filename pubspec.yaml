@@ -57,7 +57,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
 
   pin_code_fields: ^8.0.1
-
+  emoji_picker_flutter: ^3.1.0
 
   http: any
   bloc: any
@@ -81,8 +81,6 @@ flutter_icons:
   adaptive_icon_maskable: true
   adaptive_icon_foreground: "assets/logos/app_logo.png"
 
-
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -92,8 +90,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
-
 
   # To add assets to your application, add an assets section, like this:
   assets:

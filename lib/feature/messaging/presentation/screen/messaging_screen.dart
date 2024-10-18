@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/messaging/presentation/Data/Model/message.dart';
-import 'package:telegram/feature/messaging/presentation/widget/CInput_bar.dart';
+import 'package:telegram/feature/messaging/presentation/widget/cinput_bar.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/feature/messaging/presentation/widget/message_list.dart';
@@ -68,7 +67,7 @@ class MessagingScreen extends StatelessWidget {
                   messages: messages,
                 ),
               ),
-              CInputBar(
+              CinputBar(
                 controller: controller,
               ),
             ],

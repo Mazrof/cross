@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class RecieverDetails extends StatelessWidget {
   final String userName;
@@ -15,12 +16,12 @@ class RecieverDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      width: 300,
+      height: AppSizes.xxl,
+      width: AppSizes.receiverDetailsWidth,
       child: Row(
         children: [
           avatar,
-          const SizedBox(width: 20),
+          const SizedBox(width: AppSizes.md),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

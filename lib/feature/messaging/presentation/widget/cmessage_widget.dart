@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/helper/screen_helper.dart';
 
 class ChatMessage extends StatelessWidget {
   final String message;
@@ -20,6 +21,19 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color getMessageBackGroundColor() {
+      Color backgroundColor = Colors.white;
+
+      if (isSender) {
+        if (ScreenHelper.isDarkMode(context) == true) {
+          backgroundColor = Color.fromARGB(255, 67, 87, 47);
+        } else
+          backgroundColor = Colors.white;
+      }
+
+      return backgroundColor;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -29,7 +43,7 @@ class ChatMessage extends StatelessWidget {
               : const EdgeInsets.only(top: 5, bottom: 5),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
-            color: isSender ? const Color(0xFFEFFFDE) : Colors.white,
+            color: getMessageBackGroundColor(),
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(12),
               topRight: const Radius.circular(12),
@@ -41,57 +55,55 @@ class ChatMessage extends StatelessWidget {
                   : const Radius.circular(12),
             ),
           ),
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (imagePath != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 50),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image(
-                          image: AssetImage(imagePath!),
-                        ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (imagePath != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 50),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image(
+                        image: AssetImage(imagePath!),
                       ),
                     ),
                   ),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                  ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      time,
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        color: isSender
-                            ? const Color(0xFF91C57E)
-                            : const Color(0xFFABB3BB),
-                        fontSize: 12,
+              Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    time,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: isSender
+                          ? const Color(0xFF91C57E)
+                          : const Color(0xFFABB3BB),
+                      fontSize: 12,
+                    ),
+                  ),
+                  if (isSender)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Icon(
+                        _getStatusIcon(),
+                        color: _getStatusColor(),
+                        size: 16,
                       ),
                     ),
-                    if (isSender)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: Icon(
-                          _getStatusIcon(),
-                          color: _getStatusColor(),
-                          size: 16,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

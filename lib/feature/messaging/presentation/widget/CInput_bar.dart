@@ -1,9 +1,16 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_launcher_icons/config/config.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
+import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
-class CInputBar extends StatelessWidget {
-  const CInputBar({required this.controller, super.key});
+class CinputBar extends StatelessWidget {
+  const CinputBar({required this.controller, super.key});
 
   final TextEditingController controller;
 
@@ -14,7 +21,7 @@ class CInputBar extends StatelessWidget {
       child: Container(
         height: AppSizes.inputFieldH,
         decoration: BoxDecoration(
-          color: AppColors.darkBackgroundColor,
+          color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
           boxShadow: const [
             BoxShadow(
@@ -55,18 +62,7 @@ class CInputBar extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.attach_file),
-              color: AppColors.grey,
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.send),
-              color: AppColors.grey,
-              onPressed: () {
-                // Todo
-              },
-            ),
+            const InputBarTrailing()
           ],
         ),
       ),
