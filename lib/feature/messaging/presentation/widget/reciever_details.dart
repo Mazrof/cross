@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
-import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class RecieverDetails extends StatelessWidget {
   final String userName;
@@ -15,7 +14,7 @@ class RecieverDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       width: 300,
       child: Row(
@@ -26,15 +25,20 @@ class RecieverDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userName,
-                  style: const TextStyle(
-                    fontSize: AppSizes.fontSizeVLg,
-                  )),
-              Text(state,
-                  style: const TextStyle(
-                    fontSize: AppSizes.fontSizeSm - 1,
-                    color: AppColors.grey,
-                  )),
+              Text(
+                userName,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .apply(color: AppColors.whiteColor),
+              ),
+              Text(
+                state,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .apply(color: AppColors.whiteColor),
+              )
             ],
           )
         ],

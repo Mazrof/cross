@@ -41,12 +41,7 @@ final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   ),
   GoRoute(
     path: AppRouter.kMessaging,
-    builder: (context, state) {
-      return BlocProvider<OnBordingCubit>(
-        create: (context) => sl<OnBordingCubit>(),
-        child: MessagingScreen(),
-      );
-    },
+    builder: (context, state) => MessagingScreen(),
   ),
   GoRoute(
       path: AppRouter.kSPlash,

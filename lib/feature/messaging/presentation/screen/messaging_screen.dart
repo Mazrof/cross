@@ -14,7 +14,8 @@ class MessagingScreen extends StatelessWidget {
   MessagingScreen({super.key});
 
   final List<Message> messages = [
-    Message(content: "Hello", time: "9:05", sender: "ME", isDate: false),
+    Message(
+        content: "Hello World!!", time: "9:05", sender: "ME", isDate: false),
     Message(content: "Hello", time: "9:05", sender: "ME", isDate: false),
     Message(content: "October 3", time: "9:05", sender: "ME", isDate: true),
     Message(content: "Hello", time: "9:05", sender: "ME", isDate: false),

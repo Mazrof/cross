@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class PopupMenu extends StatelessWidget {
@@ -24,7 +25,10 @@ class PopupMenu extends StatelessWidget {
           ),
       ],
       constraints: const BoxConstraints(maxWidth: 200),
-      icon: const Icon(Icons.more_vert),
+      icon: const Icon(
+        Icons.more_vert,
+        color: AppColors.whiteColor,
+      ),
     );
   }
 }
