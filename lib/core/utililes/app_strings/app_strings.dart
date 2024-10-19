@@ -73,13 +73,26 @@ class AppStrings {
   static const String skip = 'skip';
   static const String start = 'start';
 
-
   //verify mail
   static const String checkYourEmail = 'Check your mail';
-  static const String weSentYouAnEmail = 'Please Enter code we sent you on your email';
+  static const String weSentYouAnEmail =
+      'Please Enter code we sent you on your email';
   static const String verify = 'Verify';
   static const String resendCode = 'Resend';
 
-
-
+  //settings
+  static const String privacyAndSecurity = "Privacy And Security";
+  static const String security = "Security";
+  static const String autoDelMessages = "Auto-Delete Messages";
+  static const String blockedUsers = "Blocked Users";
+  static const String devices = "Devices";
+  static const String privacy = "Privacy";
+  static const String lastSeenOnline = "Last Seen & Online";
+  static const String profilePhotos = "Profile Photos";
+  static const String everybody = "Everybody";
+  static const String myContacts = "My Contacts";
+  static const String nobody = "Nobody";
+  static const String lastSeenTitle = "Who can see my last seen time?";
+  static const String profilePhotosTitle = "Who can see my profile photos?";
+  static const String enableReadReceipts = "Enable Read Receipts";
 }
