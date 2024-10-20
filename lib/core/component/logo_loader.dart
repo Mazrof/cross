@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
-import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
 class LogoLoader extends StatelessWidget {
   final double scale;
@@ -28,11 +27,6 @@ class LogoLoader extends StatelessWidget {
                 onPlay: (controller) =>
                     controller.repeat(), // Repeat indefinitely
               )
-              // .animate(
-              //     autoPlay: true, onPlay: (controller) => controller.repeat())
-              // // Fade in at the beginning
-
-              // Vibration effect (move horizontally)
               .moveX(
                 duration: 600.ms,
                 begin: -30 * scale,
