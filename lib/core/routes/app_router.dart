@@ -15,7 +15,7 @@ import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen
 
 class AppRouter {
   static const String kLogin = '/login';
-  static const String kSPlash = '/splash';
+  static const String kSplash = '/splash';
   static const String kSignUp = '/sign_up';
   static const String kHome = '/home';
   static const String kOnboarding = '/onboarding';
@@ -30,7 +30,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kLogoLoader,
+final route = GoRouter(initialLocation: AppRouter.kSplash,
 routes: [
   GoRoute(path: AppRouter.kOnBoarding,
     builder: (context, state) {
@@ -40,14 +40,16 @@ routes: [
       );
     },
   ),
-   GoRoute(path: AppRouter.kSPlash,
-        builder: (context, state) {
-          return BlocProvider<SplashCubit>.value(
-            value:sl<SplashCubit>()..checkAuthentication(),
-            child: const SplashScreen()
-          );
-        }
-    ),
+   GoRoute(
+    path: AppRouter.kSplash,
+    builder: (context, state) {
+      return BlocProvider(
+        create: (context) => SplashCubit()
+          ..startAnimation(),
+        child: const SplashScreen(),
+      );
+    },
+  ),
   GoRoute(
     path: AppRouter.kLogin,
     builder: (context, state) {
