@@ -11,4 +11,7 @@ class AppAssetsStrings {
   static const String on_bording2 = 'assets/onbording/onbording3.png';
   static const String on_bording3 = 'assets/onbording/onbording2.png';
   static const String on_bording4 = 'assets/onbording/onbording.png';
+
+  //logo loader 
+  static const String logoLoader = 'assets/logos/app_color.png';
 }
