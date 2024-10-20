@@ -1,14 +1,16 @@
-
-import 'package:equatable/equatable.dart';
-
-abstract class SplashState extends Equatable {
-  const SplashState();
-
-  @override
-  List<Object> get props => [];
-}
+abstract class SplashState {}
 
 class SplashInitial extends SplashState {}
+
+class SplashLoading extends SplashState {}
+
+class SplashFirstTime extends SplashState {}
+
+class SplashAuthenticated extends SplashState {}
+
+class SplashUnauthenticated extends SplashState {}
+
+class SplashEmailVerificationRequired extends SplashState {}
 
 class AnimationInProgress extends SplashState {}
 
@@ -20,18 +22,7 @@ class TypewriterEffectInProgress extends SplashState {
   final String displayedText;
   final int textIndex;
 
-  const TypewriterEffectInProgress(this.displayedText, this.textIndex);
-
-  @override
-  List<Object> get props => [displayedText, textIndex];
+  TypewriterEffectInProgress(this.displayedText, this.textIndex);
 }
 
 class TypewriterEffectCompleted extends SplashState {}
-
-class SplashLoading extends SplashState {}
-
-class SplashAuthenticated extends SplashState {}
-
-class SplashUnauthenticated extends SplashState {}
-
-class SplashFirstTime extends SplashState {}
