@@ -11,7 +11,6 @@ class TAppBarTheme {
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,
     titleSpacing: 0,
-
     elevation: 0,
     titleTextStyle: TextStyle(
         fontSize: 18, color: AppColors.whiteColor, fontWeight: FontWeight.w600),
@@ -31,15 +30,16 @@ class TAppBarTheme {
     centerTitle: false,
     scrolledUnderElevation: 0,
     backgroundColor: Colors.transparent,
+    titleSpacing: 0,
     elevation: 0,
     titleTextStyle: TextStyle(
-        fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+        fontSize: 18, color: AppColors.whiteColor, fontWeight: FontWeight.w600),
     iconTheme: IconThemeData(
       color: AppColors.whiteColor,
       size: 24,
     ),
     actionsIconTheme: IconThemeData(
-      color: AppColors.whiteColor,
+      color: Colors.white,
       size: 24,
     ),
   );

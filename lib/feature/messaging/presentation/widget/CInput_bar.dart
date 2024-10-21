@@ -19,7 +19,7 @@ class CinputBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(AppSizes.sm),
       child: Container(
-        height: AppSizes.inputFieldH,
+        // height: AppSizes.inputFieldH,
         decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
@@ -44,6 +44,7 @@ class CinputBar extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     bottom: AppSizes.xxs, top: AppSizes.xxs),
                 child: TextField(
+                  keyboardType: TextInputType.multiline,
                   style: Theme.of(context).textTheme.bodyMedium,
                   maxLines:
                       5, // Max number of lines before field starts scrolling

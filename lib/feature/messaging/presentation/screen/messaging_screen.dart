@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/component/cnight_mode_switch.dart';
 import 'package:telegram/core/component/popup_menu.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/messaging/presentation/Data/Model/message.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cinput_bar.dart';
@@ -8,6 +10,7 @@ import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/feature/messaging/presentation/widget/message_list.dart';
 import 'package:telegram/feature/messaging/presentation/widget/reciever_details.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
 class MessagingScreen extends StatelessWidget {
   MessagingScreen({super.key});
@@ -24,6 +27,8 @@ class MessagingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(sl<NightModeCubit>().state);
+
     return Scaffold(
       appBar: CAppBar(
         onLeadingTap: () {},
@@ -53,9 +58,11 @@ class MessagingScreen extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/chat_background.png'),
+                image: sl<NightModeCubit>().state
+                    ? const AssetImage('assets/images/chat_background.png')
+                    : const AssetImage('assets/images/chat_background.png'),
                 fit: BoxFit.cover,
               ),
             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class ChatMessage extends StatelessWidget {
   final String message;
@@ -39,8 +41,10 @@ class ChatMessage extends StatelessWidget {
       children: [
         Container(
           margin: isSender
-              ? const EdgeInsets.only(top: 5, bottom: 5)
-              : const EdgeInsets.only(top: 5, bottom: 5),
+              ? const EdgeInsets.only(
+                  top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm)
+              : const EdgeInsets.only(
+                  top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
             color: getMessageBackGroundColor(),
@@ -85,10 +89,8 @@ class ChatMessage extends StatelessWidget {
                   Text(
                     time,
                     textAlign: TextAlign.right,
-                    style: TextStyle(
-                      color: isSender
-                          ? const Color(0xFF91C57E)
-                          : const Color(0xFFABB3BB),
+                    style: const TextStyle(
+                      color: AppColors.grey,
                       fontSize: 12,
                     ),
                   ),
