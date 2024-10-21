@@ -1,106 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart'; // Adjust as necessary
+import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as necessary
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_state.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/routes/app_router.dart'; // Import GoRouter
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightBackgroundColor,
-      body: BlocListener<SplashCubit, SplashState>(
-        listener: (context, state) {
-          if (state is SplashAuthenticated) {
-            // Navigate to authenticated screen
-            // Navigator.of(context).pushReplacementNamed('/home');
-          } else if (state is SplashUnauthenticated) {
-            // Navigate to unauthenticated screen
-            // Navigator.of(context).pushReplacementNamed('/login');
-          } else if (state is SplashFirstTime) {
-            // Navigate to onboarding screen
-            // Navigator.of(context).pushReplacementNamed('/onboarding');
-          }
-        },
+      body: Center(
         child: BlocBuilder<SplashCubit, SplashState>(
           builder: (context, state) {
-            if (state is SplashInitial || state is AnimationInProgress || state is SplashLoading) {
-              return const Center(child: CircularProgressIndicator());
+            if (state is SplashInitial || state is SplashLoading) {
+              return const CircularProgressIndicator();
+            } else if (state is SplashFirstTime) {
+              // Navigate to onboarding screen
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go(AppRouter.kOnboarding);
+              });
+              return Container();
+            } else if (state is SplashAuthenticated) {
+              // Navigate to authenticated screen
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go(AppRouter.kHome);
+              });
+              return Container();
+            } else if (state is SplashUnauthenticated) {
+              // Navigate to unauthenticated screen
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go(AppRouter.kLogin);
+              });
+              return Container();
+            } else if (state is SplashEmailVerificationRequired) {
+              // Navigate to email verification screen
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go(AppRouter.kVerifyMail);
+              });
+              return Container();
+            } else if (state is AnimationInProgress ||
+                state is AnimationMoved ||
+                state is AnimationEnded ||
+                state is TypewriterEffectInProgress ||
+                state is TypewriterEffectCompleted) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedOpacity(
+                    opacity: state is AnimationMoved ||
+                            state is AnimationEnded ||
+                            state is TypewriterEffectInProgress ||
+                            state is TypewriterEffectCompleted
+                        ? 1.0
+                        : 0.0,
+                    duration: const Duration(milliseconds: 2000),
+                    child: Image.asset(
+                      AppAssetsStrings.loginLogo, // Replace with your logo path
+                      width: 350.w,
+                      height:350.h,
+                    ),
+                  ),
+                  SizedBox(height: 50.h),
+                  Text(
+                    state is TypewriterEffectInProgress
+                        ? state.displayedText
+                        : 'Your World is Just One Chat Away',
+                    style: Theme.of(context).textTheme.bodyMedium!.apply(color: AppColors.primaryColor),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              );
+            } else {
+              return Container();
             }
-
-            if (state is AnimationMoved || state is AnimationEnded || state is TypewriterEffectInProgress || state is TypewriterEffectCompleted) {
-              return _buildSplashContent(context, state);
-            }
-
-            return Container();
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildSplashContent(BuildContext context, SplashState state) {
-    double imageOpacity = 1.0;
-    double sloganOpacity = 0.0;
-    String displayedText = '';
-
-    if (state is AnimationEnded) {
-      imageOpacity = 1.0;
-    } else if (state is TypewriterEffectInProgress) {
-      displayedText = state.displayedText;
-    } else if (state is TypewriterEffectCompleted) {
-      sloganOpacity = 1.0;
-    }
-
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(seconds: 2),
-              opacity: imageOpacity,
-              child: Column(
-                children: [
-                  // Image.asset(
-                  //   'assets/images/your_image.png', // Path to your image file
-                  //   width: 150.w,
-                  //   height: 150.h,
-                  // ),
-                  Text(
-                    'MaZrof',
-                    style: Theme.of(context).textTheme.headlineLarge!.apply(
-                          color: AppColors.primaryColor,
-                          fontSizeFactor: 1.2,
-                          fontWeightDelta: -2,
-                        ),
-                  ),
-
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-            _buildTypewriterText(context,displayedText, sloganOpacity),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTypewriterText(BuildContext context,String displayedText, double opacity) {
-    return AnimatedOpacity(
-      duration: const Duration(seconds: 2),
-      opacity: opacity,
-      child: Text(
-        displayedText,
-        style: Theme.of(context).textTheme.headlineSmall!.apply(
-              color: AppColors.primaryColor,
-              fontSizeFactor: 1.2,
-            ),
-        textAlign: TextAlign.center,
       ),
     );
   }

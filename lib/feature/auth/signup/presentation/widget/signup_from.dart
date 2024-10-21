@@ -221,7 +221,7 @@ class SignUpForm extends StatelessWidget {
               child: ElevatedButton(
 
                 onPressed: (){
-                  context.go(AppRouter.kverifyMail);
+                  context.go(AppRouter.kVerifyMail);
                 },
                 child: const Text(AppStrings.signUp),
               ),
