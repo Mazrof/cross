@@ -1,25 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'dart:async';
-
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
-  // final AuthService _authService; // Add your authentication service
-  // final FirstTimeService _firstTimeService; // Add your first-time check service
+  SplashCubit() : super(SplashInitial());
 
-  SplashCubit(
-      // this._authService, this._firstTimeService
-      )
-      : super(SplashInitial());
-
-  void startAnimation(String slogan) {
+  void startAnimation() {
     emit(AnimationInProgress());
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       emit(AnimationMoved());
-      Future.delayed(const Duration(seconds: 2), () {
-        emit(AnimationEnded());
-        _startTypewriterEffect(slogan, 0);
-      });
+      _startTypewriterEffect('Your World is Just One Chat Away !', 0);
     });
   }
 
@@ -32,21 +22,30 @@ class SplashCubit extends Cubit<SplashState> {
       } else {
         timer.cancel();
         emit(TypewriterEffectCompleted());
+        checkAuthentication(); // Check authentication after typewriter effect is completed
       }
     });
   }
 
   void checkAuthentication() async {
     emit(SplashLoading());
-    const isFirstTime = true;
+    // Mock data for authentication checks
+    bool isFirstTime = true; // Change this to false to simulate returning users
     if (isFirstTime) {
       emit(SplashFirstTime());
       return;
     }
 
-    const isAuthenticated = false;
+    bool isAuthenticated =
+        false; // Change this to true to simulate authenticated users
     if (isAuthenticated) {
-      emit(SplashAuthenticated());
+      bool isEmailVerified =
+          false; // Change this to true to simulate verified email
+      if (isEmailVerified) {
+        emit(SplashAuthenticated());
+      } else {
+        emit(SplashEmailVerificationRequired());
+      }
     } else {
       emit(SplashUnauthenticated());
     }

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/logo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
@@ -23,11 +24,12 @@ import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
 
 class AppRouter {
   static const String kLogin = '/login';
-  static const String kSPlash = '/splash';
+  static const String kSplash = '/splash';
   static const String kSignUp = '/sign_up';
   static const String kHome = '/home';
   static const String kOnboarding = '/onboarding';
   static const String kSuccess = '/success';
+
   static const String konboarding = '/onboarding';
   static const String kverifyMail = '/verify_mail';
   static const String ksettings = '/settings';
@@ -38,6 +40,10 @@ class AppRouter {
   static const String klastSeenOnline = '/last_seen_online';
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
+  static const String kOnBoarding = '/onboarding';
+  static const String kVerifyMail = '/verify_mail';
+  static const String kLogoLoader = '/chat';
+
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -47,6 +53,9 @@ class AppRouter {
 final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.konboarding,
+final route = GoRouter(initialLocation: AppRouter.kSplash,
+routes: [
+  GoRoute(path: AppRouter.kOnBoarding,
     builder: (context, state) {
       return BlocProvider<OnBordingCubit>(
         create: (context) => sl<OnBordingCubit>(),
@@ -61,6 +70,16 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
             value: sl<SplashCubit>()..checkAuthentication(),
             child: const SplashScreen());
       }),
+   GoRoute(
+    path: AppRouter.kSplash,
+    builder: (context, state) {
+      return BlocProvider(
+        create: (context) => SplashCubit()
+          ..startAnimation(),
+        child: const SplashScreen(),
+      );
+    },
+  ),
   GoRoute(
     path: AppRouter.kLogin,
     builder: (context, state) {
@@ -89,6 +108,7 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   ),
   GoRoute(
     path: AppRouter.kverifyMail,
+  GoRoute(path: AppRouter.kVerifyMail,
     builder: (context, state) {
       return VerifyMailScreen(
         email: 'mariam@gmail.com',
@@ -152,4 +172,11 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
       return BlockUserScreen();
     },
   ),
+    path: AppRouter.kLogoLoader,
+    builder: (context, state) {
+      return const LogoLoader();
+    },
+  ),
+
+
 ]);
