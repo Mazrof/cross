@@ -49,8 +49,7 @@ dependencies:
   palette_generator: ^0.3.3+4
   iconsax: ^0.0.8
   flutter_native_splash: ^2.4.1
-
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^6.1.0
   device_preview: ^1.2.0
   flutter_screenutil: ^5.9.3
   flutter_gcaptcha_v3: ^2.1.1
@@ -61,6 +60,8 @@ dependencies:
 
   http: any
   bloc: any
+  flutter_animate: ^4.5.0
+  animated_text_kit: ^4.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
