@@ -10,6 +10,7 @@ import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubi
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/messaging/presentation/screen/messaging_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -32,6 +33,7 @@ class AppRouter {
 
   static const String konboarding = '/onboarding';
   static const String kverifyMail = '/verify_mail';
+  static const String kMessaging = '/messaging';
   static const String ksettings = '/settings';
   static const String kprivacyAndSecurity = '/privacy_security';
   static const String kblockedUsers = '/blocked_users';
@@ -50,19 +52,19 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
-  GoRoute(
-    path: AppRouter.konboarding,
+final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
+
 final route = GoRouter(initialLocation: AppRouter.kSplash,
 routes: [
   GoRoute(path: AppRouter.kOnBoarding,
     builder: (context, state) {
       return BlocProvider<OnBordingCubit>(
         create: (context) => sl<OnBordingCubit>(),
-        child: OnBordingScreen(),
+        child: const OnBordingScreen(),
       );
     },
   ),
+
   GoRoute(
       path: AppRouter.kSPlash,
       builder: (context, state) {
@@ -106,15 +108,16 @@ routes: [
       onButtonPressed: () {},
     ),
   ),
-  GoRoute(
-    path: AppRouter.kverifyMail,
+
   GoRoute(path: AppRouter.kVerifyMail,
+
     builder: (context, state) {
       return VerifyMailScreen(
         email: 'mariam@gmail.com',
       );
     },
   ),
+
   GoRoute(
     path: AppRouter.ksettings,
     builder: (context, state) {

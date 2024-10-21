@@ -15,26 +15,31 @@ class RecieverDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      width: 300,
+    return SizedBox(
+      height: AppSizes.xxl,
+      width: AppSizes.receiverDetailsWidth,
       child: Row(
         children: [
           avatar,
-          const SizedBox(width: 20),
+          const SizedBox(width: AppSizes.md),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userName,
-                  style: const TextStyle(
-                    fontSize: AppSizes.fontSizeVLg,
-                  )),
-              Text(state,
-                  style: const TextStyle(
-                    fontSize: AppSizes.fontSizeSm - 1,
-                    color: AppColors.grey,
-                  )),
+              Text(
+                userName,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .apply(color: AppColors.whiteColor),
+              ),
+              Text(
+                state,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .apply(color: AppColors.whiteColor),
+              )
             ],
           )
         ],

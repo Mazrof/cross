@@ -1,10 +1,12 @@
 class AppSizes {
   //padding and margin
+  static const double xxs = 3;
   static const double xs = 4;
   static const double sm = 8;
   static const double md = 16;
   static const double lg = 24;
   static const double xl = 32;
+  static const double xxl = 50;
 
   //border radius
   static const double borderRadiusSm = 4;
@@ -15,7 +17,7 @@ class AppSizes {
   static const double dividerH = 1;
 
   //input field
-  static const double inputFieldH = 48;
+  static const double inputFieldH = 45;
   static const double inputFieldR = 12;
   static const double spaceBetweenInputField = 16;
 
@@ -26,7 +28,7 @@ class AppSizes {
   static const double iconXs = 12;
   static const double iconSm = 16;
   static const double iconMd = 24;
-  static const double iconLg = 32;
+  static const double iconLg = 45;
 
   //button
   static const double buttonH = 18;
@@ -69,4 +71,6 @@ class AppSizes {
 
   static const double verifyPadding = 24;
 
+  // Other Constant Sizes
+  static const double receiverDetailsWidth = 300;
 }

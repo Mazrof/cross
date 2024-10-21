@@ -80,6 +80,8 @@ class AppStrings {
   static const String verify = 'Verify';
   static const String resendCode = 'Resend';
 
+  //messaging
+  static const String waitingInternet = 'Waiting for Internet';
   //settings
   static const String privacyAndSecurity = "Privacy And Security";
   static const String security = "Security";
