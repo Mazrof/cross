@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../Widget/radio_tile.dart';
 
 class LastseenOnlineScreen extends StatelessWidget {
@@ -8,34 +12,39 @@ class LastseenOnlineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Last seen & online"),
-        backgroundColor: Colors.lightBlue,
+      appBar: CAppBar(
+        title: const Text(AppStrings.lastSeenOnline),
+        leadingIcon: Icons.arrow_back,
+        onLeadingTap: () {
+          context.go(AppRouter.kprivacyAndSecurity);
+        },
       ),
       body: ListView(padding: const EdgeInsets.all(16.0), children: [
-        Text(
-          'Who can see my last seen time?',
+        const Text(
+          AppStrings.lastSeenTitle,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Column(
           children: [
             RadioTile(
-                label: 'Everybody', groupValue: selectedOption.convertString()),
-            Divider(
-              thickness: 0.5,
-            ),
-            RadioTile(
-                label: 'My Contacts',
+                label: AppStrings.everybody,
                 groupValue: selectedOption.convertString()),
-            Divider(
+            const Divider(
               thickness: 0.5,
             ),
             RadioTile(
-                label: 'Nobody', groupValue: selectedOption.convertString()),
+                label: AppStrings.myContacts,
+                groupValue: selectedOption.convertString()),
+            const Divider(
+              thickness: 0.5,
+            ),
+            RadioTile(
+                label: AppStrings.nobody,
+                groupValue: selectedOption.convertString()),
           ],
         ),
       ]),

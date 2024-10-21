@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
-
 import 'core/di/service_locator.dart';
 
 void main() async {
@@ -64,6 +63,7 @@ class App extends StatelessWidget {
     );
   }
 }
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

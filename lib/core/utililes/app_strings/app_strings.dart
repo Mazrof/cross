@@ -95,4 +95,27 @@ class AppStrings {
   static const String lastSeenTitle = "Who can see my last seen time?";
   static const String profilePhotosTitle = "Who can see my profile photos?";
   static const String enableReadReceipts = "Enable Read Receipts";
+  static const String changeProfilePicture = "Change Profile Picture";
+  static const String editInfo = "Edit info";
+  static const String account = "Account";
+  static const String settings = "Settings";
+  static const String phoneNumber = "Phone Number";
+  static const String bio = 'Bio';
+  static const String yourUsername = "Your Username";
+  static const String yourName = "Your Name";
+  static const String profileInfo = "Profile Info";
+  static const String yourBio = "Your bio";
+  static const String bioHint = 'Write about yourself...';
+  static const String bioDescription =
+      'You can add a few lines about yourself. Choose who can see your bio in Settings.';
+  static const String blockUser = "Block user";
+  static const String blockDescription =
+      'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
+  static const String selfDestructTimer = "Self-Destruct Timer";
+  static const String off = "Off";
+  static const String afterOneDay = "After 1 day";
+  static const String afterOneWeek = "After 1 week";
+  static const String afterOneMonth = "After 1 month";
+  static const String autoDelMessageDescription =
+      'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
 }

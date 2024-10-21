@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../Widget/radio_tile.dart';
 
 class AutodelMessages extends StatelessWidget {
@@ -8,54 +12,59 @@ class AutodelMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        title: Text("Auto-Delete Messages"),
+      appBar: CAppBar(
+        title: const Text(AppStrings.autoDelMessages),
+        leadingIcon: Icons.arrow_back,
+        onLeadingTap: () {
+          context.go(AppRouter.kprivacyAndSecurity);
+        },
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Center(
+          const Center(
             child: Icon(
               Icons.security,
               size: 80,
               color: Colors.orange,
             ),
           ),
-          SizedBox(height: 20),
-          Text(
-            'Self-Destruct Timer',
+          const SizedBox(height: 20),
+          const Text(
+            AppStrings.selfDestructTimer,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Column(
             children: [
               RadioTile(
-                  label: "Off", groupValue: selectedTimer.convertString()),
-              Divider(
-                thickness: 0.5,
-              ),
-              RadioTile(
-                  label: "After 1 day",
+                  label: AppStrings.off,
                   groupValue: selectedTimer.convertString()),
-              Divider(
+              const Divider(
                 thickness: 0.5,
               ),
               RadioTile(
-                  label: "After 1 day",
+                  label: AppStrings.afterOneDay,
                   groupValue: selectedTimer.convertString()),
-              Divider(
+              const Divider(
                 thickness: 0.5,
               ),
               RadioTile(
-                  label: "Off", groupValue: selectedTimer.convertString()),
+                  label: AppStrings.afterOneWeek,
+                  groupValue: selectedTimer.convertString()),
+              const Divider(
+                thickness: 0.5,
+              ),
+              RadioTile(
+                  label: AppStrings.afterOneMonth,
+                  groupValue: selectedTimer.convertString()),
             ],
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.',
             style: TextStyle(color: Colors.grey),
           ),

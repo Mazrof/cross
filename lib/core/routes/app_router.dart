@@ -10,6 +10,7 @@ import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.d
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
+import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/edit_profile.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/lastseen_online.dart';
@@ -30,19 +31,20 @@ class AppRouter {
   static const String konboarding = '/onboarding';
   static const String kverifyMail = '/verify_mail';
   static const String ksettings = '/settings';
-  static const String kprivacyAndSecurity = 'privacy_security';
-  static const String kblockedUsers = 'blocked_users';
-  static const String kprofilePhotoSecurity = 'profile_photo_security';
-  static const String keditProfile = 'edit_profile';
-  static const String klastSeenOnline = 'last_seen_online';
-  static const String kautoDeleteMessages = 'auto_delete_messages';
+  static const String kprivacyAndSecurity = '/privacy_security';
+  static const String kblockedUsers = '/blocked_users';
+  static const String kprofilePhotoSecurity = '/profile_photo_security';
+  static const String keditProfile = '/edit_profile';
+  static const String klastSeenOnline = '/last_seen_online';
+  static const String kautoDeleteMessages = '/auto_delete_messages';
+  static const String kblockUser = '/block_user';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.konboarding, routes: [
+final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.konboarding,
     builder: (context, state) {
@@ -97,10 +99,12 @@ final route = GoRouter(initialLocation: AppRouter.konboarding, routes: [
     path: AppRouter.ksettings,
     builder: (context, state) {
       return SettingsScreen(
-          screenName: "Ahmed",
-          userName: "user",
-          phoneNumber: '1234',
-          bio: "Hello");
+        screenName: "Ahmed",
+        userName: "user",
+        phoneNumber: '1234',
+        bio: "Hello",
+        status: "Online",
+      );
     },
   ),
   GoRoute(
@@ -130,7 +134,9 @@ final route = GoRouter(initialLocation: AppRouter.konboarding, routes: [
   GoRoute(
     path: AppRouter.kblockedUsers,
     builder: (context, state) {
-      return BlockedUsersScreen();
+      return BlockedUsersScreen(
+        blockedUsers: List.generate(10, (index) => 'Blocked User ${index + 1}'),
+      );
     },
   ),
   GoRoute(
@@ -139,5 +145,11 @@ final route = GoRouter(initialLocation: AppRouter.konboarding, routes: [
       return ProfilePhotoSecurityScreen(
           selectedOption: PrivacyOption.myContacts);
     },
-  )
+  ),
+  GoRoute(
+    path: AppRouter.kblockUser,
+    builder: (context, state) {
+      return BlockUserScreen();
+    },
+  ),
 ]);
