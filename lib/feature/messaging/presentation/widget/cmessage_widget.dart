@@ -26,9 +26,10 @@ class ChatMessage extends StatelessWidget {
 
       if (isSender) {
         if (ScreenHelper.isDarkMode(context) == true) {
-          backgroundColor = Color.fromARGB(255, 67, 87, 47);
-        } else
+          backgroundColor = const Color.fromARGB(255, 67, 87, 47);
+        } else {
           backgroundColor = Colors.white;
+        }
       }
 
       return backgroundColor;

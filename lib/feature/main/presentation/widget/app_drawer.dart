@@ -51,7 +51,7 @@ class AppDrawer extends StatelessWidget {
             title: 'Settings',
             onTilePressed: () {},
           ),
-          Divider(),
+          const Divider(),
           DrawerListTile(
             iconData: Icons.person_add,
             title: 'Invite Friends',
@@ -74,11 +74,11 @@ class DrawerListTile extends StatelessWidget {
   final VoidCallback onTilePressed;
 
   const DrawerListTile({
-    Key? key,
+    super.key,
     required this.iconData,
     required this.title,
     required this.onTilePressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class DrawerListTile extends StatelessWidget {
       leading: Icon(iconData),
       title: Text(
         title,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
     );
   }

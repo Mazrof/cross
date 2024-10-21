@@ -37,7 +37,7 @@ class VerifyMailScreen extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(AppSizes.padding),
+                padding: const EdgeInsets.all(AppSizes.padding),
                 child: Text(
                   AppStrings.checkYourEmail,
                   style: Theme.of(context).textTheme.titleLarge,

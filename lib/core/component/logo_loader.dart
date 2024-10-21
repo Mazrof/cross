@@ -5,7 +5,7 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class LogoLoader extends StatelessWidget {
-  const LogoLoader({Key? key, this.scale = 1}) : super(key: key);
+  const LogoLoader({super.key, this.scale = 1});
   final double scale;
 
   @override
@@ -28,7 +28,7 @@ class LogoLoader extends StatelessWidget {
                 .fadeIn(
                   duration: 2000.ms, // Duration for fading in
                 ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             AnimatedTextKit(
               animatedTexts: [
                 TypewriterAnimatedText(
