@@ -10,6 +10,7 @@ import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubi
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -44,13 +45,14 @@ class AppRouter {
   static const String kOnBoarding = '/onboarding';
   static const String kVerifyMail = '/verify_mail';
   static const String kLogoLoader = '/chat';
+  static const String kProfile = '/profile';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
   GoRoute(
     path: AppRouter.kOnBoarding,
     builder: (context, state) {
@@ -141,9 +143,16 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     },
   ),
   GoRoute(
+    path: AppRouter.kProfile,
+    builder: (context, state) {
+      return const ProfileScreen();
+    },
+  ),
+  GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
+      return const LastseenOnlineScreen(
+          selectedOption: PrivacyOption.everybody);
     },
   ),
   GoRoute(

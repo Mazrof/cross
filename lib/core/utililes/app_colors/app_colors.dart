@@ -16,6 +16,7 @@ class AppColors {
   static const Color dividerColor = Color.fromARGB(255, 143, 143, 143);
   static const Color grey = Colors.grey;
   static const Color accentColor = Color.fromARGB(255, 242, 190, 237);
+  static const Color darkGrey = Color.fromRGBO(33, 33, 33, 1);
 
   static const Color messageBackgroundColor =
       Color.fromARGB(255, 103, 110, 243);
