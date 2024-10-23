@@ -1,53 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:telegram/core/utililes/app_assets/assets_strings.dart'; // Adjust as necessary
-import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as necessary
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 
 class LogoLoader extends StatelessWidget {
-  const LogoLoader({super.key, this.scale = 1});
   final double scale;
+  final Color? color;
+  const LogoLoader({super.key, this.scale = 1, this.color});
+
+  final Curve _animationCurve = Curves.linear;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackgroundColor,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppAssetsStrings.loginLogo, // Replace with your logo path
-              width: 200 * scale,
-              height: 200 * scale,
-            )
-                .animate(
-                  autoPlay: true,
-                  onPlay: (controller) => controller.forward(), // Play once
-                )
-                .fadeIn(
-                  duration: 2000.ms, // Duration for fading in
-                ),
-            const SizedBox(height: 20),
-            AnimatedTextKit(
-              animatedTexts: [
-                TypewriterAnimatedText(
-                  'Your World is Just One Chat Away', // Replace with your slogan
-                  textStyle: TextStyle(
-                    fontSize: 24 * scale,
-                    color: AppColors.primaryColor,
-                  ),
-                  speed: const Duration(milliseconds: 100), // Speed of typing
-                ),
-              ],
-              totalRepeatCount: 1,
-              pause: const Duration(milliseconds: 0), // No pause between words
-              displayFullTextOnTap: true,
-              stopPauseOnTap: true,
-            ),
-          ],
-        ),
-      ),
+          child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Logo with vibration and rotation effect
+          Image.asset(
+            AppAssetsStrings.logoLoader, // Replace with your logo path
+            width: 200 * scale,
+            height: 200 * scale,
+          )
+              .animate(
+                autoPlay: true,
+                onPlay: (controller) =>
+                    controller.repeat(), // Repeat indefinitely
+              )
+              .moveX(
+                duration: 600.ms,
+                begin: -30 * scale,
+                end: 20 * scale,
+                curve: _animationCurve,
+              )
+              // Add slight rotation for vibration effect
+              .then(delay: 200.ms) // No delay before fading in
+              .fadeOut(
+                duration: 200.ms,
+                curve: _animationCurve,
+              )
+              .then(delay: 200.ms) // No delay before fading in
+        ],
+      )),
     );
   }
 }

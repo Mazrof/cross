@@ -2,14 +2,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/logo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/screen/on_bording_screen.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
-import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/auth/signup/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -52,6 +52,12 @@ class AppRouter {
 
 final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
+    path: AppRouter.kHome,
+    builder: (context, state) {
+      return const HomeScreen();
+    },
+  ),
+  GoRoute(
     path: AppRouter.kOnBoarding,
     builder: (context, state) {
       return BlocProvider<OnBordingCubit>(
@@ -60,13 +66,6 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       );
     },
   ),
-  GoRoute(
-      path: AppRouter.kSplash,
-      builder: (context, state) {
-        return BlocProvider<SplashCubit>.value(
-            value: sl<SplashCubit>()..checkAuthentication(),
-            child: const SplashScreen());
-      }),
   GoRoute(
     path: AppRouter.kSplash,
     builder: (context, state) {
@@ -94,14 +93,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       );
     },
   ),
-  GoRoute(
-    path: AppRouter.kSuccess,
-    builder: (context, state) => SuccessScreen(
-      title: 'You Successfully Registered',
-      subtitle: 'tap on continue to go to login in',
-      onButtonPressed: () {},
-    ),
-  ),
+
   GoRoute(
     path: AppRouter.kVerifyMail,
     builder: (context, state) {
@@ -143,7 +135,8 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
+      return const LastseenOnlineScreen(
+          selectedOption: PrivacyOption.everybody);
     },
   ),
   GoRoute(
