@@ -20,12 +20,9 @@ class LastseenOnlineScreen extends StatelessWidget {
         },
       ),
       body: ListView(padding: const EdgeInsets.all(16.0), children: [
-        const Text(
+        Text(
           AppStrings.lastSeenTitle,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 10),
         Column(

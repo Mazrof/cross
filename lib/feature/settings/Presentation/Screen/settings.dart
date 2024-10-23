@@ -79,64 +79,78 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             child: Text(
               AppStrings.account,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: AppColors.lightBlueColor,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           ListTile(
-            title: const Text(AppStrings.phoneNumber),
-            subtitle: Text(phoneNumber),
+            title: Text(
+              AppStrings.phoneNumber,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              phoneNumber,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.keditProfile);
             },
           ),
           ListTile(
-            title: const Text(AppStrings.username),
-            subtitle: Text(userName),
+            title: Text(
+              AppStrings.username,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              userName,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.keditProfile);
             },
           ),
           ListTile(
-            title: const Text(AppStrings.bio),
-            subtitle: Text(bio),
+            title: Text(
+              AppStrings.bio,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              bio,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.keditProfile);
             },
           ),
-          Container(
-            width: 10,
-            height: 10,
-            color: Colors.grey[300],
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          const Divider(),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: Text(
               AppStrings.settings,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: AppColors.lightBlueColor,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           ListTile(
             leading: const Icon(Icons.lock_outline_rounded),
-            title: const Text(AppStrings.privacyAndSecurity),
+            title: Text(
+              AppStrings.privacyAndSecurity,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             onTap: () {
               context.go(AppRouter.kprivacyAndSecurity);
             },
           ),
           ListTile(
             leading: const Icon(Icons.devices_rounded),
-            title: const Text(AppStrings.devices),
+            title: Text(
+              AppStrings.devices,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             onTap: () {},
           ),
         ],
