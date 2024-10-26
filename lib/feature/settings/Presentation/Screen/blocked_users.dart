@@ -26,7 +26,7 @@ class BlockedUsersScreen extends StatelessWidget {
             leading: const Icon(Icons.person_add_alt),
             title: const Text(
               AppStrings.blockUser,
-              style: TextStyle(color: Colors.lightBlue),
+              style: TextStyle(color: AppColors.lightBlueColor, fontSize: 18),
             ),
             onTap: () {
               context.go(AppRouter.kblockUser);
@@ -36,7 +36,10 @@ class BlockedUsersScreen extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: Text(
               AppStrings.blockDescription,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+              ),
             ),
           ),
           Padding(
@@ -51,18 +54,16 @@ class BlockedUsersScreen extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Column(
-              children: blockedUsers.map((blockedUser) {
-                return ContactListTile(
-                  imageUrl:
-                      "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
-                  contactName: blockedUser,
-                  lastMessage: "Hello",
-                );
-              }).toList(),
-              //Can use onLongtap or popupmenubutton to block user
-            ),
+          Column(
+            children: blockedUsers.map((blockedUser) {
+              return ContactListTile(
+                imageUrl:
+                    "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
+                contactName: blockedUser,
+                lastMessage: "Hello",
+              );
+            }).toList(),
+            //Can use onLongtap or popupmenubutton to block user
           ),
         ],
       ),

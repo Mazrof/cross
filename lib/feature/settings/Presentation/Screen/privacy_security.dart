@@ -13,75 +13,102 @@ class PrivacySecurityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CAppBar(
-          title: const Text(AppStrings.privacyAndSecurity),
+          title: const Text(
+            AppStrings.privacyAndSecurity,
+          ),
           leadingIcon: Icons.arrow_back,
           onLeadingTap: () {
             context.go(AppRouter.ksettings);
           }),
       body: ListView(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               AppStrings.security,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: AppColors.lightBlueColor,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           ListTile(
             leading: const Icon(Icons.timer_outlined),
-            title: const Text(AppStrings.autoDelMessages),
-            subtitle: const Text('2'),
+            title: Text(
+              AppStrings.autoDelMessages,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              '2',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.kautoDeleteMessages);
             },
           ),
           ListTile(
             leading: const Icon(Icons.back_hand_outlined),
-            title: const Text(AppStrings.blockedUsers),
-            subtitle: const Text('2'),
+            title: Text(
+              AppStrings.blockedUsers,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              '2',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.kblockedUsers);
             },
           ),
           ListTile(
             leading: const Icon(Icons.devices_rounded),
-            title: const Text(AppStrings.devices),
-            subtitle: const Text('5'),
+            title: Text(
+              AppStrings.devices,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              '5',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {},
           ),
           const Divider(),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               AppStrings.privacy,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: AppColors.lightBlueColor,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           ListTile(
-            title: const Text(AppStrings.lastSeenOnline),
-            subtitle: const Text('Everybody'),
+            title: Text(
+              AppStrings.lastSeenOnline,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              'Everybody',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.klastSeenOnline);
             },
           ),
           ListTile(
-            title: const Text(AppStrings.profilePhotos),
-            subtitle: const Text('Everybody'),
+            title: Text(
+              AppStrings.profilePhotos,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              'Everybody',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             onTap: () {
               context.go(AppRouter.kprofilePhotoSecurity);
             },
           ),
           SwitchListTile(
-            title: const Text(AppStrings.enableReadReceipts),
-            activeColor: Colors.lightBlue,
+            title: Text(
+              AppStrings.enableReadReceipts,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            activeColor: AppColors.lightBlueColor,
             value: readReceiptStatus,
             onChanged: (bool newValue) {},
           ),

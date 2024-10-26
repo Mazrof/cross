@@ -143,7 +143,8 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
+      return const LastseenOnlineScreen(
+          selectedOption: PrivacyOption.everybody);
     },
   ),
   GoRoute(
