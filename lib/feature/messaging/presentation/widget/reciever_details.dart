@@ -26,20 +26,8 @@ class RecieverDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                userName,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .apply(color: AppColors.whiteColor),
-              ),
-              Text(
-                state,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .apply(color: AppColors.whiteColor),
-              )
+              Text(userName, style: Theme.of(context).textTheme.bodyMedium!),
+              Text(state, style: Theme.of(context).textTheme.bodySmall!)
             ],
           )
         ],
