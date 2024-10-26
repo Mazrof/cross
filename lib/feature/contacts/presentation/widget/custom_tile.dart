@@ -4,7 +4,12 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 class CustomTile extends StatelessWidget {
   final String title;
   final IconData icon;
-  const CustomTile({super.key, required this.title, required this.icon});
+  final onPressed;
+  const CustomTile(
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +19,7 @@ class CustomTile extends StatelessWidget {
         color: AppColors.grey,
       ),
       title: TextButton(
+        onPressed: onPressed,
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -21,7 +27,6 @@ class CustomTile extends StatelessWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
         ),
-        onPressed: () {},
       ),
     );
   }
