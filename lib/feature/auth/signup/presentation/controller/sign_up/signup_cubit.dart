@@ -53,7 +53,13 @@ class SignUpCubit extends Cubit<SignupState> {
 
 
 void signUp() async {
-    if (formKey.currentState?.validate() ?? false) {
+    if (formKey.currentState?.validate()??false) {
+      if(state.isPrivacyPolicyAccepted==false){
+        emit(state.copyWith(
+            state: SignUpState.failure,
+            errorMessage: 'Please accept the privacy policy'));
+        return;
+      }
       if (state.state != SignUpState.loading) {
         emit(state.copyWith(state: SignUpState.loading));
         bool connection = await NetworkManager().isConnected();
@@ -81,7 +87,7 @@ void signUp() async {
   }
 
   
-  void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
+void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
     await registerUseCase.call(signUpRequestBody).then((value) async {
       value.fold((failure) {
         emit(state.copyWith(
@@ -89,7 +95,18 @@ void signUp() async {
           errorMessage: failure.message,
         ));
       }, (unit) async {
-        emit(state.copyWith(state: SignUpState.success));
+        // Call the save data use case here
+        await saveRegisterInfoUseCase
+            .call(signUpRequestBody).then((saveResult) {
+          saveResult.fold((saveFailure) {
+            emit(state.copyWith(
+              state: SignUpState.failure,
+              errorMessage: saveFailure.message,
+            ));
+          }, (saveSuccess) {
+            emit(state.copyWith(state: SignUpState.success));
+          });
+        });
       });
     });
   }

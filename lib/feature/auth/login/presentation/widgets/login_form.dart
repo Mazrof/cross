@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
@@ -97,7 +99,7 @@ class LoginForm extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, AppRoutes.forgetPassword);
+                    context.go(AppRouter.kForgetPassword);
                   },
                   child: const Text(
                     AppStrings.forgetPassword,

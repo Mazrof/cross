@@ -6,6 +6,7 @@ import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
+import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/login/data/remote_data/remote_data_source.dart';
 import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
@@ -54,6 +55,10 @@ class ServiceLocator {
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
     sl.registerLazySingleton(() => NightModeCubit(initialState: isDarkMode));
+
+    //reset password
+    sl.registerLazySingleton(() => ResetPasswordCubit());
+    
   }
 
   static void registerUseCases() {
@@ -63,6 +68,8 @@ class ServiceLocator {
     //signup
     sl.registerLazySingleton(() => RegisterUseCase(sl()));
     sl.registerLazySingleton(() => SaveRegisterInfoUseCase(sl()));
+
+    
   }
 
   static void registerRepositories() {

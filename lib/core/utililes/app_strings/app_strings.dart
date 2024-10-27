@@ -121,4 +121,15 @@ class AppStrings {
   static const String autoDelMessageDescription =
       'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
        static const String token = "token";
+
+
+  //forget password
+  static const String forgetPasswordTitle= 'Forget Password';
+  static const String forgetPasswordSubTitle = ' Enter your email to reset your password '; 
+  static const String resetPassword = 'Reset Password';
+
+  //reset password
+  static const String resetPasswordTitle = 'Reset Password';
+  static const String resetPasswordSubTitle = ' Enter Your new password and confirm it ';
+  
 }

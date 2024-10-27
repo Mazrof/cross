@@ -30,7 +30,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBackButton
           ? IconButton(
               icon: const Icon(Iconsax.arrow_left, color: AppColors.whiteColor),
-              onPressed: () {},
+              onPressed: onLeadingTap,
             )
           : leadingIcon != null
               ? IconButton(

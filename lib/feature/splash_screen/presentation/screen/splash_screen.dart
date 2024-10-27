@@ -24,7 +24,7 @@ class SplashScreen extends StatelessWidget {
             } else if (state is SplashFirstTime) {
               // Navigate to onboarding screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kOnboarding);
+                context.go(AppRouter.kOnBoarding);
               });
               return Container();
             } else if (state is SplashAuthenticated) {

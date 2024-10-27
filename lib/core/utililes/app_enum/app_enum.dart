@@ -15,3 +15,11 @@ enum SignUpState {
   failure,
 }
 
+
+
+enum ResetPasswordEnum {
+  initial,
+  loading,
+  success,
+  failure,
+}

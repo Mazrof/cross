@@ -11,6 +11,7 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/login/presentation/widgets/go_to_login.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/signup_from.dart';
 
 import '../../../../../core/utililes/app_sizes/app_sizes.dart';
@@ -20,8 +21,7 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit,SignupState>(
-        builder: (context, state) {
+    return BlocBuilder<SignUpCubit, SignupState>(builder: (context, state) {
       if (state.state == SignUpState.loading) {
         return const LogoLoader();
       } else if (state.state == SignUpState.success) {
@@ -83,7 +83,8 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSizes.spaceBetweenInputField),
                 //footer
-                const CSocialIcons()
+                const CSocialIcons(),
+                
               ],
             ),
           ),
