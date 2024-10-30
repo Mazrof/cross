@@ -11,6 +11,8 @@ import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.d
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
+import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
+import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -46,6 +48,10 @@ class AppRouter {
   static const String kVerifyMail = '/verify_mail';
   static const String kLogoLoader = '/chat';
   static const String kContacts = '/contacts';
+
+  // My Contacts Routes
+  static const String kNewChannel = '/new_channel';
+  static const String kNewGroup = '/new_group';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -131,9 +137,21 @@ final route = GoRouter(initialLocation: AppRouter.kContacts, routes: [
     },
   ),
   GoRoute(
+    path: AppRouter.kNewChannel,
+    builder: (context, state) {
+      return NewChannelScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kNewGroup,
+    builder: (context, state) {
+      return const NewGroupScreen();
+    },
+  ),
+  GoRoute(
     path: AppRouter.kContacts,
     builder: (context, state) {
-      return const ContactsScreen();
+      return ContactsScreen();
     },
   ),
   GoRoute(
