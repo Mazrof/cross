@@ -21,6 +21,8 @@ import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
 
 class AppRouter {
   static const String kLogin = '/login';
@@ -44,13 +46,15 @@ class AppRouter {
   static const String kOnBoarding = '/onboarding';
   static const String kVerifyMail = '/verify_mail';
   static const String kLogoLoader = '/chat';
+  static const String kcallLog = '/call_log';
+  static const String kvoiceCall = '/voice_call';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
   GoRoute(
     path: AppRouter.kOnBoarding,
     builder: (context, state) {
@@ -143,7 +147,8 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
+      return const LastseenOnlineScreen(
+          selectedOption: PrivacyOption.everybody);
     },
   ),
   GoRoute(
@@ -171,6 +176,24 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.kLogoLoader,
     builder: (context, state) {
       return const LogoLoader();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kcallLog,
+    builder: (context, state) {
+      return CallLogScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kvoiceCall,
+    builder: (context, state) {
+      return VoiceCallScreen(
+        isMuted: false,
+        speakerMode: false,
+        callStatus: "Waiting",
+        contactName: "Caller",
+        contactImage: "",
+      );
     },
   ),
 ]);

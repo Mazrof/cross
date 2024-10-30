@@ -50,7 +50,7 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.darkTheme,
+                  theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
