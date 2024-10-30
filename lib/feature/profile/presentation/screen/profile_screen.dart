@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/popup_menu.dart';
+import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/messaging/presentation/widget/reciever_details.dart';
 import 'package:telegram/feature/profile/presentation/widget/user_info.dart';
+import 'package:telegram/feature/profile/presentation/widget/user_media.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -14,7 +17,12 @@ class ProfileScreen extends StatelessWidget {
           SliverAppBar(
             actions: [
               IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+              const PopupMenu([
+                {'icon': Icons.edit, 'value': 'Edit'},
+                {'icon': Icons.photo_camera_back, 'value': 'Set Profile Photo'},
+                {'icon': Icons.color_lens, 'value': 'Change profile color'},
+                {'icon': Icons.person, 'value': 'Set username'},
+              ]),
             ],
             expandedHeight: 150.0,
             collapsedHeight: 80,
@@ -42,6 +50,10 @@ class ProfileScreen extends StatelessWidget {
               },
               childCount: 1,
             ),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.all(AppSizes.sm),
+            sliver: UserMedia(),
           ),
         ],
       ),
