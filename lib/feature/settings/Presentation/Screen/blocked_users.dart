@@ -54,17 +54,19 @@ class BlockedUsersScreen extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            children: blockedUsers.map((blockedUser) {
-              return ContactListTile(
-                imageUrl:
-                    "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
-                contactName: blockedUser,
-                lastMessage: "Hello",
-              );
-            }).toList(),
-            //Can use onLongtap or popupmenubutton to block user
-          ),
+          Expanded(
+            child: Column(
+              children: blockedUsers.map((blockedUser) {
+                return ContactListTile(
+                  imageUrl:
+                      "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
+                  contactName: blockedUser,
+                  subTitle: "Hello",
+                );
+              }).toList(),
+              //Can use onLongtap or popupmenubutton to block user
+            ),
+            )
         ],
       ),
     );

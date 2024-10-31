@@ -11,10 +11,18 @@ import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_b
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
+
+import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
+import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
+import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
+import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
+
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
+
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -46,6 +54,14 @@ class AppRouter {
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
   static const String kLogoLoader = '/chat';
+  
+
+  // My Contacts Routes
+  static const String kNewChannel = '/new_channel';
+  static const String kNewGroup = '/new_group';
+  static const String kContacts = '/contacts';
+
+  
   static const String kNotRobot = '/not_robot';
   static const String kblockedUsers = '/blocked_users';
   static const String ksettings = '/settings';
@@ -148,6 +164,31 @@ final route = GoRouter(initialLocation: AppRouter.kPreVerify, routes: [
     },
   ),
   GoRoute(
+    path: AppRouter.kprivacyAndSecurity,
+    builder: (context, state) {
+      return const PrivacySecurityScreen(readReceiptStatus: true);
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kNewChannel,
+    builder: (context, state) {
+      return NewChannelScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kNewGroup,
+    builder: (context, state) {
+      return const NewGroupScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kContacts,
+    builder: (context, state) {
+      return ContactsScreen();
+    },
+  ),
+  GoRoute(
+
     path: AppRouter.kautoDeleteMessages,
     builder: (context, state) {
       return const AutodelMessages(selectedTimer: AutoDelOption.oneDay);
