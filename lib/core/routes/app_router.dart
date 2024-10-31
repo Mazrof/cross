@@ -7,8 +7,8 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/screen/on_bording_screen.dart';
+import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
+import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';

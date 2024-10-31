@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/widgets/build_dot.dart';
+import 'package:telegram/feature/on_bording/presentation/widgets/build_dot.dart';
 
 class Dots extends StatelessWidget {
   const Dots({

@@ -3,8 +3,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_state.dart';
-import 'package:telegram/feature/auth/on_bording/data/models/on_bording_model.dart';
+import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_state.dart';
+import 'package:telegram/feature/on_bording/data/models/on_bording_model.dart';
 
 class OnBordingCubit extends Cubit<OnBordingState> {
   OnBordingCubit()

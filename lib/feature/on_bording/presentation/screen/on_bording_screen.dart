@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_state.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/widgets/Dots.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/widgets/onboarding_content.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/widgets/skip_next_button.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/widgets/start_button.dart';
+import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
+import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_state.dart';
+import 'package:telegram/feature/on_bording/presentation/widgets/Dots.dart';
+import 'package:telegram/feature/on_bording/presentation/widgets/onboarding_content.dart';
+import 'package:telegram/feature/on_bording/presentation/widgets/skip_next_button.dart';
+import 'package:telegram/feature/on_bording/presentation/widgets/start_button.dart';
 
 class OnBordingScreen extends StatelessWidget {
   const OnBordingScreen({super.key});

@@ -19,7 +19,7 @@ import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
-import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
+import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_up_remote_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/repositories/sign_up_repo_impl.dart';
