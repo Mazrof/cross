@@ -30,7 +30,7 @@ Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
-  //  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+   
 }
 
 class App extends StatelessWidget {

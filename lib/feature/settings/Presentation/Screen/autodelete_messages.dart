@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../Widget/radio_tile.dart';
