@@ -11,9 +11,6 @@ import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_b
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
-
-import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
