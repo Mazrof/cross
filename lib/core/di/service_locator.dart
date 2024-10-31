@@ -10,6 +10,8 @@ import 'package:telegram/feature/auth/forget_password/data/data_source/forget_pa
 import 'package:telegram/feature/auth/forget_password/data/repo/forget_password_repo_imp.dart';
 import 'package:telegram/feature/auth/forget_password/domain/repo/forget_password_repo.dart';
 import 'package:telegram/feature/auth/forget_password/domain/usecase/forget_password_use_case.dart';
+import 'package:telegram/feature/auth/forget_password/domain/usecase/log_out_use_case.dart';
+import 'package:telegram/feature/auth/forget_password/domain/usecase/reset_password_use_case.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
@@ -27,7 +29,7 @@ import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/data/data_source/verify_mail_remot_data_source.dart';
 import 'package:telegram/feature/auth/verify_mail/data/repo/verfiy_mail_imp.dart';
-import 'package:telegram/feature/auth/verify_mail/domain/base_repo/verify_mail_base_repo.dart';
+import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_repo.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
@@ -67,7 +69,8 @@ class ServiceLocator {
     sl.registerLazySingleton(() => NightModeCubit());
 
     //reset password
-    sl.registerLazySingleton(() => ResetPasswordCubit());
+    sl.registerLazySingleton(() =>
+        ResetPasswordCubit(resetPasswordUsecase: sl(), logOutUseCase: sl()));
 
     //verify mail
     sl.registerLazySingleton(() => VerifyMailCubit(
@@ -95,6 +98,12 @@ class ServiceLocator {
 
     //forget password
     sl.registerLazySingleton(() => (ForgetPasswordUseCase(sl())));
+
+    //reset password
+    sl.registerLazySingleton(() => ResetPasswordUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => LogOutUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -107,11 +116,16 @@ class ServiceLocator {
         signUpLocalDataSource: sl(), signUpRemoteDataSource: sl()));
 
     //verify mail
-    sl.registerLazySingleton<VerifyMailBaseRepository>(() => VerfiyMailImp(
-          verifyMailRemoteDataSource: sl(),
-        ));
+    sl.registerLazySingleton<VerifyMailRepository>(
+        () => VerfiyMailRepositoryImp(
+              verifyMailRemoteDataSource: sl(),
+            ));
 
     //forget password
+    sl.registerLazySingleton<ForgetPasswordRepository>(() =>
+        ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
+
+    //reset password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
   }
@@ -131,10 +145,14 @@ class ServiceLocator {
         () => SignUpLocalDataSourceImp());
 
     //verify mail
-    sl.registerLazySingleton<VerifyMailRemoteDataSource>(
-        () => VerifyMailRemoteDataSourceImp());
+    sl.registerLazySingleton<VerifyMailDataSource>(
+        () => VerifyMailDataSourceImp());
 
     //forget password
+    sl.registerLazySingleton<ForgetPasswordDataSource>(
+        () => ForgetPasswordDataSourceImp(sl()));
+
+    //reset password
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
   }

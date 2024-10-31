@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_divider.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/csocial_icons.dart';
-import 'package:telegram/core/component/logo_loader.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
@@ -22,13 +22,13 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpCubit, SignupState>(builder: (context, state) {
-      if (state.state == SignUpState.loading) {
+      if (state.state == CubitState.loading) {
         return const LogoLoader();
-      } else if (state.state == SignUpState.success) {
+      } else if (state.state == CubitState.success) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go(AppRouter.kVerifyMail);
         });
-      } else if (state.state == SignUpState.failure) {
+      } else if (state.state == CubitState.failure) {
         // show error message
         WidgetsBinding.instance.addPostFrameCallback((_) {
           CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);

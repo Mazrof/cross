@@ -56,17 +56,17 @@ void signUp() async {
     if (formKey.currentState?.validate()??false) {
       if(state.isPrivacyPolicyAccepted==false){
         emit(state.copyWith(
-            state: SignUpState.failure,
+            state: CubitState.failure,
             errorMessage: 'Please accept the privacy policy'));
         return;
       }
-      if (state.state != SignUpState.loading) {
-        emit(state.copyWith(state: SignUpState.loading));
+      if (state.state != CubitState.loading) {
+        emit(state.copyWith(state: CubitState.loading));
         bool connection = await NetworkManager().isConnected();
 
         if (!connection) {
           emit(state.copyWith(
-              state: SignUpState.failure,
+              state: CubitState.failure,
               errorMessage: 'No Internet Connection'));
           return;
         }
@@ -81,7 +81,7 @@ void signUp() async {
       }
     } else {
       emit(state.copyWith(
-          state: SignUpState.failure,
+          state: CubitState.failure,
           errorMessage: 'Please fill in all required fields'));
     }
   }
@@ -91,7 +91,7 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
     await registerUseCase.call(signUpRequestBody).then((value) async {
       value.fold((failure) {
         emit(state.copyWith(
-          state: SignUpState.failure,
+          state: CubitState.failure,
           errorMessage: failure.message,
         ));
       }, (unit) async {
@@ -100,11 +100,11 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
             .call(signUpRequestBody).then((saveResult) {
           saveResult.fold((saveFailure) {
             emit(state.copyWith(
-              state: SignUpState.failure,
+              state: CubitState.failure,
               errorMessage: saveFailure.message,
             ));
           }, (saveSuccess) {
-            emit(state.copyWith(state: SignUpState.success));
+            emit(state.copyWith(state: CubitState.success));
           });
         });
       });

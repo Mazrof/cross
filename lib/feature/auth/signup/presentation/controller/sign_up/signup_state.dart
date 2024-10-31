@@ -2,14 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 
 class SignupState extends Equatable {
-  final SignUpState state;
+  final CubitState state;
   final String? errorMessage;
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
   final bool isPrivacyPolicyAccepted;
 
   SignupState({
-    this.state = SignUpState.initial,
+    this.state = CubitState.initial,
     this.errorMessage,
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
@@ -17,7 +17,7 @@ class SignupState extends Equatable {
   });
 
   SignupState copyWith({
-    SignUpState? state,
+    CubitState? state,
     String? errorMessage,
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,

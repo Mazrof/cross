@@ -1,28 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/core/validator/app_validator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_state.dart';
 
 class VerifyMailScreen extends StatelessWidget {
-  final String email;
+  final String method;
 
-  const VerifyMailScreen({super.key, required this.email});
+  const VerifyMailScreen({super.key, required this.method});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<VerifyMailCubit, VerifyMailState>(
+        builder: (context, state) {
+      if (state.status == VerifyMailStatus.success) {
+        CSnackBar.showSuccessSnackBar(context, 'Mail Verified',
+            AppStrings.mailVerified);
+        context.go(AppRouter.kLogin);
+      } else if (state.status == VerifyMailStatus.error) {
+        CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+      } else if (state.status == VerifyMailStatus.optSent) {
+        CSnackBar.showSuccessSnackBar(context, 'Mail Sent',
+            AppStrings.codeSent);
+      } else if (state.status == VerifyMailStatus.loading) {
+        return LogoLoader();
+      }
+
+      return VerifyMailPage();
+    });
+  }
+}
+
+class VerifyMailPage extends StatelessWidget {
+  const VerifyMailPage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CAppBar(
-        onLeadingTap: () {
-          context.go(AppRouter.kLogin);
-        },
-        showBackButton: true,
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(AppSizes.padding),
         child: Center(
@@ -48,7 +74,8 @@ class VerifyMailScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               Text(
-                maskEmail(email),
+                // TODO :Get mail from user data
+                maskEmail('mariam@gmail.com'),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -83,12 +110,15 @@ class VerifyMailScreen extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {},
                   child: Text(AppStrings.resendCode,
-                      style: Theme.of(context).textTheme.bodySmall!.apply(color: AppColors.primaryColor)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .apply(color: AppColors.primaryColor)),
                 ),
               ),
             ],
           ),
-        ),  
+        ),
       ),
     );
   }
