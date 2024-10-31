@@ -10,12 +10,15 @@ class NightModeCubit extends Cubit<bool> {
     var isDarkMode = brightness == Brightness.dark;
     final isDarkModeFromCache = CacheHelper.read(key: 'isDarkMode');
     if (isDarkModeFromCache != null) {
-      isDarkMode = isDarkModeFromCache as bool;
+      isDarkMode = isDarkModeFromCache==true?true:false ;
     }
     return isDarkMode;
   }
 
-  void toggleNightMode() => emit(!state);
+  void toggleNightMode() {
+    CacheHelper.write(key: 'isDarkMode', value: !state);
+    emit(!state);
+  }
 
   void setNightMode(bool isNightMode) {
     // Save the state in local storage
