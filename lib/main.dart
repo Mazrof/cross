@@ -36,7 +36,7 @@ Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
-  //  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+   
 }
 
 class App extends StatelessWidget {
@@ -56,7 +56,7 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.darkTheme,
+                  theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,

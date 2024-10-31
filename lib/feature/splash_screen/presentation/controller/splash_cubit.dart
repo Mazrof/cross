@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:telegram/core/helper/user_status_helper.dart';
 import 'dart:async';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_state.dart';
 
@@ -28,26 +29,25 @@ class SplashCubit extends Cubit<SplashState> {
   }
 
   void checkAuthentication() async {
-    emit(SplashLoading());
-    // Mock data for authentication checks
-    bool isFirstTime = true; // Change this to false to simulate returning users
-    if (isFirstTime) {
-      emit(SplashFirstTime());
-      return;
-    }
+     emit(SplashLoading());
 
-    bool isAuthenticated =
-        false; // Change this to true to simulate authenticated users
-    if (isAuthenticated) {
-      bool isEmailVerified =
-          false; // Change this to true to simulate verified email
-      if (isEmailVerified) {
-        emit(SplashAuthenticated());
-      } else {
+    // Check user status using UserStatusHelper
+    String status = await UserStatusHelper.checkUserStatus();
+
+    switch (status) {
+      case 'onbording':
+        emit(SplashFirstTime());
+        break;
+      case 'login':
+        emit(SplashUnauthenticated());
+        break;
+      case 'verify_mail':
         emit(SplashEmailVerificationRequired());
-      }
-    } else {
-      emit(SplashUnauthenticated());
+        break;
+      default:
+        emit(SplashAuthenticated());
+        break;
     }
   }
+
 }
