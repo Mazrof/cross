@@ -2,10 +2,10 @@ import 'package:dartz/dartz.dart';
 import '../../../../../core/error/faliure.dart';
 import '../../domain/repositories/base_repo.dart';
 import '../model/login_request_model.dart';
-import '../remote_data/remote_data_source.dart';
+import '../data_source/login_data_source.dart';
 
-class LoginRepositoryImpl implements BaseLoginRepository {
-  final BaseLoginRemoteDataSource loginRemoteDataSource;
+class LoginRepositoryImpl implements LoginRepository {
+  final LoginDataSource loginRemoteDataSource;
 
   LoginRepositoryImpl({required this.loginRemoteDataSource});
 

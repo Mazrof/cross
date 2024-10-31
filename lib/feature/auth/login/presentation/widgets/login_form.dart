@@ -5,8 +5,8 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/auth/login/presentation/controller/login/login_cubit.dart';
-import 'package:telegram/feature/auth/login/presentation/controller/login/login_state.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login_state.dart';
 import 'package:telegram/core/di/service_locator.dart';
 
 class LoginForm extends StatelessWidget {

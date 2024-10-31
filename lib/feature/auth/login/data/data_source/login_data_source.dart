@@ -6,14 +6,14 @@ import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../model/login_request_model.dart';
 
-abstract class BaseLoginRemoteDataSource {
+abstract class LoginDataSource {
   Future<Unit> login({required LoginRequestBody loginModel});
 }
 
-class LoginRemoteDataSource implements BaseLoginRemoteDataSource {
+class LoginDataSourceImp implements LoginDataSource {
   final ApiService _apiService;
 
-  LoginRemoteDataSource({
+  LoginDataSourceImp({
     required ApiService apiService,
   }) : _apiService = apiService;
 
@@ -32,14 +32,13 @@ class LoginRemoteDataSource implements BaseLoginRemoteDataSource {
       },
     );
     UserAccessToken.accessToken = response.data['userDetails']['session'];
-    if(loginModel.rememberMe ?? false)
-    {
+    if (loginModel.rememberMe ?? false) {
       await CacheHelper.write(
         key: AppStrings.token,
         value: UserAccessToken.accessToken,
       );
     }
- 
+
     print('here');
     print(response.data);
     print(UserAccessToken.accessToken);

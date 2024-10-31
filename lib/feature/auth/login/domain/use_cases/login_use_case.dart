@@ -6,14 +6,14 @@ import '../../data/model/login_request_model.dart';
 import '../repositories/base_repo.dart';
 
 class LoginUseCase implements BaseUseCase<Unit, LoginRequestBody> {
-  final BaseLoginRepository loginRepository;
+  final LoginRepository loginRepository;
 
   LoginUseCase({required this.loginRepository});
 
   @override
   Future<Either<Failure, Unit>> call(LoginRequestBody loginModel) async {
     try {
-        return await loginRepository.login(loginModel: loginModel);
+      return await loginRepository.login(loginModel: loginModel);
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailure.fromDioError(e));

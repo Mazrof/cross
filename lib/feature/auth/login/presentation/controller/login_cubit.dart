@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
-import 'package:telegram/feature/auth/login/domain/use_cases/use_case.dart';
-import 'package:telegram/feature/auth/login/presentation/controller/login/login_state.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final formKey = GlobalKey<FormState>();
