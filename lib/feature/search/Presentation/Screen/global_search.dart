@@ -52,25 +52,39 @@ class GlobalSearchScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            _buildListView("Chat"),
-            _buildListView("Channel"),
-            _buildListView("Contact"),
+            ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(child: Icon(Icons.person)),
+                  title: Text('Chat Search Result'),
+                  subtitle: Text('...'),
+                );
+              },
+            ),
+            ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(child: Icon(Icons.person)),
+                  title: Text('Channel Search Result'),
+                  subtitle: Text('...'),
+                );
+              },
+            ),
+            ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(child: Icon(Icons.person)),
+                  title: Text('Contact Search Result'),
+                  subtitle: Text('...'),
+                );
+              },
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildListView(String type) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: CircleAvatar(child: Icon(Icons.person)),
-          title: Text('$type Result $index'),
-          subtitle: Text('Subtitle for $type result $index'),
-        );
-      },
     );
   }
 }
