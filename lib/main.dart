@@ -22,7 +22,13 @@ void main() async {
     }
   }
   runApp(
-    const App(),
+    DevicePreview(
+      enabled: true,
+      tools: const [
+        ...DevicePreview.defaultTools,
+      ],
+      builder: (context) => const App(),
+    ),
   );
 }
 
