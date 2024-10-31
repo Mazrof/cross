@@ -125,9 +125,7 @@ class ServiceLocator {
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
 
-    //reset password
-    sl.registerLazySingleton<ForgetPasswordRepository>(() =>
-        ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
+   
   }
 
   static void registerDataSources() {
@@ -149,10 +147,6 @@ class ServiceLocator {
         () => VerifyMailDataSourceImp());
 
     //forget password
-    sl.registerLazySingleton<ForgetPasswordDataSource>(
-        () => ForgetPasswordDataSourceImp(sl()));
-
-    //reset password
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
   }
