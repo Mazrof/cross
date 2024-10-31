@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:telegram/core/error/faliure.dart';
-import 'package:telegram/feature/auth/forget_password/data/remote_data/remote_data.dart';
+import 'package:telegram/feature/auth/forget_password/data/data_source/forget_password_data_source.dart';
 import 'package:telegram/feature/auth/forget_password/domain/repo/forget_password_repo.dart';
 
 class ForgetPasswordRepositoryImpl implements ForgetPasswordRepository {
-  ForgetPasswordRemoteDataSource forgetPasswordRemoteDataSource;
+  ForgetPasswordDataSource forgetPasswordRemoteDataSource;
 
   ForgetPasswordRepositoryImpl({required this.forgetPasswordRemoteDataSource});
 
@@ -19,9 +19,9 @@ class ForgetPasswordRepositoryImpl implements ForgetPasswordRepository {
     return forgetPasswordRemoteDataSource.resetPassword(token, newPassword);
   }
 
-  // @override
-  // Future<Either<Failure, void>> logoutFromAllDevices() {
-
-  // }
+    @override
+  Future<Either<Failure, void>> logoutFromAllDevices() async {
+    return forgetPasswordRemoteDataSource.logoutFromAllDevices();
+  }
 
 }

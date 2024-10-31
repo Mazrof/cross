@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
-import 'package:telegram/core/component/logo_loader.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -19,122 +19,134 @@ class ResetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = sl<ResetPasswordCubit>();
-    return BlocProvider.value(
-      value: controller,
-      child: BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
-        builder: (context, state) {
-          if (state.state == ResetPasswordEnum.loading) {
-            return const LogoLoader();
-          } else if (state.state == ResetPasswordEnum.success) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.go(AppRouter.kLogin);
-            });
-          } else if (state.state == ResetPasswordEnum.failure) {
-            // show error message
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              CSnackBar.showErrorSnackBar(
-                  context, 'Error', state.errorMessage!);
-            });
-          }
-          // Handle other states if necessary
-          return Scaffold(
-            appBar: AppBar(),
-            body: Padding(
+    return BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
+      builder: (context, state) {
+        if (state.state == CubitState.loading) {
+          return const LogoLoader();
+        } else if (state.state == CubitState.success) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.go(AppRouter.kLogin);
+          });
+        } else if (state.state == CubitState.failure) {
+          // show error message
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          });
+        }
+        // Handle other states if necessary
+        return ResetPasswordPage(state: state);
+      },
+    );
+  }
+}
+
+class ResetPasswordPage extends StatelessWidget {
+  const ResetPasswordPage({
+    required this.state,
+    super.key,
+  });
+  final state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSizes.padding),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
               padding: const EdgeInsets.all(AppSizes.padding),
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.padding),
-                    child: Form(
-                      key: controller.formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 8),
-                              Text(AppStrings.resetPasswordTitle,
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge),
-                              const SizedBox(height: 8),
-                            
-                            ],
-                          ),
-                          const SizedBox(height: AppSizes.xl),
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodySmall,
-                            key: controller.passwordKey,
-                            controller: controller.passwordController,
-                            obscureText: !state.isPasswordVisible,
-                            decoration: InputDecoration(
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .apply(color: AppColors.grey),
-                              hintText: AppStrings.passwordHint,
-                              labelText: AppStrings.password,
-                              prefixIcon: const Icon(Iconsax.password_check),
-                              suffixIcon: IconButton(
-                                onPressed: controller.togglePasswordVisibility,
-                                icon: Icon(state.isPasswordVisible
-                                    ? Iconsax.eye
-                                    : Iconsax.eye_slash),
-                              ),
-                            ),
-                            validator: validatePassword,
-                          ),
-                          const SizedBox(height: AppSizes.spaceBetweenInputField),
-                          TextFormField(
-                            style: Theme.of(context).textTheme.bodySmall,
-                            key: controller.confirmPasswordKey,
-                            controller: controller.confirmPasswordController,
-                            obscureText: !state.isConfirmPasswordVisible,
-                            decoration: InputDecoration(
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .apply(color: AppColors.grey),
-                              hintText: AppStrings.confirmPassword,
-                              labelText: AppStrings.confirmPassword,
-                              prefixIcon: const Icon(Iconsax.password_check),
-                              suffixIcon: IconButton(
-                                onPressed:
-                                    controller.toggleConfirmPasswordVisibility,
-                                icon: Icon(state.isConfirmPasswordVisible
-                                    ? Iconsax.eye
-                                    : Iconsax.eye_slash),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value != controller.passwordController.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (controller.formKey.currentState!.validate()) {
-                                controller.resetPassword();
-                              }
-                            },
-                            child: const Text(AppStrings.resetPassword),
-                          ),
-                        ],
-                      ),
+              child: Form(
+                key: sl<ResetPasswordCubit>().formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        Text(AppStrings.resetPasswordTitle,
+                            style: Theme.of(context).textTheme.headlineLarge),
+                        const SizedBox(height: 8),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: AppSizes.xl),
+                    TextFormField(
+                      style: Theme.of(context).textTheme.bodySmall,
+                      key: sl<ResetPasswordCubit>().passwordKey,
+                      controller: sl<ResetPasswordCubit>().passwordController,
+                      obscureText: !state.isPasswordVisible,
+                      decoration: InputDecoration(
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .apply(color: AppColors.grey),
+                        hintText: AppStrings.passwordHint,
+                        labelText: AppStrings.password,
+                        prefixIcon: const Icon(Iconsax.password_check),
+                        suffixIcon: IconButton(
+                          onPressed:
+                              sl<ResetPasswordCubit>().togglePasswordVisibility,
+                          icon: Icon(state.isPasswordVisible
+                              ? Iconsax.eye
+                              : Iconsax.eye_slash),
+                        ),
+                      ),
+                      validator: validatePassword,
+                    ),
+                    const SizedBox(height: AppSizes.spaceBetweenInputField),
+                    TextFormField(
+                      style: Theme.of(context).textTheme.bodySmall,
+                      key: sl<ResetPasswordCubit>().confirmPasswordKey,
+                      controller:
+                          sl<ResetPasswordCubit>().confirmPasswordController,
+                      obscureText: !state.isConfirmPasswordVisible,
+                      decoration: InputDecoration(
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .apply(color: AppColors.grey),
+                        hintText: AppStrings.confirmPassword,
+                        labelText: AppStrings.confirmPassword,
+                        prefixIcon: const Icon(Iconsax.password_check),
+                        suffixIcon: IconButton(
+                          onPressed: sl<ResetPasswordCubit>()
+                              .toggleConfirmPasswordVisibility,
+                          icon: Icon(state.isConfirmPasswordVisible
+                              ? Iconsax.eye
+                              : Iconsax.eye_slash),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please confirm your password';
+                        }
+                        if (value !=
+                            sl<ResetPasswordCubit>().passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (sl<ResetPasswordCubit>()
+                            .formKey
+                            .currentState!
+                            .validate()) {
+                          sl<ResetPasswordCubit>().resetPassword();
+                        }
+                      },
+                      child: const Text(AppStrings.resetPassword),
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

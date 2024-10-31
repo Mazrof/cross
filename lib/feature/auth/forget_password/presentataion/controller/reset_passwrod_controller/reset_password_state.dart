@@ -2,26 +2,23 @@ import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 
 class ResetPasswordState extends Equatable {
-  final ResetPasswordEnum state;
+  final CubitState state;
   final String? errorMessage;
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
 
-
   ResetPasswordState({
-    this.state = ResetPasswordEnum.initial,
+    this.state = CubitState.initial,
     this.errorMessage,
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
-
   });
 
   ResetPasswordState copyWith({
-    ResetPasswordEnum? state,
+    CubitState? state,
     String? errorMessage,
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,
-
   }) {
     return ResetPasswordState(
       state: state ?? this.state,
@@ -29,7 +26,6 @@ class ResetPasswordState extends Equatable {
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       isConfirmPasswordVisible:
           isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
-
     );
   }
 
@@ -39,6 +35,5 @@ class ResetPasswordState extends Equatable {
         errorMessage,
         isPasswordVisible,
         isConfirmPasswordVisible,
-
       ];
 }
