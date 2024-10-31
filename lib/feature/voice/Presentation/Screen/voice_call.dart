@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/voice/Presentation/Widget/voice_icon.dart';
 
 class VoiceCallScreen extends StatefulWidget {
@@ -98,7 +100,9 @@ class _CallScreenState extends State<VoiceCallScreen> {
                   icon: Icons.call_end_rounded,
                   label: "End Call",
                   isPressed: false,
-                  onTap: () {},
+                  onTap: () {
+                    context.go(AppRouter.kcallLog);
+                  },
                   activeColor: Colors.red,
                   inactiveColor: Colors.red,
                 )

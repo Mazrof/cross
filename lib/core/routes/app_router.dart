@@ -21,6 +21,7 @@ import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
 
@@ -48,6 +49,7 @@ class AppRouter {
   static const String kLogoLoader = '/chat';
   static const String kcallLog = '/call_log';
   static const String kvoiceCall = '/voice_call';
+  static const String kcallContact = '/call_contact';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -194,6 +196,12 @@ final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
         contactName: "Caller",
         contactImage: "",
       );
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kcallContact,
+    builder: (context, state) {
+      return CallContactScreen();
     },
   ),
 ]);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/voice/Presentation/Widget/call_log_tile_subtitle.dart';
 
 class CallLogTile extends StatelessWidget {
@@ -22,7 +24,9 @@ class CallLogTile extends StatelessWidget {
       subtitle: CallLogTileSubtitle(
           isIncoming: true, isMissed: true, callDate: "October 24 at 9:56 PM"),
       trailing: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          context.go(AppRouter.kvoiceCall);
+        },
         icon: Icon(
           Icons.call,
           color: Colors.lightBlue,
