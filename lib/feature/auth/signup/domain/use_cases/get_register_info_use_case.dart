@@ -6,17 +6,15 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
 
-
 class GetRegisterInfoUseCase
     extends BaseUseCase<SignUpBodyModel?, NoParameters> {
-  SignUpRepo signUpRepo;
+  SignUpRepository signUpRepo;
   GetRegisterInfoUseCase(
     this.signUpRepo,
   );
 
   @override
-  Future<Either<Failure, SignUpBodyModel?>> call(
-      NoParameters parameter) async {
+  Future<Either<Failure, SignUpBodyModel?>> call(NoParameters parameter) async {
     try {
       var res = signUpRepo.getRegisterInfo();
       return res;

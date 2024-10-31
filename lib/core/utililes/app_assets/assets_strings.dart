@@ -14,4 +14,7 @@ class AppAssetsStrings {
 
   //logo loader 
   static const String logoLoader = 'assets/logos/app_color.png';
+
+  //preverify
+  static const String verifyMail = 'assets/verify_mail/verify_mail.png';  
 }

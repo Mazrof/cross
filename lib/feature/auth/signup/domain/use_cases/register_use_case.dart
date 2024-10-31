@@ -5,7 +5,7 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
 
 class RegisterUseCase extends BaseUseCase<String, SignUpBodyModel> {
-  final SignUpRepo signUpRepo;
+  final SignUpRepository signUpRepo;
 
   RegisterUseCase(this.signUpRepo);
 

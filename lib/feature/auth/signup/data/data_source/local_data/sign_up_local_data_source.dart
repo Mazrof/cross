@@ -8,7 +8,7 @@ abstract class SignUpLocalDataSource {
   Future<SignUpBodyModel> getRegisterInfo();
 }
 
-class SignUpLocalDataSourceImpl extends SignUpLocalDataSource {
+class SignUpLocalDataSourceImp extends SignUpLocalDataSource {
   final String registerInfoKey = "register_info";
   @override
   Future<SignUpBodyModel> getRegisterInfo() async {

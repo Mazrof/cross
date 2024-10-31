@@ -1,17 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/logo_loader.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
-import 'package:telegram/feature/auth/login/presentation/controller/login/login_cubit.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
-import 'package:telegram/feature/auth/signup/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
+import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
@@ -34,6 +36,7 @@ class AppRouter {
   static const String kSignUp = '/sign_up';
   static const String kprivacyAndSecurity = '/privacy_security';
   static const String kVerifyMail = '/verify_mail';
+  static const String kPreVerify = '/pre_verify';
   static const String kForgetPassword = '/forget_password';
   static const String kResetPassword = '/reset';
 
@@ -52,7 +55,13 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+final route = GoRouter(initialLocation: AppRouter.kPreVerify, routes: [
+  GoRoute(
+    path: AppRouter.kPreVerify,
+    builder: (context, state) {
+      return const PreVerifyScreen();
+    },
+  ),
   GoRoute(
       path: AppRouter.kResetPassword,
       builder: (context, state) {
@@ -95,14 +104,14 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     },
   ),
   GoRoute(
-      path: AppRouter.kSignUp,
-      builder: (context, state) {
-        return BlocProvider.value(
-          value: sl<SignUpCubit>(),
-          child: const SignUpScreen(),
-        );
-      },
-    ),
+    path: AppRouter.kSignUp,
+    builder: (context, state) {
+      return BlocProvider.value(
+        value: sl<SignUpCubit>(),
+        child: const SignUpScreen(),
+      );
+    },
+  ),
   GoRoute(
     path: AppRouter.kprivacyAndSecurity,
     builder: (context, state) {
@@ -112,8 +121,12 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kVerifyMail,
     builder: (context, state) {
-      return const VerifyMailScreen(
-        email: 'mariam@gmail.com',
+      final param = state.extra as Map<String, dynamic>;
+      return BlocProvider.value(
+        value: sl<VerifyMailCubit>(), 
+        child: VerifyMailScreen(
+        method: param['method'] as String,
+        )
       );
     },
   ),

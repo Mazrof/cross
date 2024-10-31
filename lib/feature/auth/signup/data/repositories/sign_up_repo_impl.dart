@@ -5,9 +5,8 @@ import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_u
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/auth/signup/domain/entities/sign_up_entity.dart';
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
 
-class SignUpRepoImpl extends SignUpRepo {
+class SignUpRepoImpl extends SignUpRepository {
   final SignUpRemoteDataSource signUpRemoteDataSource;
   final SignUpLocalDataSource signUpLocalDataSource;
 
@@ -15,27 +14,6 @@ class SignUpRepoImpl extends SignUpRepo {
     required this.signUpRemoteDataSource,
     required this.signUpLocalDataSource,
   });
-
-  @override
-  Future<Either<Failure, Map<String, dynamic>>> sendOtp(String email) async {
-    try {
-      var data = await signUpRemoteDataSource.sendOtp(email);
-      return right(data);
-    } catch (error) {
-      return left(error as Failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Map<String, dynamic>>> verifyOtp(
-      String email, String otpCode) async {
-    try {
-      var data = await signUpRemoteDataSource.verifyOtp(email, otpCode);
-      return right(data);
-    } catch (error) {
-      return left(error as Failure);
-    }
-  }
 
   @override
   Future<Either<Failure, String>> registerSeller(

@@ -8,16 +8,7 @@ enum LoginStatusEnum {
 }
 
 
-enum SignUpState {
-  initial,
-  loading,
-  success,
-  failure,
-}
-
-
-
-enum ResetPasswordEnum {
+enum CubitState {
   initial,
   loading,
   success,

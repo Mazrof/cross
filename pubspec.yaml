@@ -102,6 +102,7 @@ flutter:
     - assets/gif/
     - assets/onbording/
     - assets/images/
+    - assets/verify_mail/
 
   fonts:
     - family: Roboto
