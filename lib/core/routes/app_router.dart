@@ -20,6 +20,7 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
+import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -51,14 +52,13 @@ class AppRouter {
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
   static const String kLogoLoader = '/chat';
-  
+  static const String kglobalSearch = '/global_search';
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
   static const String kNewGroup = '/new_group';
   static const String kContacts = '/contacts';
 
-  
   static const String kNotRobot = '/not_robot';
   static const String kblockedUsers = '/blocked_users';
   static const String ksettings = '/settings';
@@ -136,11 +136,10 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     builder: (context, state) {
       final param = state.extra as Map<String, dynamic>;
       return BlocProvider.value(
-        value: sl<VerifyMailCubit>(), 
-        child: VerifyMailScreen(
-        method: param['method'] as String,
-        )
-      );
+          value: sl<VerifyMailCubit>(),
+          child: VerifyMailScreen(
+            method: param['method'] as String,
+          ));
     },
   ),
   GoRoute(
@@ -185,7 +184,6 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     },
   ),
   GoRoute(
-
     path: AppRouter.kautoDeleteMessages,
     builder: (context, state) {
       return const AutodelMessages(selectedTimer: AutoDelOption.oneDay);
@@ -229,6 +227,12 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.kLogoLoader,
     builder: (context, state) {
       return const LogoLoader();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kglobalSearch,
+    builder: (context, state) {
+      return GlobalSearchScreen(isTyping: true);
     },
   ),
 ]);
