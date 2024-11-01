@@ -48,7 +48,6 @@ class ServiceLocator {
     registerRepositories();
     registerUseCases();
     registerCubits();
-    registerCore();
   }
 
   static void registerCubits() {
@@ -137,7 +136,7 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
-
+  }
 
   static void registerDataSources() {
     //login
@@ -161,8 +160,6 @@ class ServiceLocator {
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
   }
-
-  static void registerCore() {}
 
   static void registerSingletons() {
     sl.registerSingleton<ApiService>(ApiService());

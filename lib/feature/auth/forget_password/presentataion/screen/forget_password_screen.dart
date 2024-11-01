@@ -105,8 +105,9 @@ class ForgetPasswordPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                               sl<ForgetPasswordCubit>()
-                                  .sendResetLink();
+                              context.go(AppRouter.kResetPassword);
+
+                              //  sl<ForgetPasswordCubit>().sendResetLink();
                             },
                             child: const Text(
                               AppStrings.resetPassword,

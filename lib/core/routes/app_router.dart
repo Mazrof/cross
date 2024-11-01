@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
@@ -57,7 +58,6 @@ class AppRouter {
   static const String kLogoLoader = '/chat';
 
   static const String kglobalSearch = '/global_search';
-
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
@@ -153,7 +153,9 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
       path: AppRouter.kForgetPassword,
       builder: (context, state) {
-        return const ForgetPasswordScreen();
+        return BlocProvider.value(
+            value: sl<ForgetPasswordCubit>(),
+            child: const ForgetPasswordScreen());
       }),
   GoRoute(
     path: AppRouter.ksettings,
@@ -167,12 +169,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       );
     },
   ),
-  GoRoute(
-    path: AppRouter.kprivacyAndSecurity,
-    builder: (context, state) {
-      return const PrivacySecurityScreen(readReceiptStatus: true);
-    },
-  ),
+
   GoRoute(
     path: AppRouter.kNewChannel,
     builder: (context, state) {
@@ -237,7 +234,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return const LogoLoader();
     },
   ),
-
+  GoRoute(
     path: AppRouter.kcallLog,
     builder: (context, state) {
       return CallLogScreen();
@@ -259,10 +256,12 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.kcallContact,
     builder: (context, state) {
       return CallContactScreen();
+    },
+  ),
+  GoRoute(
     path: AppRouter.kglobalSearch,
     builder: (context, state) {
       return GlobalSearchScreen(isTyping: true);
-
     },
   ),
 ]);
