@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
 
 class SignUpCubit extends Cubit<SignupState> {
-
-  SignUpCubit({required this.registerUseCase,
-  required this.saveRegisterInfoUseCase
-  }) : super(SignupState());
+  SignUpCubit(
+      {required this.registerUseCase,
+      required this.saveRegisterInfoUseCase,
+      required this.appValidator,
+      required this.networkManager})
+      : super(SignupState());
 
   final RegisterUseCase registerUseCase;
   final SaveRegisterInfoUseCase saveRegisterInfoUseCase;
-
+  final AppValidator appValidator;
+  final NetworkManager networkManager;
 
   // Text editing controllers for form fields
   final firstNameController = TextEditingController();
@@ -36,7 +41,6 @@ class SignUpCubit extends Cubit<SignupState> {
   // Form key for validation
   final formKey = GlobalKey<FormState>();
 
-
   void togglePasswordVisibility() {
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
@@ -51,10 +55,9 @@ class SignUpCubit extends Cubit<SignupState> {
         isPrivacyPolicyAccepted: !state.isPrivacyPolicyAccepted));
   }
 
-
-void signUp() async {
-    if (formKey.currentState?.validate()??false) {
-      if(state.isPrivacyPolicyAccepted==false){
+  void signUp() async {
+    if (appValidator.isFormValid(formKey)) {
+      if (state.isPrivacyPolicyAccepted == false) {
         emit(state.copyWith(
             state: CubitState.failure,
             errorMessage: 'Please accept the privacy policy'));
@@ -62,7 +65,7 @@ void signUp() async {
       }
       if (state.state != CubitState.loading) {
         emit(state.copyWith(state: CubitState.loading));
-        bool connection = await NetworkManager().isConnected();
+        bool connection = await networkManager.isConnected();
 
         if (!connection) {
           emit(state.copyWith(
@@ -86,8 +89,7 @@ void signUp() async {
     }
   }
 
-  
-void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
+  void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
     await registerUseCase.call(signUpRequestBody).then((value) async {
       value.fold((failure) {
         emit(state.copyWith(
@@ -97,7 +99,8 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
       }, (unit) async {
         // Call the save data use case here
         await saveRegisterInfoUseCase
-            .call(signUpRequestBody).then((saveResult) {
+            .call(signUpRequestBody)
+            .then((saveResult) {
           saveResult.fold((saveFailure) {
             emit(state.copyWith(
               state: CubitState.failure,
@@ -110,7 +113,6 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
       });
     });
   }
-  
 
   @override
   Future<void> close() {

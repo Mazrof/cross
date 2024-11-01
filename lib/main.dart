@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
@@ -36,6 +37,9 @@ Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
+
+  Bloc.observer = MyBlocObserver();
+
 }
 
 class App extends StatelessWidget {

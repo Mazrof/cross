@@ -6,7 +6,7 @@ class SignupState extends Equatable {
   final String? errorMessage;
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
-  final bool isPrivacyPolicyAccepted;
+   bool isPrivacyPolicyAccepted;
 
   SignupState({
     this.state = CubitState.initial,

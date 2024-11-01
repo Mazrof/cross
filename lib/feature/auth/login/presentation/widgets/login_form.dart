@@ -21,9 +21,11 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginCubit = sl<LoginCubit>();
 
-    return Form(
+    return
+     Form(
       key: loginCubit.formKey,
-      child: Padding(
+      child:
+       Padding(
         padding: const EdgeInsets.all(AppSizes.padding),
         child: Column(
           children: [
