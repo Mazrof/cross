@@ -32,6 +32,9 @@ import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
+import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
 
 class AppRouter {
   static const String kSplash = '/splash';
@@ -52,7 +55,9 @@ class AppRouter {
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
   static const String kLogoLoader = '/chat';
+
   static const String kglobalSearch = '/global_search';
+
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
@@ -62,6 +67,9 @@ class AppRouter {
   static const String kNotRobot = '/not_robot';
   static const String kblockedUsers = '/blocked_users';
   static const String ksettings = '/settings';
+  static const String kcallLog = '/call_log';
+  static const String kvoiceCall = '/voice_call';
+  static const String kcallContact = '/call_contact';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -229,10 +237,32 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return const LogoLoader();
     },
   ),
+
+    path: AppRouter.kcallLog,
+    builder: (context, state) {
+      return CallLogScreen();
+    },
+  ),
   GoRoute(
+    path: AppRouter.kvoiceCall,
+    builder: (context, state) {
+      return VoiceCallScreen(
+        isMuted: false,
+        speakerMode: false,
+        callStatus: "Waiting",
+        contactName: "Caller",
+        contactImage: "",
+      );
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kcallContact,
+    builder: (context, state) {
+      return CallContactScreen();
     path: AppRouter.kglobalSearch,
     builder: (context, state) {
       return GlobalSearchScreen(isTyping: true);
+
     },
   ),
 ]);

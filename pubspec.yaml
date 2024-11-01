@@ -42,6 +42,7 @@ dependencies:
   json_annotation: ^4.9.0
   flutter_secure_storage: ^9.2.2
   flutter_bloc: ^8.1.6
+  animate_gradient: ^0.0.3
   go_router: ^14.2.9
   dartz: ^0.10.1
   data_format: ^0.0.4
