@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
 enum PrivacyOption { everybody, myContacts, nobody }
 
@@ -40,7 +41,11 @@ class RadioTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RadioListTile<String>(
-      title: Text(label),
+      title: Text(
+        label,
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+      activeColor: AppColors.lightBlueColor,
       value: label,
       groupValue: groupValue,
       onChanged: (value) {},

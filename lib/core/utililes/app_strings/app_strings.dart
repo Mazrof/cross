@@ -120,6 +120,35 @@ class AppStrings {
   static const String afterOneMonth = "After 1 month";
   static const String autoDelMessageDescription =
       'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
+  static const String token = "token";
+
+  //forget password
+  static const String forgetPasswordTitle = 'Forget Password';
+  static const String forgetPasswordSubTitle =
+      ' Enter your email to reset your password ';
+  static const String resetPassword = 'Reset Password';
+  static const String resetPasswordMailSent =
+      'Reset link sent to your email ,please check your email';
+
+  //reset password
+  static const String resetPasswordTitle = 'Reset Password';
+  static const String resetPasswordSubTitle =
+      ' Enter Your new password and confirm it ';
+
+  //preverify
+  static const String chooseVerifyMethodTitle = 'Choose Verify Method';
+  static const String chooseVerifyMethodSubTitle =
+      'Choose the method you want to verify your account';
+  static const String verifyByMail = 'MAIL';
+  static const String verifyByPhone = 'SMS';
+
+  //verify phone
+  static const String mailVerified = 'Your mail has been verified successfully';
+  static const String phoneVerified =
+      'Your phone has been verified successfully';
+  static const String checkYourPhone = 'Check your phone';
+  static const String codeSent =
+      'We have sent you an email with the verification code';
   static const String callLog = "Call Log";
   static const String selectContact = "Select Contact";
   static const String speaker = "Speaker";
