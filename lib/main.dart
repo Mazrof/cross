@@ -22,7 +22,13 @@ void main() async {
     }
   }
   runApp(
-    const App(),
+    DevicePreview(
+      enabled: true,
+      tools: const [
+        ...DevicePreview.defaultTools,
+      ],
+      builder: (context) => const App(),
+    ),
   );
 }
 
@@ -30,7 +36,6 @@ Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
-  //  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 }
 
 class App extends StatelessWidget {
