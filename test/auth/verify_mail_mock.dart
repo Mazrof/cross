@@ -60,6 +60,7 @@ void main() {
         await wait(500); // Wait for 500 milliseconds
       },
       expect: () => [
+        
         const VerifyMailState(status: VerifyMailStatus.loading),
         const VerifyMailState(status: VerifyMailStatus.optSent),
       ],
