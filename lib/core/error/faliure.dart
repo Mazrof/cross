@@ -17,9 +17,7 @@ class DataBaseFailure extends Failure {
 }
 
 class ServerFailure extends Failure {
-
-
-  const ServerFailure( {required super.message});
+  const ServerFailure({required super.message});
   factory ServerFailure.fromDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -58,7 +56,7 @@ class ServerFailure extends Failure {
       );
     } else if (statusCode == 401) {
       return const ServerFailure(
-         message: AppStrings.errorUnauthorized,
+        message: AppStrings.errorUnauthorized,
       );
     }
     return const ServerFailure(message: AppStrings.badResponseMessage);

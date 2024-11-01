@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:telegram/core/local/user_access_token.dart';
@@ -8,9 +7,9 @@ import '../../error/faliure.dart';
 
 class ApiService {
   static const String baseUrl = endPointDev;
-  static const String endPointPro = "https://myfakeapi.com";
-  static const String endPointDev = "https://myfakeapi.com";
-
+  static const String endPointPro = "";
+  static const String endPointDev = "";
+  
   Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -38,14 +37,16 @@ class ApiService {
   Future<Response> get({
     required String endPoint,
     String? token,
+    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
           ? {}
           : {
               'Authorization': 'Bearer $token',
+              'userType': 'seller'
             };
-
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.get(
         '$baseUrl/$endPoint',
       );
@@ -64,16 +65,18 @@ class ApiService {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        
+        log("i will call handle error in api service");
         throw _handleError(e);
       }
     }
   }
 
+
   Future<Response> post({
     required String endPoint,
     Object? data,
     String? token,
+    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -81,16 +84,14 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.post(
         '$baseUrl/$endPoint',
         data: data,
       );
-      print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        
         throw response;
       }
     } catch (e) {
@@ -106,6 +107,7 @@ class ApiService {
     required String endPoint,
     String? token,
     Map<String, dynamic>? body,
+    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -113,7 +115,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -135,6 +137,7 @@ class ApiService {
   Future<Response> delete({
     required String endPoint,
     String? token,
+    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -142,7 +145,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -164,6 +167,7 @@ class ApiService {
     required String endPoint,
     String? token,
     Object? data,
+    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -171,7 +175,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -193,14 +197,17 @@ class ApiService {
   Future<Response> getForSearch({
     required String endPoint,
     String? token,
+    bool isUserType = false,
     Map<String, dynamic>? data,
   }) async {
     try {
-      dio.options.headers =
-          token == null ? {} : {'Authorization': 'Bearer $token'};
-
-      Response response =
-          await dio.get('$baseUrl/$endPoint', queryParameters: data);
+      dio.options.headers = token == null
+          ? {}
+          : {
+              'Authorization': 'Bearer $token'
+            };
+      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+      Response response = await dio.get('$baseUrl/$endPoint', queryParameters: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -235,16 +242,13 @@ class ApiService {
         case 403:
           throw const ServerFailure(message: AppStrings.errorForbidden);
         case 404:
-          throw ServerFailure(
-              message: response['message'] ?? AppStrings.errorResource);
+          throw ServerFailure(message: response['message'] ?? AppStrings.errorResource);
         case 429:
           throw const ServerFailure(message: AppStrings.errorServer);
         case 500:
           throw const ServerFailure(message: AppStrings.errorInternal);
         default:
-          throw ServerFailure(
-              message:
-                  'Server error: ${e.response!.statusCode} ${e.response!.statusMessage}');
+          throw ServerFailure(message: 'Server error: ${e.response!.statusCode} ${e.response!.statusMessage}');
       }
     } else {
       throw const ServerFailure(message: AppStrings.errorNetwork);
