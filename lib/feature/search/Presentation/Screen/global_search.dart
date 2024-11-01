@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/search/Presentation/Widget/search_result_tile.dart';
 
 class GlobalSearchScreen extends StatelessWidget {
   final bool isTyping;
@@ -16,13 +19,15 @@ class GlobalSearchScreen extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.titleLarge!.color,
               ),
               onPressed: () {},
             ),
           ),
-          title: TextField(
+          title: const TextField(
+            maxLength: 40,
             decoration: InputDecoration(
+              counterText: "",
               hintText: 'Search...',
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -32,14 +37,14 @@ class GlobalSearchScreen extends StatelessWidget {
           actions: [
             isTyping
                 ? IconButton(
-                    icon: Icon(Icons.clear),
-                    color: Colors.black,
+                    icon: const Icon(Icons.clear),
+                    color: Theme.of(context).textTheme.titleLarge!.color,
                     onPressed: () {},
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
           bottom: TabBar(
-            tabs: [
+            tabs: const [
               Tab(text: "Chats"),
               Tab(text: "Channels"),
               Tab(text: "Contacts"),
@@ -47,40 +52,33 @@ class GlobalSearchScreen extends StatelessWidget {
             indicatorColor: Colors.blue,
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+            labelStyle: Theme.of(context).textTheme.labelMedium,
           ),
         ),
         body: TabBarView(
           children: [
             ListView.builder(
               itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Chat Search Result'),
-                  subtitle: Text('...'),
-                );
-              },
+              itemBuilder: (context, index) => const SearchResultTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                searchTitle: "Chat Result",
+                searchSubtitle: Text("Message"),
+                trailing: Text("16.04.23"),
+              ),
             ),
             ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Channel Search Result'),
-                  subtitle: Text('...'),
-                );
-              },
+              itemCount: 20,
+              itemBuilder: (context, index) => const SearchResultTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                searchTitle: "Channel Result",
+              ),
             ),
             ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Contact Search Result'),
-                  subtitle: Text('...'),
-                );
-              },
+              itemCount: 20,
+              itemBuilder: (context, index) => const SearchResultTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                searchTitle: "Contact Result",
+              ),
             ),
           ],
         ),
