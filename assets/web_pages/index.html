@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>reCAPTCHA</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </head>
+  <body style='background-color: aqua;'>
+    <div style='height: 60px;'></div>
+    <form action="?" method="POST">
+      <div class="g-recaptcha"
+        data-sitekey="6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU"
+        data-callback="captchaCallback"></div>
+
+    </form>
+    <script>
+      function captchaCallback(response){
+        //console.log(response);
+        if(typeof Captcha!=="undefined"){
+          Captcha.postMessage(response);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<!-- ستخدِم هذا المفتاح السري لإجراء الاتصال بين موقعك الإلكتروني وخدمة reCAPTCHA. -->
+<!-- 6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9 -->
+
+<!-- 
+//android 6LcjcF8qAAAAAMhZR5SmEDVO18FpjFWtIS9hgoX2
+// ios 6LcmcF8qAAAAABgf0NvTZ3O_Rp6AKdSp1vtWOICA -->
