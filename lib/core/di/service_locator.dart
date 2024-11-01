@@ -15,6 +15,7 @@ import 'package:telegram/feature/auth/forget_password/domain/usecase/log_out_use
 import 'package:telegram/feature/auth/forget_password/domain/usecase/reset_password_use_case.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
+import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
 import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
@@ -72,7 +73,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => OnBordingCubit());
 
     // night mode cubit
-    sl.registerLazySingleton(() => NightModeCubit());
+    sl.registerLazySingleton<NightModeCubit>(() => NightModeCubit());
 
     //reset password
     sl.registerLazySingleton(() => ResetPasswordCubit(
@@ -136,7 +137,7 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
-  }
+
 
   static void registerDataSources() {
     //login

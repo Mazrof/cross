@@ -120,6 +120,9 @@ class AppStrings {
   static const String afterOneMonth = "After 1 month";
   static const String autoDelMessageDescription =
       'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
+  static const String chats = "Chats";
+  static const String channels = "Channels";
+  static const String contacts = "Contacts";
   static const String token = "token";
 
   //forget password
@@ -149,4 +152,11 @@ class AppStrings {
   static const String checkYourPhone = 'Check your phone';
   static const String codeSent =
       'We have sent you an email with the verification code';
+  static const String callLog = "Call Log";
+  static const String selectContact = "Select Contact";
+  static const String speaker = "Speaker";
+  static const String mute = "Mute";
+  static const String unmute = "Unmute";
+  static const String endCall = "End Call";
+  static const String deleteAllCalls = "Delete All Calls";
 }
