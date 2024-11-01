@@ -1,10 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/voice/Presentation/Widget/voice_icon.dart';
+import 'package:animate_gradient/animate_gradient.dart';
 
-class VoiceCallScreen extends StatefulWidget {
+class VoiceCallScreen extends StatelessWidget {
   final bool isMuted;
   final bool speakerMode;
   final String callStatus;
@@ -21,40 +22,26 @@ class VoiceCallScreen extends StatefulWidget {
   });
 
   @override
-  _CallScreenState createState() => _CallScreenState();
-}
-
-class _CallScreenState extends State<VoiceCallScreen> {
-  bool _toggle = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(Duration(seconds: 4), (timer) {
-      setState(() {
-        _toggle = !_toggle;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedContainer(
-        duration: Duration(seconds: 4),
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: _toggle
-                ? [Colors.blue, Colors.purple]
-                : [Colors.purple, Colors.blue],
-            radius: 10,
-            center: Alignment.center,
-          ),
-        ),
+      body: AnimateGradient(
+        primaryColors: const [
+          Colors.purple,
+          Colors.purpleAccent,
+          Colors.grey,
+        ],
+        secondaryColors: const [
+          Colors.blue,
+          Colors.blueAccent,
+          Colors.grey,
+        ],
+        duration: const Duration(seconds: 2),
+        reverse: true,
+        animateAlignments: true,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 128.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 128.0),
               child: CircleAvatar(
                 radius: 100,
                 backgroundColor: Colors.green,
@@ -62,43 +49,41 @@ class _CallScreenState extends State<VoiceCallScreen> {
                     AssetImage('assets/images/chat_background.png'),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              widget.contactName,
-              style: TextStyle(color: Colors.white, fontSize: 24),
+              contactName,
+              style: const TextStyle(color: Colors.white, fontSize: 24),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              widget.callStatus,
-              style: TextStyle(color: Colors.white70, fontSize: 16),
+              callStatus,
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 VoiceIcon(
-                  icon: widget.speakerMode
+                  icon: speakerMode
                       ? Icons.volume_up_outlined
                       : Icons.volume_off_outlined,
-                  label: "Speaker",
-                  isPressed: !widget.speakerMode,
+                  label: AppStrings.speaker,
+                  isPressed: !speakerMode,
                   onTap: () {},
                   activeColor: Colors.white,
                   inactiveColor: Colors.white.withOpacity(0.2),
                 ),
                 VoiceIcon(
-                  icon: widget.isMuted
-                      ? Icons.mic_off_outlined
-                      : Icons.mic_outlined,
-                  label: widget.isMuted ? "Unmute" : "Mute",
-                  isPressed: widget.isMuted,
+                  icon: isMuted ? Icons.mic_off_outlined : Icons.mic_outlined,
+                  label: isMuted ? AppStrings.unmute : AppStrings.mute,
+                  isPressed: isMuted,
                   onTap: () {},
                   activeColor: Colors.white,
                   inactiveColor: Colors.white.withOpacity(0.2),
                 ),
                 VoiceIcon(
                   icon: Icons.call_end_rounded,
-                  label: "End Call",
+                  label: AppStrings.endCall,
                   isPressed: false,
                   onTap: () {
                     context.go(AppRouter.kcallLog);
@@ -108,7 +93,7 @@ class _CallScreenState extends State<VoiceCallScreen> {
                 )
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),

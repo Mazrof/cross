@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class VoiceIcon extends StatelessWidget {
   final IconData icon;
@@ -9,7 +8,7 @@ class VoiceIcon extends StatelessWidget {
   final Color activeColor;
   final Color inactiveColor;
 
-  VoiceIcon({
+  const VoiceIcon({
     super.key,
     required this.icon,
     required this.label,
@@ -40,10 +39,10 @@ class VoiceIcon extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           label,
-          style: TextStyle(fontSize: 14, color: Colors.white),
+          style: const TextStyle(fontSize: 14, color: Colors.white),
         )
       ],
     );

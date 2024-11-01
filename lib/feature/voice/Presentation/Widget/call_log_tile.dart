@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/voice/Presentation/Widget/call_log_tile_subtitle.dart';
 
 class CallLogTile extends StatelessWidget {
@@ -21,15 +21,15 @@ class CallLogTile extends StatelessWidget {
         contactName,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      subtitle: CallLogTileSubtitle(
+      subtitle: const CallLogTileSubtitle(
           isIncoming: true, isMissed: true, callDate: "October 24 at 9:56 PM"),
       trailing: IconButton(
         onPressed: () {
           context.go(AppRouter.kvoiceCall);
         },
-        icon: Icon(
+        icon: const Icon(
           Icons.call,
-          color: Colors.lightBlue,
+          color: AppColors.lightBlueColor,
         ),
       ),
     );

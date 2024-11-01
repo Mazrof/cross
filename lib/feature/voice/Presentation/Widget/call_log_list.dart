@@ -9,7 +9,7 @@ class CallLogList extends StatelessWidget {
     return ListView.builder(
         itemCount: 4,
         itemBuilder: (context, index) {
-          CallLogTile(
+          const CallLogTile(
               imageUrl:
                   "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
               contactName: "Contact");
