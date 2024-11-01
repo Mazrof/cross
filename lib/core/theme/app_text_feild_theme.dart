@@ -7,7 +7,7 @@ class TAppTextFieldTheme {
 
   static InputDecorationTheme lightTheme = InputDecorationTheme(
     errorMaxLines: 3,
-    labelStyle: const TextStyle().copyWith(color:AppColors.hintTextColor, fontSize: 14),
+    labelStyle: const TextStyle().copyWith(color:AppColors.primaryColor, fontSize: 14),
     hintStyle: const TextStyle().copyWith(color: AppColors.hintTextColor, fontSize: 14),
     errorStyle: const TextStyle().copyWith(color: Colors.red, fontSize: 12),
     floatingLabelStyle: const TextStyle()
@@ -37,7 +37,7 @@ class TAppTextFieldTheme {
   //dark theme
   static InputDecorationTheme darkTheme = InputDecorationTheme(
     errorMaxLines: 3,
-    labelStyle: const TextStyle().copyWith(color: AppColors.hintTextColor, fontSize: 14),
+    labelStyle: const TextStyle().copyWith(color: AppColors.primaryColor, fontSize: 14),
     hintStyle: const TextStyle().copyWith(color:  AppColors.hintTextColor, fontSize: 14),
     errorStyle: const TextStyle().copyWith(color: Colors.red, fontSize: 12),
     floatingLabelStyle: const TextStyle()

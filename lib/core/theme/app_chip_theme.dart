@@ -5,7 +5,7 @@ class TAppChipTheme {
   TAppChipTheme._();
   // Light Theme
   static ChipThemeData lightChipTheme = ChipThemeData(
-    disabledColor:   AppColors.grey.withOpacity(.4),
+    disabledColor:   AppColors.greyColor.withOpacity(.4),
     labelStyle: const TextStyle(
       color:  AppColors.blackColor,
     ),
@@ -17,7 +17,7 @@ class TAppChipTheme {
   // Dark Theme
 
   static ChipThemeData darkChipTheme = ChipThemeData(
-    disabledColor:AppColors.grey.withOpacity(.4),
+    disabledColor:AppColors.greyColor.withOpacity(.4),
     labelStyle: const TextStyle(
       color: AppColors.whiteColor,
     ),
