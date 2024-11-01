@@ -6,6 +6,7 @@ import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
+import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/forget_password/data/data_source/forget_password_data_source.dart';
 import 'package:telegram/feature/auth/forget_password/data/repo/forget_password_repo_imp.dart';
 import 'package:telegram/feature/auth/forget_password/domain/repo/forget_password_repo.dart';
@@ -51,13 +52,18 @@ class ServiceLocator {
 
   static void registerCubits() {
     //login
+
     sl.registerLazySingleton(() => LoginCubit(
+          appValidator: sl(),
+          networkManager: sl(),
           loginUseCase: sl(),
         ));
     //signup
     sl.registerLazySingleton(() => SignUpCubit(
           registerUseCase: sl(),
           saveRegisterInfoUseCase: sl(),
+          appValidator: sl(),
+          networkManager: sl(),
         ));
 
     //splash
@@ -69,17 +75,23 @@ class ServiceLocator {
     sl.registerLazySingleton(() => NightModeCubit());
 
     //reset password
-    sl.registerLazySingleton(() =>
-        ResetPasswordCubit(resetPasswordUsecase: sl(), logOutUseCase: sl()));
+    sl.registerLazySingleton(() => ResetPasswordCubit(
+        resetPasswordUsecase: sl(),
+        logOutUseCase: sl(),
+        networkManager: sl(),
+        appValidator: sl()));
 
     //verify mail
     sl.registerLazySingleton(() => VerifyMailCubit(
+          sl(),
           sl(),
           sl(),
         ));
 
     //forget password
     sl.registerLazySingleton(() => ForgetPasswordCubit(
+          appValidator: sl(),
+          networkManager: sl(),
           forgetPasswordUseCase: sl(),
         ));
   }
@@ -124,10 +136,6 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
-
-    //reset password
-    sl.registerLazySingleton<ForgetPasswordRepository>(() =>
-        ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
   }
 
   static void registerDataSources() {
@@ -151,10 +159,6 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
-
-    //reset password
-    sl.registerLazySingleton<ForgetPasswordDataSource>(
-        () => ForgetPasswordDataSourceImp(sl()));
   }
 
   static void registerCore() {}
@@ -168,5 +172,6 @@ class ServiceLocator {
     sl.registerLazySingleton<InternetConnectionChecker>(
         () => InternetConnectionChecker());
     sl.registerLazySingleton<NetworkManager>(() => (NetworkManager()));
+    sl.registerLazySingleton<AppValidator>(() => AppValidator());
   }
 }

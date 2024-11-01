@@ -10,7 +10,7 @@ class NightModeCubit extends Cubit<bool> {
     var isDarkMode = brightness == Brightness.dark;
     final isDarkModeFromCache = CacheHelper.read(key: 'isDarkMode');
     if (isDarkModeFromCache != null) {
-      isDarkMode = isDarkModeFromCache as bool;
+      isDarkMode = isDarkModeFromCache ==true?true:false;
     }
     return isDarkMode;
   }

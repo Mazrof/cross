@@ -99,3 +99,9 @@ bool _isValidHexCode(String code) {
     return "$maskedUsername@$emailDomain";
   }
 
+
+class AppValidator {
+  bool isFormValid(GlobalKey<FormState> formKey) {
+    return formKey.currentState?.validate() ?? false;
+  }
+}

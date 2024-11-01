@@ -55,7 +55,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kPreVerify, routes: [
+final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {

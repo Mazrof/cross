@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_state.dart';
@@ -12,17 +13,24 @@ class LoginCubit extends Cubit<LoginState> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final LoginUseCase loginUseCase;
+  final NetworkManager networkManager;
+  final AppValidator appValidator;
 
-  LoginCubit({required this.loginUseCase}) : super(const LoginState());
+  LoginCubit({
+    required this.appValidator,
+    required this.networkManager, required this.loginUseCase})
+      : super(const LoginState());
 
   Timer? _timer;
   final Duration timerDuration = const Duration(seconds: 1);
 
   void login() async {
-    if (formKey.currentState?.validate() ?? false) {
+    if (appValidator.isFormValid(formKey)) {
       if (state.remainingAttempts > 0) {
+        print(' hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         emit(state.copyWith(state: LoginStatusEnum.loading));
-        bool conncection = await NetworkManager().isConnected();
+        bool conncection = await networkManager.isConnected();
+        print('i am here ');
 
         if (!conncection) {
           emit(state.copyWith(
