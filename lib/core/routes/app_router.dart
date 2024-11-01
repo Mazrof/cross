@@ -20,6 +20,7 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
+import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -54,6 +55,9 @@ class AppRouter {
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
   static const String kLogoLoader = '/chat';
+
+  static const String kglobalSearch = '/global_search';
+
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
@@ -233,7 +237,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return const LogoLoader();
     },
   ),
-  GoRoute(
+
     path: AppRouter.kcallLog,
     builder: (context, state) {
       return CallLogScreen();
@@ -255,6 +259,10 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.kcallContact,
     builder: (context, state) {
       return CallContactScreen();
+    path: AppRouter.kglobalSearch,
+    builder: (context, state) {
+      return GlobalSearchScreen(isTyping: true);
+
     },
   ),
 ]);
