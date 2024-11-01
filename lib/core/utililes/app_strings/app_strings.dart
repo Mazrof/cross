@@ -120,4 +120,7 @@ class AppStrings {
   static const String afterOneMonth = "After 1 month";
   static const String autoDelMessageDescription =
       'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
+  static const String chats = "Chats";
+  static const String channels = "Channels";
+  static const String contacts = "Contacts";
 }
