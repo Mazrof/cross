@@ -21,9 +21,18 @@ jobs:
         with:
           channel: stable
           version: 3.24.4
+          
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          
+      - name: Java Home
+        run: echo $JAVA_HOME
       
       - name: Install dependencies
         run: flutter pub get
+        
       - name: Run Tests
         run: flutter test
         
