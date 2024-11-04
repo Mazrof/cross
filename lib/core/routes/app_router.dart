@@ -12,6 +12,11 @@ import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_b
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
+
+import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
+import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
+
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
@@ -22,6 +27,7 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mai
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
+
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -56,6 +62,7 @@ class AppRouter {
   static const String kautoDeleteMessages = '/auto_delete_messages';
   static const String kblockUser = '/block_user';
   static const String kLogoLoader = '/chat';
+  static const String kProfile = '/profile';
 
   static const String kglobalSearch = '/global_search';
 
@@ -76,7 +83,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -198,6 +205,12 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.keditProfile,
     builder: (context, state) {
       return const EditProfileScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kProfile,
+    builder: (context, state) {
+      return const ProfileScreen();
     },
   ),
   GoRoute(
