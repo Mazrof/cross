@@ -37,7 +37,7 @@ dependencies:
   get_it: ^8.0.0
   dio: ^5.7.0
   equatable: ^2.0.5
-  lottie: ^3.1.2
+  lottie: ^3.0.0
   internet_connection_checker: ^1.0.0+1
   json_annotation: ^4.9.0
   flutter_secure_storage: ^9.2.2
@@ -61,6 +61,9 @@ dependencies:
 
   intl_phone_number_input: ^0.7.4
 
+  google_sign_in: ^6.2.1
+  github_sign_in_plus: ^0.0.2
+
   http: any
   bloc: any
   flutter_animate: ^4.5.0
@@ -72,9 +75,8 @@ dependencies:
   flutter_test:
     sdk: flutter
   # webview_flutter_plus: ^0.3.0
- 
-dev_dependencies:
 
+dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

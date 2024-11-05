@@ -20,6 +20,8 @@ import 'package:telegram/feature/auth/login/data/data_source/login_data_source.d
 import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_github_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
@@ -54,6 +56,8 @@ class ServiceLocator {
     //login
 
     sl.registerLazySingleton(() => LoginCubit(
+          loginWithGoogleUseCase: sl(),
+          loginWithGithubUseCase: sl(),
           appValidator: sl(),
           networkManager: sl(),
           loginUseCase: sl(),
@@ -99,6 +103,10 @@ class ServiceLocator {
   static void registerUseCases() {
     //login
     sl.registerLazySingleton(() => LoginUseCase(loginRepository: sl()));
+    sl.registerLazySingleton(
+        () => LoginWithGoogleUseCase(loginRepository: sl()));
+    sl.registerLazySingleton(
+        () => LoginWithGithubUseCase(loginRepository: sl()));
 
     //signup
     sl.registerLazySingleton(() => RegisterUseCase(sl()));
