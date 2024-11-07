@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:telegram/core/error/internet_check.dart';
@@ -15,12 +14,12 @@ import 'package:telegram/feature/auth/forget_password/domain/usecase/log_out_use
 import 'package:telegram/feature/auth/forget_password/domain/usecase/reset_password_use_case.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
-import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
 import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_up_remote_data_source.dart';
@@ -28,7 +27,7 @@ import 'package:telegram/feature/auth/signup/data/repositories/sign_up_repo_impl
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/data/data_source/verify_mail_remot_data_source.dart';
 import 'package:telegram/feature/auth/verify_mail/data/repo/verfiy_mail_imp.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_repo.dart';
@@ -64,6 +63,7 @@ class ServiceLocator {
           saveRegisterInfoUseCase: sl(),
           appValidator: sl(),
           networkManager: sl(),
+          recaptchaService: sl(),
         ));
 
     //splash
@@ -162,6 +162,7 @@ class ServiceLocator {
   }
 
   static void registerSingletons() {
+    sl.registerLazySingleton(() => RecaptchaService());
     sl.registerSingleton<ApiService>(ApiService());
     sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<NetworkInfo>(

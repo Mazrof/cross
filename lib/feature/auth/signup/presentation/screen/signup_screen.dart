@@ -9,9 +9,8 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/login/presentation/widgets/go_to_login.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
-import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/signup_from.dart';
 
 import '../../../../../core/utililes/app_sizes/app_sizes.dart';

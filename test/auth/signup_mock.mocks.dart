@@ -9,6 +9,7 @@ import 'package:connectivity_plus/connectivity_plus.dart' as _i10;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:flutter/material.dart' as _i12;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i14;
 import 'package:telegram/core/error/faliure.dart' as _i6;
 import 'package:telegram/core/network/network_manager.dart' as _i9;
 import 'package:telegram/core/validator/app_validator.dart' as _i11;
@@ -20,6 +21,8 @@ import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.
     as _i5;
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart'
     as _i8;
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart'
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -238,4 +241,49 @@ class MockAppValidator extends _i1.Mock implements _i11.AppValidator {
         ),
         returnValue: false,
       ) as bool);
+}
+
+/// A class which mocks [RecaptchaService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockRecaptchaService extends _i1.Mock implements _i13.RecaptchaService {
+  MockRecaptchaService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get siteKey => (super.noSuchMethod(
+        Invocation.getter(#siteKey),
+        returnValue: _i14.dummyValue<String>(
+          this,
+          Invocation.getter(#siteKey),
+        ),
+      ) as String);
+
+  @override
+  _i4.Future<bool> initialize() => (super.noSuchMethod(
+        Invocation.method(
+          #initialize,
+          [],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<String?> executeRecaptcha(String? action) => (super.noSuchMethod(
+        Invocation.method(
+          #executeRecaptcha,
+          [action],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
+
+  @override
+  _i4.Future<String?> handleRecaptcha() => (super.noSuchMethod(
+        Invocation.method(
+          #handleRecaptcha,
+          [],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
 }

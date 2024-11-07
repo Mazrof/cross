@@ -7,13 +7,15 @@ import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 
 class SignUpCubit extends Cubit<SignupState> {
   SignUpCubit(
       {required this.registerUseCase,
       required this.saveRegisterInfoUseCase,
       required this.appValidator,
+      required this.recaptchaService,
       required this.networkManager})
       : super(SignupState());
 
@@ -21,6 +23,7 @@ class SignUpCubit extends Cubit<SignupState> {
   final SaveRegisterInfoUseCase saveRegisterInfoUseCase;
   final AppValidator appValidator;
   final NetworkManager networkManager;
+  final RecaptchaService recaptchaService;
 
   // Text editing controllers for form fields
   final firstNameController = TextEditingController();
@@ -56,11 +59,12 @@ class SignUpCubit extends Cubit<SignupState> {
   }
 
   void signUp() async {
-    if (appValidator.isFormValid(formKey)) {
+    if (appValidator.isFormValid(formKey) ?? false) {
       if (state.isPrivacyPolicyAccepted == false) {
         emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'Please accept the privacy policy'));
+          state: CubitState.failure,
+          errorMessage: 'Please accept the privacy policy',
+        ));
         return;
       }
       if (state.state != CubitState.loading) {
@@ -69,23 +73,34 @@ class SignUpCubit extends Cubit<SignupState> {
 
         if (!connection) {
           emit(state.copyWith(
-              state: CubitState.failure,
-              errorMessage: 'No Internet Connection'));
+            state: CubitState.failure,
+            errorMessage: 'No Internet Connection',
+          ));
           return;
         }
 
-        emitSignUpStates(SignUpBodyModel(
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
-          email: emailController.text.trim(),
-          phone: phoneController.text.trim(),
-          password: passwordController.text.trim(),
-        ));
+        final recaptchaToken = await recaptchaService.handleRecaptcha();
+        if (recaptchaToken != null) {
+          emitSignUpStates(SignUpBodyModel(
+            firstName: firstNameController.text.trim(),
+            lastName: lastNameController.text.trim(),
+            email: emailController.text.trim(),
+            phone: phoneController.text.trim(),
+            password: passwordController.text.trim(),
+            recaptchaToken: recaptchaToken,
+          ));
+        } else {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+        }
       }
     } else {
       emit(state.copyWith(
-          state: CubitState.failure,
-          errorMessage: 'Please fill in all required fields'));
+        state: CubitState.failure,
+        errorMessage: 'Please fill in all required fields',
+      ));
     }
   }
 
@@ -113,6 +128,7 @@ class SignUpCubit extends Cubit<SignupState> {
       });
     });
   }
+
 
   @override
   Future<void> close() {

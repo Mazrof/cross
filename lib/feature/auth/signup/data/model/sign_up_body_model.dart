@@ -6,6 +6,7 @@ class SignUpBodyModel extends SignUpEntity {
   final String phone;
   final String email;
   final String password;
+  final String recaptchaToken;
 
   SignUpBodyModel({
     required this.firstName,
@@ -13,12 +14,15 @@ class SignUpBodyModel extends SignUpEntity {
     required this.phone,
     required this.email,
     required this.password,
+    required this.recaptchaToken,
   }) : super(
-            firstName: firstName,
-            lastName: lastName,
-            phone: phone,
-            email: email,
-            password: password);
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          email: email,
+          password: password,
+          recaptchaToken: recaptchaToken,
+        );
 
   Map<String, dynamic> toJson() {
     final body = {
@@ -27,6 +31,7 @@ class SignUpBodyModel extends SignUpEntity {
       'primary_mobile': phone,
       'email': email,
       'password': password,
+      'recaptcha_token': recaptchaToken,
     };
     return body;
   }
@@ -38,16 +43,17 @@ class SignUpBodyModel extends SignUpEntity {
       phone: entity.phone,
       email: entity.email,
       password: entity.password,
+      recaptchaToken: entity.recaptchaToken,
     );
   }
-  static empty()
-  {
+  static empty() {
     return SignUpBodyModel(
       firstName: '',
       lastName: '',
       phone: '',
       email: '',
       password: '',
+      recaptchaToken: '',
     );
   }
 }
