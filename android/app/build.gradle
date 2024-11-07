@@ -9,6 +9,8 @@ android {
     namespace = "com.example.telegram"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    namespace 'com.example.telegram'
+    namespace 'io.flutter.plugins.webviewflutter'
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

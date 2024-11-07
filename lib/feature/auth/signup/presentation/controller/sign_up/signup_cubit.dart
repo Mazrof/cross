@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 
 class SignUpCubit extends Cubit<SignupState> {
-
-  SignUpCubit({required this.registerUseCase,
-  required this.saveRegisterInfoUseCase
+  SignUpCubit({
+    required this.registerUseCase,
+    required this.saveRegisterInfoUseCase,
   }) : super(SignupState());
 
   final RegisterUseCase registerUseCase;
   final SaveRegisterInfoUseCase saveRegisterInfoUseCase;
 
-
-  // Text editing controllers for form fields
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -25,7 +25,6 @@ class SignUpCubit extends Cubit<SignupState> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Create unique GlobalKeys for each TextFormField
   final firstNameKey = GlobalKey<FormFieldState>();
   final lastNameKey = GlobalKey<FormFieldState>();
   final emailKey = GlobalKey<FormFieldState>();
@@ -33,9 +32,7 @@ class SignUpCubit extends Cubit<SignupState> {
   final passwordKey = GlobalKey<FormFieldState>();
   final confirmPasswordKey = GlobalKey<FormFieldState>();
 
-  // Form key for validation
   final formKey = GlobalKey<FormState>();
-
 
   void togglePasswordVisibility() {
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
@@ -51,13 +48,13 @@ class SignUpCubit extends Cubit<SignupState> {
         isPrivacyPolicyAccepted: !state.isPrivacyPolicyAccepted));
   }
 
-
-void signUp() async {
-    if (formKey.currentState?.validate()??false) {
-      if(state.isPrivacyPolicyAccepted==false){
+  void signUp() async {
+    if (formKey.currentState?.validate() ?? false) {
+      if (state.isPrivacyPolicyAccepted == false) {
         emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'Please accept the privacy policy'));
+          state: CubitState.failure,
+          errorMessage: 'Please accept the privacy policy',
+        ));
         return;
       }
       if (state.state != CubitState.loading) {
@@ -66,28 +63,38 @@ void signUp() async {
 
         if (!connection) {
           emit(state.copyWith(
-              state: CubitState.failure,
-              errorMessage: 'No Internet Connection'));
+            state: CubitState.failure,
+            errorMessage: 'No Internet Connection',
+          ));
           return;
         }
 
-        emitSignUpStates(SignUpBodyModel(
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
-          email: emailController.text.trim(),
-          phone: phoneController.text.trim(),
-          password: passwordController.text.trim(),
-        ));
+        final recaptchaToken = await handleRecaptcha();
+        if (recaptchaToken != null) {
+          emitSignUpStates(SignUpBodyModel(
+            firstName: firstNameController.text.trim(),
+            lastName: lastNameController.text.trim(),
+            email: emailController.text.trim(),
+            phone: phoneController.text.trim(),
+            password: passwordController.text.trim(),
+            recaptchaToken: recaptchaToken,
+          ));
+        } else {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+        }
       }
     } else {
       emit(state.copyWith(
-          state: CubitState.failure,
-          errorMessage: 'Please fill in all required fields'));
+        state: CubitState.failure,
+        errorMessage: 'Please fill in all required fields',
+      ));
     }
   }
 
-  
-void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
+  void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
     await registerUseCase.call(signUpRequestBody).then((value) async {
       value.fold((failure) {
         emit(state.copyWith(
@@ -95,9 +102,9 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
           errorMessage: failure.message,
         ));
       }, (unit) async {
-        // Call the save data use case here
         await saveRegisterInfoUseCase
-            .call(signUpRequestBody).then((saveResult) {
+            .call(signUpRequestBody)
+            .then((saveResult) {
           saveResult.fold((saveFailure) {
             emit(state.copyWith(
               state: CubitState.failure,
@@ -110,7 +117,30 @@ void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
       });
     });
   }
-  
+Future<String?> handleRecaptcha() async {
+    final recaptchaService =
+        RecaptchaService(siteKey: "6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9");
+    bool isRecaptchaReady = await recaptchaService.initialize();
+
+    if (!isRecaptchaReady) {
+      emit(state.copyWith(
+        state: CubitState.failure,
+        errorMessage: 'reCAPTCHA initialization failed.',
+      ));
+      return null;
+    }
+
+    String? token = await recaptchaService.executeRecaptcha("signup_action");
+    if (token != null) {
+      return token;
+    } else {
+      emit(state.copyWith(
+        state: CubitState.failure,
+        errorMessage: 'reCAPTCHA token retrieval failed.',
+      ));
+      return null;
+    }
+  }
 
   @override
   Future<void> close() {
