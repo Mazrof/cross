@@ -30,8 +30,6 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(sl<NightModeCubit>().state);
-
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         return Scaffold(

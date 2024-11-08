@@ -1,4 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
@@ -17,11 +20,28 @@ class ChatCubit extends Cubit<ChatState> {
           ),
         );
 
-  // // Update the current page index
-  // void updateCurrentPage(int val) {
-  //   emit();
-  // }
+  // Update the current page index
+  Future<dynamic> getMessages() async {
+    Dio dio = sl<Dio>();
+
+    List<Message> response = [];
+
+    try {
+      // emit(const ChatLoading());
+      // final response = await dio.get('${AppStrings.serverUrl}/messages');
+
+      print(response);
+
+      // emit(ChatLoaded(['Message 1', 'Message 2', 'Message 3']));
+    } catch (e) {
+      print(e);
+      // emit(ChatError('Failed to fetch messages'));
+    }
+
+    return response;
+  }
 }
+
 
 
 // OnBordingState(
