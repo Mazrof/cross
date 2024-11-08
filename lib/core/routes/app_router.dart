@@ -10,7 +10,7 @@ import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubi
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
-import 'package:telegram/feature/messaging/presentation/screen/messaging_screen.dart';
+import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
@@ -46,140 +46,142 @@ class AppRouter {
   static const String kVerifyMail = '/verify_mail';
   static const String kLogoLoader = '/chat';
 
-
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
-
-final route = GoRouter(initialLocation: AppRouter.kSplash,
-routes: [
-  GoRoute(path: AppRouter.kOnBoarding,
-    builder: (context, state) {
-      return BlocProvider<OnBordingCubit>(
-        create: (context) => sl<OnBordingCubit>(),
-        child: const OnBordingScreen(),
-      );
-    },
-  ),
-
-  GoRoute(
-      path: AppRouter.kSPlash,
+final route = GoRouter(
+  initialLocation: AppRouter.kMessaging,
+  routes: [
+    GoRoute(
+      path: AppRouter.kOnBoarding,
       builder: (context, state) {
-        return BlocProvider<SplashCubit>.value(
-            value: sl<SplashCubit>()..checkAuthentication(),
-            child: const SplashScreen());
-      }),
-   GoRoute(
-    path: AppRouter.kSplash,
-    builder: (context, state) {
-      return BlocProvider(
-        create: (context) => SplashCubit()
-          ..startAnimation(),
-        child: const SplashScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kLogin,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<LoginCubit>(),
-        child: LoginScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kSignUp,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<SignUpCubit>(),
-        child: SignUpScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kSuccess,
-    builder: (context, state) => SuccessScreen(
-      title: 'You Successfully Registered',
-      subtitle: 'tap on continue to go to login in',
-      onButtonPressed: () {},
+        return BlocProvider<OnBordingCubit>(
+          create: (context) => sl<OnBordingCubit>(),
+          child: const OnBordingScreen(),
+        );
+      },
     ),
-  ),
-
-  GoRoute(path: AppRouter.kVerifyMail,
-
-    builder: (context, state) {
-      return VerifyMailScreen(
-        email: 'mariam@gmail.com',
-      );
-    },
-  ),
-
-  GoRoute(
-    path: AppRouter.ksettings,
-    builder: (context, state) {
-      return SettingsScreen(
-        screenName: "Ahmed",
-        userName: "user",
-        phoneNumber: '1234',
-        bio: "Hello",
-        status: "Online",
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kprivacyAndSecurity,
-    builder: (context, state) {
-      return PrivacySecurityScreen(readReceiptStatus: true);
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kautoDeleteMessages,
-    builder: (context, state) {
-      return AutodelMessages(selectedTimer: AutoDelOption.oneDay);
-    },
-  ),
-  GoRoute(
-    path: AppRouter.keditProfile,
-    builder: (context, state) {
-      return EditProfileScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.klastSeenOnline,
-    builder: (context, state) {
-      return LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kblockedUsers,
-    builder: (context, state) {
-      return BlockedUsersScreen(
-        blockedUsers: List.generate(10, (index) => 'Blocked User ${index + 1}'),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kprofilePhotoSecurity,
-    builder: (context, state) {
-      return ProfilePhotoSecurityScreen(
-          selectedOption: PrivacyOption.myContacts);
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kblockUser,
-    builder: (context, state) {
-      return BlockUserScreen();
-    },
-  ),
-    path: AppRouter.kLogoLoader,
-    builder: (context, state) {
-      return const LogoLoader();
-    },
-  ),
-
-
-]);
+    GoRoute(
+        path: AppRouter.kSplash,
+        builder: (context, state) {
+          return BlocProvider<SplashCubit>.value(
+              value: sl<SplashCubit>()..checkAuthentication(),
+              child: const SplashScreen());
+        }),
+    GoRoute(
+      path: AppRouter.kSplash,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) => SplashCubit()..startAnimation(),
+          child: const SplashScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kLogin,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<LoginCubit>(),
+          child: const LoginScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kSignUp,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<SignUpCubit>(),
+          child: const SignUpScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kSuccess,
+      builder: (context, state) => SuccessScreen(
+        title: 'You Successfully Registered',
+        subtitle: 'tap on continue to go to login in',
+        onButtonPressed: () {},
+      ),
+    ),
+    GoRoute(
+      path: AppRouter.kVerifyMail,
+      builder: (context, state) {
+        return const VerifyMailScreen(
+          email: 'mariam@gmail.com',
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.ksettings,
+      builder: (context, state) {
+        return const SettingsScreen(
+          screenName: "Ahmed",
+          userName: "user",
+          phoneNumber: '1234',
+          bio: "Hello",
+          status: "Online",
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kprivacyAndSecurity,
+      builder: (context, state) {
+        return const PrivacySecurityScreen(readReceiptStatus: true);
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kautoDeleteMessages,
+      builder: (context, state) {
+        return AutodelMessages(selectedTimer: AutoDelOption.oneDay);
+      },
+    ),
+    GoRoute(
+      path: AppRouter.keditProfile,
+      builder: (context, state) {
+        return EditProfileScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.klastSeenOnline,
+      builder: (context, state) {
+        return LastseenOnlineScreen(selectedOption: PrivacyOption.everybody);
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kblockedUsers,
+      builder: (context, state) {
+        return BlockedUsersScreen(
+          blockedUsers:
+              List.generate(10, (index) => 'Blocked User ${index + 1}'),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kprofilePhotoSecurity,
+      builder: (context, state) {
+        return const ProfilePhotoSecurityScreen(
+            selectedOption: PrivacyOption.myContacts);
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kblockUser,
+      builder: (context, state) {
+        return BlockUserScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kLogoLoader,
+      builder: (context, state) {
+        return const LogoLoader();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kMessaging,
+      builder: (context, state) {
+        return ChatScreen();
+      },
+    ),
+  ],
+);

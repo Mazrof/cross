@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/feature/messaging/presentation/Data/Model/message.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cmessage_widget.dart';
 import 'package:telegram/feature/messaging/presentation/widget/message_date.dart';
 

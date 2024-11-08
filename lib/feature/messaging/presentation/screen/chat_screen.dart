@@ -3,7 +3,7 @@ import 'package:telegram/core/component/cnight_mode_switch.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/messaging/presentation/Data/Model/message.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cinput_bar.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/avatar.dart';
@@ -12,8 +12,8 @@ import 'package:telegram/feature/messaging/presentation/widget/reciever_details.
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
-class MessagingScreen extends StatelessWidget {
-  MessagingScreen({super.key});
+class ChatScreen extends StatelessWidget {
+  ChatScreen({super.key});
 
   final List<Message> messages = [
     Message(

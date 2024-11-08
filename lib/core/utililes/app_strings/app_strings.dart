@@ -82,6 +82,8 @@ class AppStrings {
 
   //messaging
   static const String waitingInternet = 'Waiting for Internet';
+  static const String serverUrl = 'https://your_socket_server_url';
+
   //settings
   static const String privacyAndSecurity = "Privacy And Security";
   static const String security = "Security";
