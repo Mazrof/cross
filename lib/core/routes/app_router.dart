@@ -10,6 +10,7 @@ import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubi
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
 import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
@@ -85,6 +86,15 @@ final route = GoRouter(
         return BlocProvider.value(
           value: sl<LoginCubit>(),
           child: const LoginScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kMessaging,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<ChatCubit>(),
+          child: ChatScreen(),
         );
       },
     ),
@@ -175,12 +185,6 @@ final route = GoRouter(
       path: AppRouter.kLogoLoader,
       builder: (context, state) {
         return const LogoLoader();
-      },
-    ),
-    GoRoute(
-      path: AppRouter.kMessaging,
-      builder: (context, state) {
-        return ChatScreen();
       },
     ),
   ],

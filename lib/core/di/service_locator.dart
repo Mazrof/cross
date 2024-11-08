@@ -9,6 +9,7 @@ import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -30,6 +31,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => SignUpCubit());
     sl.registerLazySingleton(() => SplashCubit());
     sl.registerLazySingleton(() => OnBordingCubit());
+    sl.registerLazySingleton(() => ChatCubit());
 
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
