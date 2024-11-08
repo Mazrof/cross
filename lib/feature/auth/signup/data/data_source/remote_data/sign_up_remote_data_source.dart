@@ -8,6 +8,7 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
 
 abstract class SignUpRemoteDataSource {
   Future<Response> register(SignUpBodyModel signUpBodyModel);
+  Future<bool> checkRecaptchaToken(String recaptchaToken);
 }
 
 class SignUpRemoteDataSourceImp extends SignUpRemoteDataSource {
@@ -35,5 +36,12 @@ class SignUpRemoteDataSourceImp extends SignUpRemoteDataSource {
       value: UserAccessToken.accessToken,
     );
     return response;
+  }
+
+  @override
+  Future<bool> checkRecaptchaToken(String recaptchaToken) async {
+  
+    
+    return  apiService.verifyToken(recaptchaToken);
   }
 }

@@ -5,6 +5,7 @@ import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
+import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
@@ -16,6 +17,7 @@ class SignUpCubit extends Cubit<SignupState> {
       required this.saveRegisterInfoUseCase,
       required this.appValidator,
       required this.recaptchaService,
+      required this.checkRecaptchaTocken,
       required this.networkManager})
       : super(SignupState());
 
@@ -24,6 +26,7 @@ class SignUpCubit extends Cubit<SignupState> {
   final AppValidator appValidator;
   final NetworkManager networkManager;
   final RecaptchaService recaptchaService;
+  final CheckRecaptchaTocken checkRecaptchaTocken;
 
   // Text editing controllers for form fields
   final firstNameController = TextEditingController();
@@ -80,21 +83,29 @@ class SignUpCubit extends Cubit<SignupState> {
         }
 
         final recaptchaToken = await recaptchaService.handleRecaptcha();
-        if (recaptchaToken != null) {
-          emitSignUpStates(SignUpBodyModel(
-            firstName: firstNameController.text.trim(),
-            lastName: lastNameController.text.trim(),
-            email: emailController.text.trim(),
-            phone: phoneController.text.trim(),
-            password: passwordController.text.trim(),
-            recaptchaToken: recaptchaToken,
-          ));
-        } else {
+        if (recaptchaToken == null) {
           emit(state.copyWith(
             state: CubitState.failure,
             errorMessage: 'reCAPTCHA verification failed.',
           ));
+          return;
         }
+        final response = await checkRecaptchaTocken.call(recaptchaToken!);
+        if (response.isLeft() || response.isRight() == false ) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+          return;
+        }
+
+        emitSignUpStates(SignUpBodyModel(
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          email: emailController.text.trim(),
+          phone: phoneController.text.trim(),
+          password: passwordController.text.trim(),
+        ));
       }
     } else {
       emit(state.copyWith(
@@ -128,7 +139,6 @@ class SignUpCubit extends Cubit<SignupState> {
       });
     });
   }
-
 
   @override
   Future<void> close() {

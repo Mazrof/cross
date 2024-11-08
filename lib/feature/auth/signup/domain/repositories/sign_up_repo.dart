@@ -9,4 +9,5 @@ abstract class SignUpRepository {
   Future<Either<Failure, String>> saveRegisterInfo(
       SignUpBodyModel registerState);
   Future<Either<Failure, SignUpBodyModel?>> getRegisterInfo();
+  Future<Either<Failure, bool>> checkRecaptchaToken(String recaptchaToken);
 }

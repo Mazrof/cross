@@ -19,6 +19,7 @@ import 'package:telegram/feature/auth/login/data/repositories/login_repo.dart';
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
+import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
@@ -64,6 +65,8 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
           recaptchaService: sl(),
+          checkRecaptchaTocken: sl(),
+
         ));
 
     //splash
@@ -103,6 +106,7 @@ class ServiceLocator {
     //signup
     sl.registerLazySingleton(() => RegisterUseCase(sl()));
     sl.registerLazySingleton(() => SaveRegisterInfoUseCase(sl()));
+    sl.registerLazySingleton(() => CheckRecaptchaTocken(sl()));
 
     //verify mail
     sl.registerLazySingleton(() => SendOtpUseCase(sl()));

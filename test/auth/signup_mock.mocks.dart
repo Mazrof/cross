@@ -17,6 +17,8 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
     as _i7;
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart'
     as _i2;
+import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart'
+    as _i15;
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart'
     as _i5;
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart'
@@ -286,4 +288,49 @@ class MockRecaptchaService extends _i1.Mock implements _i13.RecaptchaService {
         ),
         returnValue: _i4.Future<String?>.value(),
       ) as _i4.Future<String?>);
+}
+
+/// A class which mocks [CheckRecaptchaTocken].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCheckRecaptchaTocken extends _i1.Mock
+    implements _i15.CheckRecaptchaTocken {
+  MockCheckRecaptchaTocken() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.SignUpRepository get signUpRepo => (super.noSuchMethod(
+        Invocation.getter(#signUpRepo),
+        returnValue: _FakeSignUpRepository_0(
+          this,
+          Invocation.getter(#signUpRepo),
+        ),
+      ) as _i2.SignUpRepository);
+
+  @override
+  set signUpRepo(_i2.SignUpRepository? _signUpRepo) => super.noSuchMethod(
+        Invocation.setter(
+          #signUpRepo,
+          _signUpRepo,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i4.Future<_i3.Either<_i6.Failure, bool>> call(String? recaptchaToken) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [recaptchaToken],
+        ),
+        returnValue: _i4.Future<_i3.Either<_i6.Failure, bool>>.value(
+            _FakeEither_1<_i6.Failure, bool>(
+          this,
+          Invocation.method(
+            #call,
+            [recaptchaToken],
+          ),
+        )),
+      ) as _i4.Future<_i3.Either<_i6.Failure, bool>>);
 }
