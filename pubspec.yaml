@@ -71,6 +71,7 @@ dependencies:
   test: ^1.25.7
   flutter_test:
     sdk: flutter
+  g_recaptcha_v3: ^0.0.5
   # webview_flutter_plus: ^0.3.0
  
 dev_dependencies:

@@ -6,20 +6,16 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
 
-class GetRegisterInfoUseCase
-    extends BaseUseCase<SignUpBodyModel?, NoParameters> {
+class CheckRecaptchaTocken
+    extends OneParameter<bool,String> {
   SignUpRepository signUpRepo;
-  GetRegisterInfoUseCase(
+  CheckRecaptchaTocken(
     this.signUpRepo,
   );
 
   @override
-  Future<Either<Failure, SignUpBodyModel?>> call(NoParameters parameter) async {
-    try {
-      var res = signUpRepo.getRegisterInfo();
-      return res;
-    } catch (error) {
-      return Left(error as Failure);
-    }
+  Future<Either<Failure, bool>> call(String recaptchaToken) async {
+
+    return signUpRepo.checkRecaptchaToken(recaptchaToken);
   }
 }

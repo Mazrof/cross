@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:math';
 
@@ -187,6 +188,23 @@ class ApiService {
       } else {
         throw _handleError(e);
       }
+    }
+  }
+
+  Future<bool> verifyToken(String token) async {
+    Uri uri = Uri.parse('https://www.google.com/recaptcha/api/siteverify');
+    final response = await dio.post(
+      uri.toString(),
+      data: {
+        'secret': '6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9',
+        'response': token,
+      },
+    );
+    final Map<String, dynamic> jsonResponse = json.decode(response.data);
+    if (jsonResponse['success']) {
+      return true;
+    } else {
+      return false;
     }
   }
 

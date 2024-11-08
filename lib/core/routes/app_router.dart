@@ -10,7 +10,7 @@ import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
 import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
