@@ -6,10 +6,10 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = endPointDev;
+  static const String baseUrl = AppStrings.serverUrl;
   static const String endPointPro = "";
-  static const String endPointDev = "";
-  
+  // static const String endPointDev = "";
+
   Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -42,10 +42,7 @@ class ApiService {
     try {
       dio.options.headers = token == null
           ? {}
-          : {
-              'Authorization': 'Bearer $token',
-              'userType': 'seller'
-            };
+          : {'Authorization': 'Bearer $token', 'userType': 'seller'};
       isUserType ? dio.options.headers["userType"] = "seller" : () {};
       Response response = await dio.get(
         '$baseUrl/$endPoint',
@@ -53,8 +50,8 @@ class ApiService {
       // Response response = await dio.get(
       //   '$baseUrl/$endPoint?userType=seller',
       // );
-      print(response.data);
-      print(response.statusCode);
+      // print(response.data);
+      // print(response.statusCode);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
@@ -70,7 +67,6 @@ class ApiService {
       }
     }
   }
-
 
   Future<Response> post({
     required String endPoint,
@@ -201,13 +197,11 @@ class ApiService {
     Map<String, dynamic>? data,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Authorization': 'Bearer $token'
-            };
+      dio.options.headers =
+          token == null ? {} : {'Authorization': 'Bearer $token'};
       isUserType ? dio.options.headers["userType"] = "seller" : () {};
-      Response response = await dio.get('$baseUrl/$endPoint', queryParameters: data);
+      Response response =
+          await dio.get('$baseUrl/$endPoint', queryParameters: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -242,13 +236,16 @@ class ApiService {
         case 403:
           throw const ServerFailure(message: AppStrings.errorForbidden);
         case 404:
-          throw ServerFailure(message: response['message'] ?? AppStrings.errorResource);
+          throw ServerFailure(
+              message: response['message'] ?? AppStrings.errorResource);
         case 429:
           throw const ServerFailure(message: AppStrings.errorServer);
         case 500:
           throw const ServerFailure(message: AppStrings.errorInternal);
         default:
-          throw ServerFailure(message: 'Server error: ${e.response!.statusCode} ${e.response!.statusMessage}');
+          throw ServerFailure(
+              message:
+                  'Server error: ${e.response!.statusCode} ${e.response!.statusMessage}');
       }
     } else {
       throw const ServerFailure(message: AppStrings.errorNetwork);

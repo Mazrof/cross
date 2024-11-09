@@ -74,7 +74,7 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: MessageList(
-                      messages: state.messages,
+                      messages: state is ChatLoaded ? state.messages : [],
                     ),
                   ),
                   CinputBar(

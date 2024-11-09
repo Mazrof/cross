@@ -82,7 +82,8 @@ class AppStrings {
 
   //messaging
   static const String waitingInternet = 'Waiting for Internet';
-  static const String serverUrl = 'https://your_socket_server_url';
+  static const String serverUrl =
+      'https://fee3c103-51b8-4876-a854-ae12ed78bdcf.mock.pstmn.io';
 
   //settings
   static const String privacyAndSecurity = "Privacy And Security";

@@ -1,44 +1,44 @@
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit()
-      : super(
-          ChatState(
-            messages: [
-              Message(
-                content: "Hello",
-                sender: "Kiro",
-                time: "12",
-                isDate: false,
-              )
-            ],
-          ),
-        );
+  ChatCubit() : super(ChatInitial());
 
   // Update the current page index
   Future<dynamic> getMessages() async {
     Dio dio = sl<Dio>();
 
-    List<Message> response = [];
+    List<Message> messages = [];
 
     try {
       // emit(const ChatLoading());
-      // final response = await dio.get('${AppStrings.serverUrl}/messages');
+      var apiService = sl<ApiService>();
+      final res = await apiService.get(endPoint: '/messages', token: "");
 
-      print(response);
+      print(jsonDecode(res.data));
 
-      // emit(ChatLoaded(['Message 1', 'Message 2', 'Message 3']));
+      messages = (jsonDecode(res.data) as List)
+          .map(
+            (e) => Message(
+                isDate: false,
+                sender: e['senderId'],
+                content: e['content'],
+                time: e['timestamp']),
+          )
+          .toList();
+
+      emit(ChatLoaded(messages: messages));
+      return res;
     } catch (e) {
       print(e);
-      // emit(ChatError('Failed to fetch messages'));
+      emit(ChatError(message: 'Failed to fetch messages'));
     }
-
-    return response;
   }
 }
 
