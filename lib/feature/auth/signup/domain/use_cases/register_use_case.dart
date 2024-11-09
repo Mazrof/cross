@@ -11,6 +11,6 @@ class RegisterUseCase extends BaseUseCase<String, SignUpBodyModel> {
 
   @override
   Future<Either<Failure, String>> call(SignUpBodyModel parameter) async {
-    return await signUpRepo.registerSeller(parameter);
+    return await signUpRepo.register(parameter);
   }
 }

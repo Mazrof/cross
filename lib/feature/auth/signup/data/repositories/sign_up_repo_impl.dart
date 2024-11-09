@@ -16,7 +16,7 @@ class SignUpRepoImpl extends SignUpRepository {
   });
 
   @override
-  Future<Either<Failure, String>> registerSeller(
+  Future<Either<Failure, String>> register(
       SignUpEntity signUpEntity) async {
     try {
       await signUpRemoteDataSource

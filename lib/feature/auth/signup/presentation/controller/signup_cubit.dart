@@ -83,6 +83,7 @@ class SignUpCubit extends Cubit<SignupState> {
         }
 
         final recaptchaToken = await recaptchaService.handleRecaptcha();
+        print('recaptchaToken: $recaptchaToken');
         if (recaptchaToken == null) {
           emit(state.copyWith(
             state: CubitState.failure,
@@ -90,8 +91,8 @@ class SignUpCubit extends Cubit<SignupState> {
           ));
           return;
         }
-        final response = await checkRecaptchaTocken.call(recaptchaToken!);
-        if (response.isLeft() || response.isRight() == false ) {
+        final response = await checkRecaptchaTocken.call(recaptchaToken);
+        if (response.isLeft() || response.isRight() == false) {
           emit(state.copyWith(
             state: CubitState.failure,
             errorMessage: 'reCAPTCHA verification failed.',

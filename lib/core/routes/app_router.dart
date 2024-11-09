@@ -81,7 +81,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
+final route = GoRouter(initialLocation: AppRouter.kSignUp, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -174,7 +174,6 @@ final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
       );
     },
   ),
-
   GoRoute(
     path: AppRouter.kNewChannel,
     builder: (context, state) {

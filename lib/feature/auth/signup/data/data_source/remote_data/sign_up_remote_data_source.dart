@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/user_access_token.dart';
@@ -30,18 +32,13 @@ class SignUpRemoteDataSourceImp extends SignUpRemoteDataSource {
       data: signUpBodyModel.toJson(),
     );
 
-    UserAccessToken.accessToken = response.data.data!.token!.accessToken;
-    await CacheHelper.write(
-      key: AppStrings.token,
-      value: UserAccessToken.accessToken,
-    );
     return response;
   }
 
   @override
   Future<bool> checkRecaptchaToken(String recaptchaToken) async {
-  
-    
-    return  apiService.verifyToken(recaptchaToken);
+    print('here to check recaptcha token');
+    print('recaptchaToken: $recaptchaToken');
+    return apiService.verifyToken(recaptchaToken);
   }
 }

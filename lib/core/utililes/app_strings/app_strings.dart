@@ -159,4 +159,8 @@ class AppStrings {
   static const String unmute = "Unmute";
   static const String endCall = "End Call";
   static const String deleteAllCalls = "Delete All Calls";
+
+  //cache
+  static const String cacheError = 'Cache Error';
+  static const String refreshToken= 'refreshToken';
 }

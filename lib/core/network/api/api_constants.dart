@@ -1,14 +1,13 @@
 class ApiConstants {
-  static String sendOtp = "auth/sendotp";
-  static String verifyOtp = "auth/verifyotp";
   static String register = "auth/register";
 
+  static const login = 'auth/login';
 
+  static const sendOtpMial = 'auth/confirmation-code/send-email';
+  static const sendOtpPhone = 'auth/confirmation-code/send-phone';
+  static const logout = 'auth/logout';
 
-  static const currentEndpoint = baseUrlDevelopment;
-
-  static const baseUrlProduction = "https://dummyjson.com/";
-  static const baseUrlDevelopment ="https://dummyjson.com/auth/login";
-  static const loginUrl = 'auth/login';
-
+  static const refreshToken = 'auth/refresh-token';
+  static const verifyOtp = 'auth/confirmation-code/check';
+  static const socialLogin = 'auth/social-login';
 }

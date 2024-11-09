@@ -217,10 +217,9 @@ class SignUpForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                context.go(AppRouter.kNotRobot);
-                // if (signupController.formKey.currentState!.validate()) {
-                //   signupController.signUp();
-                // }
+                if (signupController.formKey.currentState!.validate()) {
+                  signupController.signUp();
+                }
               },
               child: const Text(AppStrings.signUp),
             ),

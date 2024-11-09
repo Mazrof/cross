@@ -1,15 +1,20 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:telegram/core/error/excpetions.dart';
+import 'package:telegram/core/error/faliure.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/user_access_token.dart';
+import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../model/login_request_model.dart';
 
 abstract class LoginDataSource {
-  Future<Unit> login({required LoginRequestBody loginModel});
+  Future<void> login(LoginRequestBody loginModel);
   Future<String> signInWithGoogle();
   Future<String> signInWithGithub(BuildContext context);
 }
@@ -20,34 +25,45 @@ class LoginDataSourceImp implements LoginDataSource {
   LoginDataSourceImp({
     required ApiService apiService,
   }) : _apiService = apiService;
-
   @override
-  Future<Unit> login({required LoginRequestBody loginModel}) async {
+  Future<void> login(LoginRequestBody loginModel) async {
     print('LoginRemoteDataSource: login: email: ${loginModel.email}');
-
-    final response = await _apiService.post(
-      endPoint: 'api/login',
-      data: {
-        "userName": loginModel.email,
-        "password": loginModel.password,
-        "verified": true,
-        "blocked": false,
-        "delay": 20
-      },
-    );
-    UserAccessToken.accessToken = response.data['userDetails']['session'];
-    if (loginModel.rememberMe ?? false) {
-      await CacheHelper.write(
-        key: AppStrings.token,
-        value: UserAccessToken.accessToken,
+    try {
+      final response = await _apiService.post(
+        endPoint: ApiConstants.login,
+        data: {
+          'email': loginModel.email,
+          'password': loginModel.password,
+        },
       );
+      if (response.statusCode == 200) {
+         final responseData = jsonDecode(response.data);
+        // Extract the access token and refresh token from the response
+        String accessToken = responseData['access_token'];
+        String refreshToken = responseData['refresh_token'];
+        print('heeeeeeeeeeeeeeeeeeeeeeeer');
+
+        // Store the access token and refresh token in the cache
+        UserAccessToken.accessToken = accessToken;
+        if (loginModel.rememberMe ?? false) {
+          await CacheHelper.write(
+            key: AppStrings.token,
+            value: accessToken,
+          );
+        }
+        await CacheHelper.write(
+          key: AppStrings.refreshToken,
+          value: refreshToken,
+        );
+      }
+
+      if (response.statusCode != 200) {
+        throw ServerFailure(message: 'Login failed');
+      }
+    } catch (e) {
+      print(e);
+      throw ServerFailure(message: 'Login failed');
     }
-
-    print('here');
-    print(response.data);
-    print(UserAccessToken.accessToken);
-
-    return Future.value(unit);
   }
 
   @override

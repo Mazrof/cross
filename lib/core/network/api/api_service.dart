@@ -8,10 +8,14 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = endPointDev;
-  static const String endPointPro = "https://myfakeapi.com";
-  static const String endPointDev = "https://myfakeapi.com";
+  static const String baseUrl = mockUrl;
+  static const String endPointPro =
+      "https://MAZROF.com/api/v1 - production server";
+  static const String endPointDev =
+      "https://virtserver.swaggerhub.com/ABDOMOHAMED9192_1/Mazrof-API/1.0.0 - SwaggerHub API Auto Mocking";
 
+  static const String mockUrl =
+      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
   Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -20,7 +24,6 @@ class ApiService {
       receiveTimeout: const Duration(milliseconds: 30000),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer $token',
         'Authorization': 'Bearer ${UserAccessToken.accessToken}',
       },
       validateStatus: (int? status) {
@@ -50,9 +53,6 @@ class ApiService {
       Response response = await dio.get(
         '$baseUrl/$endPoint',
       );
-      // Response response = await dio.get(
-      //   '$baseUrl/$endPoint?userType=seller',
-      // );
       print(response.data);
       print(response.statusCode);
 
@@ -65,7 +65,6 @@ class ApiService {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        
         throw _handleError(e);
       }
     }
@@ -78,27 +77,27 @@ class ApiService {
   }) async {
     try {
       dio.options.headers = token == null
-          ? {}
+          ? {
+              'Content-Type': 'application/json',
+            }
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
 
-      Response response = await dio.post(
-        '$baseUrl/$endPoint',
-        data: data,
-      );
-      print(response);
+      String url = '$baseUrl/$endPoint';
+      final response = await dio.post(url, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
         return response;
       } else {
-        
         throw response;
       }
     } catch (e) {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        throw _handleError(e);
+        throw ServerFailure(message: e.toString());
       }
     }
   }
@@ -192,18 +191,38 @@ class ApiService {
   }
 
   Future<bool> verifyToken(String token) async {
-    Uri uri = Uri.parse('https://www.google.com/recaptcha/api/siteverify');
-    final response = await dio.post(
-      uri.toString(),
-      data: {
-        'secret': '6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9',
-        'response': token,
-      },
-    );
-    final Map<String, dynamic> jsonResponse = json.decode(response.data);
-    if (jsonResponse['success']) {
-      return true;
-    } else {
+    final url =
+        'https://recaptchaenterprise.googleapis.com/v1/projects/mazrof-1728756255237/assessments?key=AIzaSyDicdtnlOKgZmgKaKMdb27xb7vqo7gVkzc';
+
+    final requestBody = {
+      "event": {
+        "token": token,
+        "expectedAction":
+            "signup", // Replace this with your specific action
+        "siteKey":
+            "6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9", // Replace with your actual site key
+      }
+    };
+
+    try {
+      final response = await Dio().post(
+        url,
+        data: jsonEncode(requestBody),
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      final jsonResponse = response.data;
+      if (jsonResponse['tokenProperties']['valid'] == true) {
+        return true; // Successfully verified
+      } else {
+        return false; // Verification failed
+      }
+    } catch (e) {
+      print('Error verifying reCAPTCHA Enterprise token: $e');
       return false;
     }
   }

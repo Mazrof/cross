@@ -1,30 +1,42 @@
+import 'dart:io';
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 
 class RecaptchaService {
-  final String siteKey = '6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9';
-
   RecaptchaService();
 
   /// Initialize the reCAPTCHA ready state
   Future<bool> initialize() async {
-    bool ready = await GRecaptchaV3.ready(siteKey);
-    return ready;
+    try {
+      return await GRecaptchaV3.ready(
+          '6LcfXwqAAAAAPlu80FSm2yTVbNi293Vw7JKfIZU');
+    } catch (e) {
+      print('Error initializing reCAPTCHA: $e');
+      return false;
+    }
   }
 
   /// Execute reCAPTCHA to get a token
   Future<String?> executeRecaptcha(String action) async {
-    String? token = await GRecaptchaV3.execute(action);
-    return token;
+    try {
+      String? token = await GRecaptchaV3.execute(action);
+      return token;
+    } catch (e) {
+      print('Error executing reCAPTCHA: $e');
+      return null;
+    }
   }
 
   Future<String?> handleRecaptcha() async {
+    print('here to handle recaptcha');
     bool isRecaptchaReady = await initialize();
+    print('isRecaptchaReady: $isRecaptchaReady');
 
     if (!isRecaptchaReady) {
       return null;
     }
 
-    String? token = await executeRecaptcha("signup_action");
+    String? token = await executeRecaptcha("signup");
+    print('recaptchaToken: $token');
     if (token != null) {
       return token;
     } else {
