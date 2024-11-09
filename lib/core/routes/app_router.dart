@@ -13,8 +13,6 @@ import 'package:telegram/feature/on_bording/presentation/screen/on_bording_scree
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
-import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
