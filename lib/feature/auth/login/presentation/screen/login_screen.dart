@@ -5,6 +5,7 @@ import 'package:telegram/core/component/capp_divider.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/csocial_icons.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
@@ -84,7 +85,11 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceBetweenInputField / 2),
               const CAppDivider(title: AppStrings.or),
               const SizedBox(height: AppSizes.spaceBetweenInputField),
-              const CSocialIcons(),
+              CSocialIcons(
+                onPressedGoogle: sl<LoginCubit>().signInWithGoogle,
+                onPressedGithub: () =>
+                    sl<LoginCubit>().signInWithGithub(context),
+              ),
             ],
           ),
         ),
