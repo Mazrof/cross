@@ -1,15 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/settings/Domain/entities/user_settings_entity.dart';
+import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/Presentation/Controller/user_settings_state.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<UserSettingsCubit, UserSettingsState>(
+      builder: (context, state) {
+        return EditProfilePage(
+          state: state,
+        );
+      },
+    );
+  }
+}
+
+class EditProfilePage extends StatelessWidget {
+  const EditProfilePage({super.key, required this.state});
+  final UserSettingsState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final userNameController = TextEditingController(text: state.userName);
+    final screenNameController = TextEditingController(text: state.screenName);
+    final bioController = TextEditingController(text: state.bio);
+    final phoneNumberController =
+        TextEditingController(text: state.phoneNumber);
+
+    void _saveSettings() {
+      context.read<UserSettingsCubit>().updateSettingsUseCase(
+            UserSettingsEntity(
+                screenName: screenNameController.text,
+                userName: userNameController.text,
+                phoneNumber: phoneNumberController.text,
+                bio: bioController.text,
+                status: "Online"),
+          );
+    }
+
     return Scaffold(
       appBar: CAppBar(
         title: const Text(AppStrings.profileInfo),
@@ -20,7 +57,7 @@ class EditProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                context.go(AppRouter.ksettings);
+                _saveSettings();
               },
               icon: const Icon(Icons.check)),
         ],
@@ -35,8 +72,9 @@ class EditProfileScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.labelMedium,
             ),
             const SizedBox(height: 8),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: userNameController,
+              decoration: const InputDecoration(
                 hintText: AppStrings.enterYourUsername,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -48,8 +86,9 @@ class EditProfileScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.labelMedium,
             ),
             const SizedBox(height: 8),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: screenNameController,
+              decoration: const InputDecoration(
                 hintText: AppStrings.enterYourName,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -61,7 +100,8 @@ class EditProfileScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.labelMedium,
             ),
             const SizedBox(height: 8),
-            const TextField(
+            TextField(
+              controller: bioController,
               maxLength: 70,
               maxLines: 2,
               decoration: InputDecoration(
@@ -84,6 +124,7 @@ class EditProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextField(
+              controller: phoneNumberController,
               maxLength: 11,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             )

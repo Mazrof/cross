@@ -13,8 +13,8 @@ import 'package:telegram/feature/on_bording/presentation/screen/on_bording_scree
 import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
-import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+// import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
+// import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
@@ -83,7 +83,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
+final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -176,7 +176,6 @@ final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
       );
     },
   ),
-
   GoRoute(
     path: AppRouter.kNewChannel,
     builder: (context, state) {
