@@ -6,6 +6,7 @@ import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
+import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_state.dart';
 
 class BottomNavBar extends StatelessWidget {
   NavCubit navController = sl<NavCubit>();
@@ -14,7 +15,7 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavCubit, int>(builder: (context, state) {
+    return BlocBuilder<NavCubit, NavState>(builder: (context, state) {
       return Scaffold(
           appBar: CAppBar(
             onLeadingTap: () {},
@@ -32,7 +33,7 @@ class BottomNavBar extends StatelessWidget {
               backgroundColor: AppColors.primaryColor.withOpacity(.001),
               indicatorColor: AppColors.primaryColor.withOpacity(.3),
               elevation: 0,
-              selectedIndex: navController.index,
+              selectedIndex: navController.state.index,
               onDestinationSelected: (index) {
                 navController.updateCurrentIndex(index);
               },
@@ -48,7 +49,7 @@ class BottomNavBar extends StatelessWidget {
               ],
             ),
           ),
-          body: navController.screens[navController.index]);
+          body: navController.screens[navController.state.index]);
     });
   }
 }
