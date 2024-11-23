@@ -24,6 +24,9 @@ import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/banned_users_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/group_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/user_controller.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_up_remote_data_source.dart';
@@ -106,6 +109,17 @@ class ServiceLocator {
 
     // nav bar
     sl.registerLazySingleton(() => NavCubit());
+
+    //user dashboard cubit
+    sl.registerLazySingleton(() => UsersCubit());
+
+    // banned users cubit
+    sl.registerLazySingleton(() => BannedUsersCubit());
+
+    // group cubit
+    sl.registerLazySingleton(() => GroupsCubit());
+    
+
   }
 
   static void registerUseCases() {
