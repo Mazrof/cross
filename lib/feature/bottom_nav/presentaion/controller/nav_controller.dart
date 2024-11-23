@@ -10,11 +10,11 @@ class NavCubit extends Cubit<NavState> {
 
   final List<Widget> screens = [
     UsersPage(),
-    BannedUsers(),
     GroubsPage(),
+    BannedUsers(),
   ];
 
   void updateCurrentIndex(int index) {
-    emit(NavState(index: index));
+    emit(state.copyWith(index: index));
   }
 }

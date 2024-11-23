@@ -39,7 +39,6 @@ Future<void> _initializeApp() async {
   ServiceLocator.init();
 
   Bloc.observer = MyBlocObserver();
-
 }
 
 class App extends StatelessWidget {
@@ -61,7 +60,8 @@ class App extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
-                  themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
+                  themeMode: ThemeMode.dark,
+                  // themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );
               },
