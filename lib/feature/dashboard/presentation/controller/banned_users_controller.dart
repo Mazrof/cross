@@ -26,12 +26,14 @@ class BannedUsersCubit extends Cubit<BannedUsersState> {
   }
 
   void UnBanUSer(String filter) {
+    
     final updatedUsers = List<User>.from(state.bannedUsers)
       ..removeWhere((element) => element.name.contains(filter));
 
       /// Simulate banning user
     emit(state.copyWith(
         bannedUsers: updatedUsers, currState: CubitState.success));
+        
 
   }
 }

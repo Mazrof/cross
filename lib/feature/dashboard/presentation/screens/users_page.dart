@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/user_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/user_state.dart';
 
 class UsersPage extends StatelessWidget {
   UsersPage({super.key});
@@ -23,6 +29,15 @@ class UsersPage extends StatelessWidget {
       User(id: 3, name: 'Alice Johnson', email: 'alice.johnson@example.com'),
       // Add more users as needed
     ];
+     return BlocBuilder<UsersCubit, UsersState>(
+      builder: (context, state) {
+        if (state.currState == CubitState.loading) {
+          return LogoLoader();
+        } else if (state.currState == CubitState.failure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          });
+        }
 
     return Scaffold(
  
@@ -55,16 +70,22 @@ class UsersPage extends StatelessWidget {
                   // Handle ban user action
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text('User ${user.name} banned'),
+                        content: Text('User ${user.name} banned',
+                            style: Theme.of(context).textTheme.bodySmall, ),
                         backgroundColor:
                             AppColors.primaryColor.withOpacity(.5)),
                   );
                 },
               ),
+
             ),
+
           );
         },
       ),
     );
   }
+  );
+  }
 }
+

@@ -44,7 +44,6 @@ class GroupsPage extends StatelessWidget {
                       foregroundColor: AppColors.whiteColor,
                       child: Text(group.id.toString()),
                     ),
-                    
                     title: Text(group.name,
                         style: Theme.of(context).textTheme.bodyLarge),
                     trailing: SizedBox(
@@ -55,7 +54,14 @@ class GroupsPage extends StatelessWidget {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 AppColors.primaryColor),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(' ${group.name} is now fil', style: Theme.of(context).textTheme.bodySmall,),
+                                  backgroundColor:
+                                      AppColors.primaryColor.withOpacity(.5)),
+                            );
+                          },
                           child: Text('Filter',
                               style: Theme.of(context).textTheme.bodySmall)),
                     )),
