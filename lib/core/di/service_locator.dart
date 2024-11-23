@@ -23,6 +23,7 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_up_remote_data_source.dart';
@@ -101,6 +102,10 @@ class ServiceLocator {
           networkManager: sl(),
           forgetPasswordUseCase: sl(),
         ));
+
+
+    // nav bar
+    sl.registerLazySingleton(() => NavCubit());
   }
 
   static void registerUseCases() {
