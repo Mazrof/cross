@@ -7,6 +7,7 @@ import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.da
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
 
 class SaveRegisterInfoUseCase extends BaseUseCase<String, SignUpBodyModel> {
+
   SignUpRepository signUpRepo;
   SaveRegisterInfoUseCase(
     this.signUpRepo,
@@ -14,6 +15,7 @@ class SaveRegisterInfoUseCase extends BaseUseCase<String, SignUpBodyModel> {
 
   @override
   Future<Either<Failure, String>> call(SignUpBodyModel parameter) async {
+    print('SaveRegisterInfoUseCase called');
     return await signUpRepo.saveRegisterInfo(parameter);
   }
 }

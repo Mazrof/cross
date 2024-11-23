@@ -9,6 +9,9 @@ android {
     namespace = "com.example.telegram"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    dependencies {
+    implementation 'com.google.android.gms:play-services-recaptcha:16.0.0'
+    }
     
 
     compileOptions {

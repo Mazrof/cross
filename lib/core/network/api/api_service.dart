@@ -76,15 +76,6 @@ class ApiService {
     String? token,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {
-              'Content-Type': 'application/json',
-            }
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
       String url = '$baseUrl/$endPoint';
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -191,22 +182,20 @@ class ApiService {
   }
 
   Future<bool> verifyToken(String token) async {
-    final url =
-        'https://recaptchaenterprise.googleapis.com/v1/projects/mazrof-1728756255237/assessments?key=AIzaSyDicdtnlOKgZmgKaKMdb27xb7vqo7gVkzc';
-
+    const String verifyUrl =
+        'https://www.google.com/recaptcha/enterprise.js?render=6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
+    const String siteKey = '6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
     final requestBody = {
       "event": {
         "token": token,
-        "expectedAction":
-            "signup", // Replace this with your specific action
-        "siteKey":
-            "6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9", // Replace with your actual site key
+        "expectedAction": "signup",
+        "siteKey": siteKey,
       }
     };
 
     try {
       final response = await Dio().post(
-        url,
+        verifyUrl,
         data: jsonEncode(requestBody),
         options: Options(
           headers: {
@@ -216,11 +205,14 @@ class ApiService {
       );
 
       final jsonResponse = response.data;
-      if (jsonResponse['tokenProperties']['valid'] == true) {
-        return true; // Successfully verified
-      } else {
-        return false; // Verification failed
-      }
+      final isValid = jsonResponse['tokenProperties']['valid'] == true;
+      final score = jsonResponse['riskAnalysis']['score'];
+      final action = jsonResponse['tokenProperties']['action'];
+
+      print('Verification Score: $score, Action: $action');
+
+      // You can set a threshold score if needed, usually above 0.5
+      return isValid && score >= 0.5;
     } catch (e) {
       print('Error verifying reCAPTCHA Enterprise token: $e');
       return false;

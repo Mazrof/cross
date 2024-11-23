@@ -48,17 +48,24 @@ class SignUpCubit extends Cubit<SignupState> {
   final formKey = GlobalKey<FormState>();
 
   void togglePasswordVisibility() {
-    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
+    emit(state.copyWith(
+        isPasswordVisible: !state.isPasswordVisible,
+        errorMessage: '',
+        state: CubitState.initial));
   }
 
   void toggleConfirmPasswordVisibility() {
     emit(state.copyWith(
-        isConfirmPasswordVisible: !state.isConfirmPasswordVisible));
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible,
+        errorMessage: '',
+        state: CubitState.initial));
   }
 
   void togglePrivacyPolicyAcceptance() {
     emit(state.copyWith(
-        isPrivacyPolicyAccepted: !state.isPrivacyPolicyAccepted));
+        isPrivacyPolicyAccepted: !state.isPrivacyPolicyAccepted,
+        errorMessage: '',
+        state: CubitState.initial));
   }
 
   void signUp() async {
@@ -82,23 +89,23 @@ class SignUpCubit extends Cubit<SignupState> {
           return;
         }
 
-        final recaptchaToken = await recaptchaService.handleRecaptcha();
-        print('recaptchaToken: $recaptchaToken');
-        if (recaptchaToken == null) {
-          emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'reCAPTCHA verification failed.',
-          ));
-          return;
-        }
-        final response = await checkRecaptchaTocken.call(recaptchaToken);
-        if (response.isLeft() || response.isRight() == false) {
-          emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'reCAPTCHA verification failed.',
-          ));
-          return;
-        }
+        // final recaptchaToken = await recaptchaService.handleRecaptcha();
+        // print('recaptchaToken: $recaptchaToken');
+        // if (recaptchaToken == null) {
+        //   emit(state.copyWith(
+        //     state: CubitState.failure,
+        //     errorMessage: 'reCAPTCHA verification failed.',
+        //   ));
+        //   return;
+        // }
+        // final response = await checkRecaptchaTocken.call(recaptchaToken);
+        // if (response.isLeft() || response.isRight() == false) {
+        //   emit(state.copyWith(
+        //     state: CubitState.failure,
+        //     errorMessage: 'reCAPTCHA verification failed.',
+        //   ));
+        //   return;
+        // }
 
         emitSignUpStates(SignUpBodyModel(
           firstName: firstNameController.text.trim(),
@@ -125,10 +132,13 @@ class SignUpCubit extends Cubit<SignupState> {
         ));
       }, (unit) async {
         // Call the save data use case here
+
         await saveRegisterInfoUseCase
             .call(signUpRequestBody)
             .then((saveResult) {
           saveResult.fold((saveFailure) {
+            print(saveFailure.message);
+            
             emit(state.copyWith(
               state: CubitState.failure,
               errorMessage: saveFailure.message,

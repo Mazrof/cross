@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/validator/app_validator.dart';
@@ -45,6 +46,7 @@ final sl = GetIt.instance;
 class ServiceLocator {
   static void init() {
     CacheHelper.init();
+    HiveCash.init();
     registerSingletons();
     registerDataSources();
     registerRepositories();
@@ -70,7 +72,6 @@ class ServiceLocator {
           networkManager: sl(),
           recaptchaService: sl(),
           checkRecaptchaTocken: sl(),
-
         ));
 
     //splash
@@ -182,6 +183,7 @@ class ServiceLocator {
 
     sl.registerLazySingleton<InternetConnectionChecker>(
         () => InternetConnectionChecker());
+   
     sl.registerLazySingleton<NetworkManager>(() => (NetworkManager()));
     sl.registerLazySingleton<AppValidator>(() => AppValidator());
   }

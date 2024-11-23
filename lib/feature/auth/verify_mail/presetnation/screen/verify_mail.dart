@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
@@ -23,27 +25,29 @@ class VerifyMailScreen extends StatelessWidget {
     return BlocBuilder<VerifyMailCubit, VerifyMailState>(
         builder: (context, state) {
       if (state.status == VerifyMailStatus.success) {
-        CSnackBar.showSuccessSnackBar(context, 'Mail Verified',
-            AppStrings.mailVerified);
+        CSnackBar.showSuccessSnackBar(
+            context, 'Mail Verified', AppStrings.mailVerified);
         context.go(AppRouter.kLogin);
       } else if (state.status == VerifyMailStatus.error) {
         CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
       } else if (state.status == VerifyMailStatus.optSent) {
-        CSnackBar.showSuccessSnackBar(context, 'Mail Sent',
-            AppStrings.codeSent);
+        CSnackBar.showSuccessSnackBar(
+            context, 'Mail Sent', AppStrings.codeSent);
       } else if (state.status == VerifyMailStatus.loading) {
         return LogoLoader();
       }
 
-      return VerifyMailPage();
+      return VerifyMailPage(method: method);
     });
   }
 }
 
 class VerifyMailPage extends StatelessWidget {
   const VerifyMailPage({
+    required this.method,
     super.key,
   });
+  final method;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,8 @@ class VerifyMailPage extends StatelessWidget {
               ),
               Text(
                 // TODO :Get mail from user data
-                maskEmail('mariam@gmail.com'),
+                maskEmail(HiveCash.read<String>(
+                    boxName: "register_info", key: method)!),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -101,14 +106,26 @@ class VerifyMailPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    sl<VerifyMailCubit>().verifyMail(context);
+                  },
                   child: const Text(AppStrings.verify),
                 ),
               ),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (method == 'email') {
+                      final email =
+                          HiveCash.read(boxName: "register_info", key: 'email');
+                      sl<VerifyMailCubit>().sendVerificationMail(method, email);
+                    } else if (method == 'phone') {
+                      final phone =
+                          HiveCash.read(boxName: "register_info", key: 'phone');
+                      sl<VerifyMailCubit>().sendVerificationMail(method, phone);
+                    }
+                  },
                   child: Text(AppStrings.resendCode,
                       style: Theme.of(context)
                           .textTheme

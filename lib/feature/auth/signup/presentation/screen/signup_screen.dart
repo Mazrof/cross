@@ -27,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
         return const LogoLoader();
       } else if (state.state == CubitState.success) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go(AppRouter.kVerifyMail);
+          context.go(AppRouter.kPreVerify);
         });
       } else if (state.state == CubitState.failure) {
         // show error message
