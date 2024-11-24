@@ -15,14 +15,14 @@ class GroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Group> groups = [
-      GroupModel(name: 'group1', id: 1),
-      GroupModel(name: 'group2', id: 2),
-      GroupModel(name: 'group3', id: 3),
-      GroupModel(name: 'group4', id: 4),
-      GroupModel(name: 'group5', id: 5),
-      GroupModel(name: 'group6', id: 6),
-      GroupModel(name: 'group7', id: 7),
-      GroupModel(name: 'group8', id: 8),
+      GroupModel(name: 'group1', id: '1'),
+      GroupModel(name: 'group2', id: '2'),
+      GroupModel(name: 'group3', id: '3'),
+      GroupModel(name: 'group4', id: '4'),
+      GroupModel(name: 'group5', id: '5'),
+      GroupModel(name: 'group6', id: '6'),
+      GroupModel(name: 'group7', id: '7'),
+      GroupModel(name: 'group8', id: '8'),
     ];
     return BlocBuilder<GroupsCubit, GroupsState>(
       builder: (context, state) {

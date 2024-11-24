@@ -1,32 +1,84 @@
 import 'package:bloc/bloc.dart';
+import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/data/model/group_model.dart';
-import 'package:telegram/feature/dashboard/domain/entity/group.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_groups.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_groups.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/apply_filter.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
 class GroupsCubit extends Cubit<GroupsState> {
-  GroupsCubit() : super(GroupsState(groups: []));
+  GroupsCubit(
+      {required this.getGroupsUseCase,
+      required this.networkManager,
+      required this.saveGroupsUseCase,
+      required this.getGroupLocalUseCase,
+      required this.applyFilterUseCase}
+  ) : super(GroupsState(groups: []));
 
-  void fetchGroups() async {
+  GetGroupsUseCase getGroupsUseCase;
+  NetworkManager networkManager ;
+  SaveGroupsUseCase saveGroupsUseCase;
+  GetGroupLocalUseCase getGroupLocalUseCase;
+  ApplyFilterUseCase applyFilterUseCase;
+
+
+
+
+
+
+void fetchGroups() async {
     emit(state.copyWith(currState: CubitState.loading));
     try {
-      // Simulate fetching groups from the backend
-      await Future.delayed(Duration(seconds: 2));
-      final groups = [
-        GroupModel(id: 1, name: 'Group 1'),
-        GroupModel(id: 2, name: 'Group 2'),
-        GroupModel(id: 3, name: 'Group 3'),
-      ];
-      emit(state.copyWith(groups: groups, currState: CubitState.success));
+      bool connection = await networkManager.isConnected();
+      if (!connection) {
+        final result = await getGroupLocalUseCase.call();
+        emit(state.copyWith(currState: CubitState.success, groups: result));
+        return;
+      }
+
+      final result = await getGroupsUseCase.call();
+
+      result.fold(
+        (failure) {
+          emit(state.copyWith(
+              currState: CubitState.failure, errorMessage: failure.message));
+        },
+        (groups) {
+          saveGroupsUseCase.call(groups);
+          emit(state.copyWith(groups: groups, currState: CubitState.success));
+        },
+      );
     } catch (e) {
       emit(state.copyWith(
           currState: CubitState.failure, errorMessage: e.toString()));
     }
   }
+  void filterGroups(String filter) async {
+    emit(state.copyWith(currState: CubitState.loading));
+    try {
+      
+      bool connection =await networkManager.isConnected();
+      if (!connection) {
+        emit(state.copyWith(
+            currState: CubitState.failure, errorMessage: 'No internet connection'));
+        return;
+      }
 
-  void filterGroups(String filter) {
-    final filteredGroups = List<Group>.from(state.groups)
-      ..removeWhere((element) => !element.name.contains(filter));
-    emit(state.copyWith(groups: filteredGroups));
+      final result = await applyFilterUseCase.call(filter);
+
+      result.fold(
+        (failure) {
+          emit(state.copyWith(
+              currState: CubitState.failure, errorMessage: failure.message));
+        },
+        (success) {
+          emit(state.copyWith( currState: CubitState.success));
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+          currState: CubitState.failure, errorMessage: e.toString()));
+    }
   }
 }

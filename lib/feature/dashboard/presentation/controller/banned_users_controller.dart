@@ -1,39 +1,85 @@
 import 'package:bloc/bloc.dart';
+import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/unban_user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/banned_users_state.dart';
 
 class BannedUsersCubit extends Cubit<BannedUsersState> {
-  BannedUsersCubit() : super(BannedUsersState(bannedUsers: []));
+  final GetUsersLocalUseCase getUsersLocalUseCase;
+  final GetUsersUseCase getUsersUseCase;
+  final UnBanUserUseCase unBanUserUseCase;
+  final NetworkManager networkManager;
 
-  void fetchGroups() async {
+  BannedUsersCubit({
+    required this.getUsersLocalUseCase,
+    required this.getUsersUseCase,
+    required this.unBanUserUseCase,
+    required this.networkManager,
+  }) : super(BannedUsersState(bannedUsers: []));
+
+  void fetchBannedUsers() async {
     emit(state.copyWith(currState: CubitState.loading));
     try {
-      // Simulate fetching users from the backend
-      await Future.delayed(Duration(seconds: 2));
+      bool connection = await networkManager.isConnected();
+      if (!connection) {
+        final result = await getUsersLocalUseCase.call();
+        List<User> bannedUsers =
+            result.where((user) => user.status == 'banned').toList();
+        emit(state.copyWith(
+            currState: CubitState.success, bannedUsers: bannedUsers));
+        return;
+      }
 
-      final users = [
-        User(id: 1, name: 'John Doe', email: ''),
-        User(id: 2, name: 'Jane Smith', email: ''),
-      ];
+      final result = await getUsersUseCase.call();
 
-      emit(state.copyWith(bannedUsers: users, currState: CubitState.success));
+      result.fold(
+        (failure) {
+          emit(state.copyWith(
+              currState: CubitState.failure, errorMessage: failure.message));
+        },
+        (users) {
+          List<User> bannedUsers =
+              users.where((user) => user.status == 'banned').toList();
+          emit(state.copyWith(
+              bannedUsers: bannedUsers, currState: CubitState.success));
+        },
+      );
     } catch (e) {
       emit(state.copyWith(
           currState: CubitState.failure, errorMessage: e.toString()));
     }
   }
 
-  void UnBanUSer(String filter) {
-    
-    final updatedUsers = List<User>.from(state.bannedUsers)
-      ..removeWhere((element) => element.name.contains(filter));
+  void unbanUser(String userID) async {
+    emit(state.copyWith(currState: CubitState.loading));
+    try {
+      bool connection = await networkManager.isConnected();
+      if (!connection) {
+        emit(state.copyWith(
+            currState: CubitState.failure,
+            errorMessage: 'No Internet Connection'));
+        return;
+      }
 
-      /// Simulate banning user
-    emit(state.copyWith(
-        bannedUsers: updatedUsers, currState: CubitState.success));
-        
-
+      final result = await unBanUserUseCase.call(userID);
+      result.fold(
+        (failure) {
+          emit(state.copyWith(
+              currState: CubitState.failure, errorMessage: failure.message));
+        },
+        (success) {
+          final updatedBannedUsers =
+              state.bannedUsers.where((user) => user.id != userID).toList();
+          emit(state.copyWith(
+              bannedUsers: updatedBannedUsers, currState: CubitState.success));
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+          currState: CubitState.failure, errorMessage: e.toString()));
+    }
   }
 }
-

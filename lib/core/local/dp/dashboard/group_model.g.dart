@@ -17,7 +17,7 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GroupModel(
-      id: fields[0] as int,
+      id: fields[0] as String,
       name: fields[1] as String,
     );
   }

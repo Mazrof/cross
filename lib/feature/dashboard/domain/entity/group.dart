@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Group extends Equatable {
   final String name;
-  final int id;
+  final String id;
 
   const Group({required this.name, required this.id});
   

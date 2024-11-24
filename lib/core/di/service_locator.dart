@@ -126,13 +126,32 @@ class ServiceLocator {
     sl.registerLazySingleton(() => NavCubit());
 
     //user dashboard cubit
-    sl.registerLazySingleton(() => UsersCubit());
+    sl.registerLazySingleton(() => UsersCubit(
+          networkManager: sl(),
+          getUsersUseCase: sl(),
+          banUserUseCase: sl(),
+          getUsersLocalUseCase: sl(),
+          saveUsersUseCase: sl(),
+
+         
+    ));
 
     // banned users cubit
-    sl.registerLazySingleton(() => BannedUsersCubit());
+    sl.registerLazySingleton(() => BannedUsersCubit(
+          getUsersLocalUseCase: sl(),
+          getUsersUseCase: sl(),
+          unBanUserUseCase: sl(),
+          networkManager: sl(),
+    ));
 
     // group cubit
-    sl.registerLazySingleton(() => GroupsCubit());
+    sl.registerLazySingleton(() => GroupsCubit(
+          networkManager: sl(),
+          getGroupsUseCase: sl(),
+          applyFilterUseCase: sl(),
+          getGroupLocalUseCase: sl(),
+          saveGroupsUseCase: sl(),
+    ));
   }
 
   static void registerUseCases() {

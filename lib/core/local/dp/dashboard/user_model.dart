@@ -8,7 +8,7 @@ part  'user_model.g.dart';
 class UserModel extends User {
   @override
   @HiveField(0)
-  final int id;
+  final String id;
 
   @override
   @HiveField(1)
@@ -18,14 +18,24 @@ class UserModel extends User {
   @HiveField(2)
   final String email;
 
-  UserModel({required this.id, required this.name, required this.email})
-      : super(id: id, name: name, email: email);
+
+
+  @override
+  @HiveField(3)
+  final bool status;
+
+
+
+
+  UserModel({required this.id, required this.name, required this.email, required this.status})
+      : super(id: id, name: name, email: email, status: status);
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
       name: json['name'],
       email: json['email'],
+      status: json['status']=='true'?true:false,
     );
   }
 
@@ -34,6 +44,7 @@ class UserModel extends User {
       'id': id,
       'name': name,
       'email': email,
+      'status': status == true ? 'true' : 'false',
     };
   }
 }

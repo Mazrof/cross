@@ -7,7 +7,7 @@ part 'group_model.g.dart';
 class GroupModel extends Group {
   @override
   @HiveField(0)
-  final int id;
+  final String id;
 
   @override
   @HiveField(1)

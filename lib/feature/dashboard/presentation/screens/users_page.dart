@@ -13,21 +13,10 @@ class UsersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<User> users = [
-      User(id: 1, name: 'John Doe', email: 'john.doe@example.com'),
-      User(id: 2, name: 'Jane Smith', email: 'jane.smith@example.com'),
-      User(id: 3, name: 'Alice Johnson', email: 'alice.johnson@example.com'),
-      User(id: 1, name: 'John Doe', email: 'john.doe@example.com'),
-      User(id: 2, name: 'Jane Smith', email: 'jane.smith@example.com'),
-      User(id: 3, name: 'Alice Johnson', email: 'alice.johnson@example.com'),
-      User(id: 1, name: 'John Doe', email: 'john.doe@example.com'),
-      User(id: 2, name: 'Jane Smith', email: 'jane.smith@example.com'),
-      User(id: 3, name: 'Alice Johnson', email: 'alice.johnson@example.com'),
-      User(id: 1, name: 'John Doe', email: 'john.doe@example.com'),
-      User(id: 2, name: 'Jane Smith', email: 'jane.smith@example.com'),
-      User(id: 3, name: 'Alice Johnson', email: 'alice.johnson@example.com'),
-      // Add more users as needed
-    ];
+    // final List<User> users = [
+      
+    //   // Add more users as needed
+    // ];
      return BlocBuilder<UsersCubit, UsersState>(
       builder: (context, state) {
         if (state.currState == CubitState.loading) {
@@ -41,9 +30,9 @@ class UsersPage extends StatelessWidget {
     return Scaffold(
  
       body: ListView.builder(
-        itemCount: users.length,
+        itemCount:state. users.length,
         itemBuilder: (context, index) {
-          final user = users[index];
+          final user =state. users[index];
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: ListTile(
