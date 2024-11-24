@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Welcomeage extends StatelessWidget {
-   Welcomeage({Key? key});
+   const Welcomeage({super.key, Key? key});
 
   @override
   Widget build(BuildContext context) {

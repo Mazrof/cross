@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:telegram/core/error/faliure.dart';
-import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/dashboard/domain/repository/dashboard_repo.dart';
 
 class BanUserUseCase {

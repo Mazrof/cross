@@ -9,7 +9,7 @@ import 'package:telegram/feature/dashboard/presentation/controller/banned_users_
 import 'package:telegram/feature/dashboard/presentation/controller/banned_users_state.dart';
 
 class BannedUsers extends StatelessWidget {
-  BannedUsers({super.key});
+  const BannedUsers({super.key});
 
   @override
   Widget build(BuildContext context) {

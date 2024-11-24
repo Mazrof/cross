@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -10,7 +9,7 @@ import 'package:telegram/feature/dashboard/presentation/controller/user_controll
 import 'package:telegram/feature/dashboard/presentation/controller/user_state.dart';
 
 class UsersPage extends StatelessWidget {
-  UsersPage({super.key});
+  const UsersPage({super.key});
 
   @override
   Widget build(BuildContext context) {

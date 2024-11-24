@@ -24,6 +24,7 @@ class VerifyMailDataSourceImp extends VerifyMailDataSource {
     }
   }
 
+  @override
   Future<Either<Failure, void>> verifyOtp(VerifyMailData data) async {
     String target = ApiConstants.verifyOtp;
     final Map<String, String> requestBody = {

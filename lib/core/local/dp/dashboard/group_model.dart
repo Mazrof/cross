@@ -5,13 +5,15 @@ part 'group_model.g.dart';
 
 @HiveType(typeId: 1)
 class GroupModel extends Group {
+  @override
   @HiveField(0)
   final int id;
 
+  @override
   @HiveField(1)
   final String name;
 
-  GroupModel({required this.id, required this.name})
+  const GroupModel({required this.id, required this.name})
       : super(id: id, name: name);
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {

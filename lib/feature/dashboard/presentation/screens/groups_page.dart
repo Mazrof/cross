@@ -10,7 +10,7 @@ import 'package:telegram/feature/dashboard/presentation/controller/group_control
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
 class GroupsPage extends StatelessWidget {
-  GroupsPage({super.key});
+  const GroupsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class GroupsPage extends StatelessWidget {
                       height: 40,
                       child: ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                                 AppColors.primaryColor),
                           ),
                           onPressed: () {

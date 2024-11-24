@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/banned_users_state.dart';
 

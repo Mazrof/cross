@@ -1,4 +1,3 @@
-import 'package:hive/hive.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive_helper.dart';
 import 'package:telegram/feature/dashboard/data/model/group_model.dart';
@@ -19,7 +18,7 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
   Future<List<UserModel>> getUsers() async {
     await HiveHelper.openBox<UserModel>('userBox'); // Ensure the box is opened
 
-     List <UserModel> list= HiveHelper.getAll<UserModel>('userBox')as List<UserModel>;
+     List <UserModel> list= HiveHelper.getAll<UserModel>('userBox');
      
     return list;
 

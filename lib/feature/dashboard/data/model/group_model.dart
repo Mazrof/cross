@@ -1,7 +1,7 @@
 import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 
 class GroupModel extends Group{
-  GroupModel({required super.name, required super.id});
+  const GroupModel({required super.name, required super.id});
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
