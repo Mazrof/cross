@@ -93,7 +93,9 @@ final route = GoRouter(
       path: AppRouter.kMessaging,
       builder: (context, state) {
         return BlocProvider(
-          create: (context) => sl<ChatCubit>()..getMessages(),
+          create: (context) => sl<ChatCubit>()
+            ..getMessages()
+            ..startSocket(),
           child: ChatScreen(),
         );
       },

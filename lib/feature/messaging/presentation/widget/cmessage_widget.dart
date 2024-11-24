@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class ChatMessage extends StatelessWidget {
   final String message;
@@ -39,73 +42,79 @@ class ChatMessage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          margin: isSender
-              ? const EdgeInsets.only(
-                  top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm)
-              : const EdgeInsets.only(
-                  top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          decoration: BoxDecoration(
-            color: getMessageBackGroundColor(),
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(12),
-              topRight: const Radius.circular(12),
-              bottomLeft: isSender
-                  ? const Radius.circular(12)
-                  : const Radius.circular(0),
-              bottomRight: isSender
-                  ? const Radius.circular(0)
-                  : const Radius.circular(12),
+        GestureDetector(
+          onLongPress: () {
+            print("Long Press detected!");
+            sl<ChatCubit>().messageSelected(0);
+          },
+          child: Container(
+            margin: isSender
+                ? const EdgeInsets.only(
+                    top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm)
+                : const EdgeInsets.only(
+                    top: AppSizes.xs, bottom: AppSizes.xs, right: AppSizes.sm),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            decoration: BoxDecoration(
+              color: getMessageBackGroundColor(),
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12),
+                topRight: const Radius.circular(12),
+                bottomLeft: isSender
+                    ? const Radius.circular(12)
+                    : const Radius.circular(0),
+                bottomRight: isSender
+                    ? const Radius.circular(0)
+                    : const Radius.circular(12),
+              ),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (imagePath != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 50),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        image: AssetImage(imagePath!),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (imagePath != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 50),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image(
+                          image: AssetImage(imagePath!),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    time,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: AppColors.grey,
-                      fontSize: 12,
-                    ),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
                   ),
-                  if (isSender)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Icon(
-                        _getStatusIcon(),
-                        color: _getStatusColor(),
-                        size: 16,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      time,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 12,
                       ),
                     ),
-                ],
-              ),
-            ],
+                    if (isSender)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Icon(
+                          _getStatusIcon(),
+                          color: _getStatusColor(),
+                          size: 16,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],

@@ -33,31 +33,68 @@ class ChatScreen extends StatelessWidget {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: CAppBar(
-            onLeadingTap: () {},
-            title: const RecieverDetails(
-              userName: "Kiro",
-              state: AppStrings.waitingInternet,
-              avatar: Avatar(
-                  imageUrl:
-                      "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png"),
-            ),
-            showBackButton: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.call),
-                color: AppColors.whiteColor,
-                onPressed: () {},
-              ),
-              const PopupMenu([
-                {'icon': Icons.volume_up, 'value': 'Mute'},
-                {'icon': Icons.search, 'value': 'Search'},
-                {'icon': Icons.copy, 'value': 'Change Background'},
-                {'icon': Icons.clear, 'value': 'Clear History'},
-                {'icon': Icons.delete, 'value': 'Delete Chat'},
-              ]),
-            ],
-          ),
+          appBar: state is! MessageSelected
+              ? CAppBar(
+                  onLeadingTap: () {},
+                  title: const RecieverDetails(
+                    userName: "Kiro",
+                    state: AppStrings.waitingInternet,
+                    avatar: Avatar(
+                        imageUrl:
+                            "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png"),
+                  ),
+                  showBackButton: true,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.call),
+                      color: AppColors.whiteColor,
+                      onPressed: () {},
+                    ),
+                    const PopupMenu([
+                      {'icon': Icons.volume_up, 'value': 'Mute'},
+                      {'icon': Icons.search, 'value': 'Search'},
+                      {'icon': Icons.copy, 'value': 'Change Background'},
+                      {'icon': Icons.clear, 'value': 'Clear History'},
+                      {'icon': Icons.delete, 'value': 'Delete Chat'},
+                    ]),
+                  ],
+                )
+              : CAppBar(
+                  onLeadingTap: () {
+                    sl<ChatCubit>().unselectMessage();
+                  },
+                  leadingIcon: Icons.close,
+                  title: const Text("1"),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.copy),
+                      color: AppColors.whiteColor,
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.forward_outlined),
+                      color: AppColors.whiteColor,
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outlined),
+                      color: AppColors.whiteColor,
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      color: AppColors.whiteColor,
+                      onPressed: () {},
+                    ),
+                    // const PopupMenu([
+                    //   {'icon': Icons.volume_up, 'value': 'Mute'},
+                    //   {'icon': Icons.search, 'value': 'Search'},
+                    //   {'icon': Icons.copy, 'value': 'Change Background'},
+                    //   {'icon': Icons.clear, 'value': 'Clear History'},
+                    //   {'icon': Icons.delete, 'value': 'Delete Chat'},
+                    // ]),
+                  ],
+                ),
           body: Stack(
             children: [
               Container(
@@ -74,7 +111,7 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: MessageList(
-                      messages: state is ChatLoaded ? state.messages : [],
+                      messages: state.getMessages,
                     ),
                   ),
                   CinputBar(

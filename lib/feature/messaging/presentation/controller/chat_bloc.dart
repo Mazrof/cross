@@ -3,14 +3,78 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/network/api/api_service.dart';
-import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
 
-  // Update the current page index
+  // Start the socket connection
+
+  Future<void> startSocket() async {
+    SocketService socketService = sl<SocketService>();
+
+    socketService.connect();
+  }
+
+  void unselectMessage() {
+    emit(ChatLoaded(messages: (state as MessageSelected).messages));
+  }
+
+  void messageSelected(int index) {
+    emit(
+      MessageSelected(messages: (state as ChatLoaded).messages, index: index),
+    );
+  }
+
+  void sendMessage(String message) {
+    if (state is ChatLoaded) {
+      print(message);
+
+      sl<SocketService>().socket.emit(
+        "message:sent",
+        {
+          "content": message,
+          "status": "pinned", //or null
+          "durationInMinutes": 10, // can be null
+          "isAnnouncement": true, // for group announcement
+          "isForward": false,
+          "participantId":
+              1, // id of the place where the message gonna be send or null if you will provide reciever id for new personl chats
+          // "replyTo":12,// or null (the message id to which this message reply for)
+          "senderId": 2 // Will be deleted after mirging auth,
+          // "receiverId":2// if you provide a receiver id this means I will create new personal chat
+          // "messageMentions":[
+          //     1,//ids of the users mentioned
+          //     2
+          // ]
+        },
+      );
+
+      final currentState = state as ChatLoaded;
+      final updatedMessages = List<Message>.from(currentState.messages)
+        ..add(
+          Message(isDate: false, sender: "01", content: message, time: "00:00"),
+        );
+      emit(ChatLoaded(messages: updatedMessages));
+    }
+  }
+
+  void receiveMessage(String message) {
+    if (state is ChatLoaded) {
+      print(message);
+
+      final currentState = state as ChatLoaded;
+      final updatedMessages = List<Message>.from(currentState.messages)
+        ..add(
+          Message(isDate: false, sender: "01", content: message, time: "00:00"),
+        );
+      emit(ChatLoaded(messages: updatedMessages));
+    }
+  }
+
+  // Get the prev Messages
   Future<dynamic> getMessages() async {
     Dio dio = sl<Dio>();
 
@@ -21,7 +85,7 @@ class ChatCubit extends Cubit<ChatState> {
       var apiService = sl<ApiService>();
       final res = await apiService.get(endPoint: '/messages', token: "");
 
-      print(jsonDecode(res.data));
+      // print(jsonDecode(res.data));
 
       messages = (jsonDecode(res.data) as List)
           .map(

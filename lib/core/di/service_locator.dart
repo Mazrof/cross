@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -6,6 +8,7 @@ import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
+import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
@@ -48,6 +51,7 @@ class ServiceLocator {
 
   static void registerSingletons() {
     sl.registerSingleton<ApiService>(ApiService());
+    sl.registerLazySingleton<SocketService>(() => SocketService());
     sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<NetworkInfo>(
         () => NetworkInfoImpl(connectionChecker: sl()));

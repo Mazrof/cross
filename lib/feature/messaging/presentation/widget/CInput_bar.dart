@@ -63,7 +63,9 @@ class CinputBar extends StatelessWidget {
                 ),
               ),
             ),
-            const InputBarTrailing()
+            InputBarTrailing(
+              controller: controller,
+            )
           ],
         ),
       ),
