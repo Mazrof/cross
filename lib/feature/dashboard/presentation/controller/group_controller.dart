@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/domain/entity/groups.dart';
+import 'package:telegram/feature/dashboard/data/model/group_model.dart';
+import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
 class GroupsCubit extends Cubit<GroupsState> {
@@ -12,13 +13,14 @@ class GroupsCubit extends Cubit<GroupsState> {
       // Simulate fetching groups from the backend
       await Future.delayed(Duration(seconds: 2));
       final groups = [
-        Group(id: '1', name: 'Group 1'),
-        Group(id: '2', name: 'Group 2'),
-        Group(id: '3', name: 'Group 3'),
+        GroupModel(id: 1, name: 'Group 1'),
+        GroupModel(id: 2, name: 'Group 2'),
+        GroupModel(id: 3, name: 'Group 3'),
       ];
       emit(state.copyWith(groups: groups, currState: CubitState.success));
     } catch (e) {
-      emit(state.copyWith( currState: CubitState.failure , errorMessage: e.toString()));
+      emit(state.copyWith(
+          currState: CubitState.failure, errorMessage: e.toString()));
     }
   }
 

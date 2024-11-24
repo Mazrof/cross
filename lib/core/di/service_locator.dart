@@ -74,7 +74,6 @@ class ServiceLocator {
           networkManager: sl(),
           recaptchaService: sl(),
           checkRecaptchaTocken: sl(),
-
         ));
 
     //splash
@@ -106,7 +105,6 @@ class ServiceLocator {
           forgetPasswordUseCase: sl(),
         ));
 
-
     // nav bar
     sl.registerLazySingleton(() => NavCubit());
 
@@ -118,8 +116,6 @@ class ServiceLocator {
 
     // group cubit
     sl.registerLazySingleton(() => GroupsCubit());
-    
-
   }
 
   static void registerUseCases() {

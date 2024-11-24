@@ -1,5 +1,5 @@
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/domain/entity/groups.dart';
+import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 
 class GroupsState {
   final List<Group> groups;
