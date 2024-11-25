@@ -18,13 +18,26 @@ class ChatCubit extends Cubit<ChatState> {
     socketService.connect();
   }
 
-  void unselectMessage() {
-    emit(ChatLoaded(messages: (state as MessageSelected).messages));
+  void editMessage(int index) {
+    print("Editing Message");
+    emit(EditingMessage(messages: (state).getMessages, index: index));
   }
 
-  void messageSelected(int index) {
+  void defaultState() {
+    emit(ChatLoaded(messages: (state).getMessages));
+  }
+
+  void messageSelected(
+      int index, double dx, double dy, double width, double height) {
     emit(
-      MessageSelected(messages: (state as ChatLoaded).messages, index: index),
+      MessageSelected(
+        messages: (state).getMessages,
+        index: index,
+        xCoordiate: dx,
+        yCoordiate: dy,
+        width: width,
+        height: height,
+      ),
     );
   }
 
@@ -61,14 +74,23 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  void receiveMessage(String message) {
+  void typingMessage() {
+    emit(TypingMessage(messages: state.getMessages));
+  }
+
+  void receiveMessage(dynamic message) {
     if (state is ChatLoaded) {
-      print(message);
+      // message = jsonDecode(message);
 
       final currentState = state as ChatLoaded;
       final updatedMessages = List<Message>.from(currentState.messages)
         ..add(
-          Message(isDate: false, sender: "01", content: message, time: "00:00"),
+          Message(
+            isDate: false,
+            sender: "01",
+            content: message["content"],
+            time: message["createdAt"],
+          ),
         );
       emit(ChatLoaded(messages: updatedMessages));
     }

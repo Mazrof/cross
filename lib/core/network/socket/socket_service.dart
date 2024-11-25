@@ -26,6 +26,7 @@ class SocketService {
     });
 
     socket.on('message:receive', (data) {
+      print(data);
       sl<ChatCubit>().receiveMessage(data);
     });
 

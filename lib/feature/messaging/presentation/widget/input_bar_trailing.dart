@@ -12,25 +12,35 @@ class InputBarTrailing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-          icon: const Icon(Icons.attach_file),
-          color: AppColors.grey,
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.send),
-          color: AppColors.grey,
-          onPressed: () {
-            // Send The Message
-            // sl<SocketService>().sendMessage(controller.text);
+    return sl<ChatCubit>().state is TypingMessage
+        ? Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.send),
+                color: AppColors.grey,
+                onPressed: () {
+                  // Send The Message
+                  // sl<SocketService>().sendMessage(controller.text);
 
-            // add the messages to the front-end
-            sl<ChatCubit>().sendMessage("Hello");
-          },
-        ),
-      ],
-    );
+                  // add the messages to the front-end
+                  sl<ChatCubit>().sendMessage(controller.text);
+                },
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.attach_file),
+                color: AppColors.grey,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.mic_outlined),
+                color: AppColors.grey,
+                onPressed: () {},
+              ),
+            ],
+          );
   }
 }

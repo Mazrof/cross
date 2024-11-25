@@ -29,8 +29,38 @@ class ChatLoaded extends ChatState {
 class MessageSelected extends ChatState {
   final List<Message> messages;
   final int index;
+  final double xCoordiate;
+  final double yCoordiate;
+  final double width;
+  final double height;
 
-  MessageSelected({required this.messages, required this.index});
+  MessageSelected({
+    required this.xCoordiate,
+    required this.yCoordiate,
+    required this.messages,
+    required this.index,
+    required this.width,
+    required this.height,
+  });
+
+  @override
+  List<Message> get getMessages => messages;
+}
+
+class TypingMessage extends ChatState {
+  final List<Message> messages;
+
+  TypingMessage({required this.messages});
+
+  @override
+  List<Message> get getMessages => messages;
+}
+
+class EditingMessage extends ChatState {
+  final List<Message> messages;
+  final int index;
+
+  EditingMessage({required this.messages, required this.index});
 
   @override
   List<Message> get getMessages => messages;

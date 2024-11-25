@@ -6,6 +6,7 @@ import 'package:flutter_launcher_icons/config/config.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -58,7 +59,12 @@ class CinputBar extends StatelessWidget {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                   ),
-                  onChanged: (text) {},
+                  onChanged: (text) {
+                    if (controller.text != "")
+                      sl<ChatCubit>().typingMessage();
+                    else
+                      sl<ChatCubit>().defaultState();
+                  },
                   controller: controller,
                 ),
               ),

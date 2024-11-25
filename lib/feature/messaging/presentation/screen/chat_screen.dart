@@ -33,7 +33,7 @@ class ChatScreen extends StatelessWidget {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: state is! MessageSelected
+          appBar: (state is! MessageSelected && state is! EditingMessage)
               ? CAppBar(
                   onLeadingTap: () {},
                   title: const RecieverDetails(
@@ -61,7 +61,11 @@ class ChatScreen extends StatelessWidget {
                 )
               : CAppBar(
                   onLeadingTap: () {
-                    sl<ChatCubit>().unselectMessage();
+                    if (controller.text.isNotEmpty) {
+                      sl<ChatCubit>().typingMessage();
+                    } else {
+                      sl<ChatCubit>().defaultState();
+                    }
                   },
                   leadingIcon: Icons.close,
                   title: const Text("1"),
@@ -82,9 +86,11 @@ class ChatScreen extends StatelessWidget {
                       onPressed: () {},
                     ),
                     IconButton(
-                      icon: const Icon(Icons.edit),
+                      icon: const Icon(Icons.edit_outlined),
                       color: AppColors.whiteColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        sl<ChatCubit>().editMessage(0);
+                      },
                     ),
                     // const PopupMenu([
                     //   {'icon': Icons.volume_up, 'value': 'Mute'},

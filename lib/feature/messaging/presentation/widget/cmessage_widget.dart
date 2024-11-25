@@ -13,6 +13,7 @@ class ChatMessage extends StatelessWidget {
   final String time;
   final bool isDelivered;
   final bool isSeen;
+  final int index;
 
   const ChatMessage({
     super.key,
@@ -22,6 +23,7 @@ class ChatMessage extends StatelessWidget {
     required this.time,
     this.isDelivered = false,
     this.isSeen = false,
+    required this.index,
   });
 
   @override
@@ -45,7 +47,14 @@ class ChatMessage extends StatelessWidget {
         GestureDetector(
           onLongPress: () {
             print("Long Press detected!");
-            sl<ChatCubit>().messageSelected(0);
+
+            // GlobalKey key = GlobalKey();
+            dynamic object = context.findRenderObject();
+            Offset position = object.localToGlobal(Offset.zero);
+            Size size = object.size;
+
+            sl<ChatCubit>().messageSelected(
+                index, position.dx, position.dy, size.width, size.height);
           },
           child: Container(
             margin: isSender
