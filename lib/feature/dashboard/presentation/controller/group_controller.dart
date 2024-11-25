@@ -7,34 +7,30 @@ import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/appl
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
-
 class GroupsCubit extends Cubit<GroupsState> {
   GroupsCubit(
       {required this.getGroupsUseCase,
       required this.networkManager,
       required this.saveGroupsUseCase,
       required this.getGroupLocalUseCase,
-      required this.applyFilterUseCase}
-  ) : super(GroupsState(groups: []));
+      required this.applyFilterUseCase})
+      : super(GroupsState(groups: []));
 
   GetGroupsUseCase getGroupsUseCase;
-  NetworkManager networkManager ;
+  NetworkManager networkManager;
   SaveGroupsUseCase saveGroupsUseCase;
   GetGroupLocalUseCase getGroupLocalUseCase;
   ApplyFilterUseCase applyFilterUseCase;
 
-
-
-
-
-
-void fetchGroups() async {
+  void fetchGroups() async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
         final result = await getGroupLocalUseCase.call();
-        emit(state.copyWith(currState: CubitState.success, groups: result, errorMessage: null));
+        result.sort((a, b) => a.status ? 1 : -1);
+        emit(state.copyWith(
+            currState: CubitState.success, groups: result, errorMessage: null));
         return;
       }
 
@@ -47,7 +43,13 @@ void fetchGroups() async {
         },
         (groups) {
           saveGroupsUseCase.call(groups);
-          emit(state.copyWith(groups: groups, currState: CubitState.success, errorMessage: null));
+          // filter list to get the status false at the first and then the true
+          groups.sort((a, b) => a.status ? 1 : -1);
+
+          emit(state.copyWith(
+              groups: groups,
+              currState: CubitState.success,
+              errorMessage: null));
         },
       );
     } catch (e) {
@@ -56,15 +58,14 @@ void fetchGroups() async {
     }
   }
 
-
   void filterGroups(String filter) async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
-      
-      bool connection =await networkManager.isConnected();
+      bool connection = await networkManager.isConnected();
       if (!connection) {
         emit(state.copyWith(
-            currState: CubitState.failure, errorMessage: 'No internet connection'));
+            currState: CubitState.failure,
+            errorMessage: 'No internet connection'));
         return;
       }
 
@@ -76,7 +77,8 @@ void fetchGroups() async {
               currState: CubitState.failure, errorMessage: failure.message));
         },
         (success) {
-          emit(state.copyWith( currState: CubitState.success, errorMessage: null));
+          emit(state.copyWith(
+              currState: CubitState.success, errorMessage: null));
         },
       );
     } catch (e) {

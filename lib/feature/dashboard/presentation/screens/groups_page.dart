@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
-import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/data/model/group_model.dart';
-import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_controller.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
@@ -24,47 +21,66 @@ class GroupsPage extends StatelessWidget {
             CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
           });
         }
-        return ListView.builder(
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Groups'),
+          ),
+          body: ListView.builder(
             itemCount: state.groups.length,
             itemBuilder: (context, index) {
               final group = state.groups[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: AppColors.primaryColor,
-                      foregroundColor: AppColors.whiteColor,
-                      child: Text(group.id.toString()),
-                    ),
-                    title: Text(group.name,
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    trailing: SizedBox(
-                      width: 80,
-                      height: 40,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all<Color>(
-                                AppColors.primaryColor),
-                          ),
+                  leading: CircleAvatar(
+                    backgroundColor: AppColors.primaryColor,
+                    foregroundColor: AppColors.whiteColor,
+                    child: Text(group.name[0].toUpperCase()),
+                  ),
+                  title: Text(
+                    group.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Group Size: ${group.groupSize}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        'Privacy: ${group.privacy ? 'Private' : 'Public'}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  trailing: group.status
+                      ? Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        )
+                      : IconButton(
+                          icon:
+                              const Icon(Icons.filter_alt, color:AppColors.primaryColor),
                           onPressed: () {
-                            sl<GroupsCubit>().filterGroups(group.id.toString());
-
+                            // Handle filter action
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text(
-                                    ' ${group.name} is now filtered',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                  backgroundColor:
-                                      AppColors.primaryColor.withOpacity(.5)),
+                                content: Text(
+                                  'Filter applied to group ${group.name}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                backgroundColor:
+                                    AppColors.primaryColor.withOpacity(.5),
+                              ),
                             );
                           },
-                          child: Text('Filter',
-                              style: Theme.of(context).textTheme.bodySmall)),
-                    )),
+                        ),
+                ),
               );
-            });
+            },
+          ),
+        );
       },
     );
   }
