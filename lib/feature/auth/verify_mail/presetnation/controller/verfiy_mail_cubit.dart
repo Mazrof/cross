@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/network_manager.dart';
-import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/entity/verify_mail_data.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';

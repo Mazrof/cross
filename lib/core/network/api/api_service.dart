@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:telegram/core/local/user_access_token.dart';
@@ -9,8 +7,9 @@ import '../../error/faliure.dart';
 
 class ApiService {
   static const String baseUrl = endPointDev;
-  static const String endPointPro = "https://myfakeapi.com";
-  static const String endPointDev = "https://myfakeapi.com";
+  static const String endPointPro =
+      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
+  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
 
   Dio dio = Dio(
     BaseOptions(
@@ -38,6 +37,7 @@ class ApiService {
 
   Future<Response> get({
     required String endPoint,
+    Object? data,
     String? token,
   }) async {
     try {
@@ -49,10 +49,9 @@ class ApiService {
 
       Response response = await dio.get(
         '$baseUrl/$endPoint',
+        data: data,
       );
-      // Response response = await dio.get(
-      //   '$baseUrl/$endPoint?userType=seller',
-      // );
+
       print(response.data);
       print(response.statusCode);
 
@@ -65,7 +64,6 @@ class ApiService {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        
         throw _handleError(e);
       }
     }
@@ -91,7 +89,6 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        
         throw response;
       }
     } catch (e) {

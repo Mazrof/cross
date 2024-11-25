@@ -9,12 +9,9 @@ class NightModeCubit extends Cubit<bool> {
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     var isDarkMode = brightness == Brightness.dark;
     final isDarkModeFromCache = CacheHelper.read(key: 'isDarkMode');
-    if (isDarkModeFromCache != null) {
+    isDarkMode = isDarkModeFromCache ==true?true:false;
 
-      isDarkMode = isDarkModeFromCache ==true?true:false;
-
-    }
-    return isDarkMode;
+      return isDarkMode;
   }
 
   void toggleNightMode() {

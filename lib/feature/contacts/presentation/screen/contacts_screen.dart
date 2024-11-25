@@ -1,11 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/contact_list/contact_list.dart';
-import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';

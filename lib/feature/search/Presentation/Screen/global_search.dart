@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/search/Presentation/Widget/search_result_tile.dart';
 

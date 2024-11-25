@@ -23,6 +23,25 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
+import 'package:telegram/feature/dashboard/data/data_source/local_data_source/dashboard_data_source.dart';
+import 'package:telegram/feature/dashboard/data/data_source/remote_data_source/dashboard_data_source.dart';
+import 'package:telegram/feature/dashboard/data/repository/dashboard_local_repo.dart';
+import 'package:telegram/feature/dashboard/data/repository/dashboard_remote_repo.dart';
+import 'package:telegram/feature/dashboard/domain/repository/dashboard_local_repo.dart';
+import 'package:telegram/feature/dashboard/domain/repository/dashboard_repo.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_groups.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_groups.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_users.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/apply_filter.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/ban_user.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
+import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/unban_user.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/banned_users_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/group_controller.dart';
+import 'package:telegram/feature/dashboard/presentation/controller/user_controller.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/local_data/sign_up_local_data_source.dart';
 import 'package:telegram/feature/auth/signup/data/data_source/remote_data/sign_up_remote_data_source.dart';
@@ -45,6 +64,7 @@ final sl = GetIt.instance;
 class ServiceLocator {
   static void init() {
     CacheHelper.init();
+    
     registerSingletons();
     registerDataSources();
     registerRepositories();
@@ -70,7 +90,6 @@ class ServiceLocator {
           networkManager: sl(),
           recaptchaService: sl(),
           checkRecaptchaTocken: sl(),
-
         ));
 
     //splash
@@ -101,6 +120,37 @@ class ServiceLocator {
           networkManager: sl(),
           forgetPasswordUseCase: sl(),
         ));
+
+    // nav bar
+    sl.registerLazySingleton(() => NavCubit());
+
+    //user dashboard cubit
+    sl.registerLazySingleton(() => UsersCubit(
+          networkManager: sl(),
+          getUsersUseCase: sl(),
+          banUserUseCase: sl(),
+          getUsersLocalUseCase: sl(),
+          saveUsersUseCase: sl(),
+
+         
+    ));
+
+    // banned users cubit
+    sl.registerLazySingleton(() => BannedUsersCubit(
+          getUsersLocalUseCase: sl(),
+          getUsersUseCase: sl(),
+          unBanUserUseCase: sl(),
+          networkManager: sl(),
+    ));
+
+    // group cubit
+    sl.registerLazySingleton(() => GroupsCubit(
+          networkManager: sl(),
+          getGroupsUseCase: sl(),
+          applyFilterUseCase: sl(),
+          getGroupLocalUseCase: sl(),
+          saveGroupsUseCase: sl(),
+    ));
   }
 
   static void registerUseCases() {
@@ -128,6 +178,19 @@ class ServiceLocator {
           sl(),
         ));
     sl.registerLazySingleton(() => LogOutUseCase(sl()));
+
+    //dashboard
+    sl.registerLazySingleton(() => GetGroupsUseCase(sl()));
+    sl.registerLazySingleton(() => GetUsersUseCase(sl()));
+    sl.registerLazySingleton(() => BanUserUseCase(sl()));
+    sl.registerLazySingleton(() => UnBanUserUseCase(sl()));
+    sl.registerLazySingleton(() => ApplyFilterUseCase(sl()));
+
+    //local dashboard
+    sl.registerLazySingleton(() => GetGroupLocalUseCase(sl()));
+    sl.registerLazySingleton(() => SaveGroupsUseCase(sl()));
+    sl.registerLazySingleton(() => SaveUsersUseCase(sl()));
+    sl.registerLazySingleton(() => GetUsersLocalUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -148,6 +211,13 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
+
+    //dashboard
+    sl.registerLazySingleton<DashboardLocalRepo>(() => DashboardLocalRepoImpl(
+          localDataSource: sl(),
+        ));
+    sl.registerLazySingleton<DashboardRepo>(
+        () => DashboardRemoteRepoImpl(dataSource: sl()));
   }
 
   static void registerDataSources() {
@@ -171,10 +241,17 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
+
+    //dashboard
+    sl.registerLazySingleton<DashboardLocalDataSource>(
+        () => DashboardLocalDataSourceImpl());
+    sl.registerLazySingleton<DashboardDataSource>(
+        () => DashboardDataSourceImpl());
   }
 
   static void registerSingletons() {
     sl.registerLazySingleton(() => RecaptchaService());
+
     sl.registerSingleton<ApiService>(ApiService());
     sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<NetworkInfo>(

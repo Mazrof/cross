@@ -5,19 +5,24 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:connectivity_plus/connectivity_plus.dart' as _i9;
+import 'package:connectivity_plus/connectivity_plus.dart' as _i11;
 import 'package:dartz/dartz.dart' as _i3;
-import 'package:flutter/material.dart' as _i11;
+import 'package:flutter/foundation.dart' as _i6;
+import 'package:flutter/material.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:telegram/core/error/faliure.dart' as _i6;
-import 'package:telegram/core/network/network_manager.dart' as _i8;
-import 'package:telegram/core/validator/app_validator.dart' as _i10;
+import 'package:telegram/core/error/faliure.dart' as _i8;
+import 'package:telegram/core/network/network_manager.dart' as _i10;
+import 'package:telegram/core/validator/app_validator.dart' as _i12;
 import 'package:telegram/feature/auth/login/data/model/login_request_model.dart'
-    as _i7;
+    as _i9;
 import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart'
     as _i2;
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart'
-    as _i5;
+    as _i7;
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_github_use_case.dart'
+    as _i14;
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_use_case.dart'
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -64,10 +69,57 @@ class _FakeStreamSubscription_2<T> extends _i1.SmartFake
         );
 }
 
+class _FakeWidget_3 extends _i1.SmartFake implements _i5.Widget {
+  _FakeWidget_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeInheritedWidget_4 extends _i1.SmartFake
+    implements _i5.InheritedWidget {
+  _FakeInheritedWidget_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeDiagnosticsNode_5 extends _i1.SmartFake
+    implements _i5.DiagnosticsNode {
+  _FakeDiagnosticsNode_5(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({
+    _i6.TextTreeConfiguration? parentConfiguration,
+    _i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info,
+  }) =>
+      super.toString();
+}
+
 /// A class which mocks [LoginUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLoginUseCase extends _i1.Mock implements _i5.LoginUseCase {
+class MockLoginUseCase extends _i1.Mock implements _i7.LoginUseCase {
   MockLoginUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -82,40 +134,40 @@ class MockLoginUseCase extends _i1.Mock implements _i5.LoginUseCase {
       ) as _i2.LoginRepository);
 
   @override
-  _i4.Future<_i3.Either<_i6.Failure, _i3.Unit>> call(
-          _i7.LoginRequestBody? loginModel) =>
+  _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>> call(
+          _i9.LoginRequestBody? loginModel) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [loginModel],
         ),
-        returnValue: _i4.Future<_i3.Either<_i6.Failure, _i3.Unit>>.value(
-            _FakeEither_1<_i6.Failure, _i3.Unit>(
+        returnValue: _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>>.value(
+            _FakeEither_1<_i8.Failure, _i3.Unit>(
           this,
           Invocation.method(
             #call,
             [loginModel],
           ),
         )),
-      ) as _i4.Future<_i3.Either<_i6.Failure, _i3.Unit>>);
+      ) as _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>>);
 }
 
 /// A class which mocks [NetworkManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkManager extends _i1.Mock implements _i8.NetworkManager {
+class MockNetworkManager extends _i1.Mock implements _i10.NetworkManager {
   MockNetworkManager() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i9.ConnectivityResult get connectionStatus => (super.noSuchMethod(
+  _i11.ConnectivityResult get connectionStatus => (super.noSuchMethod(
         Invocation.getter(#connectionStatus),
-        returnValue: _i9.ConnectivityResult.bluetooth,
-      ) as _i9.ConnectivityResult);
+        returnValue: _i11.ConnectivityResult.bluetooth,
+      ) as _i11.ConnectivityResult);
 
   @override
-  set connectionStatus(_i9.ConnectivityResult? _connectionStatus) =>
+  set connectionStatus(_i11.ConnectivityResult? _connectionStatus) =>
       super.noSuchMethod(
         Invocation.setter(
           #connectionStatus,
@@ -125,19 +177,19 @@ class MockNetworkManager extends _i1.Mock implements _i8.NetworkManager {
       );
 
   @override
-  _i4.StreamSubscription<List<_i9.ConnectivityResult>>
+  _i4.StreamSubscription<List<_i11.ConnectivityResult>>
       get connectivitySubscription => (super.noSuchMethod(
             Invocation.getter(#connectivitySubscription),
             returnValue:
-                _FakeStreamSubscription_2<List<_i9.ConnectivityResult>>(
+                _FakeStreamSubscription_2<List<_i11.ConnectivityResult>>(
               this,
               Invocation.getter(#connectivitySubscription),
             ),
-          ) as _i4.StreamSubscription<List<_i9.ConnectivityResult>>);
+          ) as _i4.StreamSubscription<List<_i11.ConnectivityResult>>);
 
   @override
   set connectivitySubscription(
-          _i4.StreamSubscription<List<_i9.ConnectivityResult>>?
+          _i4.StreamSubscription<List<_i11.ConnectivityResult>>?
               _connectivitySubscription) =>
       super.noSuchMethod(
         Invocation.setter(
@@ -148,11 +200,11 @@ class MockNetworkManager extends _i1.Mock implements _i8.NetworkManager {
       );
 
   @override
-  _i4.Stream<_i9.ConnectivityResult> get connectionStatusStream =>
+  _i4.Stream<_i11.ConnectivityResult> get connectionStatusStream =>
       (super.noSuchMethod(
         Invocation.getter(#connectionStatusStream),
-        returnValue: _i4.Stream<_i9.ConnectivityResult>.empty(),
-      ) as _i4.Stream<_i9.ConnectivityResult>);
+        returnValue: _i4.Stream<_i11.ConnectivityResult>.empty(),
+      ) as _i4.Stream<_i11.ConnectivityResult>);
 
   @override
   _i4.Future<bool> isConnected() => (super.noSuchMethod(
@@ -176,13 +228,13 @@ class MockNetworkManager extends _i1.Mock implements _i8.NetworkManager {
 /// A class which mocks [AppValidator].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppValidator extends _i1.Mock implements _i10.AppValidator {
+class MockAppValidator extends _i1.Mock implements _i12.AppValidator {
   MockAppValidator() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  bool isFormValid(_i11.GlobalKey<_i11.FormState>? formKey) =>
+  bool isFormValid(_i5.GlobalKey<_i5.FormState>? formKey) =>
       (super.noSuchMethod(
         Invocation.method(
           #isFormValid,
@@ -190,4 +242,225 @@ class MockAppValidator extends _i1.Mock implements _i10.AppValidator {
         ),
         returnValue: false,
       ) as bool);
+}
+
+/// A class which mocks [LoginWithGoogleUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLoginWithGoogleUseCase extends _i1.Mock
+    implements _i13.LoginWithGoogleUseCase {
+  MockLoginWithGoogleUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.LoginRepository get loginRepository => (super.noSuchMethod(
+        Invocation.getter(#loginRepository),
+        returnValue: _FakeLoginRepository_0(
+          this,
+          Invocation.getter(#loginRepository),
+        ),
+      ) as _i2.LoginRepository);
+
+  @override
+  _i4.Future<_i3.Either<_i8.Failure, String>> call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i4.Future<_i3.Either<_i8.Failure, String>>.value(
+            _FakeEither_1<_i8.Failure, String>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+          ),
+        )),
+      ) as _i4.Future<_i3.Either<_i8.Failure, String>>);
+}
+
+/// A class which mocks [LoginWithGithubUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLoginWithGithubUseCase extends _i1.Mock
+    implements _i14.LoginWithGithubUseCase {
+  MockLoginWithGithubUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.LoginRepository get loginRepository => (super.noSuchMethod(
+        Invocation.getter(#loginRepository),
+        returnValue: _FakeLoginRepository_0(
+          this,
+          Invocation.getter(#loginRepository),
+        ),
+      ) as _i2.LoginRepository);
+
+  @override
+  _i4.Future<_i3.Either<_i8.Failure, String>> call(_i5.BuildContext? context) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [context],
+        ),
+        returnValue: _i4.Future<_i3.Either<_i8.Failure, String>>.value(
+            _FakeEither_1<_i8.Failure, String>(
+          this,
+          Invocation.method(
+            #call,
+            [context],
+          ),
+        )),
+      ) as _i4.Future<_i3.Either<_i8.Failure, String>>);
+}
+
+/// A class which mocks [BuildContext].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockBuildContext extends _i1.Mock implements _i5.BuildContext {
+  MockBuildContext() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Widget get widget => (super.noSuchMethod(
+        Invocation.getter(#widget),
+        returnValue: _FakeWidget_3(
+          this,
+          Invocation.getter(#widget),
+        ),
+      ) as _i5.Widget);
+
+  @override
+  bool get mounted => (super.noSuchMethod(
+        Invocation.getter(#mounted),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get debugDoingBuild => (super.noSuchMethod(
+        Invocation.getter(#debugDoingBuild),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i5.InheritedWidget dependOnInheritedElement(
+    _i5.InheritedElement? ancestor, {
+    Object? aspect,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #dependOnInheritedElement,
+          [ancestor],
+          {#aspect: aspect},
+        ),
+        returnValue: _FakeInheritedWidget_4(
+          this,
+          Invocation.method(
+            #dependOnInheritedElement,
+            [ancestor],
+            {#aspect: aspect},
+          ),
+        ),
+      ) as _i5.InheritedWidget);
+
+  @override
+  void visitAncestorElements(_i5.ConditionalElementVisitor? visitor) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #visitAncestorElements,
+          [visitor],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void visitChildElements(_i5.ElementVisitor? visitor) => super.noSuchMethod(
+        Invocation.method(
+          #visitChildElements,
+          [visitor],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void dispatchNotification(_i5.Notification? notification) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #dispatchNotification,
+          [notification],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i5.DiagnosticsNode describeElement(
+    String? name, {
+    _i6.DiagnosticsTreeStyle? style = _i6.DiagnosticsTreeStyle.errorProperty,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeElement,
+          [name],
+          {#style: style},
+        ),
+        returnValue: _FakeDiagnosticsNode_5(
+          this,
+          Invocation.method(
+            #describeElement,
+            [name],
+            {#style: style},
+          ),
+        ),
+      ) as _i5.DiagnosticsNode);
+
+  @override
+  _i5.DiagnosticsNode describeWidget(
+    String? name, {
+    _i6.DiagnosticsTreeStyle? style = _i6.DiagnosticsTreeStyle.errorProperty,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeWidget,
+          [name],
+          {#style: style},
+        ),
+        returnValue: _FakeDiagnosticsNode_5(
+          this,
+          Invocation.method(
+            #describeWidget,
+            [name],
+            {#style: style},
+          ),
+        ),
+      ) as _i5.DiagnosticsNode);
+
+  @override
+  List<_i5.DiagnosticsNode> describeMissingAncestor(
+          {required Type? expectedAncestorType}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeMissingAncestor,
+          [],
+          {#expectedAncestorType: expectedAncestorType},
+        ),
+        returnValue: <_i5.DiagnosticsNode>[],
+      ) as List<_i5.DiagnosticsNode>);
+
+  @override
+  _i5.DiagnosticsNode describeOwnershipChain(String? name) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeOwnershipChain,
+          [name],
+        ),
+        returnValue: _FakeDiagnosticsNode_5(
+          this,
+          Invocation.method(
+            #describeOwnershipChain,
+            [name],
+          ),
+        ),
+      ) as _i5.DiagnosticsNode);
 }

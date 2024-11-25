@@ -62,30 +62,42 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> signInWithGoogle() async {
-    emit(LoginState());
-
     // to be modified
+    bool conncection = await networkManager.isConnected();
+    print('i am here ');
+
+    if (!conncection) {
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'No Internet Connection'));
+      return;
+    }
+
     final result = await loginWithGoogleUseCase.call();
 
-    // Still need to handle errors
-
-    // print(result);
-    // result.fold(
-    //   (failure) {
-    //     emit(SignUpError(failure.message));
-    //   },
-    //   (user) {
-    //     emit(SignUpSuccess(user));
-    //   },
-    // );
+    result.fold((l) {
+      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+    }, (r) {
+      emit(state.copyWith(state: LoginStatusEnum.success));
+    });
   }
 
   Future<void> signInWithGithub(context) async {
-    emit(LoginState());
+    bool conncection = await networkManager.isConnected();
+    print('github');
 
+    if (!conncection) {
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'No Internet Connection'));
+      return;
+    }
+    print('github');
     final result = await loginWithGithubUseCase.call(context);
-
-    // Still need to handle errors
+    print('github3');
+    result.fold((l) {
+      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+    }, (r) {
+      emit(state.copyWith(state: LoginStatusEnum.success));
+    });
   }
 
   void emitLoginStates(LoginRequestBody loginRequestBody) async {

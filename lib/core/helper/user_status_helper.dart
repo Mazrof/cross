@@ -17,11 +17,8 @@ class UserStatusHelper {
       } else {
         return 'login';
       }
-    } else if (loggedIn != null) {
-      return 'home';
-    } else {
-      return 'login';
-    }
+    } else    return 'home';
+  
 
   }
 
