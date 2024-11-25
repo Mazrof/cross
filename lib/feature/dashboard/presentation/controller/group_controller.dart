@@ -27,10 +27,11 @@ class GroupsCubit extends Cubit<GroupsState> {
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
-        final result = await getGroupLocalUseCase.call();
-        result.sort((a, b) => a.status ? 1 : -1);
+      
+
+     
         emit(state.copyWith(
-            currState: CubitState.success, groups: result, errorMessage: null));
+            currState: CubitState.success, errorMessage: null));
         return;
       }
 
@@ -43,8 +44,8 @@ class GroupsCubit extends Cubit<GroupsState> {
         },
         (groups) {
           saveGroupsUseCase.call(groups);
-          // filter list to get the status false at the first and then the true
-          groups.sort((a, b) => a.status ? 1 : -1);
+          //sort groups from the sorted to unfiltered
+          groups.sort((a, b) => a.hasFilter ? 1 : -1);
 
           emit(state.copyWith(
               groups: groups,

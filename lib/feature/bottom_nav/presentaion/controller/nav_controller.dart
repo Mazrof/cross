@@ -11,23 +11,34 @@ import 'package:telegram/feature/dashboard/presentation/screens/users_page.dart'
 
 class NavCubit extends Cubit<NavState> {
   NavCubit() : super(NavState(index: 0));
-
   final List<Widget> screens = [
-    BlocProvider(
-      create: (context) => sl<UsersCubit>()..fetchUsers(),
+    BlocProvider.value(
+      value: sl<UsersCubit>()..fetchUsers(),
       child: UsersPage(),
     ),
-    BlocProvider(
-      create: (context) => sl<BannedUsersCubit>()..fetchBannedUsers(),
+    BlocProvider.value(
+      value: sl<BannedUsersCubit>()..fetchBannedUsers(),
       child: BannedUsers(),
     ),
-    BlocProvider(
-      create: (context) => sl<GroupsCubit>()..fetchGroups(),
+    BlocProvider.value(
+      value: sl<GroupsCubit>()..fetchGroups(),
       child: GroupsPage(),
-    )
+    ),
   ];
-
   void updateCurrentIndex(int index) {
     emit(state.copyWith(index: index));
+
+    // Trigger fetch based on the index
+    switch (index) {
+      case 0:
+        sl<UsersCubit>().fetchUsers();
+        break;
+      case 1:
+        sl<BannedUsersCubit>().fetchBannedUsers();
+        break;
+      case 2:
+        sl<GroupsCubit>().fetchGroups();
+        break;
+    }
   }
 }

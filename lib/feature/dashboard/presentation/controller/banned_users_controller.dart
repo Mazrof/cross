@@ -25,11 +25,9 @@ class BannedUsersCubit extends Cubit<BannedUsersState> {
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
-        final result = await getUsersLocalUseCase.call();
-        List<User> bannedUsers =
-            result.where((user) => !user.status ).toList();
+     
         emit(state.copyWith(
-            currState: CubitState.success, bannedUsers: bannedUsers));
+            currState: CubitState.success,));
         return;
       }
 

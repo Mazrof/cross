@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:telegram/core/local/hive_helper.dart';
 import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
@@ -31,6 +33,10 @@ void main() async {
       builder: (context) => const App(),
     ),
   );
+
+   Future.delayed(Duration.zero, () {
+     Hive.close();
+  });
 }
 
 Future<void> _initializeApp() async {

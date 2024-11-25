@@ -7,8 +7,10 @@ import '../../error/faliure.dart';
 
 class ApiService {
   static const String baseUrl = endPointDev;
-  static const String endPointPro = "https://myfakeapi.com";
-  static const String endPointDev = "https://myfakeapi.com";
+  static const String endPointPro =
+      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
+  static const String endPointDev =
+      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
 
   Dio dio = Dio(
     BaseOptions(
@@ -48,9 +50,7 @@ class ApiService {
       Response response = await dio.get(
         '$baseUrl/$endPoint',
       );
-      // Response response = await dio.get(
-      //   '$baseUrl/$endPoint?userType=seller',
-      // );
+
       print(response.data);
       print(response.statusCode);
 
@@ -63,7 +63,6 @@ class ApiService {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        
         throw _handleError(e);
       }
     }
@@ -89,7 +88,6 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        
         throw response;
       }
     } catch (e) {

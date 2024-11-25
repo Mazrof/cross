@@ -5,10 +5,10 @@ class Group extends Equatable {
   final int groupSize;
   final String name;
   final bool privacy;
-  final bool status;
+  final bool hasFilter;
 
   const Group({
-    required this.status,
+    required this.hasFilter,
     required this.id,
     required this.groupSize,
     required this.name,
@@ -16,5 +16,5 @@ class Group extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, groupSize, name, privacy, status];
+  List<Object?> get props => [id, groupSize, name, privacy, hasFilter];
 }

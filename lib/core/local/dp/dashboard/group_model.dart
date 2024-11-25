@@ -17,16 +17,16 @@ class GroupModel extends Group {
   @HiveField(3)
   final bool privacy;
   @HiveField(4)
-  final bool status;
+  final bool hasFilter;
 
   GroupModel({
-    required this.status,
+    required this.hasFilter,
     required this.id,
     required this.groupSize,
     required this.name,
     required this.privacy,
   }) : super(
-          status: status,
+          hasFilter: hasFilter,
           id: id,
           groupSize: groupSize,
           name: name,
@@ -35,7 +35,7 @@ class GroupModel extends Group {
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
-      status: json['status'],
+      hasFilter: json['hasFilter'],
       id: json['id'].toString(),
       groupSize: json['groupSize'],
       name: json['communities']['name'],
@@ -45,7 +45,7 @@ class GroupModel extends Group {
 
   Map<String, dynamic> toJson() {
     return {
-      'status': status,
+      'hasFilter': hasFilter,
       'id': id,
       'groupSize': groupSize,
       'name': name,
@@ -64,7 +64,7 @@ class GroupModel extends Group {
         other.id == id &&
         other.groupSize == groupSize &&
         other.name == name &&
-        other.status == status &&
+        other.hasFilter == hasFilter &&
         other.privacy == privacy;
   }
 
@@ -74,7 +74,7 @@ class GroupModel extends Group {
       groupSize.hashCode ^
       name.hashCode ^
       privacy.hashCode ^
-      status.hashCode;
+      hasFilter.hashCode;
 
   @override
   String toString() {

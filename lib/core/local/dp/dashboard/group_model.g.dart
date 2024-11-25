@@ -17,7 +17,7 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GroupModel(
-      status: fields[4] as bool,
+      hasFilter: fields[4] as bool,
       id: fields[0] as String,
       groupSize: fields[1] as int,
       name: fields[2] as String,
@@ -38,7 +38,7 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       ..writeByte(3)
       ..write(obj.privacy)
       ..writeByte(4)
-      ..write(obj.status);
+      ..write(obj.hasFilter);
   }
 
   @override

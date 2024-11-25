@@ -24,13 +24,12 @@ class UsersCubit extends Cubit<UsersState> {
   }) : super(UsersState(users: []));
 
   void fetchUsers() async {
-    emit(state.copyWith(currState: CubitState.loading));
+    print('fetchUsers');
+    emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
-        final result = await getUsersLocalUseCase.call();
-        List<UserModel> users = result.where((user) => user.status).toList();
-        emit(state.copyWith(currState: CubitState.success, users: users));
+        emit(state.copyWith(currState: CubitState.success, errorMessage: null));
         return;
       }
 
@@ -44,7 +43,8 @@ class UsersCubit extends Cubit<UsersState> {
         (users) {
           saveUsersUseCase.call(users);
           users = users.where((user) => user.status).toList();
-          emit(state.copyWith(users: users, currState: CubitState.success));
+          emit(state.copyWith(
+              users: users, currState: CubitState.success, errorMessage: null));
         },
       );
     } catch (e) {
@@ -54,7 +54,7 @@ class UsersCubit extends Cubit<UsersState> {
   }
 
   void banUser(String userID) async {
-    emit(state.copyWith(currState: CubitState.loading));
+    emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
@@ -74,7 +74,9 @@ class UsersCubit extends Cubit<UsersState> {
           final updatedUsers =
               state.users.where((user) => user.id != userID).toList();
           emit(state.copyWith(
-              users: updatedUsers, currState: CubitState.success));
+              users: updatedUsers,
+              currState: CubitState.success,
+              errorMessage: null));
         },
       );
     } catch (e) {

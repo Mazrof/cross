@@ -49,13 +49,17 @@ void main() {
   group('GroupsCubit', () {
     final groups = [
       GroupModel(
-          id: '1', groupSize: 10, name: 'Group 1', privacy: true, status: true),
+          id: '1',
+          groupSize: 10,
+          name: 'Group 1',
+          privacy: true,
+          hasFilter: true),
       GroupModel(
           id: '2',
           groupSize: 20,
           name: 'Group 2',
           privacy: false,
-          status: true),
+          hasFilter: true),
     ];
 
     blocTest<GroupsCubit, GroupsState>(
@@ -111,22 +115,18 @@ void main() {
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => false);
         when(mockApplyFilterUseCase.call(any))
             .thenAnswer((_) async => Right(true));
-        
-      
+
         return groupsCubit;
       },
       act: (cubit) {
         cubit.filterGroups('1');
-
       },
       expect: () => [
-     
         GroupsState(groups: [], currState: CubitState.loading),
         GroupsState(
             groups: [],
             currState: CubitState.failure,
             errorMessage: 'No internet connection'),
-      
       ],
     );
 

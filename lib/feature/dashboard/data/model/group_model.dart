@@ -6,13 +6,16 @@ class GroupModel extends Group {
     required int groupSize,
     required String name,
     required bool privacy,
-    required bool status, // Add status field
+    required bool hasFilter, // Add status field
+   
   }) : super(
+
           id: id,
           groupSize: groupSize,
           name: name,
           privacy: privacy,
-          status: status, // Add status field
+          hasFilter: hasFilter, // Add status field
+        
         );
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -21,7 +24,7 @@ class GroupModel extends Group {
       groupSize: json['groupSize'],
       name: json['communities']['name'],
       privacy: json['communities']['privacy'],
-      status: json['status'], // Add status field
+      hasFilter: json['hasFilter'], // Add status field
     );
   }
 
@@ -31,7 +34,7 @@ class GroupModel extends Group {
       'groupSize': groupSize,
       'name': name,
       'privacy': privacy,
-      'status': status, // Add status field
+      'hasFilter': hasFilter, // Add status field
     };
   }
 
@@ -44,7 +47,8 @@ class GroupModel extends Group {
         other.groupSize == groupSize &&
         other.name == name &&
         other.privacy == privacy &&
-        other.status == status; // Add status field
+        other.hasFilter == hasFilter; // Add status field
+        
   }
 
   @override
@@ -53,10 +57,10 @@ class GroupModel extends Group {
       groupSize.hashCode ^
       name.hashCode ^
       privacy.hashCode ^
-      status.hashCode; // Add status field
+      hasFilter.hashCode; // Add status field
 
   @override
   String toString() {
-    return 'GroupModel(id: $id, groupSize: $groupSize, name: $name, privacy: $privacy, status: $status)'; // Add status field
+    return 'GroupModel(id: $id, groupSize: $groupSize, name: $name, privacy: $privacy, status: $hasFilter)'; // Add status field
   }
 }
