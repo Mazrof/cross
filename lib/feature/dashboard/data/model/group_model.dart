@@ -7,24 +7,21 @@ class GroupModel extends Group {
     required String name,
     required bool privacy,
     required bool hasFilter, // Add status field
-   
   }) : super(
-
           id: id,
           groupSize: groupSize,
           name: name,
           privacy: privacy,
           hasFilter: hasFilter, // Add status field
-        
         );
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
       id: json['id'].toString(),
       groupSize: json['groupSize'],
-      name: json['communities']['name'],
-      privacy: json['communities']['privacy'],
-      hasFilter: json['hasFilter'], // Add status field
+      name: json['community']['name'],
+      privacy: json['community']['privacy'],
+      hasFilter: json['hasFilter'],
     );
   }
 
@@ -48,7 +45,6 @@ class GroupModel extends Group {
         other.name == name &&
         other.privacy == privacy &&
         other.hasFilter == hasFilter; // Add status field
-        
   }
 
   @override

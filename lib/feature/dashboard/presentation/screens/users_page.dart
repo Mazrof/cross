@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/user_controller.dart';
@@ -100,17 +101,19 @@ class UsersContent extends StatelessWidget {
                 color: AppColors.errorColor,
                 size: 35,
               ),
-              onPressed: () {
-                context.read<UsersCubit>().banUser(user.id);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'User ${user.username} banned',
-                      style: Theme.of(context).textTheme.bodySmall,
+              onPressed: () async {
+                Future<bool> result = sl<UsersCubit>().banUser(user.id);
+                if (await result) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'User ${user.username} banned',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      backgroundColor: AppColors.primaryColor.withOpacity(.5),
                     ),
-                    backgroundColor: AppColors.primaryColor.withOpacity(.5),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ),

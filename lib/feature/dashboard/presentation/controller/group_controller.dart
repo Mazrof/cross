@@ -27,11 +27,7 @@ class GroupsCubit extends Cubit<GroupsState> {
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
-      
-
-     
-        emit(state.copyWith(
-            currState: CubitState.success, errorMessage: null));
+        emit(state.copyWith(currState: CubitState.success, errorMessage: null));
         return;
       }
 
@@ -59,7 +55,7 @@ class GroupsCubit extends Cubit<GroupsState> {
     }
   }
 
-  void filterGroups(String filter) async {
+  Future<bool> filterGroups(String filter) async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
@@ -67,7 +63,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         emit(state.copyWith(
             currState: CubitState.failure,
             errorMessage: 'No internet connection'));
-        return;
+        return false;
       }
 
       final result = await applyFilterUseCase.call(filter);
@@ -76,15 +72,18 @@ class GroupsCubit extends Cubit<GroupsState> {
         (failure) {
           emit(state.copyWith(
               currState: CubitState.failure, errorMessage: failure.message));
+              return false;
         },
         (success) {
-          emit(state.copyWith(
-              currState: CubitState.success, errorMessage: null));
+          fetchGroups();
+          return true;
         },
       );
     } catch (e) {
       emit(state.copyWith(
           currState: CubitState.failure, errorMessage: e.toString()));
+      return false;
     }
+    return false;
   }
 }

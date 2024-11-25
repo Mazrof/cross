@@ -119,7 +119,7 @@ void main() {
         return groupsCubit;
       },
       act: (cubit) {
-        cubit.filterGroups('1');
+        cubit.filterGroups('1',);
       },
       expect: () => [
         GroupsState(groups: [], currState: CubitState.loading),

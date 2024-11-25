@@ -53,7 +53,7 @@ class UsersCubit extends Cubit<UsersState> {
     }
   }
 
-  void banUser(String userID) async {
+  Future<bool> banUser(String userID) async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
@@ -61,7 +61,7 @@ class UsersCubit extends Cubit<UsersState> {
         emit(state.copyWith(
             currState: CubitState.failure,
             errorMessage: 'No Internet Connection'));
-        return;
+        return false;
       }
 
       final result = await banUserUseCase.call(userID);
@@ -69,6 +69,7 @@ class UsersCubit extends Cubit<UsersState> {
         (failure) {
           emit(state.copyWith(
               currState: CubitState.failure, errorMessage: failure.message));
+              return false;
         },
         (success) {
           final updatedUsers =
@@ -77,11 +78,14 @@ class UsersCubit extends Cubit<UsersState> {
               users: updatedUsers,
               currState: CubitState.success,
               errorMessage: null));
+              return true;
         },
       );
     } catch (e) {
       emit(state.copyWith(
           currState: CubitState.failure, errorMessage: e.toString()));
+          return false;
     }
+    return false;
   }
 }

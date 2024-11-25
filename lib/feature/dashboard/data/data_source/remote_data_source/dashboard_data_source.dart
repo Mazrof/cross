@@ -22,21 +22,26 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
   @override
   Future<List<UserModel>> getUsers() async {
-    String endpoint = 'admin/users';
+    String endpoint = 'admins/';
     print('start fetching users');
 
     var response = await apiService.get(
       endPoint: endpoint,
       token: UserAccessToken.accessToken,
+      data: {
+        'adminId': 1,
+
+        ///----------------------->> This is the issue
+      },
     );
 
     if (response.statusCode == 200) {
-      final decodedJson = jsonDecode(response.data);
+      final decodedJson = (response.data);
       print('here1');
       print(decodedJson);
 
       // Extract the "data" list from the response
-      final List<dynamic> usersJson = decodedJson['data'];
+      final List<dynamic> usersJson = decodedJson['data']['users'];
       print('here2');
       print(usersJson);
 
@@ -51,38 +56,47 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   }
 
   @override
-  Future<bool> banUser(String userID) async {
-    String endpoint = 'admin/users';
-    final response = await apiService.post(
-        endPoint: '$endpoint/$userID', token: UserAccessToken.accessToken);
+  Future<bool> banUser(String userId) async {
+    String endpoint = 'admins';
+    final response = await apiService.patch(
+      endPoint: '$endpoint/$userId/ban',
+      token: UserAccessToken.accessToken,
+      data: {
+        'adminId': 1,
+      },
+    );
     return response.statusCode == 200;
   }
 
   @override
-  Future<bool> unBanUser(String userID) async {
-    String endpoint = 'admin/users';
-    final response = await apiService.post(
-        endPoint: '$endpoint/$userID', token: UserAccessToken.accessToken);
+  Future<bool> unBanUser(String userId) async {
+    String endpoint = 'admins';
+    final response = await apiService.patch(
+      endPoint: '$endpoint/$userId/ban',
+      token: UserAccessToken.accessToken,
+      data: {
+        'adminId': 1,
+      },
+    );
     return response.statusCode == 200;
   }
 
   @override
   Future<List<GroupModel>> getGroups() async {
-    String endpoint = 'admin/groups';
+    String endpoint = 'groups/';
     final response = await apiService.get(
         endPoint: endpoint, token: UserAccessToken.accessToken);
-    if (response.statusCode == 200) {
-      final decodedJson = jsonDecode(response.data);
-      print('here1');
-      print(decodedJson);
 
+    if (response.statusCode == 200) {
       // Extract the "data" list from the response
-      final List<dynamic> groups = decodedJson['data']['data'];
+      print('i am here');
+      final List<dynamic> groups = response.data['data']['data'];
       print('here2');
       print(groups);
 
       // Map the JSON list to a list of UserModel
-      List<GroupModel> groupList = groups.map((json) => GroupModel.fromJson(json)).toList();
+      List<GroupModel> groupList =
+          groups.map((json) => GroupModel.fromJson(json)).toList();
       return groupList;
     } else {
       throw Exception('Failed to load groups');
@@ -90,10 +104,15 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   }
 
   @override
-  Future<bool> applyFilter(String groupID) async {
-    String endpoint = 'admin/groups';
+  Future<bool> applyFilter(String groupId) async {
+    String endpoint = 'groups';
     final response = await apiService.post(
-        endPoint: '$endpoint/$groupID', token: UserAccessToken.accessToken);
+      endPoint: '$endpoint/$groupId/filter',
+      token: UserAccessToken.accessToken,
+      data: {
+        'adminId': 1,
+      },
+    );
     return response.statusCode == 200;
   }
 }

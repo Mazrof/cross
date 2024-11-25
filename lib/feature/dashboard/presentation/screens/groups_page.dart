@@ -86,18 +86,22 @@ class GroupsContent extends StatelessWidget {
               ),
               trailing: group.hasFilter
                   ? TextButton(
-                      onPressed: () {
-                        sl<GroupsCubit>().filterGroups(group.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Filter applied to group ${group.name}',
-                              style: Theme.of(context).textTheme.bodySmall,
+                      onPressed: () async {
+                        Future<bool> result =
+                            sl<GroupsCubit>().filterGroups(group.id);
+                        // Handle filter action
+                        if (await result) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Filter applied to group ${group.name}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              backgroundColor:
+                                  AppColors.primaryColor.withOpacity(.5),
                             ),
-                            backgroundColor:
-                                AppColors.primaryColor.withOpacity(.5),
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Text(
                         'Remove Filter',
@@ -110,19 +114,23 @@ class GroupsContent extends StatelessWidget {
                       width: 100,
                       height: 50,
                       child: ElevatedButton(
-                          onPressed: () {
-                            sl<GroupsCubit>().filterGroups(group.id);
+                          onPressed: () async {
+                            Future<bool> result =
+                                sl<GroupsCubit>().filterGroups(group.id);
                             // Handle filter action
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Filter applied to group ${group.name}',
-                                  style: Theme.of(context).textTheme.bodySmall,
+                            if (await result) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Filter applied to group ${group.name}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                  backgroundColor:
+                                      AppColors.primaryColor.withOpacity(.5),
                                 ),
-                                backgroundColor:
-                                    AppColors.primaryColor.withOpacity(.5),
-                              ),
-                            );
+                              );
+                            }
                           },
                           child: Text(
                             'Filter',

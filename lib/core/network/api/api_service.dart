@@ -9,8 +9,7 @@ class ApiService {
   static const String baseUrl = endPointDev;
   static const String endPointPro =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
-  static const String endPointDev =
-      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
+  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
 
   Dio dio = Dio(
     BaseOptions(
@@ -38,6 +37,7 @@ class ApiService {
 
   Future<Response> get({
     required String endPoint,
+    Object? data,
     String? token,
   }) async {
     try {
@@ -49,6 +49,7 @@ class ApiService {
 
       Response response = await dio.get(
         '$baseUrl/$endPoint',
+        data: data,
       );
 
       print(response.data);
