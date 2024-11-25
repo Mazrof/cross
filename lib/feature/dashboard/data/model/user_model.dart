@@ -1,41 +1,78 @@
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
 
-class UserModel extends User{
-  UserModel({required super.id, required super.name, required super.email, required super.status});
+class UserModel extends User {
+  UserModel({
+    required String id,
+    required String username,
+    required bool status,
+    required String email,
+    required String bio,
+    required bool activeNow,
+    required String phone,
+  }) : super(
+          id: id,
+          username: username,
+          status: status,
+          email: email,
+          bio: bio,
+          activeNow: activeNow,
+          phone: phone,
+        );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
-      name: json['name'],
+      username: json['username'],
+      status: json['status'],
       email: json['email'],
-      status: json['status'] == 'true' ? true : false,
-
+      bio: json['bio'],
+      activeNow: json['activeNow'],
+      phone: json['phone'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': super.id,
-      'name': super.name,
-      'email': super.email,
-      'status': super.status==true ? 'true' : 'false',
+      'id': id,
+      'username': username,
+      'status': status,
+      'email': email,
+      'bio': bio,
+      'activeNow': activeNow,
+      'phone': phone,
     };
-  } 
+  }
+
+  @override
+  List<Object?> get props =>
+      [id, username, status, email, bio, activeNow, phone];
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is UserModel &&
-      other.id == super.id &&
-      other.name == super.name &&
-      other.email == super.email;
+        other.id == id &&
+        other.username == username &&
+        other.status == status &&
+        other.email == email &&
+        other.bio == bio &&
+        other.activeNow == activeNow &&
+        other.phone == phone;
   }
 
   @override
-  int get hashCode => super.id.hashCode ^ super.name.hashCode ^ super.email.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      username.hashCode ^
+      status.hashCode ^
+      email.hashCode ^
+      bio.hashCode ^
+      activeNow.hashCode ^
+      phone.hashCode;
 
   @override
-  String toString() => 'UserModel(id: ${super.id}, name: ${super.name}, email: ${super.email})';
-
+  String toString() {
+    return 'UserModel(id: $id, username: $username, status: $status, email: $email, bio: $bio, activeNow: $activeNow, phone: $phone)';
+  }
 }

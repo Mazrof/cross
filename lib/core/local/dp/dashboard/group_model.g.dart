@@ -17,19 +17,28 @@ class GroupModelAdapter extends TypeAdapter<GroupModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GroupModel(
+      status: fields[4] as bool,
       id: fields[0] as String,
-      name: fields[1] as String,
+      groupSize: fields[1] as int,
+      name: fields[2] as String,
+      privacy: fields[3] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, GroupModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.groupSize)
+      ..writeByte(2)
+      ..write(obj.name)
+      ..writeByte(3)
+      ..write(obj.privacy)
+      ..writeByte(4)
+      ..write(obj.status);
   }
 
   @override
