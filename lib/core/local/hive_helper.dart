@@ -13,7 +13,6 @@ class HiveHelper {
       GroupModelAdapter(),
     );
 
-   
   }
 
   static Future<void> openBox<T>(String boxName) async {
@@ -47,5 +46,10 @@ class HiveHelper {
   static List<T> getAll<T>(String boxName) {
     final box = Hive.box<T>(boxName);
     return box.values.toList();
+  }
+
+
+  static Future<void> closeBox(String boxName) async {
+    await Hive.box(boxName).close();
   }
 }

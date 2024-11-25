@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/data/model/group_model.dart';
@@ -14,16 +15,6 @@ class GroupsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Group> groups = [
-      GroupModel(name: 'group1', id: '1'),
-      GroupModel(name: 'group2', id: '2'),
-      GroupModel(name: 'group3', id: '3'),
-      GroupModel(name: 'group4', id: '4'),
-      GroupModel(name: 'group5', id: '5'),
-      GroupModel(name: 'group6', id: '6'),
-      GroupModel(name: 'group7', id: '7'),
-      GroupModel(name: 'group8', id: '8'),
-    ];
     return BlocBuilder<GroupsCubit, GroupsState>(
       builder: (context, state) {
         if (state.currState == CubitState.loading) {
@@ -34,9 +25,9 @@ class GroupsPage extends StatelessWidget {
           });
         }
         return ListView.builder(
-            itemCount: groups.length,
+            itemCount: state.groups.length,
             itemBuilder: (context, index) {
-              final group = groups[index];
+              final group = state.groups[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: ListTile(
@@ -56,10 +47,12 @@ class GroupsPage extends StatelessWidget {
                                 AppColors.primaryColor),
                           ),
                           onPressed: () {
+                            sl<GroupsCubit>().filterGroups(group.id.toString());
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                   content: Text(
-                                    ' ${group.name} is now fil',
+                                    ' ${group.name} is now filtered',
                                     style:
                                         Theme.of(context).textTheme.bodySmall,
                                   ),

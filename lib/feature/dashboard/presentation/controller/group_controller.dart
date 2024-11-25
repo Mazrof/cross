@@ -7,6 +7,7 @@ import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/appl
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
 
+
 class GroupsCubit extends Cubit<GroupsState> {
   GroupsCubit(
       {required this.getGroupsUseCase,
@@ -28,12 +29,12 @@ class GroupsCubit extends Cubit<GroupsState> {
 
 
 void fetchGroups() async {
-    emit(state.copyWith(currState: CubitState.loading));
+    emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
         final result = await getGroupLocalUseCase.call();
-        emit(state.copyWith(currState: CubitState.success, groups: result));
+        emit(state.copyWith(currState: CubitState.success, groups: result, errorMessage: null));
         return;
       }
 
@@ -46,7 +47,7 @@ void fetchGroups() async {
         },
         (groups) {
           saveGroupsUseCase.call(groups);
-          emit(state.copyWith(groups: groups, currState: CubitState.success));
+          emit(state.copyWith(groups: groups, currState: CubitState.success, errorMessage: null));
         },
       );
     } catch (e) {
@@ -54,8 +55,10 @@ void fetchGroups() async {
           currState: CubitState.failure, errorMessage: e.toString()));
     }
   }
+
+
   void filterGroups(String filter) async {
-    emit(state.copyWith(currState: CubitState.loading));
+    emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       
       bool connection =await networkManager.isConnected();
@@ -73,7 +76,7 @@ void fetchGroups() async {
               currState: CubitState.failure, errorMessage: failure.message));
         },
         (success) {
-          emit(state.copyWith( currState: CubitState.success));
+          emit(state.copyWith( currState: CubitState.success, errorMessage: null));
         },
       );
     } catch (e) {

@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
 
-class BannedUsersState {
+class BannedUsersState extends Equatable {
   final List<User> bannedUsers;
   final CubitState currState;
   final String? errorMessage;
@@ -24,4 +25,8 @@ class BannedUsersState {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [bannedUsers, currState, errorMessage];
 }

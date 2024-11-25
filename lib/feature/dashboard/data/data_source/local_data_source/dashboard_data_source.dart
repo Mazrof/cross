@@ -11,25 +11,25 @@ abstract class DashboardLocalDataSource {
 }
 
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
-  HiveHelper hiveHelper = sl<HiveHelper>();
   DashboardLocalDataSourceImpl();
 
   @override
   Future<List<UserModel>> getUsers() async {
     await HiveHelper.openBox<UserModel>('userBox'); // Ensure the box is opened
 
-     List <UserModel> list= HiveHelper.getAll<UserModel>('userBox');
-     
+    List<UserModel> list = HiveHelper.getAll<UserModel>('userBox');
+
+    HiveHelper.closeBox('userBox');
     return list;
-
-
   }
 
   @override
   Future<List<GroupModel>> getGroups() async {
     await HiveHelper.openBox<GroupModel>(
         'groupBox'); // Ensure the box is opened
-    return HiveHelper.getAll<GroupModel>('groupBox');
+    final result = await HiveHelper.getAll<GroupModel>('groupBox');
+    HiveHelper.closeBox('groupBox');
+    return result;
   }
 
   @override
@@ -40,6 +40,8 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
       await HiveHelper.write(
           boxName: 'userBox', key: user.id.toString(), value: user);
     }
+
+    HiveHelper.closeBox('userBox');
   }
 
   @override
@@ -51,5 +53,6 @@ class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
       await HiveHelper.write(
           boxName: 'groupBox', key: group.id.toString(), value: group);
     }
+    HiveHelper.closeBox('groupBox');
   }
 }

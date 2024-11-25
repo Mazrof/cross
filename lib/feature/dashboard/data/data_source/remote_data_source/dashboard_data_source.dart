@@ -17,28 +17,28 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
   @override
   Future<Response> getUsers() async {
-    String endpoint = '/admin/users'; 
+    String endpoint = '/admin/users';
 
     final response = await apiService.get(
       endPoint: endpoint,
       token: UserAccessToken.accessToken,
     );
-    return response;
+    final result = response.data['users'];
+
+    return result;
   }
 
   @override
   Future<bool> banUser(String userID) async {
-      String endpoint = '/admin/users'; 
+    String endpoint = '/admin/users';
     final response = await apiService.post(
         endPoint: '$endpoint/$userID', token: UserAccessToken.accessToken);
     return response.statusCode == 200;
-
-
   }
 
   @override
   Future<bool> unBanUser(String userID) async {
-    String endpoint = '/admin/users'; 
+    String endpoint = '/admin/users';
     final response = await apiService.post(
         endPoint: '$endpoint/$userID', token: UserAccessToken.accessToken);
     return response.statusCode == 200;
@@ -46,16 +46,19 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
   @override
   Future<Response> getGroups() async {
-     String endpoint = '/admin/groups'; 
-    final response = await apiService.get(endPoint:endpoint, token: UserAccessToken.accessToken);
-    return response;
+    String endpoint = '/admin/groups';
+    final response = await apiService.get(
+        endPoint: endpoint, token: UserAccessToken.accessToken);
+
+    final reslut = response.data['groups'];
+    return reslut;
   }
 
   @override
   Future<bool> applyFilter(String groupID) async {
-     String endpoint = 'admin/groups'; 
-    final response = await apiService
-        .post(endPoint: '$endpoint/$groupID', token: UserAccessToken.accessToken);
+    String endpoint = 'admin/groups';
+    final response = await apiService.post(
+        endPoint: '$endpoint/$groupID', token: UserAccessToken.accessToken);
     return response.statusCode == 200;
   }
 }

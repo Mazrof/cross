@@ -29,7 +29,7 @@ class UsersCubit extends Cubit<UsersState> {
       bool connection = await networkManager.isConnected();
       if (!connection) {
         final result = await getUsersLocalUseCase.call();
-        List<UserModel> users = result.where((user) => !user.status).toList();
+        List<UserModel> users = result.where((user) => user.status).toList();
         emit(state.copyWith(currState: CubitState.success, users: users));
         return;
       }
@@ -43,7 +43,7 @@ class UsersCubit extends Cubit<UsersState> {
         },
         (users) {
           saveUsersUseCase.call(users);
-          users = users.where((user) => !user.status).toList();
+          users = users.where((user) => user.status).toList();
           emit(state.copyWith(users: users, currState: CubitState.success));
         },
       );

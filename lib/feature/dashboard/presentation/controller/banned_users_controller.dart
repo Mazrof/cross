@@ -27,7 +27,7 @@ class BannedUsersCubit extends Cubit<BannedUsersState> {
       if (!connection) {
         final result = await getUsersLocalUseCase.call();
         List<User> bannedUsers =
-            result.where((user) => user.status == 'banned').toList();
+            result.where((user) => !user.status ).toList();
         emit(state.copyWith(
             currState: CubitState.success, bannedUsers: bannedUsers));
         return;
@@ -42,7 +42,7 @@ class BannedUsersCubit extends Cubit<BannedUsersState> {
         },
         (users) {
           List<User> bannedUsers =
-              users.where((user) => user.status == 'banned').toList();
+              users.where((user) => !user.status ).toList();
           emit(state.copyWith(
               bannedUsers: bannedUsers, currState: CubitState.success));
         },

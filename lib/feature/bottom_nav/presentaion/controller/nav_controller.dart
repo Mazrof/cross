@@ -14,15 +14,15 @@ class NavCubit extends Cubit<NavState> {
 
   final List<Widget> screens = [
     BlocProvider(
-      create: (context) => sl<UsersCubit>(),
+      create: (context) => sl<UsersCubit>()..fetchUsers(),
       child: UsersPage(),
     ),
     BlocProvider(
-      create: (context) => sl<BannedUsersCubit>(),
+      create: (context) => sl<BannedUsersCubit>()..fetchBannedUsers(),
       child: BannedUsers(),
     ),
     BlocProvider(
-      create: (context) => sl<GroupsCubit>(),
+      create: (context) => sl<GroupsCubit>()..fetchGroups(),
       child: GroupsPage(),
     )
   ];
