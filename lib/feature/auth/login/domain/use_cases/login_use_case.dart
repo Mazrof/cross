@@ -9,11 +9,12 @@ class LoginUseCase {
   LoginUseCase({required this.loginRepository});
 
   @override
-  Future<Either<Failure, void>> call(LoginRequestBody loginModel) async {
+  Future<Either<Failure, bool>> call(LoginRequestBody loginModel) async {
     try {
       return await loginRepository.login(loginModel);
     } catch (e) {
-      return Left(e as Failure);
+      return Left(ServerFailure(
+        message: e.toString()));
     }
   }
 }

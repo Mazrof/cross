@@ -110,11 +110,13 @@ class LoginCubit extends Cubit<LoginState> {
       } else {
         emit(state.copyWith(
           state: LoginStatusEnum.error,
+          
           error: failure.message,
           remainingAttempts: newRemainingAttempts,
         ));
       }
     }, (unit) async {
+      
       resetTimer();
       emit(state.copyWith(state: LoginStatusEnum.success));
     });

@@ -89,23 +89,23 @@ class SignUpCubit extends Cubit<SignupState> {
           return;
         }
 
-        // final recaptchaToken = await recaptchaService.handleRecaptcha();
-        // print('recaptchaToken: $recaptchaToken');
-        // if (recaptchaToken == null) {
-        //   emit(state.copyWith(
-        //     state: CubitState.failure,
-        //     errorMessage: 'reCAPTCHA verification failed.',
-        //   ));
-        //   return;
-        // }
-        // final response = await checkRecaptchaTocken.call(recaptchaToken);
-        // if (response.isLeft() || response.isRight() == false) {
-        //   emit(state.copyWith(
-        //     state: CubitState.failure,
-        //     errorMessage: 'reCAPTCHA verification failed.',
-        //   ));
-        //   return;
-        // }
+        final recaptchaToken = await recaptchaService.handleRecaptcha();
+        print('recaptchaToken: $recaptchaToken');
+        if (recaptchaToken == null) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+          return;
+        }
+        final response = await checkRecaptchaTocken.call(recaptchaToken);
+        if (response.isLeft() || response.isRight() == false) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+          return;
+        }
 
         emitSignUpStates(SignUpBodyModel(
           firstName: firstNameController.text.trim(),

@@ -1,11 +1,8 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:telegram/core/error/excpetions.dart';
-import 'package:telegram/core/error/faliure.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/user_access_token.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
@@ -14,7 +11,7 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../model/login_request_model.dart';
 
 abstract class LoginDataSource {
-  Future<void> login(LoginRequestBody loginModel);
+  Future<bool> login(LoginRequestBody loginModel);
   Future<String> signInWithGoogle();
   Future<String> signInWithGithub(BuildContext context);
 }
@@ -26,7 +23,7 @@ class LoginDataSourceImp implements LoginDataSource {
     required ApiService apiService,
   }) : _apiService = apiService;
   @override
-  Future<void> login(LoginRequestBody loginModel) async {
+  Future<bool> login(LoginRequestBody loginModel) async {
     print('LoginRemoteDataSource: login: email: ${loginModel.email}');
     try {
       final response = await _apiService.post(
@@ -36,12 +33,13 @@ class LoginDataSourceImp implements LoginDataSource {
           'password': loginModel.password,
         },
       );
-      if (response.statusCode == 200) {
-         final responseData = jsonDecode(response.data);
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.data);
         // Extract the access token and refresh token from the response
-        String accessToken = responseData['access_token'];
-        String refreshToken = responseData['refresh_token'];
-        print('heeeeeeeeeeeeeeeeeeeeeeeer');
+        String accessToken = responseData['data']['access_token'];
+        String refreshToken = responseData['data']['refresh_token'];
+        print('Access Token: $accessToken');
+        print('Refresh Token: $refreshToken');
 
         // Store the access token and refresh token in the cache
         UserAccessToken.accessToken = accessToken;
@@ -50,19 +48,16 @@ class LoginDataSourceImp implements LoginDataSource {
             key: AppStrings.token,
             value: accessToken,
           );
+          await CacheHelper.write(
+            key: AppStrings.refreshToken,
+            value: refreshToken,
+          );
         }
-        await CacheHelper.write(
-          key: AppStrings.refreshToken,
-          value: refreshToken,
-        );
       }
-
-      if (response.statusCode != 200) {
-        throw ServerFailure(message: 'Login failed');
-      }
+      return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {
-      print(e);
-      throw ServerFailure(message: 'Login failed');
+      print('Login error: $e');
+      throw Exception('Failed to login');
     }
   }
 

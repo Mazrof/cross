@@ -8,11 +8,10 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = mockUrl;
+  static const String baseUrl = endPointDev;
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
-  static const String endPointDev =
-      "https://virtserver.swaggerhub.com/ABDOMOHAMED9192_1/Mazrof-API/1.0.0 - SwaggerHub API Auto Mocking";
+  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
 
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
@@ -77,6 +76,11 @@ class ApiService {
   }) async {
     try {
       String url = '$baseUrl/$endPoint';
+      dio.options.headers = token == null
+          ? {}
+          : {
+              'Authorization': 'Bearer $token',
+            };
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
@@ -182,42 +186,77 @@ class ApiService {
   }
 
   Future<bool> verifyToken(String token) async {
-    const String verifyUrl =
-        'https://www.google.com/recaptcha/enterprise.js?render=6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
-    const String siteKey = '6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
-    final requestBody = {
-      "event": {
-        "token": token,
-        "expectedAction": "signup",
-        "siteKey": siteKey,
-      }
-    };
+    final String secretKey = '6LfFCIsqAAAAAD_X_EIbKtkmf6WElq4XKqLVrANB';
+    final String verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
     try {
       final response = await Dio().post(
         verifyUrl,
-        data: jsonEncode(requestBody),
+        data: {
+          'secret': secretKey,
+          'response': token,
+        },
         options: Options(
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
         ),
       );
 
-      final jsonResponse = response.data;
-      final isValid = jsonResponse['tokenProperties']['valid'] == true;
-      final score = jsonResponse['riskAnalysis']['score'];
-      final action = jsonResponse['tokenProperties']['action'];
+      if (response.statusCode == 200) {
+        final result = response.data;
+        print('reCAPTCHA Response: $result');
 
-      print('Verification Score: $score, Action: $action');
+        final isValid = result['success'] ?? false;
+        final score = result['score'] ?? 0.0;
+        
 
-      // You can set a threshold score if needed, usually above 0.5
-      return isValid && score >= 0.5;
+        // Ensure score meets threshold (e.g., 0.5 for human-like interaction)
+        return isValid && score >= 0.5;
+      }
+      return false;
     } catch (e) {
-      print('Error verifying reCAPTCHA Enterprise token: $e');
+      print('Error verifying token: $e');
       return false;
     }
   }
+
+  // Future<bool> verifyToken(String token) async {
+  //   const String verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+  //   const String siteKey = '6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
+  //   final requestBody = {
+  //     "event": {
+  //       "token": token,
+  //       "expectedAction": "signup",
+  //       "siteKey": siteKey,
+  //     }
+  //   };
+
+  //   try {
+  //     final response = await Dio().post(
+  //       verifyUrl,
+  //       data: jsonEncode(requestBody),
+  //       options: Options(
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       ),
+  //     );
+
+  //     final jsonResponse = response.data;
+  //     final isValid = jsonResponse['tokenProperties']['valid'] == true;
+  //     final score = jsonResponse['riskAnalysis']['score'];
+  //     final action = jsonResponse['tokenProperties']['action'];
+
+  //     print('Verification Score: $score, Action: $action');
+
+  //     // You can set a threshold score if needed, usually above 0.5
+  //     return isValid && score >= 0.5;
+  //   } catch (e) {
+  //     print('Error verifying reCAPTCHA Enterprise token: $e');
+  //     return false;
+  //   }
+  // }
 
   Future<Response> getForSearch({
     required String endPoint,

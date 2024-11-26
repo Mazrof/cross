@@ -18,7 +18,7 @@ class LoginWithGithubUseCase implements BaseUseCase<String, BuildContext> {
       if (e is DioException) {
         return Left(ServerFailure.fromDioError(e));
       } else {
-        return Left(e as Failure);
+        return Left(ServerFailure(message:e.toString()));
       }
     }
   }

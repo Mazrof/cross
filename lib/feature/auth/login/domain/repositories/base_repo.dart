@@ -5,7 +5,7 @@ import 'package:telegram/feature/auth/login/data/model/login_request_model.dart'
 import '../../../../../core/error/faliure.dart';
 
 abstract class LoginRepository {
-  Future<Either<Failure, void>> login( LoginRequestBody loginModel);
+  Future<Either<Failure, bool>> login( LoginRequestBody loginModel);
   Future<Either<Failure, String>> signInWithGoogle();
   Future<Either<Failure, String>> signInWithGithub(BuildContext context);
 }

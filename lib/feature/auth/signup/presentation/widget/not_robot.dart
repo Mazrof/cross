@@ -1,7 +1,7 @@
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 
 class RecaptchaService {
-  static const String siteKey = "6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU";
+  static const String siteKey = "6LfFCIsqAAAAAFTEdBPkYwT1I2guLlkIleR-lYBU";
 
   /// Initialize the reCAPTCHA ready state
   Future<bool> initialize() async {
