@@ -36,7 +36,7 @@ class EditProfilePage extends StatelessWidget {
     final phoneNumberController =
         TextEditingController(text: state.phoneNumber);
 
-    void _saveSettings() {
+    void saveSettings() {
       context.read<UserSettingsCubit>().updateSettingsUseCase(
             UserSettingsEntity(
                 screenName: screenNameController.text,
@@ -57,7 +57,7 @@ class EditProfilePage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                _saveSettings();
+                saveSettings();
               },
               icon: const Icon(Icons.check)),
         ],

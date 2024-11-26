@@ -39,7 +39,6 @@ Future<void> _initializeApp() async {
   ServiceLocator.init();
 
   Bloc.observer = MyBlocObserver();
-
 }
 
 class App extends StatelessWidget {

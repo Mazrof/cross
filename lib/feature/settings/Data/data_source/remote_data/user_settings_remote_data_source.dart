@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:telegram/feature/settings/Data/model/user_settings_model.dart';
 import 'package:http/http.dart' as http;
 
-class UserSettingsRemoteDataSource {
-  final String mockUrl;
+abstract class UserSettingsRemoteDataSource {
+  Future<UserSettingsBodyModel> fetchSettings();
+  Future<void> updateSettings(UserSettingsBodyModel newSetting);
+}
 
-  UserSettingsRemoteDataSource(this.mockUrl);
+class UserSettingsRemoteDataSourceImpl extends UserSettingsRemoteDataSource {
+  final String mockUrl = 'https://672f5ae4229a881691f2b22f.mockapi.io/api/v1';
 
+  UserSettingsRemoteDataSourceImpl();
+
+  @override
   Future<UserSettingsBodyModel> fetchSettings() async {
     final response = await http.get(Uri.parse('$mockUrl/settings/1'));
 
@@ -18,6 +24,7 @@ class UserSettingsRemoteDataSource {
     }
   }
 
+  @override
   Future<void> updateSettings(UserSettingsBodyModel newSetting) async {
     final response = await http.put(
       Uri.parse('$mockUrl/settings/1'),

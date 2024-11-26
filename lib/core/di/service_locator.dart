@@ -35,6 +35,12 @@ import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_r
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+import 'package:telegram/feature/settings/Data/data_source/remote_data/user_settings_remote_data_source.dart';
+import 'package:telegram/feature/settings/Data/repositories/user_settings_repo_impl.dart';
+import 'package:telegram/feature/settings/Domain/repositories/user_settings_repo.dart';
+import 'package:telegram/feature/settings/Domain/use_cases/fetch_settings_use_case.dart';
+import 'package:telegram/feature/settings/Domain/use_cases/update_settings_use_case.dart';
+import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -94,6 +100,14 @@ class ServiceLocator {
           networkManager: sl(),
           forgetPasswordUseCase: sl(),
         ));
+
+    //settings
+    sl.registerLazySingleton(() => UserSettingsCubit(
+          fetchSettingsUseCase: sl(),
+          updateSettingsUseCase: sl(),
+          appValidator: sl(),
+          networkManager: sl(),
+        ));
   }
 
   static void registerUseCases() {
@@ -116,6 +130,14 @@ class ServiceLocator {
           sl(),
         ));
     sl.registerLazySingleton(() => LogOutUseCase(sl()));
+
+    //settings
+    sl.registerLazySingleton(() => FetchSettingsUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => UpdateSettingsUseCase(
+          sl(),
+        ));
   }
 
   static void registerRepositories() {
@@ -136,6 +158,10 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordRepository>(() =>
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
+
+    //settings
+    sl.registerLazySingleton<UserSettingsRepo>(
+        () => UserSettingsRepoImpl(remoteDataSource: sl()));
   }
 
   static void registerDataSources() {
@@ -159,6 +185,10 @@ class ServiceLocator {
     //forget password
     sl.registerLazySingleton<ForgetPasswordDataSource>(
         () => ForgetPasswordDataSourceImp(sl()));
+    //settings
+    sl.registerLazySingleton<UserSettingsRemoteDataSource>(
+      () => UserSettingsRemoteDataSourceImpl(),
+    );
   }
 
   static void registerSingletons() {

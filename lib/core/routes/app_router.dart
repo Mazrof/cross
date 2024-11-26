@@ -27,6 +27,7 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mai
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
+import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
 
 import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
@@ -83,7 +84,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
+final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -167,12 +168,9 @@ final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
   GoRoute(
     path: AppRouter.ksettings,
     builder: (context, state) {
-      return const SettingsScreen(
-        screenName: "Ahmed",
-        userName: "user",
-        phoneNumber: '1234',
-        bio: "Hello",
-        status: "Online",
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: SettingsScreen(),
       );
     },
   ),
@@ -203,7 +201,10 @@ final route = GoRouter(initialLocation: AppRouter.kcallLog, routes: [
   GoRoute(
     path: AppRouter.keditProfile,
     builder: (context, state) {
-      return const EditProfileScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: EditProfileScreen(),
+      );
     },
   ),
   GoRoute(
