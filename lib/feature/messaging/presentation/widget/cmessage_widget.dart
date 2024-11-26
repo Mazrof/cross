@@ -14,6 +14,7 @@ class ChatMessage extends StatelessWidget {
   final bool isDelivered;
   final bool isSeen;
   final int index;
+  final int id;
 
   const ChatMessage({
     super.key,
@@ -24,6 +25,7 @@ class ChatMessage extends StatelessWidget {
     this.isDelivered = false,
     this.isSeen = false,
     required this.index,
+    required this.id,
   });
 
   @override
@@ -54,7 +56,13 @@ class ChatMessage extends StatelessWidget {
             Size size = object.size;
 
             sl<ChatCubit>().messageSelected(
-                index, position.dx, position.dy, size.width, size.height);
+              index,
+              position.dx,
+              position.dy,
+              size.width,
+              size.height,
+              id,
+            );
           },
           child: Container(
             margin: isSender

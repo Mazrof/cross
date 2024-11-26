@@ -10,17 +10,28 @@ import 'package:telegram/feature/messaging/presentation/controller/chat_state.da
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
 
-  // Start the socket connection
-
   Future<void> startSocket() async {
+    // Start the socket connection
     SocketService socketService = sl<SocketService>();
 
     socketService.connect();
   }
 
-  void editMessage(int index) {
+  void editingMessage(int index, int id) {
     print("Editing Message");
-    emit(EditingMessage(messages: (state).getMessages, index: index));
+    emit(EditingMessage(messages: (state).getMessages, index: index, id: id));
+  }
+
+  void editMessage(int id, String newContent) {
+    print("Edit Message");
+
+    sl<SocketService>().socket.emit(
+      "message:edit",
+      {
+        "id": id,
+        "content": "Hello",
+      },
+    );
   }
 
   void defaultState() {
@@ -28,7 +39,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void messageSelected(
-      int index, double dx, double dy, double width, double height) {
+      int index, double dx, double dy, double width, double height, int id) {
     emit(
       MessageSelected(
         messages: (state).getMessages,
@@ -37,41 +48,44 @@ class ChatCubit extends Cubit<ChatState> {
         yCoordiate: dy,
         width: width,
         height: height,
+        id: id,
       ),
     );
   }
 
   void sendMessage(String message) {
-    if (state is ChatLoaded) {
-      print(message);
+    // TODO
+    // Generate a unique id for each message
+    // Send it to the backend
 
-      sl<SocketService>().socket.emit(
-        "message:sent",
-        {
-          "content": message,
-          "status": "pinned", //or null
-          "durationInMinutes": 10, // can be null
-          "isAnnouncement": true, // for group announcement
-          "isForward": false,
-          "participantId":
-              1, // id of the place where the message gonna be send or null if you will provide reciever id for new personl chats
-          // "replyTo":12,// or null (the message id to which this message reply for)
-          "senderId": 2 // Will be deleted after mirging auth,
-          // "receiverId":2// if you provide a receiver id this means I will create new personal chat
-          // "messageMentions":[
-          //     1,//ids of the users mentioned
-          //     2
-          // ]
-        },
+    print(message);
+
+    sl<SocketService>().socket.emit(
+      "message:sent",
+      {
+        "content": "after @abdo @mohamed",
+        "status": "pinned", //or null
+        "durationInMinutes": null, // can be null
+        "isAnnouncement": true, // for group announcement
+        "isForward": false,
+        "participantId": 61,
+        "senderId": 2 // Will be deleted after mirging auth,
+      },
+    );
+
+    final currentState = state as TypingMessage;
+    final updatedMessages = List<Message>.from(currentState.messages)
+      ..add(
+        Message(
+          isDate: false,
+          sender: "01",
+          content: message,
+          time: "00:00",
+          // Assign front-end id
+          id: 0,
+        ),
       );
-
-      final currentState = state as ChatLoaded;
-      final updatedMessages = List<Message>.from(currentState.messages)
-        ..add(
-          Message(isDate: false, sender: "01", content: message, time: "00:00"),
-        );
-      emit(ChatLoaded(messages: updatedMessages));
-    }
+    emit(ChatLoaded(messages: updatedMessages));
   }
 
   void typingMessage() {
@@ -80,19 +94,29 @@ class ChatCubit extends Cubit<ChatState> {
 
   void receiveMessage(dynamic message) {
     if (state is ChatLoaded) {
-      // message = jsonDecode(message);
+      print(message);
+
+      // TODO
+      // userId == my id -> update id with backend id - else - add to messages list
 
       final currentState = state as ChatLoaded;
-      final updatedMessages = List<Message>.from(currentState.messages)
-        ..add(
-          Message(
-            isDate: false,
-            sender: "01",
-            content: message["content"],
-            time: message["createdAt"],
-          ),
-        );
-      emit(ChatLoaded(messages: updatedMessages));
+
+      final messages = List<Message>.from(currentState.messages);
+
+      messages[messages.length - 1].setId(message["id"]);
+
+      print(messages[messages.length - 1]);
+
+      // final updatedMessages = List<Message>.from(currentState.messages)
+      //   ..add(
+      //     Message(
+      //       isDate: false,
+      //       sender: "01",
+      //       content: message["content"],
+      //       time: message["createdAt"],
+      //     ),
+      //   );
+      emit(ChatLoaded(messages: messages));
     }
   }
 
@@ -107,15 +131,15 @@ class ChatCubit extends Cubit<ChatState> {
       var apiService = sl<ApiService>();
       final res = await apiService.get(endPoint: '/messages', token: "");
 
-      // print(jsonDecode(res.data));
-
       messages = (jsonDecode(res.data) as List)
           .map(
             (e) => Message(
-                isDate: false,
-                sender: e['senderId'],
-                content: e['content'],
-                time: e['timestamp']),
+              isDate: false,
+              sender: e['senderId'],
+              content: e['content'],
+              time: e['timestamp'],
+              id: 0,
+            ),
           )
           .toList();
 
@@ -127,40 +151,3 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 }
-
-
-
-// OnBordingState(
-//           currentPage: 0,
-//           controller: PageController(),
-//           onBordingcontents: [
-//             OnboardingContents(
-//               title: "Welcome to Mazrof",
-//               image: AppAssetsStrings.on_bording1,
-//               desc:
-//                   "Connect with friends and family instantly, no matter where they are.",
-//               count: "1/4",
-//             ),
-//             OnboardingContents(
-//               title: "Seamless Communication",
-//               image: AppAssetsStrings.on_bording2,
-//               desc:
-//                   " Enjoy high-quality voice and video calls with just a tap.",
-//               count: "2/4",
-//             ),
-//             OnboardingContents(
-//               title: "Share Moments",
-//               image: AppAssetsStrings.on_bording3,
-//               desc:
-//                   "Send photos, videos, and files effortlessly to keep everyone in the loop.",
-//               count: "3/4",
-//             ),
-//             OnboardingContents(
-//               title: "One Chat, Endless Possibilities",
-//               image: AppAssetsStrings.on_bording4,
-//               desc:
-//                   "Dive into a world of endless conversations and connections.",
-//               count: "4/4",
-//             ),
-//           ],
-//         )

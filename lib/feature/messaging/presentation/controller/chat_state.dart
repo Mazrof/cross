@@ -29,12 +29,14 @@ class ChatLoaded extends ChatState {
 class MessageSelected extends ChatState {
   final List<Message> messages;
   final int index;
+  final int id;
   final double xCoordiate;
   final double yCoordiate;
   final double width;
   final double height;
 
   MessageSelected({
+    required this.id,
     required this.xCoordiate,
     required this.yCoordiate,
     required this.messages,
@@ -59,8 +61,10 @@ class TypingMessage extends ChatState {
 class EditingMessage extends ChatState {
   final List<Message> messages;
   final int index;
+  final int id;
 
-  EditingMessage({required this.messages, required this.index});
+  EditingMessage(
+      {required this.id, required this.messages, required this.index});
 
   @override
   List<Message> get getMessages => messages;

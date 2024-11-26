@@ -17,7 +17,6 @@ class MessageList extends StatelessWidget {
     return Stack(
       children: [
         ListView.builder(
-          reverse: true,
           itemCount: messages.length,
           itemBuilder: (context, i) {
             if (messages[i].isDate) {
@@ -28,6 +27,7 @@ class MessageList extends StatelessWidget {
                 isSender: true,
                 time: messages[i].time,
                 index: i,
+                id: messages[i].id,
               );
             }
           },
@@ -55,6 +55,7 @@ class MessageList extends StatelessWidget {
                             (sl<ChatCubit>().state as MessageSelected).index]
                         .time,
                     index: (sl<ChatCubit>().state as MessageSelected).index,
+                    id: (sl<ChatCubit>().state as MessageSelected).id,
                   ),
                 ),
               ],

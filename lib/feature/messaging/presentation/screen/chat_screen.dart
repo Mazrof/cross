@@ -89,7 +89,9 @@ class ChatScreen extends StatelessWidget {
                       icon: const Icon(Icons.edit_outlined),
                       color: AppColors.whiteColor,
                       onPressed: () {
-                        sl<ChatCubit>().editMessage(0);
+                        sl<ChatCubit>().editingMessage(
+                            (sl<ChatCubit>().state as MessageSelected).index,
+                            (sl<ChatCubit>().state as MessageSelected).id);
                       },
                     ),
                     // const PopupMenu([

@@ -30,6 +30,10 @@ class SocketService {
       sl<ChatCubit>().receiveMessage(data);
     });
 
+    socket.on('message:edited', (data) {
+      print("Message Edited!");
+    });
+
     socket.on(
       'disconnect',
       (_) {
