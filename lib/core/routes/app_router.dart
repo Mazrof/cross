@@ -22,7 +22,7 @@ import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.d
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
-import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
+import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 
@@ -81,7 +81,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kProfile, routes: [
+final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {

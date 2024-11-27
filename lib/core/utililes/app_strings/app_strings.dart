@@ -159,4 +159,9 @@ class AppStrings {
   static const String unmute = "Unmute";
   static const String endCall = "End Call";
   static const String deleteAllCalls = "Delete All Calls";
+
+
+  //home
+  static const String search = 'Search';
+
 }

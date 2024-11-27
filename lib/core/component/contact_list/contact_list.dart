@@ -7,7 +7,7 @@ class ContactList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 4,
+      itemCount: 50,
       shrinkWrap: true,
       itemBuilder: (context, index) => const ContactListTile(
         imageUrl:
