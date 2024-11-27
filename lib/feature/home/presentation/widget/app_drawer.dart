@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
@@ -27,10 +28,8 @@ class CAppDrawer extends StatelessWidget {
                     color: AppColors.whiteColor,
                   ),
             ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(AppAssetsStrings.general_person),
-            ),
+            currentAccountPicture:
+                Avatar(imageUrl: AppAssetsStrings.general_person),
           ),
           DrawerListTile(
             iconData: Icons.group,

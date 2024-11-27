@@ -9,6 +9,10 @@ class StoryModel extends Story {
     required String mediaType,
     required String mediaUrl,
     required String content,
+    required String userName,
+    required String userImage,
+    required bool isSeen,
+    required bool isOwner,
   }) : super(
           id: id,
           createdAt: createdAt,
@@ -17,6 +21,10 @@ class StoryModel extends Story {
           mediaType: mediaType,
           mediaUrl: mediaUrl,
           content: content,
+          userName: userName,
+          userImage: userImage,
+          isSeen: isSeen,
+          isOwner: isOwner,
         );
 
   factory StoryModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +36,10 @@ class StoryModel extends Story {
       mediaType: json['media_type'],
       mediaUrl: json['media_url'],
       content: json['content'],
+      userName: json['user_name'],
+      userImage: json['user_image'],
+      isSeen: json['is_seen'],
+      isOwner: json['is_owner'],
     );
   }
 
@@ -40,6 +52,10 @@ class StoryModel extends Story {
       'media_type': mediaType,
       'media_url': mediaUrl,
       'content': content,
+      'user_name': userName,
+      'user_image': userImage,
+      'is_seen': isSeen,
+      'is_owner': isOwner,
     };
   }
 }

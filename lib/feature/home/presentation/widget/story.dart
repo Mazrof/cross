@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/home/presentation/screen/story_screen.dart';
 
@@ -54,11 +55,7 @@ class StoryWidget extends StatelessWidget {
                       width: 3,
                     ),
                   ),
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage(userImage),
-                    backgroundColor: Colors.white,
-                  ),
+                  child:Avatar(imageUrl: userImage,),
                 ),
               ],
             ),

@@ -8,7 +8,7 @@ class StoryViewerCubit extends Cubit<double> {
 
   StoryViewerCubit()
       : _isHolding = false,
-        _timerMilliseconds = 100,
+        _timerMilliseconds = 70,
         super(0.0) {
     _startProgress();
   }
@@ -29,7 +29,6 @@ class StoryViewerCubit extends Cubit<double> {
   }
 
   void stopHolding() {
-    
     _isHolding = false;
   }
 }

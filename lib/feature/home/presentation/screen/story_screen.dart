@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
+import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
 
 class StoryViewerScreen extends StatelessWidget {
   final String imageUrl;
@@ -24,8 +24,8 @@ class StoryViewerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: sl<StoryViewerCubit>(),
+    return BlocProvider(
+      create: (_) => StoryViewerCubit(),
       child: BlocConsumer<StoryViewerCubit, double>(
         listener: (context, progress) {
           if (progress >= 1.0) {
@@ -40,10 +40,10 @@ class StoryViewerScreen extends StatelessWidget {
                 Navigator.pop(context); // End the story and navigate back
               },
               onLongPressStart: (_) {
-                sl<StoryViewerCubit>().startHolding();
+                context.read<StoryViewerCubit>().startHolding();
               },
               onLongPressEnd: (_) {
-                sl<StoryViewerCubit>().stopHolding();
+                context.read<StoryViewerCubit>().stopHolding();
               },
               child: Stack(
                 children: [
@@ -60,7 +60,13 @@ class StoryViewerScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          backgroundImage: AssetImage(userImage),
+                          //check if falild add the default image
+
+                          backgroundImage:
+
+                              //check if falild add the default image
+                              NetworkImage(userImage),
+
                           backgroundColor: Colors.white,
                         ),
                         SizedBox(width: 10),
@@ -85,7 +91,6 @@ class StoryViewerScreen extends StatelessWidget {
                       color: const Color.fromARGB(255, 226, 226, 226),
                     ),
                   ),
-                  // display the caption in the bottom middle of the screen
                   Positioned(
                     bottom: 20,
                     left: 0,

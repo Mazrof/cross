@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
@@ -36,11 +37,7 @@ class AddStoryWidget extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage:
-                            AssetImage(AppAssetsStrings.general_person),
-                      ),
+                      Avatar(imageUrl: AppAssetsStrings.general_person),
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -95,12 +92,7 @@ class AddStoryWidget extends StatelessWidget {
                   children: [
                     Stack(
                       children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage:
-                              AssetImage(AppAssetsStrings.general_person),
-                          backgroundColor: Colors.white,
-                        ),
+                        Avatar(imageUrl: AppAssetsStrings.general_person),
                         Positioned(
                           bottom: 0,
                           right: 0,

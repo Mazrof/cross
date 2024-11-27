@@ -8,6 +8,7 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
@@ -99,7 +100,8 @@ final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
   GoRoute(
     path: AppRouter.kHome,
     builder: (context, state) {
-      return HomeScreen();
+      return BlocProvider.value(
+          value: sl<HomeCubit>()..loadHomeData() , child: HomeScreen());
     },
   ),
   GoRoute(
