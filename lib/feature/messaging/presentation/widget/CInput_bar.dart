@@ -1,3 +1,4 @@
+import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -6,9 +7,10 @@ import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dar
 import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
 
 class CinputBar extends StatelessWidget {
-  const CinputBar({required this.controller, super.key});
+  CinputBar({required this.controller, super.key});
 
   final TextEditingController controller;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -39,28 +41,54 @@ class CinputBar extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(
                     bottom: AppSizes.xxs, top: AppSizes.xxs),
-                child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  maxLines:
-                      5, // Max number of lines before field starts scrolling
-                  minLines: 1, // Minimum number of lines field will start with
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.all(8),
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.w300, color: AppColors.grey),
-                    hintText: "Message",
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                  ),
-                  onChanged: (text) {
-                    if (controller.text != "")
-                      sl<ChatCubit>().typingMessage();
-                    else
-                      sl<ChatCubit>().defaultState();
+                child: KeyboardListener(
+                  focusNode: _focusNode,
+                  onKeyEvent: (value) {
+                    // print(value);
                   },
-                  controller: controller,
+                  child: TextField(
+                    contentInsertionConfiguration:
+                        ContentInsertionConfiguration(
+                      allowedMimeTypes: [
+                        'image/gif',
+                        'image/png',
+                        'image/jpeg'
+                      ],
+                      onContentInserted: (data) {
+                        // Handle the inserted content here
+
+                        // send the gif
+
+                        sl<ChatCubit>().sendMessage(data.uri, true);
+
+                        print('Inserted content: ${data.uri}');
+                      },
+                    ),
+
+                    keyboardType: TextInputType.multiline,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines:
+                        5, // Max number of lines before field starts scrolling
+                    minLines:
+                        1, // Minimum number of lines field will start with
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(8),
+                      hintStyle: TextStyle(
+                          fontWeight: FontWeight.w300, color: AppColors.grey),
+                      hintText: "Message",
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                    ),
+                    onChanged: (text) {
+                      print(text);
+                      if (controller.text != "")
+                        sl<ChatCubit>().typingMessage();
+                      else
+                        sl<ChatCubit>().defaultState();
+                    },
+                    controller: controller,
+                  ),
                 ),
               ),
             ),

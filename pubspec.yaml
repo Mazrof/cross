@@ -72,6 +72,7 @@ dependencies:
   animated_text_kit: ^4.2.2
 
   socket_io_client: ^3.0.1
+  extended_text_field: ^16.0.1
 
 dev_dependencies:
   mockito: ^5.4.4

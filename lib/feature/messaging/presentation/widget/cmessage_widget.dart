@@ -15,6 +15,7 @@ class ChatMessage extends StatelessWidget {
   final bool isSeen;
   final int index;
   final int id;
+  final bool isGIF;
 
   const ChatMessage({
     super.key,
@@ -26,6 +27,7 @@ class ChatMessage extends StatelessWidget {
     this.isSeen = false,
     required this.index,
     required this.id,
+    required this.isGIF,
   });
 
   @override
@@ -102,13 +104,19 @@ class ChatMessage extends StatelessWidget {
                       ),
                     ),
                   ),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                  ),
-                ),
+                isGIF
+                    ? Image.asset(
+                        "assets/gif/success.gif",
+                        width: 100,
+                        height: 100,
+                      )
+                    : Text(
+                        message,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

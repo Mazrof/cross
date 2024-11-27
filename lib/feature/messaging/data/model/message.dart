@@ -3,6 +3,7 @@ class Message {
   final String time;
   final String sender;
   final bool isDate;
+  final isGIF;
 
   int id;
 
@@ -12,6 +13,7 @@ class Message {
     required this.content,
     required this.time,
     required this.id,
+    required this.isGIF,
   });
 
   void setId(int id) {

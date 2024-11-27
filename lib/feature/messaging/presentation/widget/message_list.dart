@@ -32,6 +32,7 @@ class MessageList extends StatelessWidget {
                 time: messages[i].time,
                 index: i,
                 id: messages[i].id,
+                isGIF: messages[i].isGIF,
               );
             }
           },
@@ -58,6 +59,7 @@ class MessageList extends StatelessWidget {
                     time: messages[(sl<ChatCubit>().state).index].time,
                     index: (sl<ChatCubit>().state).index,
                     id: (sl<ChatCubit>().state).id,
+                    isGIF: messages[(sl<ChatCubit>().state).index].isGIF,
                   ),
                 ),
               ],

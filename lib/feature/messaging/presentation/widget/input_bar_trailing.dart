@@ -29,7 +29,7 @@ class InputBarTrailing extends StatelessWidget {
                     );
                   } else {
                     // Send The Message
-                    sl<ChatCubit>().sendMessage(controller.text);
+                    sl<ChatCubit>().sendMessage(controller.text, false);
                   }
 
                   // clean the controller text

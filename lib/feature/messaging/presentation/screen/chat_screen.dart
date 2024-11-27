@@ -33,6 +33,10 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        });
+
         return Scaffold(
           appBar: state.selectionState == false && state.editingState == false
               ? CAppBar(

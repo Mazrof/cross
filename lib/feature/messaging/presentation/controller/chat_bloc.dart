@@ -104,7 +104,7 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  void sendMessage(String message) {
+  void sendMessage(String message, bool isGIF) {
     // TODO
     // Generate a unique id for each message
     // Send it to the backend
@@ -128,6 +128,7 @@ class ChatCubit extends Cubit<ChatState> {
     final updatedMessages = List<Message>.from(state.messages)
       ..add(
         Message(
+          isGIF: isGIF,
           isDate: false,
           sender: "01",
           content: message,
@@ -206,6 +207,7 @@ class ChatCubit extends Cubit<ChatState> {
       messages = (jsonDecode(res.data) as List)
           .map(
             (e) => Message(
+              isGIF: false,
               isDate: false,
               sender: e['senderId'],
               content: e['content'],
