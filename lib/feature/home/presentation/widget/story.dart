@@ -1,46 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:telegram/feature/home/presentation/widget/segment_border.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/home/presentation/screen/story_screen.dart';
 
 class StoryWidget extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final int storyCount;
+  final String userImage;
+  final String userName;
   final bool isSeen;
-  final int numOfSeen;
+  final String storyUrl;
+  final String storyCaption;
+  final bool isOwner;
 
   const StoryWidget({
     Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.storyCount,
+    required this.userImage,
+    required this.storyCaption,
+    required this.userName,
     required this.isSeen,
-     required this.numOfSeen,
+    required this.storyUrl,
+    this.isOwner = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              CustomPaint(
-                painter: SegmentedBorderPainter(
-                  segments: storyCount,
-                  numOfSeen: numOfSeen,
-                  isSeen: isSeen,
-                ),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(imageUrl),
-                ),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StoryViewerScreen(
+              imageUrl: storyUrl,
+              caption: storyCaption,
+              userName: userName,
+              userImage: userImage,
+              isOwner: isOwner,
+            ),
           ),
-          SizedBox(height: 5),
-          Text(title),
-        ],
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3), // Border thickness
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSeen
+                          ? Colors.grey.withOpacity(.5)
+                          : const Color.fromARGB(255, 0, 192, 6),
+                      width: 3,
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage(userImage),
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Text(
+              userName,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: AppColors.whiteColor),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -99,7 +99,7 @@ final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
   GoRoute(
     path: AppRouter.kHome,
     builder: (context, state) {
-      return const HomeScreen();
+      return HomeScreen();
     },
   ),
   GoRoute(
@@ -174,7 +174,6 @@ final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
       );
     },
   ),
-
   GoRoute(
     path: AppRouter.kNewChannel,
     builder: (context, state) {

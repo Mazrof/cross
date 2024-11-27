@@ -4,19 +4,22 @@ import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/home/presentation/widget/add_stroy.dart';
 import 'package:telegram/feature/home/presentation/widget/app_drawer.dart';
+import 'package:telegram/feature/home/presentation/widget/chat_tile.dart';
 import 'package:telegram/feature/home/presentation/widget/story.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
+  HomeScreen({super.key});
+// Create a GlobalKey to access ScaffoldState
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
-  final int index = 0;
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(),
+      key: _scaffoldKey, // Assign the GlobalKey here
+
+      drawer: const CAppDrawer(),
       appBar: CAppBar(
         leadingIcon: Icons.menu,
-        title: Text('Telegram'),
+        title: Text('Mazrof'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -27,51 +30,58 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
         onLeadingTap: () {
-          Scaffold.of(context).openDrawer();
+          _scaffoldKey.currentState?.openDrawer();
         },
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Stories Section
-            Row(
-              children: [
-                index == 0
-                    ? AddStoryWidget(
-                        onTap: () {
-                          // Add story logic
-                        },
-                      )
-                    : StoryWidget(
-                        imageUrl: AppAssetsStrings.general_person,
-                        title: 'Kiro',
-                        storyCount: 2,
-                        isSeen: index.isEven,
-                        numOfSeen: 2,
-                      ),
-                Container(
-                  height: 120, // Adjust height
-                  padding: EdgeInsets.all(8),
-                  color: AppColors.primaryColor,
-                  child: ListView.builder(
+            Container(
+              color: AppColors.primaryColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: SizedBox(
+                  height: 130, // Adjust height for the story section
+                  child: ListView(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 10, // Number of stories
-                    itemBuilder: (context, index) {
-                      return StoryWidget(
-                        imageUrl: AppAssetsStrings.general_person,
-                        title: 'Mariam',
-                        storyCount: 3,
-                        isSeen: false,
-                        numOfSeen: 2,
-                      );
-                    },
+                    children: [
+                      AddStoryWidget(),
+                      ...List.generate(
+                        10, // Number of stories
+                        (index) => StoryWidget(
+                          userImage: AppAssetsStrings.general_person,
+                          userName: 'User $index',
+                          isSeen: index.isEven, // Example logic for seen status
+                          storyUrl: AppAssetsStrings.general_person,
+                          storyCaption: 'Caption $index',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
             // Chat Section
 
-            
+            // Placeholder for chat items
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: NeverScrollableScrollPhysics(),
+            //   scrollDirection: Axis.horizontal,
+            //   itemCount: 10, // Number of chats
+            //   itemBuilder: (context, index) {
+            //     return ChatTileWidget(
+            //         imageUrl: '',
+            //         title: 'Kiro',
+            //         subtitle: 'Hello there',
+            //         onTap: () {
+            //           // Open chat logic
+            //         });
+            //   },
+            // ),
           ],
         ),
       ),

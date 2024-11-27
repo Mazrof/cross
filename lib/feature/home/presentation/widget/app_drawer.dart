@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+class CAppDrawer extends StatelessWidget {
+  const CAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,11 +11,25 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const UserAccountsDrawerHeader(
-            accountName: Text('Your Name'),
-            accountEmail: Text('your.email@example.com'),
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+            ),
+            accountName: Text(
+              'Your Name',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.whiteColor,
+                  ),
+            ),
+            accountEmail: Text(
+              'your.email@example.com',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.whiteColor,
+                  ),
+            ),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('assets/your_profile_picture.png'),
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage(AppAssetsStrings.general_person),
             ),
           ),
           DrawerListTile(

@@ -76,6 +76,7 @@ dependencies:
     sdk: flutter
   g_recaptcha_v3: ^0.0.5
   shimmer: ^3.0.0
+  image_picker: ^1.1.2
   # webview_flutter_plus: ^0.3.0
 
 dev_dependencies:
