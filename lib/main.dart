@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:telegram/core/local/hive_helper.dart';
+import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
@@ -22,15 +25,26 @@ void main() async {
     }
   }
   runApp(
-    const App(),
+    DevicePreview(
+      enabled: true,
+      tools: const [
+        ...DevicePreview.defaultTools,
+      ],
+      builder: (context) => const App(),
+    ),
   );
+
+   Future.delayed(Duration.zero, () {
+     Hive.close();
+  });
 }
 
 Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
-  //  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  Bloc.observer = MyBlocObserver();
 }
 
 class App extends StatelessWidget {
@@ -50,8 +64,9 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.darkTheme,
+                  theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
+                  // themeMode: ThemeMode.dark,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );

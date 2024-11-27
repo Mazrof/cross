@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 
 class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +30,10 @@ class EditProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(AppStrings.yourUsername,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              AppStrings.yourUsername,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 8),
             const TextField(
               decoration: InputDecoration(
@@ -39,8 +43,10 @@ class EditProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(AppStrings.yourName,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              AppStrings.yourName,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 8),
             const TextField(
               decoration: InputDecoration(
@@ -50,8 +56,10 @@ class EditProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(AppStrings.yourBio,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              AppStrings.yourBio,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 8),
             const TextField(
               maxLength: 70,
@@ -65,13 +73,15 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 8),
             const Text(
               AppStrings.bioDescription,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.grey, fontSize: 15),
             ),
             const SizedBox(
               height: 16,
             ),
-            const Text(AppStrings.phoneNumber,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              AppStrings.phoneNumber,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 8),
             TextField(
               maxLength: 11,

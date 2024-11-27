@@ -1,136 +1,152 @@
-import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
-import 'package:telegram/core/di/service_locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/network/network_manager.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/core/validator/app_validator.dart';
+import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
+import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
+import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
+import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
+import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
 
-class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit() : super(SignUpInitial());
+class SignUpCubit extends Cubit<SignupState> {
+  SignUpCubit(
+      {required this.registerUseCase,
+      required this.saveRegisterInfoUseCase,
+      required this.appValidator,
+      required this.recaptchaService,
+      required this.checkRecaptchaTocken,
+      required this.networkManager})
+      : super(SignupState());
 
-  // final SignUpUseCase signUpUseCase;
+  final RegisterUseCase registerUseCase;
+  final SaveRegisterInfoUseCase saveRegisterInfoUseCase;
+  final AppValidator appValidator;
+  final NetworkManager networkManager;
+  final RecaptchaService recaptchaService;
+  final CheckRecaptchaTocken checkRecaptchaTocken;
 
   // Text editing controllers for form fields
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-   // Create unique GlobalKeys for each TextFormField
-    final firstNameKey = GlobalKey<FormFieldState>();
-    final lastNameKey = GlobalKey<FormFieldState>();
-    final usernameKey = GlobalKey<FormFieldState>();
-    final emailKey = GlobalKey<FormFieldState>();
-    final phoneKey = GlobalKey<FormFieldState>();
-    final passwordKey = GlobalKey<FormFieldState>();
-    final confirmPasswordKey = GlobalKey<FormFieldState>();
+  // Create unique GlobalKeys for each TextFormField
+  final firstNameKey = GlobalKey<FormFieldState>();
+  final lastNameKey = GlobalKey<FormFieldState>();
+  final emailKey = GlobalKey<FormFieldState>();
+  final phoneKey = GlobalKey<FormFieldState>();
+  final passwordKey = GlobalKey<FormFieldState>();
+  final confirmPasswordKey = GlobalKey<FormFieldState>();
 
   // Form key for validation
-// Form key for validation
   final formKey = GlobalKey<FormState>();
 
-  // Observables for password visibility
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
-  bool isPrivacyPolicyAccepted = false;
-
-  // Toggle password visibility
   void togglePasswordVisibility() {
-    isPasswordVisible = !isPasswordVisible;
-    emit(SignUpPasswordVisibilityChanged(isPasswordVisible));
+    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
-  // Toggle confirm password visibility
   void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible = !isConfirmPasswordVisible;
-    emit(SignUpConfirmPasswordVisibilityChanged(isConfirmPasswordVisible));
+    emit(state.copyWith(
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible));
   }
 
-  // Toggle privacy policy acceptance
-  void togglePrivacyPolicyAcceptance(bool? value) {
-    isPrivacyPolicyAccepted = value ?? false;
-    emit(SignUpPrivacyPolicyAcceptanceChanged(isPrivacyPolicyAccepted));
+  void togglePrivacyPolicyAcceptance() {
+    emit(state.copyWith(
+        isPrivacyPolicyAccepted: !state.isPrivacyPolicyAccepted));
   }
 
-  // Validate and submit the form
-  Future<void> submitForm(BuildContext context) async {
-    print('submitForm');
-    // start the loading state
-    try {
-      // ScreenLoader.openLoadingDialog('Please wait...', AppImageString.loading);
-      print('ScreenLoader.openLoadingDialog');
-
-      //check internet connection
-      final isConnected = await sl<NetworkManager>().isConnected();
-      print('isConnected: $isConnected');
-
-      if (isConnected == false) {
-        // ScreenLoader.stopLoadingDialog();
-        // Messages.showErrorSnakeBar(
-        //     'No internet connection', 'Please check your internet settings');
-
+  void signUp() async {
+    if (appValidator.isFormValid(formKey) ?? false) {
+      if (state.isPrivacyPolicyAccepted == false) {
+        emit(state.copyWith(
+          state: CubitState.failure,
+          errorMessage: 'Please accept the privacy policy',
+        ));
         return;
       }
+      if (state.state != CubitState.loading) {
+        emit(state.copyWith(state: CubitState.loading));
+        bool connection = await networkManager.isConnected();
 
-      // Validate the form
-      if (formKey.currentState!.validate()) {
-        // Perform signup logic here
-        // Check if privacy policy is accepted
-        if (!isPrivacyPolicyAccepted) {
-          //privacy policy check
-
-          // ScreenLoader.stopLoadingDialog();
-          // Messages.showErrorSnakeBar(
-          //     'Error', 'Please accept the privacy policy');
+        if (!connection) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'No Internet Connection',
+          ));
           return;
         }
-      } else {
-        // ScreenLoader.stopLoadingDialog();
-        // Messages.showErrorSnakeBar('Error', 'Please fill all fields correctly');
 
-        return;
+        final recaptchaToken = await recaptchaService.handleRecaptcha();
+        if (recaptchaToken == null) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+          return;
+        }
+        final response = await checkRecaptchaTocken.call(recaptchaToken);
+        if (response.isLeft() || response.isRight() == false ) {
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: 'reCAPTCHA verification failed.',
+          ));
+          return;
+        }
+
+        emitSignUpStates(SignUpBodyModel(
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          email: emailController.text.trim(),
+          phone: phoneController.text.trim(),
+          password: passwordController.text.trim(),
+        ));
       }
-
-      // register user in firebase auth & save user Data in firebase
-      // final userModel = UserModel(
-      //   id: '',
-      //   firstName: firstNameController.text.trim(),
-      //   lastName: lastNameController.text.trim(),
-      //   username: usernameController.text.trim(),
-      //   email: emailController.text.trim(),
-      //   phone: phoneController.text.trim(),
-      //   password: passwordController.text.trim(),
-      //   profileImage: '',
-      // );
-      // final result = await signUpUseCase(userModel);
-
-      // Handle the result
-    //   result.fold(
-    //     (failure) {
-    //       Messages.showErrorSnakeBar('Error', failure.message);
-    //     },
-    //     (isRegistered) {
-    //       if (isRegistered) {
-    //         Messages.showSuccessSnakeBar(
-    //             'Success', 'User registration successful');
-
-    //         // LOCAL STORAGE
-    //         TAppLocalStorage.saveData('user', UserData.userModel.toJson());
-    //         ScreenLoader.verifyEmail();
-    //       } else {
-    //         Messages.showErrorSnakeBar('Error', 'User registration failed');
-    //       }
-    //     },
-    //   );
-    } catch (e) {
-    //   ScreenLoader.stopLoadingDialog();
-    //   print('Error in submitForm: $e');
-    //   Messages.showErrorSnakeBar('Error', 'An error occurred');
+    } else {
+      emit(state.copyWith(
+        state: CubitState.failure,
+        errorMessage: 'Please fill in all required fields',
+      ));
     }
   }
 
- 
+  void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
+    await registerUseCase.call(signUpRequestBody).then((value) async {
+      value.fold((failure) {
+        emit(state.copyWith(
+          state: CubitState.failure,
+          errorMessage: failure.message,
+        ));
+      }, (unit) async {
+        // Call the save data use case here
+        await saveRegisterInfoUseCase
+            .call(signUpRequestBody)
+            .then((saveResult) {
+          saveResult.fold((saveFailure) {
+            emit(state.copyWith(
+              state: CubitState.failure,
+              errorMessage: saveFailure.message,
+            ));
+          }, (saveSuccess) {
+            emit(state.copyWith(state: CubitState.success));
+          });
+        });
+      });
+    });
+  }
+
+  @override
+  Future<void> close() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    return super.close();
+  }
 }

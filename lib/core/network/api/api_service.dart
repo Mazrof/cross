@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:telegram/core/local/user_access_token.dart';
@@ -6,9 +6,12 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = AppStrings.serverUrl;
-  static const String endPointPro = "";
-  // static const String endPointDev = "";
+
+  static const String baseUrl = endPointDev;
+  static const String endPointPro =
+      "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
+  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
+
 
   Dio dio = Dio(
     BaseOptions(
@@ -36,22 +39,24 @@ class ApiService {
 
   Future<Response> get({
     required String endPoint,
+    Object? data,
     String? token,
-    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
           ? {}
-          : {'Authorization': 'Bearer $token', 'userType': 'seller'};
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
+          : {
+              'Authorization': 'Bearer $token',
+            };
+
       Response response = await dio.get(
         '$baseUrl/$endPoint',
+        data: data,
       );
-      // Response response = await dio.get(
-      //   '$baseUrl/$endPoint?userType=seller',
-      // );
-      // print(response.data);
-      // print(response.statusCode);
+
+      print(response.data);
+      print(response.statusCode);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
@@ -62,7 +67,6 @@ class ApiService {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        log("i will call handle error in api service");
         throw _handleError(e);
       }
     }
@@ -72,7 +76,6 @@ class ApiService {
     required String endPoint,
     Object? data,
     String? token,
-    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -80,11 +83,12 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
       Response response = await dio.post(
         '$baseUrl/$endPoint',
         data: data,
       );
+      print(response);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -103,7 +107,6 @@ class ApiService {
     required String endPoint,
     String? token,
     Map<String, dynamic>? body,
-    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -111,7 +114,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -133,7 +136,6 @@ class ApiService {
   Future<Response> delete({
     required String endPoint,
     String? token,
-    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -141,7 +143,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -163,7 +165,6 @@ class ApiService {
     required String endPoint,
     String? token,
     Object? data,
-    bool isUserType = false,
   }) async {
     try {
       dio.options.headers = token == null
@@ -171,7 +172,7 @@ class ApiService {
           : {
               'Authorization': 'Bearer $token',
             };
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -190,16 +191,32 @@ class ApiService {
     }
   }
 
+  Future<bool> verifyToken(String token) async {
+    Uri uri = Uri.parse('https://www.google.com/recaptcha/api/siteverify');
+    final response = await dio.post(
+      uri.toString(),
+      data: {
+        'secret': '6LcFx2wqAAAAACsC9_PqBh15E-40sOioz2hQ9ml9',
+        'response': token,
+      },
+    );
+    final Map<String, dynamic> jsonResponse = json.decode(response.data);
+    if (jsonResponse['success']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<Response> getForSearch({
     required String endPoint,
     String? token,
-    bool isUserType = false,
     Map<String, dynamic>? data,
   }) async {
     try {
       dio.options.headers =
           token == null ? {} : {'Authorization': 'Bearer $token'};
-      isUserType ? dio.options.headers["userType"] = "seller" : () {};
+
       Response response =
           await dio.get('$baseUrl/$endPoint', queryParameters: data);
       if (response.statusCode == 200 || response.statusCode == 201) {

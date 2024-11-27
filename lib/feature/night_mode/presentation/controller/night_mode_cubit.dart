@@ -1,9 +1,27 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 
 class NightModeCubit extends Cubit<bool> {
-  NightModeCubit({required bool initialState}) : super(initialState);
+  NightModeCubit() : super(_getInitialNightMode());
 
-  void toggleNightMode() => emit(!state);
+  static bool _getInitialNightMode() {
+    final brightness = WidgetsBinding.instance.window.platformBrightness;
+    var isDarkMode = brightness == Brightness.dark;
+    final isDarkModeFromCache = CacheHelper.read(key: 'isDarkMode');
+    isDarkMode = isDarkModeFromCache ==true?true:false;
 
-  void setNightMode(bool isNightMode) => emit(isNightMode);
+      return isDarkMode;
+  }
+
+  void toggleNightMode() {
+    CacheHelper.write(key: 'isDarkMode', value: !state);
+    emit(!state);
+  }
+
+  void setNightMode(bool isNightMode) {
+    // Save the state in local storage
+    CacheHelper.write(key: 'isDarkMode', value: isNightMode);
+    emit(isNightMode);
+  }
 }

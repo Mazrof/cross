@@ -32,6 +32,7 @@ class CacheHelper {
   static Future<void> write(
       {required String key, required dynamic value}) async {
     log('Writing key: $key, value: $value');
+  
     await securedStorage!.write(
       key: key,
       value: value,

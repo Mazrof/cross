@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart'; // Adjust as necessary
 import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as necessary
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
@@ -10,21 +11,20 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/routes/app_router.dart'; // Import GoRouter
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightBackgroundColor,
       body: Center(
         child: BlocBuilder<SplashCubit, SplashState>(
           builder: (context, state) {
             if (state is SplashInitial || state is SplashLoading) {
-              return const CircularProgressIndicator();
+              return const LogoLoader ();
             } else if (state is SplashFirstTime) {
               // Navigate to onboarding screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kOnboarding);
+                context.go(AppRouter.kOnBoarding);
               });
               return Container();
             } else if (state is SplashAuthenticated) {

@@ -29,6 +29,7 @@ class AppSizes {
   static const double iconSm = 16;
   static const double iconMd = 24;
   static const double iconLg = 45;
+  static const double iconXlg = 60;
 
   //button
   static const double buttonH = 18;

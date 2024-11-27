@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
 class ContactTileDetails extends StatelessWidget {
   final String contactName;
@@ -13,11 +14,13 @@ class ContactTileDetails extends StatelessWidget {
       children: [
         Text(
           contactName,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Text(
           lastMessage,
-          style: const TextStyle(color: Color.fromARGB(255, 130, 128, 128)),
+          style: Theme.of(context)
+              .textTheme
+              .displaySmall
+              ?.copyWith(color: AppColors.grey),
         ),
       ],
     );
