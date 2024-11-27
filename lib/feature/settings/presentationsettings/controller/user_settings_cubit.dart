@@ -28,7 +28,7 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
   final TextEditingController bioController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
 
-  void loadSettings() async {
+  Future<void> loadSettings() async {
     emit(state.copyWith(state: CubitState.loading));
     final result = await fetchSettingsUseCase.call(NoParameters());
     result.fold(
@@ -41,12 +41,25 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
         phoneNumber: settings.phoneNumber,
         bio: settings.bio,
         status: settings.status,
+        autoDeleteTimer: settings.autoDeleteTimer,
+        lastSeenPrivacy: settings.lastSeenPrivacy,
+        profilePhotoPrivacy: settings.profilePhotoPrivacy,
+        enableReadReceipt: settings.enableReadReceipt,
       )),
     );
   }
 
-  void saveSettings(String newScreenName, String newUserName,
-      String newPhoneNumber, String newBio, String newStatus) async {
+  Future<void> saveSettings(
+    String newScreenName,
+    String newUserName,
+    String newPhoneNumber,
+    String newBio,
+    String newStatus,
+    String newAutoDeleteTimer,
+    String newLastSeenPrivacy,
+    String newProfilePhotoPrivacy,
+    bool newEnableReadReceipt,
+  ) async {
     emit(state.copyWith(state: CubitState.loading));
     final updatedSettings = UserSettingsEntity(
       screenName: newScreenName,
@@ -54,6 +67,10 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
       phoneNumber: newPhoneNumber,
       bio: newBio,
       status: newStatus,
+      autoDeleteTimer: newAutoDeleteTimer,
+      lastSeenPrivacy: newLastSeenPrivacy,
+      profilePhotoPrivacy: newProfilePhotoPrivacy,
+      enableReadReceipt: newEnableReadReceipt,
     );
     final result = await updateSettingsUseCase(updatedSettings);
     result.fold(

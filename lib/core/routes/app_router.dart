@@ -144,7 +144,10 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kprivacyAndSecurity,
     builder: (context, state) {
-      return const PrivacySecurityScreen(readReceiptStatus: true);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: PrivacySecurityScreen(),
+      );
     },
   ),
   GoRoute(
@@ -195,7 +198,10 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kautoDeleteMessages,
     builder: (context, state) {
-      return const AutodelMessages(selectedTimer: AutoDelOption.oneDay);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: AutodelMessagesScreen(),
+      );
     },
   ),
   GoRoute(
@@ -216,8 +222,10 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(
-          selectedOption: PrivacyOption.everybody);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: LastseenOnlineScreen(),
+      );
     },
   ),
   GoRoute(
@@ -231,8 +239,10 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kprofilePhotoSecurity,
     builder: (context, state) {
-      return const ProfilePhotoSecurityScreen(
-          selectedOption: PrivacyOption.myContacts);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: ProfilePhotoSecurityScreen(),
+      );
     },
   ),
   GoRoute(

@@ -1,13 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
 class PrivacySecurityScreen extends StatelessWidget {
-  final bool readReceiptStatus;
-  const PrivacySecurityScreen({super.key, required this.readReceiptStatus});
+  const PrivacySecurityScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserSettingsCubit, UserSettingsState>(
+      builder: (context, state) {
+        if (state.state == CubitState.failure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          });
+        } else if (state.state == CubitState.success) {
+          return PrivacySecurityPage(state: state);
+        }
+        return PrivacySecurityPage(state: state);
+      },
+    );
+  }
+}
+
+class PrivacySecurityPage extends StatelessWidget {
+  // final bool readReceiptStatus;
+  final UserSettingsState state;
+  const PrivacySecurityPage({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +63,7 @@ class PrivacySecurityScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              '2',
+              state.autoDeleteTimer,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -83,7 +110,7 @@ class PrivacySecurityScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              'Everybody',
+              state.lastSeenPrivacy,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -96,7 +123,7 @@ class PrivacySecurityScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              'Everybody',
+              state.profilePhotoPrivacy,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -109,8 +136,21 @@ class PrivacySecurityScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             activeColor: AppColors.lightBlueColor,
-            value: readReceiptStatus,
-            onChanged: (bool newValue) {},
+            value: state.enableReadReceipt,
+            onChanged: (bool newValue) async {
+              final cubit = context.read<UserSettingsCubit>();
+              await cubit.saveSettings(
+                  state.screenName,
+                  state.userName,
+                  state.phoneNumber,
+                  state.bio,
+                  "Online",
+                  state.autoDeleteTimer,
+                  state.lastSeenPrivacy,
+                  state.profilePhotoPrivacy,
+                  newValue);
+              cubit.loadSettings();
+            },
           ),
         ],
       ),

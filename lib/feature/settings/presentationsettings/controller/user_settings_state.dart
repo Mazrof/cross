@@ -9,6 +9,10 @@ class UserSettingsState extends Equatable {
   final String phoneNumber;
   final String bio;
   final String status;
+  final String autoDeleteTimer;
+  final String lastSeenPrivacy;
+  final String profilePhotoPrivacy;
+  final bool enableReadReceipt;
 
   UserSettingsState({
     this.state = CubitState.initial,
@@ -18,6 +22,10 @@ class UserSettingsState extends Equatable {
     this.phoneNumber = '',
     this.bio = '',
     this.status = '',
+    this.autoDeleteTimer = 'Off',
+    this.lastSeenPrivacy = 'Everybody',
+    this.profilePhotoPrivacy = 'Everybody',
+    this.enableReadReceipt = true,
   });
 
   UserSettingsState copyWith({
@@ -28,6 +36,10 @@ class UserSettingsState extends Equatable {
     String? phoneNumber,
     String? bio,
     String? status,
+    String? autoDeleteTimer,
+    String? lastSeenPrivacy,
+    String? profilePhotoPrivacy,
+    bool? enableReadReceipt,
   }) {
     return UserSettingsState(
       state: state ?? this.state,
@@ -37,6 +49,10 @@ class UserSettingsState extends Equatable {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       bio: bio ?? this.bio,
       status: status ?? this.status,
+      autoDeleteTimer: autoDeleteTimer ?? this.autoDeleteTimer,
+      lastSeenPrivacy: lastSeenPrivacy ?? this.lastSeenPrivacy,
+      profilePhotoPrivacy: profilePhotoPrivacy ?? this.profilePhotoPrivacy,
+      enableReadReceipt: enableReadReceipt ?? this.enableReadReceipt,
     );
   }
 
@@ -49,5 +65,9 @@ class UserSettingsState extends Equatable {
         phoneNumber,
         bio,
         status,
+        autoDeleteTimer,
+        lastSeenPrivacy,
+        profilePhotoPrivacy,
+        enableReadReceipt,
       ];
 }

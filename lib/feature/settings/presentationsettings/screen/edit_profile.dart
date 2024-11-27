@@ -37,11 +37,16 @@ class EditProfilePage extends StatelessWidget {
 
     void saveSettings() {
       context.read<UserSettingsCubit>().saveSettings(
-          screenNameController.text,
-          userNameController.text,
-          phoneNumberController.text,
-          bioController.text,
-          "Online");
+            screenNameController.text,
+            userNameController.text,
+            phoneNumberController.text,
+            bioController.text,
+            "Online",
+            state.autoDeleteTimer,
+            state.lastSeenPrivacy,
+            state.profilePhotoPrivacy,
+            state.enableReadReceipt,
+          );
     }
 
     return Scaffold(

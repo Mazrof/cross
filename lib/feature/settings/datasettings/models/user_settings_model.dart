@@ -6,18 +6,32 @@ class UserSettingsBodyModel extends UserSettingsEntity {
   final String phoneNumber;
   final String bio;
   final String status;
+  final String autoDeleteTimer;
+  final String lastSeenPrivacy;
+  final String profilePhotoPrivacy;
+  final bool enableReadReceipt;
+
   UserSettingsBodyModel({
     required this.screenName,
     required this.userName,
     required this.phoneNumber,
     required this.bio,
     required this.status,
+    required this.autoDeleteTimer,
+    required this.lastSeenPrivacy,
+    required this.profilePhotoPrivacy,
+    required this.enableReadReceipt,
   }) : super(
-            screenName: screenName,
-            userName: userName,
-            phoneNumber: phoneNumber,
-            bio: bio,
-            status: status);
+          screenName: screenName,
+          userName: userName,
+          phoneNumber: phoneNumber,
+          bio: bio,
+          status: status,
+          autoDeleteTimer: autoDeleteTimer,
+          lastSeenPrivacy: lastSeenPrivacy,
+          profilePhotoPrivacy: profilePhotoPrivacy,
+          enableReadReceipt: enableReadReceipt,
+        );
 
   Map<String, dynamic> toJson() {
     final body = {
@@ -26,6 +40,10 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       'phone_number': phoneNumber,
       'bio': bio,
       'status': status,
+      'auto_del_timer': autoDeleteTimer,
+      'last_seen_privacy': lastSeenPrivacy,
+      'profile_photo_privacy': profilePhotoPrivacy,
+      'enable_read_receipt': enableReadReceipt,
     };
     return body;
   }
@@ -37,16 +55,25 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       phoneNumber: phoneNumber,
       bio: bio,
       status: status,
+      autoDeleteTimer: autoDeleteTimer,
+      lastSeenPrivacy: lastSeenPrivacy,
+      profilePhotoPrivacy: profilePhotoPrivacy,
+      enableReadReceipt: enableReadReceipt,
     );
   }
 
   factory UserSettingsBodyModel.fromEntity(UserSettingsEntity entity) {
     return UserSettingsBodyModel(
-        screenName: entity.screenName,
-        userName: entity.userName,
-        phoneNumber: entity.phoneNumber,
-        bio: entity.bio,
-        status: entity.status);
+      screenName: entity.screenName,
+      userName: entity.userName,
+      phoneNumber: entity.phoneNumber,
+      bio: entity.bio,
+      status: entity.status,
+      autoDeleteTimer: entity.autoDeleteTimer,
+      lastSeenPrivacy: entity.lastSeenPrivacy,
+      profilePhotoPrivacy: entity.profilePhotoPrivacy,
+      enableReadReceipt: entity.enableReadReceipt,
+    );
   }
   factory UserSettingsBodyModel.fromJson(Map<String, dynamic> json) {
     return UserSettingsBodyModel(
@@ -55,6 +82,10 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       phoneNumber: json['phone_number'],
       bio: json['bio'],
       status: json['status'],
+      autoDeleteTimer: json['auto_del_timer'],
+      lastSeenPrivacy: json['last_seen_privacy'],
+      profilePhotoPrivacy: json['profile_photo_privacy'],
+      enableReadReceipt: json['enable_read_receipt'],
     );
   }
   static empty() {
@@ -64,6 +95,10 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       phoneNumber: "",
       bio: "",
       status: "",
+      autoDeleteTimer: "",
+      lastSeenPrivacy: "",
+      profilePhotoPrivacy: "",
+      enableReadReceipt: true,
     );
   }
 }
