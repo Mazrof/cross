@@ -15,8 +15,8 @@ import 'package:telegram/feature/on_bording/presentation/screen/on_bording_scree
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
-import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+// import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
+// import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 
@@ -71,6 +71,7 @@ class AppRouter {
 
   static const String kglobalSearch = '/global_search';
 
+  static const String kMessaging = '/messaging';
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
@@ -85,31 +86,29 @@ class AppRouter {
   static const String kcallContact = '/call_contact';
   static const String kNavBar = '/nav_bar';
 
-
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-
-final route = GoRouter(initialLocation: AppRouter.kNavBar, routes: [
+final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
       return const PreVerifyScreen();
     },
   ),
-    GoRoute(
-      path: AppRouter.kMessaging,
-      builder: (context, state) {
-        return BlocProvider(
-          create: (context) => sl<ChatCubit>()
-            ..getMessages()
-            ..startSocket(),
-          child: ChatScreen(),
-        );
-      },
-    ),
+  GoRoute(
+    path: AppRouter.kMessaging,
+    builder: (context, state) {
+      return BlocProvider(
+        create: (context) => sl<ChatCubit>()
+          ..getMessages()
+          ..startSocket(),
+        child: ChatScreen(),
+      );
+    },
+  ),
   GoRoute(
       path: AppRouter.kResetPassword,
       builder: (context, state) {

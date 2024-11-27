@@ -1,32 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 
-abstract class ChatState {
-  List<Message> get getMessages;
-}
-
-class ChatInitial extends ChatState {
-  @override
-  List<Message> get getMessages => [];
-}
-
-class ChatLoading extends ChatState {
-  @override
-  List<Message> get getMessages => [];
-}
-
-class ChatLoaded extends ChatState {
-  final List<Message> messages;
-
-  ChatLoaded({required this.messages});
-  @override
-  List<Message> get getMessages => messages;
-
-  // @override
-  // List<Object> get props => [messages];
-}
-
-class MessageSelected extends ChatState {
+class ChatState extends Equatable {
   final List<Message> messages;
   final int index;
   final int id;
@@ -34,53 +9,141 @@ class MessageSelected extends ChatState {
   final double yCoordiate;
   final double width;
   final double height;
+  final bool selectionState;
+  final bool typingState;
+  final bool messagesLoadedState;
+  final bool editingState;
+  final bool receivedState;
+  final bool error;
+  final String errorMessage;
 
-  MessageSelected({
+  ChatState({
+    required this.messages,
+    required this.index,
     required this.id,
     required this.xCoordiate,
     required this.yCoordiate,
-    required this.messages,
-    required this.index,
     required this.width,
     required this.height,
+    required this.selectionState,
+    required this.typingState,
+    required this.messagesLoadedState,
+    required this.editingState,
+    required this.receivedState,
+    required this.error,
+    required this.errorMessage,
   });
 
+  ChatState copyWith({
+    List<Message>? messages,
+    int? index,
+    int? id,
+    double? xCoordiate,
+    double? yCoordiate,
+    double? width,
+    double? height,
+    bool? selectionState,
+    bool? typingState,
+    bool? messagesLoadedState,
+    bool? editingState,
+    bool? receivedState,
+    bool? error,
+    String? errorMessage,
+  }) {
+    return ChatState(
+      messages: messages ?? this.messages,
+      index: index ?? this.index,
+      id: id ?? this.id,
+      xCoordiate: xCoordiate ?? this.xCoordiate,
+      yCoordiate: yCoordiate ?? this.yCoordiate,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      selectionState: selectionState ?? this.selectionState,
+      typingState: typingState ?? this.typingState,
+      messagesLoadedState: messagesLoadedState ?? this.messagesLoadedState,
+      editingState: editingState ?? this.editingState,
+      receivedState: receivedState ?? this.receivedState,
+      error: error ?? this.error,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
   @override
-  List<Message> get getMessages => messages;
+  // TODO: implement props
+  List<Object?> get props => [
+        messages,
+        index,
+        id,
+        xCoordiate,
+        yCoordiate,
+        width,
+        height,
+        selectionState,
+        typingState,
+        messagesLoadedState,
+        editingState,
+        receivedState,
+        error,
+        errorMessage,
+      ];
 }
 
-class TypingMessage extends ChatState {
-  final List<Message> messages;
-
-  TypingMessage({required this.messages});
-
-  @override
-  List<Message> get getMessages => messages;
-}
-
-class EditingMessage extends ChatState {
-  final List<Message> messages;
-  final int index;
-  final int id;
-
-  EditingMessage(
-      {required this.id, required this.messages, required this.index});
-
-  @override
-  List<Message> get getMessages => messages;
-}
-
-// class SendMessage extends ChatState {
-//   final Message message;
-
-//   SendMessage({required this.message});
+// class ChatInitial extends ChatState {
+//   @override
+//   List<Message> get getMessages => [];
 // }
 
-class ChatError extends ChatState {
-  final String message;
+// class ChatLoading extends ChatState {
+//   @override
+//   List<Message> get getMessages => [];
+// }
 
-  ChatError({required this.message});
+// class ChatLoaded extends ChatState {
+//   final List<Message> messages;
 
-  @override
-  List<Message> get getMessages => [];
-}
+//   ChatLoaded({required this.messages});
+//   @override
+//   List<Message> get getMessages => messages;
+
+//   // @override
+//   // List<Object> get props => [messages];
+// }
+
+// class MessageSelected extends ChatState {
+//   MessageSelected({
+
+//   });
+
+//   @override
+//   List<Message> get getMessages => messages;
+// }
+
+// class TypingMessage extends ChatState {
+//   final List<Message> messages;
+
+//   TypingMessage({required this.messages});
+
+//   @override
+//   List<Message> get getMessages => messages;
+// }
+
+// class EditingMessage extends ChatState {
+//   final List<Message> messages;
+//   final int index;
+//   final int id;
+
+//   EditingMessage(
+//       {required this.id, required this.messages, required this.index});
+
+//   @override
+//   List<Message> get getMessages => messages;
+// }
+
+// class ChatError extends ChatState {
+//   final String message;
+
+//   ChatError({required this.message});
+
+//   @override
+//   List<Message> get getMessages => [];
+// }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';

@@ -8,7 +8,23 @@ import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit() : super(ChatInitial());
+  ChatCubit()
+      : super(ChatState(
+          messages: [],
+          messagesLoadedState: false,
+          selectionState: false,
+          typingState: false,
+          index: -1,
+          editingState: false,
+          error: false,
+          errorMessage: "",
+          id: -1,
+          receivedState: false,
+          xCoordiate: -1,
+          yCoordiate: -1,
+          height: -1,
+          width: -1,
+        ));
 
   Future<void> startSocket() async {
     // Start the socket connection
@@ -19,36 +35,71 @@ class ChatCubit extends Cubit<ChatState> {
 
   void editingMessage(int index, int id) {
     print("Editing Message");
-    emit(EditingMessage(messages: (state).getMessages, index: index, id: id));
+
+    emit(state.copyWith(
+      editingState: true,
+    ));
   }
 
-  void editMessage(int id, String newContent) {
+  void editMessage(int id, int index, String newContent) {
     print("Edit Message");
 
-    sl<SocketService>().socket.emit(
-      "message:edit",
-      {
-        "id": id,
-        "content": "Hello",
-      },
-    );
+    state.messages[index].content = newContent;
+
+    var updatedMessages = state.messages;
+
+    emit(state.copyWith(
+      editingState: false,
+      selectionState: false,
+      index: -1,
+      id: -1,
+      height: -1,
+      width: -1,
+      xCoordiate: -1,
+      yCoordiate: -1,
+    ));
+
+    // TODO
+    // Uncomment when available
+
+    // sl<SocketService>().socket.emit(
+    //   "message:edit",
+    //   {
+    //     "id": id,
+    //     "content": "Hello",
+    //   },
+    // );
   }
 
   void defaultState() {
-    emit(ChatLoaded(messages: (state).getMessages));
+    emit(state.copyWith());
   }
 
   void messageSelected(
       int index, double dx, double dy, double width, double height, int id) {
     emit(
-      MessageSelected(
-        messages: (state).getMessages,
+      state.copyWith(
+        selectionState: true,
         index: index,
         xCoordiate: dx,
         yCoordiate: dy,
         width: width,
         height: height,
         id: id,
+      ),
+    );
+  }
+
+  void unselectMessage() {
+    emit(
+      state.copyWith(
+        selectionState: false,
+        index: -1,
+        xCoordiate: -1,
+        yCoordiate: -1,
+        width: -1,
+        height: -1,
+        id: -1,
       ),
     );
   }
@@ -63,18 +114,18 @@ class ChatCubit extends Cubit<ChatState> {
     sl<SocketService>().socket.emit(
       "message:sent",
       {
-        "content": "after @abdo @mohamed",
+        "content": message,
         "status": "pinned", //or null
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
         "isForward": false,
-        "participantId": 61,
-        "senderId": 2 // Will be deleted after mirging auth,
+        // "participantId": 2,
+        "senderId": 1 // Will be deleted after mirging auth,
       },
     );
 
-    final currentState = state as TypingMessage;
-    final updatedMessages = List<Message>.from(currentState.messages)
+    // final currentState = state as TypingMessage;
+    final updatedMessages = List<Message>.from(state.messages)
       ..add(
         Message(
           isDate: false,
@@ -85,39 +136,60 @@ class ChatCubit extends Cubit<ChatState> {
           id: 0,
         ),
       );
-    emit(ChatLoaded(messages: updatedMessages));
+    emit(state.copyWith(messages: updatedMessages, messagesLoadedState: true));
+  }
+
+  void deleteMessage(int id, int index) {
+    print(id);
+
+    // sl<SocketService>().socket.emit(
+    //   "message:delete",
+    //   {"id": id},
+    // );
+
+    final updatedMessages = state.messages;
+
+    updatedMessages.removeAt(index);
+
+    emit(state.copyWith(
+      messages: updatedMessages,
+      messagesLoadedState: true,
+      selectionState: false,
+      index: -1,
+      id: -1,
+      height: -1,
+      width: -1,
+      xCoordiate: -1,
+      yCoordiate: -1,
+    ));
   }
 
   void typingMessage() {
-    emit(TypingMessage(messages: state.getMessages));
+    emit(state.copyWith(typingState: true));
   }
 
   void receiveMessage(dynamic message) {
-    if (state is ChatLoaded) {
-      print(message);
+    print(message);
 
-      // TODO
-      // userId == my id -> update id with backend id - else - add to messages list
+    // TODO
+    // userId == my id -> update id with backend id - else - add to messages list
 
-      final currentState = state as ChatLoaded;
+    final updatedMessages = List<Message>.from(state.messages);
 
-      final messages = List<Message>.from(currentState.messages);
+    updatedMessages[updatedMessages.length - 1].setId(message["id"]);
 
-      messages[messages.length - 1].setId(message["id"]);
+    print(updatedMessages[updatedMessages.length - 1]);
 
-      print(messages[messages.length - 1]);
-
-      // final updatedMessages = List<Message>.from(currentState.messages)
-      //   ..add(
-      //     Message(
-      //       isDate: false,
-      //       sender: "01",
-      //       content: message["content"],
-      //       time: message["createdAt"],
-      //     ),
-      //   );
-      emit(ChatLoaded(messages: messages));
-    }
+    // final updatedMessages = List<Message>.from(currentState.messages)
+    //   ..add(
+    //     Message(
+    //       isDate: false,
+    //       sender: "01",
+    //       content: message["content"],
+    //       time: message["createdAt"],
+    //     ),
+    //   );
+    emit(state.copyWith(messages: updatedMessages, receivedState: true));
   }
 
   // Get the prev Messages
@@ -143,11 +215,12 @@ class ChatCubit extends Cubit<ChatState> {
           )
           .toList();
 
-      emit(ChatLoaded(messages: messages));
+      emit(state.copyWith(messages: messages, messagesLoadedState: true));
       return res;
     } catch (e) {
       print(e);
-      emit(ChatError(message: 'Failed to fetch messages'));
+      emit(
+          state.copyWith(error: true, errorMessage: "Failed to load messages"));
     }
   }
 }

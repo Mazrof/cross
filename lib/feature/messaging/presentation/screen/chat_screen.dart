@@ -27,13 +27,14 @@ class ChatScreen extends StatelessWidget {
   //   Message(content: "October 3", time: "9:05", sender: "ME", isDate: true),
   // ];
   final TextEditingController controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: (state is! MessageSelected && state is! EditingMessage)
+          appBar: state.selectionState == false && state.editingState == false
               ? CAppBar(
                   onLeadingTap: () {},
                   title: const RecieverDetails(
@@ -61,11 +62,12 @@ class ChatScreen extends StatelessWidget {
                 )
               : CAppBar(
                   onLeadingTap: () {
-                    if (controller.text.isNotEmpty) {
-                      sl<ChatCubit>().typingMessage();
-                    } else {
-                      sl<ChatCubit>().defaultState();
-                    }
+                    sl<ChatCubit>().unselectMessage();
+                    // if (controller.text.isNotEmpty) {
+                    //   sl<ChatCubit>().typingMessage();
+                    // } else {
+                    //   sl<ChatCubit>().defaultState();
+                    // }
                   },
                   leadingIcon: Icons.close,
                   title: const Text("1"),
@@ -83,15 +85,19 @@ class ChatScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.delete_outlined),
                       color: AppColors.whiteColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        sl<ChatCubit>().deleteMessage(state.id, state.index);
+                      },
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit_outlined),
                       color: AppColors.whiteColor,
                       onPressed: () {
+                        controller.text = state.messages[state.index].content;
                         sl<ChatCubit>().editingMessage(
-                            (sl<ChatCubit>().state as MessageSelected).index,
-                            (sl<ChatCubit>().state as MessageSelected).id);
+                          state.index,
+                          state.id,
+                        );
                       },
                     ),
                     // const PopupMenu([
@@ -119,7 +125,8 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: MessageList(
-                      messages: state.getMessages,
+                      messages: state.messages,
+                      scrollController: _scrollController,
                     ),
                   ),
                   CinputBar(
