@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:telegram/feature/settings/Data/model/user_settings_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:telegram/feature/settings/datasettings/models/user_settings_model.dart';
 
 abstract class UserSettingsRemoteDataSource {
   Future<UserSettingsBodyModel> fetchSettings();

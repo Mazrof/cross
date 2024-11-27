@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/use_cases/use_case.dart';
-import 'package:telegram/core/validator/app_validator.dart';
-import 'package:telegram/feature/settings/Data/model/user_settings_model.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_state.dart';
-import 'package:telegram/feature/settings/domain/use_cases/fetch_settings_use_case.dart';
-import 'package:telegram/feature/settings/domain/use_cases/update_settings_use_case.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/core/validator/app_validator.dart';
+import 'package:telegram/feature/settings/datasettings/models/user_settings_model.dart';
+import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/fetch_settings_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/update_settings_use_case.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
 class UserSettingsCubit extends Cubit<UserSettingsState> {
   final FetchSettingsUseCase fetchSettingsUseCase;
@@ -47,7 +48,7 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
   void saveSettings(String newScreenName, String newUserName,
       String newPhoneNumber, String newBio, String newStatus) async {
     emit(state.copyWith(state: CubitState.loading));
-    final updatedSettings = UserSettingsBodyModel(
+    final updatedSettings = UserSettingsEntity(
       screenName: newScreenName,
       userName: newUserName,
       phoneNumber: newPhoneNumber,

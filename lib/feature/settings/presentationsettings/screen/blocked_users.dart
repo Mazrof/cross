@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/contact_list/contact_list_tile.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -66,7 +66,7 @@ class BlockedUsersScreen extends StatelessWidget {
               }).toList(),
               //Can use onLongtap or popupmenubutton to block user
             ),
-            )
+          )
         ],
       ),
     );

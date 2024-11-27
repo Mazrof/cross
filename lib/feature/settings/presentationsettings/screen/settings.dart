@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
-import 'package:telegram/core/use_cases/use_case.dart';
-import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_state.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    context.read<UserSettingsCubit>().fetchSettingsUseCase(NoParameters());
-
     return BlocBuilder<UserSettingsCubit, UserSettingsState>(
       builder: (context, state) {
         if (state.state == CubitState.loading) {

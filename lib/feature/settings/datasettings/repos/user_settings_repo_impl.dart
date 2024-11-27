@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:telegram/core/error/faliure.dart';
-import 'package:telegram/feature/settings/Data/data_source/remote_data/user_settings_remote_data_source.dart';
-import 'package:telegram/feature/settings/Data/model/user_settings_model.dart';
-import 'package:telegram/feature/settings/Domain/entities/user_settings_entity.dart';
-import 'package:telegram/feature/settings/Domain/repositories/user_settings_repo.dart';
+import 'package:telegram/feature/settings/datasettings/datasource/remotedata/user_settings_remote_data_source.dart';
+import 'package:telegram/feature/settings/datasettings/models/user_settings_model.dart';
+import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
+import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
 
 class UserSettingsRepoImpl extends UserSettingsRepo {
   final UserSettingsRemoteDataSource remoteDataSource;

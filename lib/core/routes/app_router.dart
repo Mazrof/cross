@@ -27,19 +27,19 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mai
 import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
 
-import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/edit_profile.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/lastseen_online.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/privacy_security.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/profile_photo_security.dart';
-import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/block_user.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/blocked_users.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/edit_profile.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_online.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
+import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
@@ -169,7 +169,7 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
     path: AppRouter.ksettings,
     builder: (context, state) {
       return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
+        value: sl<UserSettingsCubit>()..loadSettings(),
         child: SettingsScreen(),
       );
     },
@@ -202,7 +202,7 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
     path: AppRouter.keditProfile,
     builder: (context, state) {
       return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
+        value: sl<UserSettingsCubit>()..loadSettings(),
         child: EditProfileScreen(),
       );
     },

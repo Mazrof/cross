@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/settings/Domain/entities/user_settings_entity.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_cubit.dart';
-import 'package:telegram/feature/settings/Presentation/Controller/user_settings_state.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
@@ -37,14 +36,12 @@ class EditProfilePage extends StatelessWidget {
         TextEditingController(text: state.phoneNumber);
 
     void saveSettings() {
-      context.read<UserSettingsCubit>().updateSettingsUseCase(
-            UserSettingsEntity(
-                screenName: screenNameController.text,
-                userName: userNameController.text,
-                phoneNumber: phoneNumberController.text,
-                bio: bioController.text,
-                status: "Online"),
-          );
+      context.read<UserSettingsCubit>().saveSettings(
+          screenNameController.text,
+          userNameController.text,
+          phoneNumberController.text,
+          bioController.text,
+          "Online");
     }
 
     return Scaffold(
@@ -58,6 +55,7 @@ class EditProfilePage extends StatelessWidget {
           IconButton(
               onPressed: () {
                 saveSettings();
+                context.go(AppRouter.ksettings);
               },
               icon: const Icon(Icons.check)),
         ],

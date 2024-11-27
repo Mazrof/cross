@@ -1,4 +1,4 @@
-import 'package:telegram/feature/settings/Domain/entities/user_settings_entity.dart';
+import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 
 class UserSettingsBodyModel extends UserSettingsEntity {
   final String screenName;
