@@ -6,7 +6,7 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = endPointDev;
+  static const String baseUrl = AppStrings.serverUrl;
   static const String endPointPro =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
   static const String endPointDev = "http://192.168.100.3:3000/api/v1";

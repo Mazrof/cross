@@ -34,8 +34,8 @@ void main() async {
     ),
   );
 
-   Future.delayed(Duration.zero, () {
-     Hive.close();
+  Future.delayed(Duration.zero, () {
+    Hive.close();
   });
 }
 
@@ -64,7 +64,7 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.lightTheme,
+                  theme: TAppTheme.darkTheme,
                   darkTheme: TAppTheme.darkTheme,
                   // themeMode: ThemeMode.dark,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,

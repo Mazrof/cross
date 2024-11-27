@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -5,6 +7,9 @@ import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
+
+import 'package:telegram/core/network/socket/socket_service.dart';
+
 import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/forget_password/data/data_source/forget_password_data_source.dart';
 import 'package:telegram/feature/auth/forget_password/data/repo/forget_password_repo_imp.dart';
@@ -20,6 +25,7 @@ import 'package:telegram/feature/auth/login/domain/repositories/base_repo.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_with_github_use_case.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_use_case.dart';
+
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
@@ -50,12 +56,16 @@ import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.da
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
+
 import 'package:telegram/feature/auth/verify_mail/data/data_source/verify_mail_remot_data_source.dart';
 import 'package:telegram/feature/auth/verify_mail/data/repo/verfiy_mail_imp.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_repo.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -96,6 +106,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => SplashCubit());
     //onboarding
     sl.registerLazySingleton(() => OnBordingCubit());
+    sl.registerLazySingleton(() => ChatCubit());
 
     // night mode cubit
     sl.registerLazySingleton<NightModeCubit>(() => NightModeCubit());
@@ -253,6 +264,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => RecaptchaService());
 
     sl.registerSingleton<ApiService>(ApiService());
+    sl.registerLazySingleton<SocketService>(() => SocketService());
     sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<NetworkInfo>(
         () => NetworkInfoImpl(connectionChecker: sl()));
