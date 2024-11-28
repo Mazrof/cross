@@ -18,7 +18,7 @@ class GetRegisterInfoUseCase
       var res = signUpRepo.getRegisterInfo();
       return res;
     } catch (error) {
-      return Left(error as Failure);
+      return Left(ServerFailure(message: error.toString()));
     }
   }
 }

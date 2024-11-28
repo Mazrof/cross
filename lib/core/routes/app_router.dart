@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
@@ -92,7 +93,8 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
+final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
+
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -174,7 +176,11 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
     builder: (context, state) {
       final param = state.extra as Map<String, dynamic>;
       return BlocProvider.value(
-          value: sl<VerifyMailCubit>(),
+          value: sl<VerifyMailCubit>()
+            ..sendVerificationMail(
+                param['method'] as String,
+                HiveCash.read(
+                    boxName: "register_info", key: param['method'] as String)!),
           child: VerifyMailScreen(
             method: param['method'] as String,
           ));

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,9 +35,6 @@ void main() async {
     ),
   );
 
-  Future.delayed(Duration.zero, () {
-    Hive.close();
-  });
 }
 
 Future<void> _initializeApp() async {

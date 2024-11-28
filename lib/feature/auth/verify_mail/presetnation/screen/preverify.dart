@@ -46,7 +46,7 @@ class PreVerifyScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => context
-                      .go(AppRouter.kVerifyMail, extra: {'method': 'mail'}),
+                      .go(AppRouter.kVerifyMail, extra: {'method': 'email'}),
                   child: Text(AppStrings.verifyByMail),
                 ),
               ),

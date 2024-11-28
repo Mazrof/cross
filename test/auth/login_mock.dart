@@ -65,7 +65,7 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, success] when login is successful',
       build: () {
-        when(mockLoginUseCase.call(any)).thenAnswer((_) async => Right(unit));
+        when(mockLoginUseCase.call(any)).thenAnswer((_) async => Right(true));
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
         when(mockAppValidator.isFormValid(any)).thenReturn(true);
 

@@ -21,11 +21,9 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginCubit = sl<LoginCubit>();
 
-    return
-     Form(
+    return Form(
       key: loginCubit.formKey,
-      child:
-       Padding(
+      child: Padding(
         padding: const EdgeInsets.all(AppSizes.padding),
         child: Column(
           children: [
@@ -55,6 +53,7 @@ class LoginForm extends StatelessWidget {
 
             // password
             TextFormField(
+              controller: loginCubit.passwordController,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall, // Set the text style here

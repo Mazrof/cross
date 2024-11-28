@@ -1,49 +1,43 @@
 import 'package:telegram/feature/auth/signup/domain/entities/sign_up_entity.dart';
 
 class SignUpBodyModel extends SignUpEntity {
-  @override
-  final String firstName;
-  @override
-  final String lastName;
+  final String username;
+
   @override
   final String phone;
   @override
   final String email;
   @override
   final String password;
+  String id;
 
   SignUpBodyModel({
-    required this.firstName,
-    required this.lastName,
+    this.id = '',
+    required this.username,
     required this.phone,
     required this.email,
     required this.password,
   }) : super(
-    
-          firstName: firstName,
-          lastName: lastName,
+          username: username,
           phone: phone,
           email: email,
           password: password,
-         
         );
 
   Map<String, dynamic> toJson() {
     final body = {
-      'first_name': firstName,
-      'last_name': lastName,
-      'primary_mobile': phone,
+      'username': username,
+      'phone': phone,
       'email': email,
       'password': password,
-     
+      'id': id,
     };
     return body;
   }
 
   factory SignUpBodyModel.fromEntity(SignUpEntity entity) {
     return SignUpBodyModel(
-      firstName: entity.firstName,
-      lastName: entity.lastName,
+      username: entity.username,
       phone: entity.phone,
       email: entity.email,
       password: entity.password,
@@ -51,11 +45,63 @@ class SignUpBodyModel extends SignUpEntity {
   }
   static empty() {
     return SignUpBodyModel(
-      firstName: '',
-      lastName: '',
+      username: '',
       phone: '',
       email: '',
       password: '',
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SignUpBodyModel &&
+        other.username == username &&
+        other.phone == phone &&
+        other.email == email &&
+        other.password == password;
+  }
+
+  @override
+  int get hashCode {
+    return username.hashCode ^
+        phone.hashCode ^
+        email.hashCode ^
+        password.hashCode;
+  }
+
+  SignUpBodyModel copyWith({
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? email,
+    String? password,
+  }) {
+    return SignUpBodyModel(
+      username: username ?? this.username,
+      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      password: password ?? this.password,
+    );
+  }
+
+  @override
+  SignUpEntity toEntity() {
+    return SignUpEntity(
+      username: username,
+      phone: phone,
+      email: email,
+      password: password,
+    );
+  }
+
+  factory SignUpBodyModel.fromJson(Map<String, dynamic> json) {
+    return SignUpBodyModel(
+      username: json['username'],
+      phone: json['phone'],
+      email: json['email'],
+      password: json['password'],
     );
   }
 }

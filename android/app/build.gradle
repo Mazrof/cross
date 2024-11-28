@@ -9,6 +9,10 @@ android {
     namespace = "com.example.telegram"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    dependencies {
+    implementation 'com.google.android.gms:play-services-recaptcha:16.0.0'
+    }
+    
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -30,6 +34,15 @@ android {
         versionName = flutter.versionName
     }
 
+    // signingConfigs
+    // {
+    //     debug{
+    //         keyAlias 'upload'
+    //         keyPassword 'android'
+    //         storeFile file('mykey.jks')
+    //         storePassword 'android'
+    //     }
+    // }
     signingConfigs
     {
         // debug{
@@ -40,13 +53,13 @@ android {
         // }
     }
 
-    buildTypes {
-        debug {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
-        }
-    }
+    // buildTypes {
+    //     debug {
+    //         // TODO: Add your own signing config for the release build.
+    //         // Signing with the debug keys for now, so `flutter run --release` works.
+    //         signingConfig = signingConfigs.debug
+    //     }
+    // }
 }
 
 flutter {

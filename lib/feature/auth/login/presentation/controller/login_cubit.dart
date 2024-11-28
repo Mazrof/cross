@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:telegram/core/local/cache_helper.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
@@ -26,7 +29,21 @@ class LoginCubit extends Cubit<LoginState> {
       required this.appValidator,
       required this.networkManager,
       required this.loginUseCase})
-      : super(const LoginState());
+      : super(const LoginState()) {
+    //first make sure there is an box with the name 'register_info'
+    if ((Hive.isBoxOpen('register_info'))) {
+      //then check if there is an email and password in the box
+
+      var email = HiveCash.read<String>(boxName: 'register_info', key: 'email');
+      var password =
+          HiveCash.read<String>(boxName: 'register_info', key: 'password');
+      if (email != null && password != null) {
+        emailController.text = email;
+        passwordController.text = password;
+        emit(state.copyWith(rememberMe: true));
+      }
+    }
+  }
 
   Timer? _timer;
   final Duration timerDuration = const Duration(seconds: 1);
@@ -34,17 +51,14 @@ class LoginCubit extends Cubit<LoginState> {
   void login() async {
     if (appValidator.isFormValid(formKey)) {
       if (state.remainingAttempts > 0) {
-        print(' hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         emit(state.copyWith(state: LoginStatusEnum.loading));
-        bool conncection = await networkManager.isConnected();
-        print('i am here ');
+        bool connection = await networkManager.isConnected();
 
-        if (!conncection) {
+        if (!connection) {
           emit(state.copyWith(
               state: LoginStatusEnum.error, error: 'No Internet Connection'));
           return;
         }
-        print('LoginCubit: login: email: ${emailController.text.trim()}');
 
         emitLoginStates(LoginRequestBody(
           email: emailController.text.trim(),
@@ -62,11 +76,9 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> signInWithGoogle() async {
-    // to be modified
-    bool conncection = await networkManager.isConnected();
-    print('i am here ');
+    bool connection = await networkManager.isConnected();
 
-    if (!conncection) {
+    if (!connection) {
       emit(state.copyWith(
           state: LoginStatusEnum.error, error: 'No Internet Connection'));
       return;
@@ -78,60 +90,69 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
     });
   }
 
   Future<void> signInWithGithub(context) async {
-    bool conncection = await networkManager.isConnected();
-    print('github');
+    bool connection = await networkManager.isConnected();
 
-    if (!conncection) {
+    if (!connection) {
       emit(state.copyWith(
           state: LoginStatusEnum.error, error: 'No Internet Connection'));
       return;
     }
-    print('github');
+
     final result = await loginWithGithubUseCase.call(context);
-    print('github3');
+
     result.fold((l) {
       emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
     });
   }
 
   void emitLoginStates(LoginRequestBody loginRequestBody) async {
-    print('here');
-    await loginUseCase.call(loginRequestBody).then((value) async {
-      value.fold((failure) {
-        int newRemainingAttempts = state.remainingAttempts - 1;
+    print('start login');
+    final result = await loginUseCase.call(loginRequestBody);
+    print('end login');
+    result.fold((failure) {
+      int newRemainingAttempts = state.remainingAttempts - 1;
 
-        if (newRemainingAttempts == 0) {
-          startTimer();
-          emit(state.copyWith(
-            state: LoginStatusEnum.suspended,
-            remainingAttempts: newRemainingAttempts,
-          ));
-        } else {
-          emit(state.copyWith(
-            state: LoginStatusEnum.error,
-            error: failure.message,
-            remainingAttempts: newRemainingAttempts,
-          ));
-        }
-      }, (unit) async {
-        resetTimer();
-        emit(state.copyWith(state: LoginStatusEnum.success));
-      });
+      if (newRemainingAttempts == 0) {
+        startTimer();
+        emit(state.copyWith(
+          state: LoginStatusEnum.suspended,
+          remainingAttempts: newRemainingAttempts,
+        ));
+      } else {
+        emit(state.copyWith(
+          state: LoginStatusEnum.error,
+          error: failure.message,
+          remainingAttempts: newRemainingAttempts,
+        ));
+      }
+    }, (unit) async {
+      resetTimer();
+      emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
+
     });
   }
 
   void toggleRememberMe(bool? value) {
-    emit(state.copyWith(rememberMe: value!));
+    emit(state.copyWith(
+        rememberMe: value!, error: '', state: LoginStatusEnum.idle));
   }
 
   void togglePasswordVisibility() {
-    emit(state.copyWith(obscureText: !state.obscureText));
+    emit(
+      state.copyWith(
+          obscureText: !state.obscureText,
+          error: '',
+          state: LoginStatusEnum.idle),
+    );
   }
 
   void startTimer() {
@@ -150,6 +171,9 @@ class LoginCubit extends Cubit<LoginState> {
       }
     });
   }
+  void setloged() {
+    CacheHelper.write(key: 'loged', value: 'true');
+  } 
 
   void resetTimer() {
     _timer?.cancel();

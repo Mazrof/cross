@@ -19,7 +19,7 @@ class DataBaseFailure extends Failure {
 class ServerFailure extends Failure {
 
 
-  const ServerFailure( {required super.message});
+  const ServerFailure({required super.message});
   factory ServerFailure.fromDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
