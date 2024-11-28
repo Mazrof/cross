@@ -9,8 +9,7 @@ class ApiService {
   static const String baseUrl = endPointDev;
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
-  static const String baseUrl = AppStrings.serverUrl;
-  
+
 
   static const String endPointDev = "http://192.168.100.3:3000/api/v1";
 
@@ -43,7 +42,6 @@ class ApiService {
     required String endPoint,
     Object? data,
     String? token,
-    Object? data,
   }) async {
     try {
       dio.options.headers = token == null

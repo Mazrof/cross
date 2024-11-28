@@ -91,7 +91,7 @@ void main() {
       'emits [loading, success] when OTP is verified successfully',
       build: () {
         when(mockVerifyOtpUseCase.call(any))
-            .thenAnswer((_) async => Right(unit));
+            .thenAnswer((_) async => Right(true));
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
         return verifyMailCubit;
       },

@@ -148,21 +148,21 @@ class MockVerifyOtpUseCase extends _i1.Mock implements _i7.VerifyOtpUseCase {
       );
 
   @override
-  _i4.Future<_i3.Either<_i6.Failure, void>> call(_i8.VerifyMailData? param) =>
+  _i4.Future<_i3.Either<_i6.Failure, bool>> call(_i8.VerifyMailData? param) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [param],
         ),
-        returnValue: _i4.Future<_i3.Either<_i6.Failure, void>>.value(
-            _FakeEither_1<_i6.Failure, void>(
+        returnValue: _i4.Future<_i3.Either<_i6.Failure, bool>>.value(
+            _FakeEither_1<_i6.Failure, bool>(
           this,
           Invocation.method(
             #call,
             [param],
           ),
         )),
-      ) as _i4.Future<_i3.Either<_i6.Failure, void>>);
+      ) as _i4.Future<_i3.Either<_i6.Failure, bool>>);
 }
 
 /// A class which mocks [NetworkManager].
