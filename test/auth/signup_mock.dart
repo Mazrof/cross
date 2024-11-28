@@ -79,8 +79,7 @@ void main() {
         return signUpCubit;
       },
       act: (cubit) async {
-        cubit.firstNameController.text = 'John';
-        cubit.lastNameController.text = 'Doe';
+        cubit.usernameController.text = 'John';
         cubit.emailController.text = 'john.doe@example.com';
         cubit.phoneController.text = '1234567890';
         cubit.passwordController.text = 'passwordPa23@@';
@@ -114,8 +113,7 @@ void main() {
         return signUpCubit;
       },
       act: (cubit) async {
-        cubit.firstNameController.text = 'John';
-        cubit.lastNameController.text = 'Doe';
+        cubit.usernameController.text = 'John';
         cubit.emailController.text = 'john.doe@example.com';
         cubit.phoneController.text = '1234567890';
         cubit.passwordController.text = 'passwordPa23@@';
@@ -148,8 +146,7 @@ void main() {
         return signUpCubit;
       },
       act: (cubit) async {
-        cubit.firstNameController.text = 'John';
-        cubit.lastNameController.text = 'Doe';
+        cubit.usernameController.text = 'John';
         cubit.emailController.text = 'john.doe@example.com';
         cubit.phoneController.text = '1234567890';
         cubit.passwordController.text = 'passwordPa23@@';
@@ -182,8 +179,7 @@ void main() {
         return signUpCubit;
       },
       act: (cubit) async {
-        cubit.firstNameController.text = 'John';
-        cubit.lastNameController.text = 'Doe';
+        cubit.usernameController.text = 'John';
         cubit.emailController.text = 'john.doe@example.com';
         cubit.phoneController.text = '1234567890';
         cubit.passwordController.text = 'passwordPa23@@';
@@ -222,8 +218,7 @@ void main() {
       return signUpCubit;
     },
     act: (cubit) async {
-      cubit.firstNameController.text = 'John';
-      cubit.lastNameController.text = 'Doe';
+      cubit.usernameController.text = 'John';
       cubit.emailController.text = 'john.doe@example.com';
       cubit.phoneController.text = '1234567890';
       cubit.passwordController.text = 'passwordPa23@@';

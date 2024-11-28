@@ -46,6 +46,7 @@ class ApiService {
       dio.options.headers = token == null
           ? {}
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
 
@@ -79,9 +80,12 @@ class ApiService {
       dio.options.headers = token == null
           ? {}
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
       final response = await dio.post(url, data: data);
+      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
         return response;
@@ -106,6 +110,7 @@ class ApiService {
       dio.options.headers = token == null
           ? {}
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
 
@@ -113,6 +118,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: body,
       );
+      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -135,12 +142,15 @@ class ApiService {
       dio.options.headers = token == null
           ? {}
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
 
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
+      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -164,6 +174,7 @@ class ApiService {
       dio.options.headers = token == null
           ? {}
           : {
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
 
@@ -171,6 +182,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
+      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -209,7 +222,6 @@ class ApiService {
 
         final isValid = result['success'] ?? false;
         final score = result['score'] ?? 0.0;
-        
 
         // Ensure score meets threshold (e.g., 0.5 for human-like interaction)
         return isValid && score >= 0.5;

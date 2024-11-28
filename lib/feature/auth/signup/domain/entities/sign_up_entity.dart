@@ -1,13 +1,13 @@
 class SignUpEntity {
-  final String firstName;
-  final String lastName;
+  final String username;
   final String phone;
   final String email;
   final String password;
+  String id;
 
   SignUpEntity({
-    required this.firstName,
-    required this.lastName,
+    this.id = '',
+    required this.username,
     required this.phone,
     required this.email,
     required this.password,

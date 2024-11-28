@@ -134,22 +134,22 @@ class MockLoginUseCase extends _i1.Mock implements _i7.LoginUseCase {
       ) as _i2.LoginRepository);
 
   @override
-  _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>> call(
+  _i4.Future<_i3.Either<_i8.Failure, bool>> call(
           _i9.LoginRequestBody? loginModel) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [loginModel],
         ),
-        returnValue: _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>>.value(
-            _FakeEither_1<_i8.Failure, _i3.Unit>(
+        returnValue: _i4.Future<_i3.Either<_i8.Failure, bool>>.value(
+            _FakeEither_1<_i8.Failure, bool>(
           this,
           Invocation.method(
             #call,
             [loginModel],
           ),
         )),
-      ) as _i4.Future<_i3.Either<_i8.Failure, _i3.Unit>>);
+      ) as _i4.Future<_i3.Either<_i8.Failure, bool>>);
 }
 
 /// A class which mocks [NetworkManager].

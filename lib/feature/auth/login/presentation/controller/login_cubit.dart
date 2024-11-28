@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
@@ -26,7 +28,21 @@ class LoginCubit extends Cubit<LoginState> {
       required this.appValidator,
       required this.networkManager,
       required this.loginUseCase})
-      : super(const LoginState());
+      : super(const LoginState()) {
+    var email = HiveCash.read(
+      boxName: 'register_info',
+      key: 'email',
+    );
+    var password = HiveCash.read(
+      boxName: 'register_info',
+      key: 'password',
+    );
+    if (email != null && password != null) {
+      emailController.text = email;
+      passwordController.text = password;
+      emit(state.copyWith(rememberMe: true));
+    }
+  }
 
   Timer? _timer;
   final Duration timerDuration = const Duration(seconds: 1);
@@ -110,13 +126,11 @@ class LoginCubit extends Cubit<LoginState> {
       } else {
         emit(state.copyWith(
           state: LoginStatusEnum.error,
-          
           error: failure.message,
           remainingAttempts: newRemainingAttempts,
         ));
       }
     }, (unit) async {
-      
       resetTimer();
       emit(state.copyWith(state: LoginStatusEnum.success));
     });

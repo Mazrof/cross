@@ -158,9 +158,7 @@ class ServiceLocator {
 
     //signup
     sl.registerLazySingleton<SignUpRemoteDataSource>(
-        () => SignUpRemoteDataSourceImp(
-              apiService: sl(),
-            ));
+        () => SignUpRemoteDataSourceImp());
 
     sl.registerLazySingleton<SignUpLocalDataSource>(
         () => SignUpLocalDataSourceImp());
@@ -183,7 +181,7 @@ class ServiceLocator {
 
     sl.registerLazySingleton<InternetConnectionChecker>(
         () => InternetConnectionChecker());
-   
+
     sl.registerLazySingleton<NetworkManager>(() => (NetworkManager()));
     sl.registerLazySingleton<AppValidator>(() => AppValidator());
   }

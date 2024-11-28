@@ -29,16 +29,14 @@ class SignUpCubit extends Cubit<SignupState> {
   final CheckRecaptchaTocken checkRecaptchaTocken;
 
   // Text editing controllers for form fields
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   // Create unique GlobalKeys for each TextFormField
-  final firstNameKey = GlobalKey<FormFieldState>();
-  final lastNameKey = GlobalKey<FormFieldState>();
+  final usernameKey = GlobalKey<FormFieldState>();
   final emailKey = GlobalKey<FormFieldState>();
   final phoneKey = GlobalKey<FormFieldState>();
   final passwordKey = GlobalKey<FormFieldState>();
@@ -69,6 +67,7 @@ class SignUpCubit extends Cubit<SignupState> {
   }
 
   void signUp() async {
+    print('signUp1');
     if (appValidator.isFormValid(formKey) ?? false) {
       if (state.isPrivacyPolicyAccepted == false) {
         emit(state.copyWith(
@@ -89,27 +88,26 @@ class SignUpCubit extends Cubit<SignupState> {
           return;
         }
 
-        final recaptchaToken = await recaptchaService.handleRecaptcha();
-        print('recaptchaToken: $recaptchaToken');
-        if (recaptchaToken == null) {
-          emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'reCAPTCHA verification failed.',
-          ));
-          return;
-        }
-        final response = await checkRecaptchaTocken.call(recaptchaToken);
-        if (response.isLeft() || response.isRight() == false) {
-          emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'reCAPTCHA verification failed.',
-          ));
-          return;
-        }
+        // final recaptchaToken = await recaptchaService.handleRecaptcha();
+        // print('recaptchaToken: $recaptchaToken');
+        // if (recaptchaToken == null) {
+        //   emit(state.copyWith(
+        //     state: CubitState.failure,
+        //     errorMessage: 'reCAPTCHA verification failed.',
+        //   ));
+        //   return;
+        // }
+        // final response = await checkRecaptchaTocken.call(recaptchaToken);
+        // if (response.isLeft() || response.isRight() == false) {
+        //   emit(state.copyWith(
+        //     state: CubitState.failure,
+        //     errorMessage: 'reCAPTCHA verification failed.',
+        //   ));
+        //   return;
+        // }
 
         emitSignUpStates(SignUpBodyModel(
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
+          username: usernameController.text.trim(),
           email: emailController.text.trim(),
           phone: phoneController.text.trim(),
           password: passwordController.text.trim(),
@@ -124,21 +122,26 @@ class SignUpCubit extends Cubit<SignupState> {
   }
 
   void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
-    await registerUseCase.call(signUpRequestBody).then((value) async {
-      value.fold((failure) {
+    final id = await registerUseCase.call(signUpRequestBody);
+    
+ 
+      id.fold((failure) {
         emit(state.copyWith(
           state: CubitState.failure,
           errorMessage: failure.message,
         ));
       }, (unit) async {
         // Call the save data use case here
+        signUpRequestBody.id = unit;
 
         await saveRegisterInfoUseCase
-            .call(signUpRequestBody)
+            .call(
+          signUpRequestBody,
+        )
             .then((saveResult) {
           saveResult.fold((saveFailure) {
             print(saveFailure.message);
-            
+
             emit(state.copyWith(
               state: CubitState.failure,
               errorMessage: saveFailure.message,
@@ -148,13 +151,12 @@ class SignUpCubit extends Cubit<SignupState> {
           });
         });
       });
-    });
-  }
+    }
+  
 
   @override
   Future<void> close() {
-    firstNameController.dispose();
-    lastNameController.dispose();
+    usernameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();

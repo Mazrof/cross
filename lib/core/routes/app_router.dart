@@ -82,7 +82,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSignUp, routes: [
+final route = GoRouter(initialLocation: AppRouter.kLogin, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -150,7 +150,11 @@ final route = GoRouter(initialLocation: AppRouter.kSignUp, routes: [
     builder: (context, state) {
       final param = state.extra as Map<String, dynamic>;
       return BlocProvider.value(
-          value: sl<VerifyMailCubit>()..sendOtpUseCase(param['method'] as String,HiveCash.read(boxName: "register_info", key: param['method'] as String )!),
+          value: sl<VerifyMailCubit>()
+            ..sendVerificationMail(
+                param['method'] as String,
+                HiveCash.read(
+                    boxName: "register_info", key: param['method'] as String)!),
           child: VerifyMailScreen(
             method: param['method'] as String,
           ));

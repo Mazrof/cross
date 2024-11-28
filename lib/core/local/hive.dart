@@ -4,6 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
+    HiveCash.openBox("register_info");
   }
 
   static Future<void> openBox(String boxName) async {

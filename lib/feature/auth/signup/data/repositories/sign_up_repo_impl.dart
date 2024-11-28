@@ -18,9 +18,8 @@ class SignUpRepoImpl extends SignUpRepository {
   @override
   Future<Either<Failure, String>> register(SignUpEntity signUpEntity) async {
     try {
-      await signUpRemoteDataSource
-          .register(SignUpBodyModel.fromEntity(signUpEntity));
-      return right("Registered");
+      final response = await signUpRemoteDataSource.register(SignUpBodyModel.fromEntity(signUpEntity));
+      return right(response.data.toString());
     } catch (error) {
       return left(error as Failure);
     }

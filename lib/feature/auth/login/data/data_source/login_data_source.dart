@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:telegram/core/local/cache_helper.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/local/user_access_token.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/network/api/api_service.dart';
@@ -33,28 +35,65 @@ class LoginDataSourceImp implements LoginDataSource {
           'password': loginModel.password,
         },
       );
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.data);
+      print('Login Response: ${response.data}');
+      if (response.statusCode == 201 || response.statusCode == 200) {
         // Extract the access token and refresh token from the response
-        String accessToken = responseData['data']['access_token'];
-        String refreshToken = responseData['data']['refresh_token'];
-        print('Access Token: $accessToken');
-        print('Refresh Token: $refreshToken');
+        int id = response.data['data']['user']['id'];
+        String userType = response.data['data']['user']['user_type'];
 
         // Store the access token and refresh token in the cache
-        UserAccessToken.accessToken = accessToken;
-        if (loginModel.rememberMe ?? false) {
-          await CacheHelper.write(
-            key: AppStrings.token,
-            value: accessToken,
+        if (loginModel.rememberMe == true) {
+          HiveCash.write(
+            boxName: 'register_info',
+            key: 'email',
+            value: loginModel.email,
           );
-          await CacheHelper.write(
-            key: AppStrings.refreshToken,
-            value: refreshToken,
+          HiveCash.write(
+            boxName: 'register_info',
+            key: 'password',
+            value: loginModel.password,
           );
+        } else {
+          HiveCash.write(
+            boxName: 'register_info',
+            key: 'email',
+            value: '',
+          );
+          HiveCash.write(
+            boxName: 'register_info',
+            key: 'password',
+            value: '',
+          );
+          //cash the email and password
+           
+          
+      
         }
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'id',
+          value: id,
+        );
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'user_type',
+          value: userType,
+        );
+        // var endp = 'auth/whoami';
+        // final whoAmIResponse = await _apiService.get(
+        //   endPoint: endp,
+        // );
+        // print('Who Am I Response: ${whoAmIResponse.data}');
+        // if (whoAmIResponse.statusCode == 201 ||
+        //     whoAmIResponse.statusCode == 200) {
+        //   print('Who Am I Response: ${whoAmIResponse.data}');
+        //   // HiveCash.write(boxName: 'register_info', key: 'user', value: whoAmIResponse.data['data']);
+        // }
+
+        return response.statusCode == 201 || response.statusCode == 200;
       }
-      return response.statusCode == 201 || response.statusCode == 200;
+
+      return false;
     } catch (e) {
       print('Login error: $e');
       throw Exception('Failed to login');

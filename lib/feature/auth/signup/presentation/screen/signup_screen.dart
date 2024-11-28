@@ -32,7 +32,7 @@ class SignUpScreen extends StatelessWidget {
       } else if (state.state == CubitState.failure) {
         // show error message
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          CSnackBar.showErrorSnackBar(context, 'Error', 'something went wrong');
         });
       }
       // Handle other states if necessary

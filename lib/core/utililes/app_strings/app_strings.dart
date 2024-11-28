@@ -159,8 +159,10 @@ class AppStrings {
   static const String unmute = "Unmute";
   static const String endCall = "End Call";
   static const String deleteAllCalls = "Delete All Calls";
+  static const String weSentYouAnSms =
+      'Please Enter code we sent you on your phone';
 
   //cache
   static const String cacheError = 'Cache Error';
-  static const String refreshToken= 'refreshToken';
+  static const String refreshToken = 'refreshToken';
 }

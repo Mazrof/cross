@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
@@ -10,8 +11,8 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/core/validator/app_validator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_state.dart';
 
@@ -25,14 +26,20 @@ class VerifyMailScreen extends StatelessWidget {
     return BlocBuilder<VerifyMailCubit, VerifyMailState>(
         builder: (context, state) {
       if (state.status == VerifyMailStatus.success) {
-        CSnackBar.showSuccessSnackBar(
-            context, 'Mail Verified', AppStrings.mailVerified);
-        context.go(AppRouter.kLogin);
+        Future.delayed(Duration.zero, () {
+          CSnackBar.showSuccessSnackBar(
+              context, 'Mail Verified', AppStrings.mailVerified);
+          context.go(AppRouter.kLogin);
+        });
       } else if (state.status == VerifyMailStatus.error) {
-        CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+        Future.delayed(Duration.zero, () {
+          CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+        });
       } else if (state.status == VerifyMailStatus.optSent) {
-        CSnackBar.showSuccessSnackBar(
-            context, 'Mail Sent', AppStrings.codeSent);
+        Future.delayed(Duration.zero, () {
+          CSnackBar.showSuccessSnackBar(
+              context, 'Mail Sent', AppStrings.codeSent);
+        });
       } else if (state.status == VerifyMailStatus.loading) {
         return LogoLoader();
       }
@@ -42,17 +49,45 @@ class VerifyMailScreen extends StatelessWidget {
   }
 }
 
-class VerifyMailPage extends StatelessWidget {
+class VerifyMailPage extends StatefulWidget {
   const VerifyMailPage({
     required this.method,
     super.key,
   });
-  final method;
+  final String method;
+
+  @override
+  _VerifyMailPageState createState() => _VerifyMailPageState();
+}
+
+class _VerifyMailPageState extends State<VerifyMailPage> {
+  late TextEditingController _otpController;
+
+  @override
+  void initState() {
+    super.initState();
+    _otpController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final mail =
+        HiveCash.read<String>(boxName: "register_info", key: widget.method)!;
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CAppBar(
+        title: Text(''),
+        leadingIcon: Icons.arrow_back,
+        onLeadingTap: () {
+          context.go(AppRouter.kPreVerify);
+        },
+      ),
       body: Padding(
         padding: const EdgeInsets.all(AppSizes.padding),
         child: Center(
@@ -68,30 +103,44 @@ class VerifyMailPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(AppSizes.padding),
-                child: Text(
-                  AppStrings.checkYourEmail,
-                  style: Theme.of(context).textTheme.titleLarge,
+                child: Column(
+                  children: [
+                    if (widget.method == 'email')
+                      Text(
+                        AppStrings.verifyByMail,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    if (widget.method == 'phone')
+                      Text(
+                        AppStrings.verifyByPhone,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                  ],
                 ),
               ),
+              if (widget.method == 'email')
+                Text(
+                  AppStrings.weSentYouAnEmail,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              if (widget.method == 'phone')
+                Text(
+                  AppStrings.weSentYouAnSms,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               Text(
-                AppStrings.weSentYouAnEmail,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Text(
-                // TODO :Get mail from user data
-                maskEmail(HiveCash.read<String>(
-                    boxName: "register_info", key: method)!),
+                widget.method == 'email' ? maskEmail(mail) : '',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
                     .apply(color: AppColors.grey),
               ),
               Container(
-                width: 250,
                 margin: const EdgeInsets.all(AppSizes.verifyPadding),
                 child: PinCodeTextField(
                   appContext: context,
-                  length: 5,
+                  length: 6,
+                  controller: _otpController,
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
                     borderRadius:
@@ -100,14 +149,26 @@ class VerifyMailPage extends StatelessWidget {
                     selectedColor: AppColors.primaryColor,
                   ),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    print(value);
+                  },
                 ),
               ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    sl<VerifyMailCubit>().verifyMail(context);
+                    final otpCode = _otpController.text.trim();
+                    if (otpCode.isEmpty) {
+                      CSnackBar.showErrorSnackBar(
+                          context, 'Error', 'Please enter the OTP code.');
+                      return;
+                    }
+                    sl<VerifyMailCubit>().verifyOtp(
+                      widget.method,
+                      mail,
+                      otpCode,
+                    );
                   },
                   child: const Text(AppStrings.verify),
                 ),
@@ -116,21 +177,32 @@ class VerifyMailPage extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
-                    if (method == 'email') {
-                      final email =
-                          HiveCash.read(boxName: "register_info", key: 'email');
-                      sl<VerifyMailCubit>().sendVerificationMail(method, email);
-                    } else if (method == 'phone') {
-                      final phone =
-                          HiveCash.read(boxName: "register_info", key: 'phone');
-                      sl<VerifyMailCubit>().sendVerificationMail(method, phone);
-                    }
+                    sl<VerifyMailCubit>()
+                        .sendVerificationMail(widget.method, mail);
                   },
                   child: Text(AppStrings.resendCode,
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall!
                           .apply(color: AppColors.primaryColor)),
+                ),
+              ),
+              SizedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    BlocBuilder<VerifyMailCubit, VerifyMailState>(
+                      builder: (context, state) {
+                        return Text(
+                          state.remainingTime.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .apply(color: AppColors.primaryColor),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
