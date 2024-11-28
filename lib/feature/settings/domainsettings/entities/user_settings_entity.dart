@@ -1,4 +1,5 @@
 class UserSettingsEntity {
+  final String profileImage;
   final String screenName;
   final String userName;
   final String phoneNumber;
@@ -12,6 +13,7 @@ class UserSettingsEntity {
   final List<String> contacts;
 
   UserSettingsEntity({
+    required this.profileImage,
     required this.screenName,
     required this.userName,
     required this.phoneNumber,

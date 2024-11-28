@@ -37,6 +37,7 @@ class EditProfilePage extends StatelessWidget {
 
     void saveSettings() {
       context.read<UserSettingsCubit>().saveSettings(
+            state.profileImage,
             screenNameController.text,
             userNameController.text,
             phoneNumberController.text,

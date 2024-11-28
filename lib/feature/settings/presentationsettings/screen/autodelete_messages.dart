@@ -32,7 +32,6 @@ class AutodelMessagesScreen extends StatelessWidget {
 }
 
 class AutodelMessages extends StatelessWidget {
-  // final AutoDelOption selectedTimer;
   final UserSettingsState state;
   const AutodelMessages({super.key, required this.state});
 
@@ -42,6 +41,7 @@ class AutodelMessages extends StatelessWidget {
       final cubit = context.read<UserSettingsCubit>();
 
       await cubit.saveSettings(
+        state.profileImage,
         state.screenName,
         state.userName,
         state.phoneNumber,

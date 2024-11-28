@@ -60,6 +60,7 @@ class BlockUserPage extends StatelessWidget {
 
                   final cubit = context.read<UserSettingsCubit>();
                   await cubit.saveSettings(
+                    state.profileImage,
                     state.screenName,
                     state.userName,
                     state.phoneNumber,

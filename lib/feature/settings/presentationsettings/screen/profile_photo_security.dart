@@ -24,7 +24,6 @@ class ProfilePhotoSecurityScreen extends StatelessWidget {
 }
 
 class ProfilePhotoSecurityPage extends StatelessWidget {
-  // final PrivacyOption selectedOption;
   final UserSettingsState state;
   const ProfilePhotoSecurityPage({super.key, required this.state});
 
@@ -33,6 +32,7 @@ class ProfilePhotoSecurityPage extends StatelessWidget {
     void saveSettings(String? value) async {
       final cubit = context.read<UserSettingsCubit>();
       await cubit.saveSettings(
+          state.profileImage,
           state.screenName,
           state.userName,
           state.phoneNumber,

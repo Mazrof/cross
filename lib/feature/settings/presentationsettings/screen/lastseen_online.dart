@@ -31,7 +31,6 @@ class LastseenOnlineScreen extends StatelessWidget {
 }
 
 class LastseenOnlinePage extends StatelessWidget {
-  // final PrivacyOption selectedOption;
   final UserSettingsState state;
   const LastseenOnlinePage({super.key, required this.state});
 
@@ -40,6 +39,7 @@ class LastseenOnlinePage extends StatelessWidget {
     void saveSettings(String? value) async {
       final cubit = context.read<UserSettingsCubit>();
       await cubit.saveSettings(
+        state.profileImage,
         state.screenName,
         state.userName,
         state.phoneNumber,

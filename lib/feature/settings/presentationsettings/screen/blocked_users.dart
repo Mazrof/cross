@@ -33,7 +33,6 @@ class BlockedUsersScreen extends StatelessWidget {
 }
 
 class BlockedUsersPage extends StatelessWidget {
-  // final List<String> blockedUsers;
   final UserSettingsState state;
   const BlockedUsersPage({super.key, required this.state});
 
@@ -96,6 +95,7 @@ class BlockedUsersPage extends StatelessWidget {
 
                     final cubit = context.read<UserSettingsCubit>();
                     await cubit.saveSettings(
+                      state.profileImage,
                       state.screenName,
                       state.userName,
                       state.phoneNumber,

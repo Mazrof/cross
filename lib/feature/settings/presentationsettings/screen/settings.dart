@@ -33,19 +33,6 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class SettingsPage extends StatelessWidget {
-  // final String screenName;
-  // final String userName;
-  // final String phoneNumber;
-  // final String bio;
-  // final String status;
-
-  // const SettingsPage(
-  //     {super.key,
-  //     required this.screenName,
-  //     required this.userName,
-  //     required this.phoneNumber,
-  //     required this.bio,
-  //     required this.status});
   final UserSettingsState state;
 
   const SettingsPage({required this.state, super.key});
@@ -60,10 +47,9 @@ class SettingsPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 6.0),
           child: Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 20,
-                backgroundImage:
-                    AssetImage("assets/images/chat_background.png"),
+                backgroundImage: NetworkImage(state.profileImage),
               ),
               const SizedBox(
                 width: 8.0,

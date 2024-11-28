@@ -1,6 +1,7 @@
 import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 
 class UserSettingsBodyModel extends UserSettingsEntity {
+  final String profileImage;
   final String screenName;
   final String userName;
   final String phoneNumber;
@@ -14,6 +15,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
   final List<String> contacts;
 
   UserSettingsBodyModel({
+    required this.profileImage,
     required this.screenName,
     required this.userName,
     required this.phoneNumber,
@@ -26,6 +28,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
     required this.blockedUsers,
     required this.contacts,
   }) : super(
+          profileImage: profileImage,
           screenName: screenName,
           userName: userName,
           phoneNumber: phoneNumber,
@@ -41,6 +44,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
 
   Map<String, dynamic> toJson() {
     final body = {
+      'profile_image': profileImage,
       'screen_name': screenName,
       'user_name': userName,
       'phone_number': phoneNumber,
@@ -58,6 +62,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
 
   UserSettingsEntity toEntity() {
     return UserSettingsEntity(
+      profileImage: profileImage,
       screenName: screenName,
       userName: userName,
       phoneNumber: phoneNumber,
@@ -74,6 +79,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
 
   factory UserSettingsBodyModel.fromEntity(UserSettingsEntity entity) {
     return UserSettingsBodyModel(
+      profileImage: entity.profileImage,
       screenName: entity.screenName,
       userName: entity.userName,
       phoneNumber: entity.phoneNumber,
@@ -89,6 +95,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
   }
   factory UserSettingsBodyModel.fromJson(Map<String, dynamic> json) {
     return UserSettingsBodyModel(
+      profileImage: json['profile_image'],
       screenName: json['screen_name'],
       userName: json['user_name'],
       phoneNumber: json['phone_number'],
@@ -104,6 +111,7 @@ class UserSettingsBodyModel extends UserSettingsEntity {
   }
   static empty() {
     return UserSettingsBodyModel(
+      profileImage: "",
       screenName: "",
       userName: "",
       phoneNumber: "",

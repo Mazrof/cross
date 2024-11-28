@@ -36,6 +36,7 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
           state: CubitState.failure, errorMessage: failure.message)),
       (settings) => emit(state.copyWith(
         state: CubitState.success,
+        profileImage: settings.profileImage,
         screenName: settings.screenName,
         userName: settings.userName,
         phoneNumber: settings.phoneNumber,
@@ -52,6 +53,7 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
   }
 
   Future<void> saveSettings(
+    String newProfileImage,
     String newScreenName,
     String newUserName,
     String newPhoneNumber,
@@ -66,6 +68,7 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
   ) async {
     emit(state.copyWith(state: CubitState.loading));
     final updatedSettings = UserSettingsEntity(
+      profileImage: newProfileImage,
       screenName: newScreenName,
       userName: newUserName,
       phoneNumber: newPhoneNumber,

@@ -31,7 +31,6 @@ class PrivacySecurityScreen extends StatelessWidget {
 }
 
 class PrivacySecurityPage extends StatelessWidget {
-  // final bool readReceiptStatus;
   final UserSettingsState state;
   const PrivacySecurityPage({super.key, required this.state});
 
@@ -76,7 +75,7 @@ class PrivacySecurityPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              '2',
+              state.blockedUsers.length.toString(),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -139,6 +138,7 @@ class PrivacySecurityPage extends StatelessWidget {
             onChanged: (bool newValue) async {
               final cubit = context.read<UserSettingsCubit>();
               await cubit.saveSettings(
+                state.profileImage,
                 state.screenName,
                 state.userName,
                 state.phoneNumber,

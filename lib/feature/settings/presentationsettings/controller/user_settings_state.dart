@@ -4,6 +4,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 class UserSettingsState extends Equatable {
   final CubitState state;
   final String? errorMessage;
+  final String profileImage;
   final String screenName;
   final String userName;
   final String phoneNumber;
@@ -19,6 +20,7 @@ class UserSettingsState extends Equatable {
   UserSettingsState({
     this.state = CubitState.initial,
     this.errorMessage,
+    this.profileImage = '',
     this.screenName = '',
     this.userName = '',
     this.phoneNumber = '',
@@ -36,6 +38,7 @@ class UserSettingsState extends Equatable {
   UserSettingsState copyWith({
     CubitState? state,
     String? errorMessage,
+    String? profileImage,
     String? screenName,
     String? userName,
     String? phoneNumber,
@@ -51,6 +54,7 @@ class UserSettingsState extends Equatable {
     return UserSettingsState(
       state: state ?? this.state,
       errorMessage: errorMessage ?? this.errorMessage,
+      profileImage: profileImage ?? this.profileImage,
       screenName: screenName ?? this.screenName,
       userName: userName ?? this.userName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -69,6 +73,7 @@ class UserSettingsState extends Equatable {
   List<Object?> get props => [
         state,
         errorMessage,
+        profileImage,
         screenName,
         userName,
         phoneNumber,
