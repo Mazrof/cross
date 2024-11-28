@@ -9,6 +9,8 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/screen/Bottom_nav_bar.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
@@ -30,7 +32,7 @@ import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.d
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mail.dart';
-import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
+import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 
@@ -93,7 +95,8 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
+final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
+
 
   GoRoute(
     path: AppRouter.kPreVerify,
@@ -123,7 +126,8 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.kHome,
     builder: (context, state) {
-      return const HomeScreen();
+      return BlocProvider.value(
+          value: sl<HomeCubit>()..loadHomeData() , child: HomeScreen());
     },
   ),
   GoRoute(

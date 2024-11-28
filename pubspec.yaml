@@ -84,6 +84,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   g_recaptcha_v3: ^0.0.5
+  shimmer: ^3.0.0
+  image_picker: ^1.1.2
+
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   flutter_dotenv: ^5.2.1

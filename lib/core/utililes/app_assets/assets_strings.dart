@@ -17,4 +17,7 @@ class AppAssetsStrings {
 
   //preverify
   static const String verifyMail = 'assets/verify_mail/verify_mail.png';  
+
+  //home
+  static const String general_person = 'assets/images/general_person.png';
 }

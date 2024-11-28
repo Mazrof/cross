@@ -30,6 +30,11 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
+import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
+import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
+
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
 import 'package:telegram/feature/dashboard/data/data_source/local_data_source/dashboard_data_source.dart';
 import 'package:telegram/feature/dashboard/data/data_source/remote_data_source/dashboard_data_source.dart';
@@ -139,6 +144,12 @@ class ServiceLocator {
           forgetPasswordUseCase: sl(),
         ));
 
+
+    //home
+    sl.registerLazySingleton(() => AddStoryCubit());
+    sl.registerFactory(() => StoryViewerCubit());
+    sl.registerFactory(() => HomeCubit());
+
     // nav bar
     sl.registerLazySingleton(() => NavCubit());
 
@@ -175,6 +186,7 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
         ));
+
   }
 
   static void registerUseCases() {

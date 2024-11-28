@@ -14,3 +14,5 @@ enum CubitState {
   success,
   failure,
 }
+
+enum MessageStatus { loading, sent, delivered, read }
