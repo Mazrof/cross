@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:telegram/core/component/cnight_mode_switch.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cinput_bar.dart';
@@ -18,14 +16,6 @@ import 'package:telegram/feature/night_mode/presentation/controller/night_mode_c
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
 
-  // final List<Message> messages = [
-  //   Message(
-  //       content: "Hello World!!", time: "9:05", sender: "ME", isDate: false),
-  //   Message(content: "Hello", time: "9:05", sender: "ME", isDate: false),
-  //   Message(content: "October 3", time: "9:05", sender: "ME", isDate: true),
-  //   Message(content: "Hello", time: "9:05", sender: "ME", isDate: false),
-  //   Message(content: "October 3", time: "9:05", sender: "ME", isDate: true),
-  // ];
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 

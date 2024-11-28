@@ -4,7 +4,6 @@ import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
-import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class ChatMessage extends StatelessWidget {
   final String message;
