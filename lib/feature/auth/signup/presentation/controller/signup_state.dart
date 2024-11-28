@@ -42,8 +42,4 @@ class SignupState extends Equatable {
         isConfirmPasswordVisible,
         isPrivacyPolicyAccepted,
       ];
-
-
-
-
 }

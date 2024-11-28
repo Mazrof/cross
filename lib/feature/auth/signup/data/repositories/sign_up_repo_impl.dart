@@ -49,4 +49,15 @@ class SignUpRepoImpl extends SignUpRepository {
     var res = await signUpLocalDataSource.getRegisterInfo();
     return right(res);
   }
+
+  @override
+  Future<Either<Failure, bool>> checkRecaptchaToken(
+      String recaptchaToken) async {
+    try {
+      var res = await signUpRemoteDataSource.checkRecaptchaToken(recaptchaToken);
+      return right(res);
+    } catch (error) {
+      return left(error as Failure);
+    }
+  }
 }

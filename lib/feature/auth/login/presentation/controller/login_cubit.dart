@@ -6,6 +6,8 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_github_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -13,12 +15,17 @@ class LoginCubit extends Cubit<LoginState> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final LoginUseCase loginUseCase;
+  final LoginWithGoogleUseCase loginWithGoogleUseCase;
+  final LoginWithGithubUseCase loginWithGithubUseCase;
   final NetworkManager networkManager;
   final AppValidator appValidator;
 
-  LoginCubit({
-    required this.appValidator,
-    required this.networkManager, required this.loginUseCase})
+  LoginCubit(
+      {required this.loginWithGoogleUseCase,
+      required this.loginWithGithubUseCase,
+      required this.appValidator,
+      required this.networkManager,
+      required this.loginUseCase})
       : super(const LoginState());
 
   Timer? _timer;
@@ -52,6 +59,45 @@ class LoginCubit extends Cubit<LoginState> {
           state: LoginStatusEnum.error,
           error: 'Please enter your email and password'));
     }
+  }
+
+  Future<void> signInWithGoogle() async {
+    // to be modified
+    bool conncection = await networkManager.isConnected();
+    print('i am here ');
+
+    if (!conncection) {
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'No Internet Connection'));
+      return;
+    }
+
+    final result = await loginWithGoogleUseCase.call();
+
+    result.fold((l) {
+      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+    }, (r) {
+      emit(state.copyWith(state: LoginStatusEnum.success));
+    });
+  }
+
+  Future<void> signInWithGithub(context) async {
+    bool conncection = await networkManager.isConnected();
+    print('github');
+
+    if (!conncection) {
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'No Internet Connection'));
+      return;
+    }
+    print('github');
+    final result = await loginWithGithubUseCase.call(context);
+    print('github3');
+    result.fold((l) {
+      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+    }, (r) {
+      emit(state.copyWith(state: LoginStatusEnum.success));
+    });
   }
 
   void emitLoginStates(LoginRequestBody loginRequestBody) async {

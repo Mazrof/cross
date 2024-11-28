@@ -7,9 +7,8 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/core/validator/app_validator.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
-import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key, required this.state});

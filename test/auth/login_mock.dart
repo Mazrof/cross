@@ -7,6 +7,8 @@ import 'package:telegram/core/error/faliure.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
 import 'package:telegram/feature/auth/login/domain/use_cases/login_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_github_use_case.dart';
+import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_use_case.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_state.dart';
 import 'package:telegram/core/network/network_manager.dart';
@@ -14,7 +16,14 @@ import 'package:dartz/dartz.dart';
 
 import 'login_mock.mocks.dart';
 
-@GenerateMocks([LoginUseCase, NetworkManager, AppValidator])
+@GenerateMocks([
+  LoginUseCase,
+  NetworkManager,
+  AppValidator,
+  LoginWithGoogleUseCase,
+  LoginWithGithubUseCase,
+  BuildContext,
+])
 void main() {
   TestWidgetsFlutterBinding
       .ensureInitialized(); // Ensure WidgetsBinding is initialized
@@ -22,6 +31,9 @@ void main() {
   late MockLoginUseCase mockLoginUseCase;
   late MockNetworkManager mockNetworkManager;
   late MockAppValidator mockAppValidator;
+  late MockLoginWithGoogleUseCase mockLoginWithGoogleUseCase;
+  late MockLoginWithGithubUseCase mockLoginWithGithubUseCase;
+  late MockBuildContext context;
 
   late LoginCubit loginCubit;
   Future<void> wait(int milliseconds) async {
@@ -32,11 +44,17 @@ void main() {
     mockAppValidator = MockAppValidator();
     mockLoginUseCase = MockLoginUseCase();
     mockNetworkManager = MockNetworkManager();
+    mockLoginWithGoogleUseCase = MockLoginWithGoogleUseCase();
+    mockLoginWithGithubUseCase = MockLoginWithGithubUseCase();
+    context = MockBuildContext();
 
     loginCubit = LoginCubit(
-        appValidator: mockAppValidator,
-        loginUseCase: mockLoginUseCase,
-        networkManager: mockNetworkManager);
+      loginWithGoogleUseCase: mockLoginWithGoogleUseCase,
+      loginWithGithubUseCase: mockLoginWithGithubUseCase,
+      appValidator: mockAppValidator,
+      loginUseCase: mockLoginUseCase,
+      networkManager: mockNetworkManager,
+    );
   });
 
   group('LoginCubit', () {
@@ -64,7 +82,6 @@ void main() {
         const LoginState(state: LoginStatusEnum.loading),
         const LoginState(state: LoginStatusEnum.success),
       ],
-    
     );
 
     blocTest<LoginCubit, LoginState>(
@@ -150,9 +167,8 @@ void main() {
       ],
     );
 
-
     blocTest<LoginCubit, LoginState>(
-      'emits [loading, suspended] when login fails three times',
+      'emits [loading, error] when no internet connection',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
           (_) async => Left(ServerFailure(message: 'Invalid credentials')),
@@ -166,7 +182,6 @@ void main() {
         cubit.emailController.text = 'test@gmail.com';
         cubit.passwordController.text = 'wrongpasswordDF!dd2Ds';
         cubit.login();
-  
       },
       expect: () => [
         const LoginState(state: LoginStatusEnum.loading),
@@ -175,13 +190,11 @@ void main() {
           error: 'No Internet Connection',
           remainingAttempts: 3,
         ),
-      
       ],
     );
 
-    
     blocTest<LoginCubit, LoginState>(
-      'emits [loading, suspended] when login fails three times',
+      'emits [error] when form validation fails',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
           (_) async => Left(ServerFailure(message: 'Invalid credentials')),
@@ -205,5 +218,84 @@ void main() {
       ],
     );
 
+    blocTest<LoginCubit, LoginState>(
+      'emits [loading, success] when login with Google is successful',
+      build: () {
+        when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
+        when(mockLoginWithGoogleUseCase.call())
+            .thenAnswer((_) async => Right('unit'));
+        return loginCubit;
+      },
+      act: (cubit) async {
+        cubit.signInWithGoogle();
+        await wait(500); // Wait for 500 milliseconds
+      },
+      expect: () => [
+        const LoginState(state: LoginStatusEnum.success),
+      ],
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'emits [loading, error] when login with Google fails',
+      build: () {
+        when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
+        when(mockLoginWithGoogleUseCase.call()).thenAnswer(
+          (_) async => Left(ServerFailure(message: 'Google login failed')),
+        );
+        return loginCubit;
+      },
+      act: (cubit) async {
+        cubit.signInWithGoogle();
+        await wait(500); // Wait for 500 milliseconds
+      },
+      expect: () => [
+        const LoginState(
+          state: LoginStatusEnum.error,
+          error: 'Google login failed',
+        ),
+      ],
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'emits [loading, success] when login with GitHub is successful',
+      build: () {
+        when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
+        when(mockLoginWithGithubUseCase.call(any))
+            .thenAnswer((_) async => Right('done'));
+        return loginCubit;
+      },
+      act: (cubit) async {
+        cubit.signInWithGithub(
+          MockBuildContext(),
+        );
+        await wait(500); // Wait for 500 milliseconds
+      },
+      expect: () => [
+        const LoginState(state: LoginStatusEnum.success),
+      ],
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'emits [loading, error] when login with GitHub fails',
+      build: () {
+        when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
+        when(mockLoginWithGithubUseCase.call(any)).thenAnswer(
+          (_) async => Left(ServerFailure(message: 'GitHub login failed')),
+        );
+        return loginCubit;
+      },
+      act: (cubit) async {
+        cubit.signInWithGithub(
+          MockBuildContext(),
+        );
+        await wait(500); // Wait for 500 milliseconds
+      },
+      expect: () => [
+        const LoginState(
+          state: LoginStatusEnum.error,
+          error: 'GitHub login failed',
+        ),
+      ],
+    );
   });
 }

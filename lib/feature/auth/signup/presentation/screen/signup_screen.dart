@@ -5,13 +5,14 @@ import 'package:telegram/core/component/capp_divider.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/csocial_icons.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/widgets/go_to_login.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_cubit.dart';
-import 'package:telegram/feature/auth/signup/presentation/controller/sign_up/signup_state.dart';
-import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
+import 'package:telegram/feature/auth/signup/presentation/controller/signup_state.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/signup_from.dart';
 
 import '../../../../../core/utililes/app_sizes/app_sizes.dart';
@@ -83,8 +84,11 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSizes.spaceBetweenInputField),
                 //footer
-                const CSocialIcons(),
-                
+                CSocialIcons(
+                  onPressedGoogle: sl<LoginCubit>().signInWithGoogle,
+                  onPressedGithub: () =>
+                      sl<LoginCubit>().signInWithGithub(context),
+                ),
               ],
             ),
           ),

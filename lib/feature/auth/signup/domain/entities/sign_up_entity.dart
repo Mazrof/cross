@@ -5,10 +5,11 @@ class SignUpEntity {
   final String email;
   final String password;
 
-  SignUpEntity(
-      {required this.firstName,
-      required this.lastName,
-      required this.phone,
-      required this.email,
-      required this.password});
+  SignUpEntity({
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    required this.email,
+    required this.password,
+  });
 }
