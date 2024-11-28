@@ -1,15 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:telegram/core/local/cache_helper.dart';
+import 'package:telegram/core/error/excpetions.dart';
 import 'package:telegram/core/local/hive.dart';
-import 'package:telegram/core/local/user_access_token.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/network/api/api_service.dart';
-import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../model/login_request_model.dart';
 
 abstract class LoginDataSource {
@@ -65,9 +60,6 @@ class LoginDataSourceImp implements LoginDataSource {
             value: '',
           );
           //cash the email and password
-           
-          
-      
         }
         HiveCash.write(
           boxName: 'register_info',
@@ -102,77 +94,89 @@ class LoginDataSourceImp implements LoginDataSource {
 
   @override
   Future<String> signInWithGoogle() async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
+    try {
+      GoogleSignIn googleSignIn = GoogleSignIn();
 
-    GoogleSignInAccount? user = await googleSignIn.signIn();
+      GoogleSignInAccount? user = await googleSignIn.signIn();
+      print('user: $user');
 
-    if (user != null) {
-      GoogleSignInAuthentication auth = await user.authentication;
-      String? accessToken = auth.accessToken;
+      if (user != null) {
+        GoogleSignInAuthentication auth = await user.authentication;
+        String? accessToken = auth.accessToken;
+        print('accessToken: $accessToken');
 
-      print(accessToken);
+        if (accessToken == null) {
+          throw Exception('Google login failed: Access token is null');
+        }
 
-      //////////////////////////////////////////////////////////////
-      ///  Uncomment that code when the endpoint is available /////
-      ///////////////////////////////////////////////////////////
+        // Send the token to the backend for verification
+        final response = await _apiService.post(
+          endPoint: ApiConstants.GoogleSignIn,
+          data: {'token': accessToken},
+        );
+        print('in google login');
+        print(response.data);
 
-      // final response = await apiService.post(
-      //   endPoint: 'verify-token',
-      //   data: {'token': accessToken},
-      // );
-
-      // print(response.statusCode);
-      // print(response.data);
-
-      // if (response.statusCode != 200) {
-      //   throw Exception('Google login failed');
-      // }
-
-      return accessToken!;
+        if (response.statusCode == 200) {
+          String? backendToken = response.data['data']['token'];
+          return backendToken!;
+        } else {
+          throw Exception('Google login failed: ${response.data['message']}');
+        }
+      } else {
+        throw Exception('Google login cancelled by user');
+      }
+    } catch (e) {
+      print('Google login failed: $e');
+      throw Exception('Google login failed');
     }
-
-    return "";
   }
 
   @override
   Future<String> signInWithGithub(BuildContext context) async {
-    print('Github login started');
+    try {
+      final GitHubSignIn gitHubSignIn = GitHubSignIn(
+        clientId: ApiConstants.githubClientId,
+        clientSecret: ApiConstants.githubClientSecret,
+        redirectUrl: 'http://localhost:5000/github/callback',
+        title: 'GitHub Connection',
+        centerTitle: false,
+      );
 
-    final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: 'Ov23liNhZ8W3afDrCcjO',
-      clientSecret: '14df323aed985c282ea8eeef2612579434dd3eb8',
-      redirectUrl:
-          'https://telegram-clone-a4785.firebaseapp.com/__/auth/handler',
-      title: 'GitHub Connection',
-      centerTitle: false,
-    );
+      var result = await gitHubSignIn.signIn(context);
 
-    var result = await gitHubSignIn.signIn(context);
+      if (result.status == GitHubSignInResultStatus.ok) {
+        String? accessToken = result.token;
 
-    if (result.status == GitHubSignInResultStatus.ok) {
-      print(result.token);
+        if (accessToken == null) {
+          throw Exception('GitHub login failed: Access token is null');
+        }
 
-      return result.token!;
+        // Send the token to the backend for verification
+        final response = await _apiService.post(
+          endPoint: ApiConstants.GithubSignIn,
+          data: {'token': accessToken},
+        );
+        print('in github login');
+        print(response.data);
 
-      //////////////////////////////////////////////////////////////
-      ///  Uncomment that code when the endpoint is available /////
-      ///////////////////////////////////////////////////////////
+        if (response.statusCode == 200) {
+          String? backendToken = response.data['data']['token'];
+          // HiveCash.write(
+          //   boxName: 'register_info',
+          //   key: 'accessToken',
+          //   value: backendToken,
+          // );
+          return backendToken!;
+        } else {
+          throw Exception('GitHub login failed: ${response.data['message']}');
+        }
+      }
 
-      // final response = await apiService.post(
-      //   endPoint: 'verify-token',
-      //   data: {'token': accessToken},
-      // );
-
-      // print(response.statusCode);
-      // print(response.data);
-
-      // if (response.statusCode != 200) {
-      //   throw Exception('Github login failed');
-      // }
-    } else {
-      print(result.errorMessage);
+      return "";
+    } catch (e) {
+      print('Github login failed: $e');
+      throw Exception('GitHub login failed');
     }
-
-    return "";
   }
 }

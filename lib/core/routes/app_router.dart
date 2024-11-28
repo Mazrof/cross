@@ -82,7 +82,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kLogin, routes: [
+final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {

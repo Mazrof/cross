@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -29,18 +30,18 @@ class LoginCubit extends Cubit<LoginState> {
       required this.networkManager,
       required this.loginUseCase})
       : super(const LoginState()) {
-    var email = HiveCash.read(
-      boxName: 'register_info',
-      key: 'email',
-    );
-    var password = HiveCash.read(
-      boxName: 'register_info',
-      key: 'password',
-    );
-    if (email != null && password != null) {
-      emailController.text = email;
-      passwordController.text = password;
-      emit(state.copyWith(rememberMe: true));
+    //first make sure there is an box with the name 'register_info'
+    if ((Hive.isBoxOpen('register_info'))) {
+      //then check if there is an email and password in the box
+
+      var email = HiveCash.read<String>(boxName: 'register_info', key: 'email');
+      var password =
+          HiveCash.read<String>(boxName: 'register_info', key: 'password');
+      if (email != null && password != null) {
+        emailController.text = email;
+        passwordController.text = password;
+        emit(state.copyWith(rememberMe: true));
+      }
     }
   }
 
@@ -89,6 +90,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
     });
   }
 
@@ -107,6 +109,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
     });
   }
 
@@ -133,6 +136,8 @@ class LoginCubit extends Cubit<LoginState> {
     }, (unit) async {
       resetTimer();
       emit(state.copyWith(state: LoginStatusEnum.success));
+      setloged();
+
     });
   }
 
@@ -166,6 +171,9 @@ class LoginCubit extends Cubit<LoginState> {
       }
     });
   }
+  void setloged() {
+    CacheHelper.write(key: 'loged', value: 'true');
+  } 
 
   void resetTimer() {
     _timer?.cancel();

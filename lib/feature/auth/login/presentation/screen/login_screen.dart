@@ -28,11 +28,11 @@ class LoginScreen extends StatelessWidget {
           return const LogoLoader();
         } else if (state.state == LoginStatusEnum.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (HiveCash.read(boxName: 'register_info', key: 'user') ==
+            if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
                 'user') {
               context.go(AppRouter.kHome);
             } else {
-              // context.go(AppRouter.kDashboard);
+              // context.go(AppRouter.kHome);
             }
           });
           return const LogoLoader();

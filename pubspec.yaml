@@ -61,7 +61,7 @@ dependencies:
 
   intl_phone_number_input: ^0.7.4
 
-  google_sign_in: ^6.2.1
+  google_sign_in: ^6.2.2
   github_sign_in_plus: ^0.0.2
 
   http: any

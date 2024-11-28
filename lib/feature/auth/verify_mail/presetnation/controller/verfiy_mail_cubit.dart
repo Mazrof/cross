@@ -17,12 +17,13 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
     this.networkManager,
     this.sendOtpUseCase,
     this.verifyOtpUseCase,
-  ) : super( VerifyMailState());
+  ) : super(VerifyMailState());
 
   Timer? _timer;
   static const int _otpTimeout = 60; // 1 minute in seconds
 
-  // final otpController = TextEditingController();
+  final otpController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   /// **Start the OTP Timer**
   void startOtpTimer() {
@@ -155,7 +156,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
 
   /// **Verify Email**
   void verifyMail() {
-    CacheHelper.write(key: 'isMailVerified', value: true);
+    CacheHelper.write(key: 'registered', value: false);
   }
 
   @override

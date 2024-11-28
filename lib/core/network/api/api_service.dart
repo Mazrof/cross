@@ -41,6 +41,7 @@ class ApiService {
   Future<Response> get({
     required String endPoint,
     String? token,
+    Object? data,
   }) async {
     try {
       dio.options.headers = token == null
@@ -52,6 +53,7 @@ class ApiService {
 
       Response response = await dio.get(
         '$baseUrl/$endPoint',
+        data: data,
       );
       print(response.data);
       print(response.statusCode);

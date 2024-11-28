@@ -123,36 +123,34 @@ class SignUpCubit extends Cubit<SignupState> {
 
   void emitSignUpStates(SignUpBodyModel signUpRequestBody) async {
     final id = await registerUseCase.call(signUpRequestBody);
-    
- 
-      id.fold((failure) {
-        emit(state.copyWith(
-          state: CubitState.failure,
-          errorMessage: failure.message,
-        ));
-      }, (unit) async {
-        // Call the save data use case here
-        signUpRequestBody.id = unit;
 
-        await saveRegisterInfoUseCase
-            .call(
-          signUpRequestBody,
-        )
-            .then((saveResult) {
-          saveResult.fold((saveFailure) {
-            print(saveFailure.message);
+    id.fold((failure) {
+      emit(state.copyWith(
+        state: CubitState.failure,
+        errorMessage: failure.message,
+      ));
+    }, (unit) async {
+      // Call the save data use case here
+      signUpRequestBody.id = unit;
 
-            emit(state.copyWith(
-              state: CubitState.failure,
-              errorMessage: saveFailure.message,
-            ));
-          }, (saveSuccess) {
-            emit(state.copyWith(state: CubitState.success));
-          });
+      await saveRegisterInfoUseCase
+          .call(
+        signUpRequestBody,
+      )
+          .then((saveResult) {
+        saveResult.fold((saveFailure) {
+          print(saveFailure.message);
+
+          emit(state.copyWith(
+            state: CubitState.failure,
+            errorMessage: saveFailure.message,
+          ));
+        }, (saveSuccess) {
+          emit(state.copyWith(state: CubitState.success));
         });
       });
-    }
-  
+    });
+  }
 
   @override
   Future<void> close() {
