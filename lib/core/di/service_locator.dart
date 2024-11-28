@@ -65,7 +65,12 @@ import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_r
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
-
+import 'package:telegram/feature/settings/datasettings/datasource/remotedata/user_settings_remote_data_source.dart';
+import 'package:telegram/feature/settings/datasettings/repos/user_settings_repo_impl.dart';
+import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/fetch_settings_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/update_settings_use_case.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -74,7 +79,7 @@ final sl = GetIt.instance;
 class ServiceLocator {
   static void init() {
     CacheHelper.init();
-    
+
     registerSingletons();
     registerDataSources();
     registerRepositories();
@@ -142,9 +147,7 @@ class ServiceLocator {
           banUserUseCase: sl(),
           getUsersLocalUseCase: sl(),
           saveUsersUseCase: sl(),
-
-         
-    ));
+        ));
 
     // banned users cubit
     sl.registerLazySingleton(() => BannedUsersCubit(
@@ -152,7 +155,7 @@ class ServiceLocator {
           getUsersUseCase: sl(),
           unBanUserUseCase: sl(),
           networkManager: sl(),
-    ));
+        ));
 
     // group cubit
     sl.registerLazySingleton(() => GroupsCubit(
@@ -161,7 +164,15 @@ class ServiceLocator {
           applyFilterUseCase: sl(),
           getGroupLocalUseCase: sl(),
           saveGroupsUseCase: sl(),
-    ));
+        ));
+
+    //settings
+    sl.registerLazySingleton(() => UserSettingsCubit(
+          fetchSettingsUseCase: sl(),
+          updateSettingsUseCase: sl(),
+          appValidator: sl(),
+          networkManager: sl(),
+        ));
   }
 
   static void registerUseCases() {
@@ -202,6 +213,14 @@ class ServiceLocator {
     sl.registerLazySingleton(() => SaveGroupsUseCase(sl()));
     sl.registerLazySingleton(() => SaveUsersUseCase(sl()));
     sl.registerLazySingleton(() => GetUsersLocalUseCase(sl()));
+
+    //settings
+    sl.registerLazySingleton(() => FetchSettingsUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => UpdateSettingsUseCase(
+          sl(),
+        ));
   }
 
   static void registerRepositories() {
@@ -229,6 +248,10 @@ class ServiceLocator {
         ));
     sl.registerLazySingleton<DashboardRepo>(
         () => DashboardRemoteRepoImpl(dataSource: sl()));
+
+    //settings
+    sl.registerLazySingleton<UserSettingsRepo>(
+        () => UserSettingsRepoImpl(remoteDataSource: sl()));
   }
 
   static void registerDataSources() {
@@ -258,6 +281,10 @@ class ServiceLocator {
         () => DashboardLocalDataSourceImpl());
     sl.registerLazySingleton<DashboardDataSource>(
         () => DashboardDataSourceImpl());
+    //settings
+    sl.registerLazySingleton<UserSettingsRemoteDataSource>(
+      () => UserSettingsRemoteDataSourceImpl(),
+    );
   }
 
   static void registerSingletons() {

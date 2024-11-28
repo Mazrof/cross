@@ -33,17 +33,18 @@ import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 
-import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/edit_profile.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/lastseen_online.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/privacy_security.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/profile_photo_security.dart';
-import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/block_user.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/blocked_users.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/edit_profile.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_online.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
+import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
@@ -91,7 +92,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
+final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -162,7 +163,10 @@ final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   GoRoute(
     path: AppRouter.kprivacyAndSecurity,
     builder: (context, state) {
-      return const PrivacySecurityScreen(readReceiptStatus: true);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: PrivacySecurityScreen(),
+      );
     },
   ),
   GoRoute(
@@ -186,12 +190,9 @@ final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   GoRoute(
     path: AppRouter.ksettings,
     builder: (context, state) {
-      return const SettingsScreen(
-        screenName: "Ahmed",
-        userName: "user",
-        phoneNumber: '1234',
-        bio: "Hello",
-        status: "Online",
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>()..loadSettings(),
+        child: SettingsScreen(),
       );
     },
   ),
@@ -216,13 +217,19 @@ final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   GoRoute(
     path: AppRouter.kautoDeleteMessages,
     builder: (context, state) {
-      return const AutodelMessages(selectedTimer: AutoDelOption.oneDay);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: AutodelMessagesScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.keditProfile,
     builder: (context, state) {
-      return const EditProfileScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>()..loadSettings(),
+        child: EditProfileScreen(),
+      );
     },
   ),
   GoRoute(
@@ -234,29 +241,37 @@ final route = GoRouter(initialLocation: AppRouter.kMessaging, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(
-          selectedOption: PrivacyOption.everybody);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: LastseenOnlineScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.kblockedUsers,
     builder: (context, state) {
-      return BlockedUsersScreen(
-        blockedUsers: List.generate(10, (index) => 'Blocked User ${index + 1}'),
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockedUsersScreen(),
       );
     },
   ),
   GoRoute(
     path: AppRouter.kprofilePhotoSecurity,
     builder: (context, state) {
-      return const ProfilePhotoSecurityScreen(
-          selectedOption: PrivacyOption.myContacts);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: ProfilePhotoSecurityScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.kblockUser,
     builder: (context, state) {
-      return const BlockUserScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockUserScreen(),
+      );
     },
   ),
   GoRoute(

@@ -1,24 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
-// will edit UI
 class SettingsScreen extends StatelessWidget {
-  final String screenName;
-  final String userName;
-  final String phoneNumber;
-  final String bio;
-  final String status;
+  const SettingsScreen({super.key});
 
-  const SettingsScreen(
-      {super.key,
-      required this.screenName,
-      required this.userName,
-      required this.phoneNumber,
-      required this.bio,
-      required this.status});
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserSettingsCubit, UserSettingsState>(
+      builder: (context, state) {
+        if (state.state == CubitState.loading) {
+          return const LogoLoader();
+        } else if (state.state == CubitState.failure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          });
+        } else if (state.state == CubitState.success) {
+          return SettingsPage(state: state);
+        }
+        return SettingsPage(state: state);
+      },
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  final UserSettingsState state;
+
+  const SettingsPage({required this.state, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +47,9 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 6.0),
           child: Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 20,
-                backgroundImage:
-                    AssetImage("assets/images/chat_background.png"),
+                backgroundImage: NetworkImage(state.profileImage),
               ),
               const SizedBox(
                 width: 8.0,
@@ -43,13 +59,13 @@ class SettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      screenName,
+                      state.screenName,
                       overflow: TextOverflow.fade,
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      status,
+                      state.status,
                       style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
@@ -92,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              phoneNumber,
+              state.phoneNumber,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -105,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              userName,
+              state.userName,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
@@ -118,7 +134,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              bio,
+              state.bio,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
