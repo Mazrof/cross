@@ -9,10 +9,17 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
+import 'package:telegram/feature/bottom_nav/presentaion/screen/Bottom_nav_bar.dart';
 import 'package:telegram/feature/on_bording/presentation/Controller/on_bording_bloc.dart';
 import 'package:telegram/feature/on_bording/presentation/screen/on_bording_screen.dart';
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
+
+// import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
+// import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
+import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 
 import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 
@@ -27,17 +34,18 @@ import 'package:telegram/feature/home/presentation/screen/main_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 
-import 'package:telegram/feature/settings/Presentation/Screen/autodelete_messages.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/block_user.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/blocked_users.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/edit_profile.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/lastseen_online.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/privacy_security.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/profile_photo_security.dart';
-import 'package:telegram/feature/settings/Presentation/Widget/radio_tile.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/block_user.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/blocked_users.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/edit_profile.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_online.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
+import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
-import 'package:telegram/feature/settings/Presentation/Screen/settings.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
@@ -65,6 +73,8 @@ class AppRouter {
 
   static const String kglobalSearch = '/global_search';
 
+  static const String kMessaging = '/messaging';
+
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
   static const String kNewGroup = '/new_group';
@@ -76,6 +86,7 @@ class AppRouter {
   static const String kcallLog = '/call_log';
   static const String kvoiceCall = '/voice_call';
   static const String kcallContact = '/call_contact';
+  static const String kNavBar = '/nav_bar';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -83,10 +94,22 @@ class AppRouter {
 }
 
 final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
+
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
       return const PreVerifyScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kMessaging,
+    builder: (context, state) {
+      return BlocProvider(
+        create: (context) => sl<ChatCubit>()
+          ..getMessages()
+          ..startSocket(),
+        child: ChatScreen(),
+      );
     },
   ),
   GoRoute(
@@ -142,7 +165,10 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.kprivacyAndSecurity,
     builder: (context, state) {
-      return const PrivacySecurityScreen(readReceiptStatus: true);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: PrivacySecurityScreen(),
+      );
     },
   ),
   GoRoute(
@@ -170,12 +196,9 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.ksettings,
     builder: (context, state) {
-      return const SettingsScreen(
-        screenName: "Ahmed",
-        userName: "user",
-        phoneNumber: '1234',
-        bio: "Hello",
-        status: "Online",
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>()..loadSettings(),
+        child: SettingsScreen(),
       );
     },
   ),
@@ -200,13 +223,19 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.kautoDeleteMessages,
     builder: (context, state) {
-      return const AutodelMessages(selectedTimer: AutoDelOption.oneDay);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: AutodelMessagesScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.keditProfile,
     builder: (context, state) {
-      return const EditProfileScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>()..loadSettings(),
+        child: EditProfileScreen(),
+      );
     },
   ),
   GoRoute(
@@ -218,29 +247,37 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
   GoRoute(
     path: AppRouter.klastSeenOnline,
     builder: (context, state) {
-      return const LastseenOnlineScreen(
-          selectedOption: PrivacyOption.everybody);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: LastseenOnlineScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.kblockedUsers,
     builder: (context, state) {
-      return BlockedUsersScreen(
-        blockedUsers: List.generate(10, (index) => 'Blocked User ${index + 1}'),
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockedUsersScreen(),
       );
     },
   ),
   GoRoute(
     path: AppRouter.kprofilePhotoSecurity,
     builder: (context, state) {
-      return const ProfilePhotoSecurityScreen(
-          selectedOption: PrivacyOption.myContacts);
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: ProfilePhotoSecurityScreen(),
+      );
     },
   ),
   GoRoute(
     path: AppRouter.kblockUser,
     builder: (context, state) {
-      return const BlockUserScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockUserScreen(),
+      );
     },
   ),
   GoRoute(
@@ -277,6 +314,15 @@ final route = GoRouter(initialLocation: AppRouter.kForgetPassword, routes: [
     path: AppRouter.kglobalSearch,
     builder: (context, state) {
       return GlobalSearchScreen(isTyping: true);
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kNavBar,
+    builder: (context, state) {
+      return BlocProvider.value(
+        value: sl<NavCubit>(),
+        child: BottomNavBar(),
+      );
     },
   ),
 ]);

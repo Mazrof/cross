@@ -17,11 +17,14 @@ class UserStatusHelper {
       } else {
         return 'login';
       }
-    } else if (loggedIn != null) {
+    } else if (loggedIn == "true") {
       return 'home';
     } else {
       return 'login';
     }
+  
+  
+
   }
 
   static Future<void> setRegisteredNotVerified() async {

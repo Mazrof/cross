@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
-import 'package:telegram/core/component/contact_list/contact_list_trailing.dart';
 import 'package:telegram/core/component/contact_list/contact_tile_details.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 

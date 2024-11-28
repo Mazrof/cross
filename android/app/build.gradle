@@ -43,6 +43,15 @@ android {
     //         storePassword 'android'
     //     }
     // }
+    signingConfigs
+    {
+        // debug{
+        //     keyAlias 'upload'
+        //     keyPassword 'android'
+        //     storeFile file('mykey.jks')
+        //     storePassword 'android'
+        // }
+    }
 
     // buildTypes {
     //     debug {

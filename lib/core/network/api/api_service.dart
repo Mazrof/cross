@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:telegram/core/local/user_access_token.dart';
@@ -11,6 +9,9 @@ class ApiService {
   static const String baseUrl = endPointDev;
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
+  static const String baseUrl = AppStrings.serverUrl;
+  
+
   static const String endPointDev = "http://192.168.100.3:3000/api/v1";
 
   static const String mockUrl =
@@ -40,6 +41,7 @@ class ApiService {
 
   Future<Response> get({
     required String endPoint,
+    Object? data,
     String? token,
     Object? data,
   }) async {
@@ -55,6 +57,7 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
+
       print(response.data);
       print(response.statusCode);
 

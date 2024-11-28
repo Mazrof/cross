@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:telegram/core/local/hive_helper.dart';
 import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
@@ -33,7 +35,6 @@ void main() async {
     ),
   );
 
- 
 }
 
 Future<void> _initializeApp() async {
@@ -61,8 +62,9 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.lightTheme,
+                  theme: TAppTheme.darkTheme,
                   darkTheme: TAppTheme.darkTheme,
+                  // themeMode: ThemeMode.dark,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );

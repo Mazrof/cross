@@ -12,8 +12,8 @@ class MessageDate extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.only(
-            top: AppSizes.xs,
-            bottom: AppSizes.xs,
+            top: AppSizes.xxs,
+            bottom: AppSizes.xxs,
             left: AppSizes.xxs,
             right: AppSizes.xxs,
           ),

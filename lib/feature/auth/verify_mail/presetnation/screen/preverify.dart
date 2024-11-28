@@ -7,7 +7,7 @@ import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 
 class PreVerifyScreen extends StatelessWidget {
-  const PreVerifyScreen({Key? key}) : super(key: key);
+  const PreVerifyScreen({super.key});
 
 
   @override
@@ -58,13 +58,13 @@ class PreVerifyScreen extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () => context
                       .go(AppRouter.kVerifyMail, extra: {'method': 'phone'}),
-                  child: Text(
-                    AppStrings.verifyByPhone,
-                    style: TextStyle(color: AppColors.primaryColor),
-                  ),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
                         color: AppColors.primaryColor), // Set the border color
+                  ),
+                  child: Text(
+                    AppStrings.verifyByPhone,
+                    style: TextStyle(color: AppColors.primaryColor),
                   ),
                 ),
               ),

@@ -2,8 +2,12 @@ import 'package:telegram/feature/auth/signup/domain/entities/sign_up_entity.dart
 
 class SignUpBodyModel extends SignUpEntity {
   final String username;
+
+  @override
   final String phone;
+  @override
   final String email;
+  @override
   final String password;
   String id;
 
