@@ -45,6 +45,8 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
         lastSeenPrivacy: settings.lastSeenPrivacy,
         profilePhotoPrivacy: settings.profilePhotoPrivacy,
         enableReadReceipt: settings.enableReadReceipt,
+        blockedUsers: settings.blockedUsers,
+        contacts: settings.contacts,
       )),
     );
   }
@@ -59,6 +61,8 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
     String newLastSeenPrivacy,
     String newProfilePhotoPrivacy,
     bool newEnableReadReceipt,
+    List<String> newBlockedUsers,
+    List<String> newContacts,
   ) async {
     emit(state.copyWith(state: CubitState.loading));
     final updatedSettings = UserSettingsEntity(
@@ -71,6 +75,8 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
       lastSeenPrivacy: newLastSeenPrivacy,
       profilePhotoPrivacy: newProfilePhotoPrivacy,
       enableReadReceipt: newEnableReadReceipt,
+      blockedUsers: newBlockedUsers,
+      contacts: newContacts,
     );
     final result = await updateSettingsUseCase(updatedSettings);
     result.fold(

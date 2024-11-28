@@ -231,8 +231,9 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kblockedUsers,
     builder: (context, state) {
-      return BlockedUsersScreen(
-        blockedUsers: List.generate(10, (index) => 'Blocked User ${index + 1}'),
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockedUsersScreen(),
       );
     },
   ),
@@ -248,7 +249,10 @@ final route = GoRouter(initialLocation: AppRouter.ksettings, routes: [
   GoRoute(
     path: AppRouter.kblockUser,
     builder: (context, state) {
-      return const BlockUserScreen();
+      return BlocProvider.value(
+        value: sl<UserSettingsCubit>(),
+        child: BlockUserScreen(),
+      );
     },
   ),
   GoRoute(

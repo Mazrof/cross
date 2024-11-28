@@ -33,16 +33,17 @@ class ProfilePhotoSecurityPage extends StatelessWidget {
     void saveSettings(String? value) async {
       final cubit = context.read<UserSettingsCubit>();
       await cubit.saveSettings(
-        state.screenName,
-        state.userName,
-        state.phoneNumber,
-        state.bio,
-        "Online",
-        state.autoDeleteTimer,
-        state.lastSeenPrivacy,
-        value!,
-        state.enableReadReceipt,
-      );
+          state.screenName,
+          state.userName,
+          state.phoneNumber,
+          state.bio,
+          "Online",
+          state.autoDeleteTimer,
+          state.lastSeenPrivacy,
+          value!,
+          state.enableReadReceipt,
+          state.blockedUsers,
+          state.contacts);
       cubit.loadSettings();
     }
 

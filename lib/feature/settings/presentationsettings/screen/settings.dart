@@ -23,6 +23,8 @@ class SettingsScreen extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
           });
+        } else if (state.state == CubitState.success) {
+          return SettingsPage(state: state);
         }
         return SettingsPage(state: state);
       },

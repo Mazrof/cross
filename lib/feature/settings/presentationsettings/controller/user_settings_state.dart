@@ -13,6 +13,8 @@ class UserSettingsState extends Equatable {
   final String lastSeenPrivacy;
   final String profilePhotoPrivacy;
   final bool enableReadReceipt;
+  final List<String> blockedUsers;
+  final List<String> contacts;
 
   UserSettingsState({
     this.state = CubitState.initial,
@@ -26,7 +28,10 @@ class UserSettingsState extends Equatable {
     this.lastSeenPrivacy = 'Everybody',
     this.profilePhotoPrivacy = 'Everybody',
     this.enableReadReceipt = true,
-  });
+    List<String>? blockedUsers,
+    List<String>? contacts,
+  })  : blockedUsers = blockedUsers ?? [],
+        contacts = contacts ?? [];
 
   UserSettingsState copyWith({
     CubitState? state,
@@ -40,6 +45,8 @@ class UserSettingsState extends Equatable {
     String? lastSeenPrivacy,
     String? profilePhotoPrivacy,
     bool? enableReadReceipt,
+    List<String>? blockedUsers,
+    List<String>? contacts,
   }) {
     return UserSettingsState(
       state: state ?? this.state,
@@ -53,6 +60,8 @@ class UserSettingsState extends Equatable {
       lastSeenPrivacy: lastSeenPrivacy ?? this.lastSeenPrivacy,
       profilePhotoPrivacy: profilePhotoPrivacy ?? this.profilePhotoPrivacy,
       enableReadReceipt: enableReadReceipt ?? this.enableReadReceipt,
+      blockedUsers: blockedUsers ?? this.blockedUsers,
+      contacts: contacts ?? this.contacts,
     );
   }
 
@@ -69,5 +78,7 @@ class UserSettingsState extends Equatable {
         lastSeenPrivacy,
         profilePhotoPrivacy,
         enableReadReceipt,
+        blockedUsers,
+        contacts,
       ];
 }

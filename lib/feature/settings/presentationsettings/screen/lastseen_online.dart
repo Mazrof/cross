@@ -49,6 +49,8 @@ class LastseenOnlinePage extends StatelessWidget {
         value!,
         state.profilePhotoPrivacy,
         state.enableReadReceipt,
+        state.blockedUsers,
+        state.contacts,
       );
       cubit.loadSettings();
     }

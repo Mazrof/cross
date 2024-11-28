@@ -7,7 +7,6 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
@@ -140,15 +139,18 @@ class PrivacySecurityPage extends StatelessWidget {
             onChanged: (bool newValue) async {
               final cubit = context.read<UserSettingsCubit>();
               await cubit.saveSettings(
-                  state.screenName,
-                  state.userName,
-                  state.phoneNumber,
-                  state.bio,
-                  "Online",
-                  state.autoDeleteTimer,
-                  state.lastSeenPrivacy,
-                  state.profilePhotoPrivacy,
-                  newValue);
+                state.screenName,
+                state.userName,
+                state.phoneNumber,
+                state.bio,
+                "Online",
+                state.autoDeleteTimer,
+                state.lastSeenPrivacy,
+                state.profilePhotoPrivacy,
+                newValue,
+                state.blockedUsers,
+                state.contacts,
+              );
               cubit.loadSettings();
             },
           ),

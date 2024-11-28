@@ -8,6 +8,8 @@ class UserSettingsEntity {
   final String lastSeenPrivacy;
   final String profilePhotoPrivacy;
   final bool enableReadReceipt;
+  final List<String> blockedUsers;
+  final List<String> contacts;
 
   UserSettingsEntity({
     required this.screenName,
@@ -19,5 +21,7 @@ class UserSettingsEntity {
     required this.lastSeenPrivacy,
     required this.profilePhotoPrivacy,
     required this.enableReadReceipt,
+    required this.blockedUsers,
+    required this.contacts,
   });
 }

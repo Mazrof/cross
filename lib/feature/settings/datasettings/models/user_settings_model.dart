@@ -10,6 +10,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
   final String lastSeenPrivacy;
   final String profilePhotoPrivacy;
   final bool enableReadReceipt;
+  final List<String> blockedUsers;
+  final List<String> contacts;
 
   UserSettingsBodyModel({
     required this.screenName,
@@ -21,6 +23,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
     required this.lastSeenPrivacy,
     required this.profilePhotoPrivacy,
     required this.enableReadReceipt,
+    required this.blockedUsers,
+    required this.contacts,
   }) : super(
           screenName: screenName,
           userName: userName,
@@ -31,6 +35,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
           lastSeenPrivacy: lastSeenPrivacy,
           profilePhotoPrivacy: profilePhotoPrivacy,
           enableReadReceipt: enableReadReceipt,
+          blockedUsers: blockedUsers,
+          contacts: contacts,
         );
 
   Map<String, dynamic> toJson() {
@@ -44,6 +50,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       'last_seen_privacy': lastSeenPrivacy,
       'profile_photo_privacy': profilePhotoPrivacy,
       'enable_read_receipt': enableReadReceipt,
+      'blocked_users': blockedUsers,
+      'contacts': contacts,
     };
     return body;
   }
@@ -59,6 +67,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       lastSeenPrivacy: lastSeenPrivacy,
       profilePhotoPrivacy: profilePhotoPrivacy,
       enableReadReceipt: enableReadReceipt,
+      blockedUsers: blockedUsers,
+      contacts: contacts,
     );
   }
 
@@ -73,6 +83,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       lastSeenPrivacy: entity.lastSeenPrivacy,
       profilePhotoPrivacy: entity.profilePhotoPrivacy,
       enableReadReceipt: entity.enableReadReceipt,
+      blockedUsers: entity.blockedUsers,
+      contacts: entity.contacts,
     );
   }
   factory UserSettingsBodyModel.fromJson(Map<String, dynamic> json) {
@@ -86,6 +98,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       lastSeenPrivacy: json['last_seen_privacy'],
       profilePhotoPrivacy: json['profile_photo_privacy'],
       enableReadReceipt: json['enable_read_receipt'],
+      blockedUsers: List<String>.from(json['blocked_users']),
+      contacts: List<String>.from(json['contacts']),
     );
   }
   static empty() {
@@ -99,6 +113,8 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       lastSeenPrivacy: "",
       profilePhotoPrivacy: "",
       enableReadReceipt: true,
+      blockedUsers: [],
+      contacts: [],
     );
   }
 }

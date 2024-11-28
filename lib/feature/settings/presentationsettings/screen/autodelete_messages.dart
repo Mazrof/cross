@@ -51,6 +51,8 @@ class AutodelMessages extends StatelessWidget {
         state.lastSeenPrivacy,
         state.profilePhotoPrivacy,
         state.enableReadReceipt,
+        state.blockedUsers,
+        state.contacts,
       );
       cubit.loadSettings();
     }
