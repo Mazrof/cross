@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
         child: BlocBuilder<SplashCubit, SplashState>(
           builder: (context, state) {
             if (state is SplashInitial || state is SplashLoading) {
-              return const LogoLoader ();
+              return const LogoLoader();
             } else if (state is SplashFirstTime) {
               // Navigate to onboarding screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -42,7 +42,7 @@ class SplashScreen extends StatelessWidget {
             } else if (state is SplashEmailVerificationRequired) {
               // Navigate to email verification screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kVerifyMail);
+                context.go(AppRouter.kPreVerify);
               });
               return Container();
             } else if (state is AnimationInProgress ||
@@ -64,7 +64,7 @@ class SplashScreen extends StatelessWidget {
                     child: Image.asset(
                       AppAssetsStrings.loginLogo, // Replace with your logo path
                       width: 350.w,
-                      height:350.h,
+                      height: 350.h,
                     ),
                   ),
                   SizedBox(height: 50.h),
@@ -72,7 +72,10 @@ class SplashScreen extends StatelessWidget {
                     state is TypewriterEffectInProgress
                         ? state.displayedText
                         : 'Your World is Just One Chat Away',
-                    style: Theme.of(context).textTheme.bodyMedium!.apply(color: AppColors.primaryColor),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .apply(color: AppColors.primaryColor),
                     textAlign: TextAlign.center,
                   ),
                 ],

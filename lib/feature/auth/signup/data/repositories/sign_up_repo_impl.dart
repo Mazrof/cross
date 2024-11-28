@@ -16,12 +16,10 @@ class SignUpRepoImpl extends SignUpRepository {
   });
 
   @override
-  Future<Either<Failure, String>> registerSeller(
-      SignUpEntity signUpEntity) async {
+  Future<Either<Failure, String>> register(SignUpEntity signUpEntity) async {
     try {
-      await signUpRemoteDataSource
-          .register(SignUpBodyModel.fromEntity(signUpEntity));
-      return right("Seller Account Created");
+      final response = await signUpRemoteDataSource.register(SignUpBodyModel.fromEntity(signUpEntity));
+      return right(response.data.toString());
     } catch (error) {
       return left(error as Failure);
     }
@@ -54,7 +52,8 @@ class SignUpRepoImpl extends SignUpRepository {
   Future<Either<Failure, bool>> checkRecaptchaToken(
       String recaptchaToken) async {
     try {
-      var res = await signUpRemoteDataSource.checkRecaptchaToken(recaptchaToken);
+      var res =
+          await signUpRemoteDataSource.checkRecaptchaToken(recaptchaToken);
       return right(res);
     } catch (error) {
       return left(error as Failure);

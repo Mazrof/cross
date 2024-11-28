@@ -5,6 +5,7 @@ enum LoginStatusEnum {
   error,
   suspended,
   suspendedComplete,
+  idle,
 }
 
 enum CubitState {

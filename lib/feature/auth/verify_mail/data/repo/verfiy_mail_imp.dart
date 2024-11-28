@@ -15,7 +15,7 @@ class VerfiyMailRepositoryImp extends VerifyMailRepository {
   }
 
   @override
-  Future<Either<Failure, void>> verifyOtp(VerifyMailData data) {
-    return verifyMailRemoteDataSource.verifyOtp(data);
+  Future<Either<Failure, bool>> verifyOtp(VerifyMailData data) async {
+    return  await verifyMailRemoteDataSource.verifyOtp(data);
   }
 }

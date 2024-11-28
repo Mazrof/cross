@@ -82,6 +82,10 @@ class AppStrings {
 
   //messaging
   static const String waitingInternet = 'Waiting for Internet';
+  static const String serverUrl =
+      'https://fee3c103-51b8-4876-a854-ae12ed78bdcf.mock.pstmn.io';
+  static const String socketUrl = "http://10.0.2.2:3000";
+
   //settings
   static const String privacyAndSecurity = "Privacy And Security";
   static const String security = "Security";
@@ -163,5 +167,20 @@ class AppStrings {
 
   //home
   static const String search = 'Search';
+  static const String weSentYouAnSms =
+      'Please Enter code we sent you on your phone';
+
+  //cache
+  static const String cacheError = 'Cache Error';
+  static const String refreshToken = 'refreshToken';
+
+
+
+
+  /// Dashboard
+  static const String dashboard = 'Dashboard';
+  static const String users='Users';
+  static const String BanedUsers='Baned Users';
+  static const String Groubs='Groubs';
 
 }

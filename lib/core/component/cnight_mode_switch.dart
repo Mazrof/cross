@@ -31,12 +31,16 @@ class CNightModeSwitch extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isNightMode ? AppColors.whiteColor : AppColors.primaryColor,
+                      color: isNightMode
+                          ? AppColors.whiteColor
+                          : AppColors.primaryColor,
                     ),
                     child: Center(
                       child: Icon(
                         isNightMode ? Icons.nights_stay : Icons.wb_sunny,
-                        color: isNightMode ? AppColors.primaryColor : AppColors.whiteColor,
+                        color: isNightMode
+                            ? AppColors.primaryColor
+                            : AppColors.whiteColor,
                       ),
                     ),
                   ),

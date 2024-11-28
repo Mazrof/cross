@@ -17,7 +17,7 @@ class LoginWithGoogleUseCase implements NoParameter<String> {
       if (e is DioException) {
         return Left(ServerFailure.fromDioError(e));
       } else {
-        return Left(e as Failure);
+        return Left(ServerFailure(message:e.toString()));
       }
     }
   }

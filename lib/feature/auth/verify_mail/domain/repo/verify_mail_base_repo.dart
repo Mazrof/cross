@@ -4,5 +4,5 @@ import 'package:telegram/feature/auth/verify_mail/domain/entity/verify_mail_data
 
 abstract class VerifyMailRepository {
   Future<Either<Failure, void>> sendOtp(String method,String email);
-  Future<Either<Failure, void>> verifyOtp(VerifyMailData data);
+  Future<Either<Failure, bool>> verifyOtp(VerifyMailData data);
 }

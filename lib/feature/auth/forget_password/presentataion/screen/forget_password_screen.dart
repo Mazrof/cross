@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -105,9 +104,9 @@ class ForgetPasswordPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go(AppRouter.kResetPassword);
+                              
 
-                              //  sl<ForgetPasswordCubit>().sendResetLink();
+                               sl<ForgetPasswordCubit>().sendResetLink();
                             },
                             child: const Text(
                               AppStrings.resetPassword,

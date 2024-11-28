@@ -7,7 +7,7 @@ import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 class NewChannelScreen extends StatelessWidget {
   NewChannelScreen({super.key});
 
-  final TextEditingController _nameController = new TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
