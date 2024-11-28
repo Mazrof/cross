@@ -1,4 +1,3 @@
-import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -56,12 +55,8 @@ class CinputBar extends StatelessWidget {
                       ],
                       onContentInserted: (data) {
                         // Handle the inserted content here
-
                         // send the gif
-
                         sl<ChatCubit>().sendMessage(data.uri, true);
-
-                        print('Inserted content: ${data.uri}');
                       },
                     ),
 
@@ -82,10 +77,11 @@ class CinputBar extends StatelessWidget {
                     ),
                     onChanged: (text) {
                       print(text);
-                      if (controller.text != "")
+                      if (controller.text != "") {
                         sl<ChatCubit>().typingMessage();
-                      else
+                      } else {
                         sl<ChatCubit>().defaultState();
+                      }
                     },
                     controller: controller,
                   ),
