@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                 'user') {
               context.go(AppRouter.kHome);
             } else {
-              // context.go(AppRouter.kHome);
+              context.go(AppRouter.kNavBar);
             }
           });
           return const LogoLoader();

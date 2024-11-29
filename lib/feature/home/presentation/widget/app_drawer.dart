@@ -11,6 +11,11 @@ class CAppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final username =
+        HiveCash.read(boxName: 'register_info', key: 'username') ?? 'Unknown';
+    final email =
+        HiveCash.read(boxName: 'register_info', key: 'email') ?? 'Unknown';
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -20,13 +25,13 @@ class CAppDrawer extends StatelessWidget {
               color: AppColors.primaryColor,
             ),
             accountName: Text(
-              HiveCash.read(boxName: 'register_info', key: 'username'),
+              username,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: AppColors.whiteColor,
                   ),
             ),
             accountEmail: Text(
-              HiveCash.read(boxName: 'register_info', key: 'email'),
+              email,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: AppColors.whiteColor,
                   ),
