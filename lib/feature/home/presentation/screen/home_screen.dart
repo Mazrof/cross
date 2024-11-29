@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -13,6 +14,7 @@ import 'package:telegram/feature/home/presentation/widget/add_stroy.dart';
 import 'package:telegram/feature/home/presentation/widget/app_drawer.dart';
 import 'package:telegram/feature/home/presentation/widget/chat_tile.dart';
 import 'package:telegram/feature/home/presentation/widget/story.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -76,6 +78,7 @@ class HomeScreen extends StatelessWidget {
                         subtitle: chat.lastMessage,
                         onTap: () {
                           // Chat tap logic
+                          context.go(AppRouter.kMessaging);
                         },
                         time: chat.time,
                         messageStatus: chat.messageStatus, // Add message status
@@ -181,6 +184,7 @@ class HomeContent extends StatelessWidget {
                 onTap: () {
                   sl<HomeCubit>().loadHomeData();
                   // Chat tap logic
+                  context.go(AppRouter.kMessaging);
                 },
                 time: chat.time,
                 messageStatus: chat.messageStatus, // Add message status

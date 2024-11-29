@@ -65,7 +65,7 @@ class StoryViewerScreen extends StatelessWidget {
                           backgroundImage:
 
                               //check if falild add the default image
-                              NetworkImage(userImage),
+                              AssetImage(userImage),
 
                           backgroundColor: Colors.white,
                         ),

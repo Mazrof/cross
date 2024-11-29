@@ -95,9 +95,7 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
-
-
+final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -127,7 +125,7 @@ final route = GoRouter(initialLocation: AppRouter.kHome, routes: [
     path: AppRouter.kHome,
     builder: (context, state) {
       return BlocProvider.value(
-          value: sl<HomeCubit>()..loadHomeData() , child: HomeScreen());
+          value: sl<HomeCubit>()..loadHomeData(), child: HomeScreen());
     },
   ),
   GoRoute(

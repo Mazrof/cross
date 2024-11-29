@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
@@ -15,7 +16,8 @@ class NewChannelScreen extends StatelessWidget {
       appBar: CAppBar(
         leadingIcon: Icons.arrow_back,
         onLeadingTap: () {
-          GoRouter.of(context).pop();
+          context.go(AppRouter.kHome);
+          // GoRouter.of(context).pop();
         },
         title: const Text("New Channel"),
         actions: [

@@ -25,7 +25,11 @@ class LoginScreen extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
         if (state.state == LoginStatusEnum.loading) {
-          return const LogoLoader();
+          // return const LogoLoader();
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.go(AppRouter.kHome);
+          });
         } else if (state.state == LoginStatusEnum.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==

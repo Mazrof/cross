@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
@@ -34,7 +36,9 @@ class CAppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.group,
             title: 'New Group',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kNewGroup);
+            },
           ),
           DrawerListTile(
             iconData: Icons.lock,
@@ -44,12 +48,16 @@ class CAppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.notifications,
             title: 'New Channel',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kNewChannel);
+            },
           ),
           DrawerListTile(
             iconData: Icons.person,
             title: 'Contacts',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kContacts);
+            },
           ),
           DrawerListTile(
             iconData: Icons.phone,
@@ -64,7 +72,9 @@ class CAppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.settings,
             title: 'Settings',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.ksettings);
+            },
           ),
           const Divider(),
           DrawerListTile(

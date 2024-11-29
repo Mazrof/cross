@@ -42,7 +42,9 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: CAppBar(
         leadingIcon: Icons.arrow_back,
-        onLeadingTap: () {},
+        onLeadingTap: () {
+          context.go(AppRouter.kHome);
+        },
         title: Padding(
           padding: const EdgeInsets.only(left: 6.0),
           child: Row(
