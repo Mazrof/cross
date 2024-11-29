@@ -30,8 +30,10 @@ class GroupsCubit extends Cubit<GroupsState> {
         emit(state.copyWith(currState: CubitState.success, errorMessage: null));
         return;
       }
+      print('fetchGroups');
 
       final result = await getGroupsUseCase.call();
+      print(result);
 
       result.fold(
         (failure) {
@@ -72,7 +74,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         (failure) {
           emit(state.copyWith(
               currState: CubitState.failure, errorMessage: failure.message));
-              return false;
+          return false;
         },
         (success) {
           fetchGroups();

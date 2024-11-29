@@ -28,7 +28,7 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
   void sendResetLink() async {
     if (appValidator.isFormValid(formKey)) {
       emit(state.copyWith(
-          status: CubitState.loading, email: emailController.text));
+          status: CubitState.loading, email: emailController.text, errorMessage: ''));
       final response = await networkManager.isConnected();
       if (response) {
         print('Email: ${emailController.text}');
@@ -40,7 +40,7 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
                 status: CubitState.failure,
                 errorMessage: 'something went wrong please try again'));
           },
-          (success) => emit(state.copyWith(status: CubitState.success)),
+          (success) => emit(state.copyWith(status: CubitState.success, errorMessage: '')),
         );
       } else {
         emit(state.copyWith(

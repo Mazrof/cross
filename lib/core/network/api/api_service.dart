@@ -6,7 +6,7 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = AppStrings.serverUrl;
+  static const String baseUrl = endPointDev ;
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
 

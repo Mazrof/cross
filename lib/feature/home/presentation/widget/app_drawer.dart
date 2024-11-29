@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -19,13 +20,13 @@ class CAppDrawer extends StatelessWidget {
               color: AppColors.primaryColor,
             ),
             accountName: Text(
-              'Your Name',
+              HiveCash.read(boxName: 'register_info', key: 'username'),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: AppColors.whiteColor,
                   ),
             ),
             accountEmail: Text(
-              'your.email@example.com',
+              HiveCash.read(boxName: 'register_info', key: 'email'),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: AppColors.whiteColor,
                   ),

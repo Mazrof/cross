@@ -27,13 +27,14 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
 
   /// **Start the OTP Timer**
   void startOtpTimer() {
-    emit(state.copyWith(remainingTime: _otpTimeout));
+    emit(state.copyWith(remainingTime: _otpTimeout, errorMessage: ''));
     _timer?.cancel(); // Ensure no duplicate timers
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.remainingTime > 0) {
         emit(state.copyWith(
             remainingTime: state.remainingTime - 1,
-            status: VerifyMailStatus.initial));
+            status: VerifyMailStatus.initial,
+            errorMessage: ''));
       } else {
         _timer?.cancel();
         emit(state.copyWith(
@@ -60,7 +61,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
         ));
         return;
       }
-      emit(state.copyWith(status: VerifyMailStatus.loading));
+      emit(state.copyWith(status: VerifyMailStatus.loading, errorMessage: ''));
 
       final result = await sendOtpUseCase(param1, param2);
       if (result.isRight()) {
@@ -75,7 +76,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
     } catch (e) {
       emit(state.copyWith(
         status: VerifyMailStatus.error,
-        errorMessage: e.toString(),
+        errorMessage: 'Failed to send OTP',
       ));
     }
   }
@@ -90,7 +91,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
         ));
         return;
       }
-      emit(state.copyWith(status: VerifyMailStatus.loading));
+      emit(state.copyWith(status: VerifyMailStatus.loading, errorMessage: ''));
 
       final result = await sendOtpUseCase(param1, param2);
       if (result.isRight()) {
@@ -105,7 +106,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
     } catch (e) {
       emit(state.copyWith(
         status: VerifyMailStatus.error,
-        errorMessage: e.toString(),
+        errorMessage: 'Failed to resend OTP',
       ));
     }
   }
@@ -128,7 +129,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
         ));
         return;
       }
-      emit(state.copyWith(status: VerifyMailStatus.loading));
+      emit(state.copyWith(status: VerifyMailStatus.loading, errorMessage: ''));
 
       final data = VerifyMailData(
           method: method, email: param, code: opt); // Create the data object
@@ -149,7 +150,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
     } catch (e) {
       emit(state.copyWith(
         status: VerifyMailStatus.error,
-        errorMessage: e.toString(),
+        errorMessage: 'Failed to verify OTP',
       ));
     }
   }

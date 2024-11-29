@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 
 class CacheHelper {
   static FlutterSecureStorage? securedStorage;
@@ -57,13 +58,13 @@ class CacheHelper {
     await delete(key: key);
   }
 
-  // static Future<void> deleteAllCache() async {
-  //   log('Deleting all cache');
-  //   await delete(key: AppStrings.cacheKey);
-  //   await securedStorage!.deleteAll(
-  //     aOptions: _getAndroidOptions(),
-  //     iOptions: _getIOSOptions(),
-  //     webOptions: _getWebOptions(),
-  //   );
-  // }
+  static Future<void> deleteAllCache() async {
+    log('Deleting all cache');
+    
+    await securedStorage!.deleteAll(
+      aOptions: _getAndroidOptions(),
+      iOptions: _getIOSOptions(),
+      webOptions: _getWebOptions(),
+    );
+  }
 }

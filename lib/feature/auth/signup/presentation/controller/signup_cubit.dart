@@ -76,13 +76,14 @@ class SignUpCubit extends Cubit<SignupState> {
         return;
       }
       if (state.state != CubitState.loading) {
-        emit(state.copyWith(state: CubitState.loading));
+        emit(state.copyWith(state: CubitState.loading, errorMessage: ''));
         bool connection = await networkManager.isConnected();
 
         if (!connection) {
           emit(state.copyWith(
             state: CubitState.failure,
             errorMessage: 'No Internet Connection',
+
           ));
           return;
         }
@@ -127,7 +128,7 @@ class SignUpCubit extends Cubit<SignupState> {
     id.fold((failure) {
       emit(state.copyWith(
         state: CubitState.failure,
-        errorMessage: failure.message,
+        errorMessage: 'Something went wrong, please try again',
       ));
     }, (unit) async {
       // Call the save data use case here
@@ -143,10 +144,10 @@ class SignUpCubit extends Cubit<SignupState> {
 
           emit(state.copyWith(
             state: CubitState.failure,
-            errorMessage: saveFailure.message,
+            errorMessage: 'Something went wrong, please try again',
           ));
         }, (saveSuccess) {
-          emit(state.copyWith(state: CubitState.success));
+          emit(state.copyWith(state: CubitState.success, errorMessage: ''));
         });
       });
     });

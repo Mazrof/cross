@@ -51,7 +51,7 @@ class LoginCubit extends Cubit<LoginState> {
   void login() async {
     if (appValidator.isFormValid(formKey)) {
       if (state.remainingAttempts > 0) {
-        emit(state.copyWith(state: LoginStatusEnum.loading));
+        emit(state.copyWith(state: LoginStatusEnum.loading, error: ''));
         bool connection = await networkManager.isConnected();
 
         if (!connection) {
@@ -87,9 +87,10 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await loginWithGoogleUseCase.call();
 
     result.fold((l) {
-      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'something went wrong'));
     }, (r) {
-      emit(state.copyWith(state: LoginStatusEnum.success));
+      emit(state.copyWith(state: LoginStatusEnum.success, error: ''));
       setloged();
     });
   }
@@ -106,9 +107,10 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await loginWithGithubUseCase.call(context);
 
     result.fold((l) {
-      emit(state.copyWith(state: LoginStatusEnum.error, error: l.message));
+      emit(state.copyWith(
+          state: LoginStatusEnum.error, error: 'something went wrong'));
     }, (r) {
-      emit(state.copyWith(state: LoginStatusEnum.success));
+      emit(state.copyWith(state: LoginStatusEnum.success, error: ''));
       setloged();
     });
   }
@@ -125,11 +127,12 @@ class LoginCubit extends Cubit<LoginState> {
         emit(state.copyWith(
           state: LoginStatusEnum.suspended,
           remainingAttempts: newRemainingAttempts,
+          error: 'You have reached the maximum number of attempts',
         ));
       } else {
         emit(state.copyWith(
           state: LoginStatusEnum.error,
-          error: failure.message,
+          error: 'Invalid email or password',
           remainingAttempts: newRemainingAttempts,
         ));
       }
@@ -137,7 +140,6 @@ class LoginCubit extends Cubit<LoginState> {
       resetTimer();
       emit(state.copyWith(state: LoginStatusEnum.success));
       setloged();
-
     });
   }
 
@@ -156,28 +158,31 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void startTimer() {
-    emit(state.copyWith(secondsRemaining: state.secondsRemaining));
+    emit(state.copyWith(secondsRemaining: state.secondsRemaining, error: ''));
     _timer?.cancel();
     _timer = Timer.periodic(timerDuration, (timer) {
       if (state.secondsRemaining > 0) {
-        emit(state.copyWith(secondsRemaining: state.secondsRemaining - 1));
+        emit(state.copyWith(
+            secondsRemaining: state.secondsRemaining - 1, error: ''));
       } else {
         _timer?.cancel();
         emit(state.copyWith(
           state: LoginStatusEnum.suspendedComplete,
           remainingAttempts: 3,
           secondsRemaining: 60,
+          error: '',
         ));
       }
     });
   }
+
   void setloged() {
     CacheHelper.write(key: 'loged', value: 'true');
-  } 
+  }
 
   void resetTimer() {
     _timer?.cancel();
-    emit(state.copyWith(remainingAttempts: 3, secondsRemaining: 60));
+    emit(state.copyWith(remainingAttempts: 3, secondsRemaining: 60, error: ''));
   }
 
   @override

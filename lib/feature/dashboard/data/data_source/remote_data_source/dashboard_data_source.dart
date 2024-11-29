@@ -86,6 +86,8 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     String endpoint = 'groups/';
     final response = await apiService.get(
         endPoint: endpoint, token: UserAccessToken.accessToken);
+    print(response.statusCode);
+    print(response.data);
 
     if (response.statusCode == 200) {
       // Extract the "data" list from the response

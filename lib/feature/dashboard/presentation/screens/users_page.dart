@@ -56,37 +56,43 @@ class UsersContent extends StatelessWidget {
               child: Text(user.id.toString()),
             ),
             title: Text(
-              user.username,
+              user.username ?? 'Unknown',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Email: ${user.email} ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey)),
-                Text('Bio: ${user.bio}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey)),
-                Text('Phone: ${user.phone}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey)),
+                if (user.email != null)
+                  Text('Email: ${user.email} ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey)),
+                if (user.bio != null)
+                  Text('Bio: ${user.bio}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey)),
+                if (user.phone != null)
+                  Text('Phone: ${user.phone}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey)),
                 Row(
                   children: [
                     Icon(
-                      user.activeNow ? Icons.circle : Icons.circle_outlined,
-                      color:
-                          user.activeNow ? Colors.green : AppColors.errorColor,
+                      user.activeNow == true
+                          ? Icons.circle
+                          : Icons.circle_outlined,
+                      color: user.activeNow == true
+                          ? Colors.green
+                          : AppColors.errorColor,
                       size: 12,
                     ),
                     const SizedBox(width: 4),
-                    Text(user.activeNow ? 'Active Now' : 'Inactive',
+                    Text(user.activeNow == true ? 'Active Now' : 'Inactive',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall!
@@ -107,7 +113,7 @@ class UsersContent extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'User ${user.username} banned',
+                        'User ${user.username ?? 'Unknown'} banned',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       backgroundColor: AppColors.primaryColor.withOpacity(.5),

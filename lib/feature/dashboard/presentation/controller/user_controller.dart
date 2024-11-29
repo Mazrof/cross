@@ -42,7 +42,7 @@ class UsersCubit extends Cubit<UsersState> {
         },
         (users) {
           saveUsersUseCase.call(users);
-          users = users.where((user) => user.status).toList();
+          users = users.where((user) => user.status!).toList();
           emit(state.copyWith(
               users: users, currState: CubitState.success, errorMessage: null));
         },

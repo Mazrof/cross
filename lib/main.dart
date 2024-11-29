@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
+import 'package:telegram/core/local/cache_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telegram/core/local/hive_helper.dart';
 import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
@@ -25,6 +27,7 @@ void main() async {
       print("Stack trace: $stackTrace");
     }
   }
+
   runApp(
     DevicePreview(
       enabled: true,
@@ -34,7 +37,7 @@ void main() async {
       builder: (context) => const App(),
     ),
   );
-
+  // CacheHelper.deleteAllCache();
 }
 
 Future<void> _initializeApp() async {
@@ -43,6 +46,21 @@ Future<void> _initializeApp() async {
   ServiceLocator.init();
 
   Bloc.observer = MyBlocObserver();
+
+  await _clearCacheIfFirstLaunch();
+}
+
+Future<void> _clearCacheIfFirstLaunch() async {
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+
+  if (isFirstLaunch) {
+    // Clear cached data
+    await CacheHelper.deleteAllCache();
+
+    // Set isFirstLaunch to false
+    await prefs.setBool('isFirstLaunch', false);
+  }
 }
 
 class App extends StatelessWidget {
@@ -62,9 +80,9 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.darkTheme,
+                  theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
-                  // themeMode: ThemeMode.dark,
+                  // themeMode: ThemeMode.light,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );

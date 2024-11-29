@@ -40,7 +40,7 @@ class BannedUsersCubit extends Cubit<BannedUsersState> {
         },
         (users) {
           List<User> bannedUsers =
-              users.where((user) => !user.status ).toList();
+              users.where((user) => !user.status! ).toList();
           emit(state.copyWith(
               bannedUsers: bannedUsers, currState: CubitState.success));
         },
