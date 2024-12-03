@@ -11,20 +11,17 @@ class UserStatusHelper {
     if (firstTime == null || firstTime == 'true') {
       CacheHelper.write(key: firstTimeKey, value: 'false');
       return 'onbording';
-    } else if (loggedIn == "false") {
-      if (registered == 'true') {
-        return 'verify_mail';
-      } else {
+    } else if (loggedIn == null || loggedIn == 'false') {
+      if (registered == null || registered == 'false') {
         return 'login';
+      } else {
+        return 'verify_mail';
       }
     } else if (loggedIn == "true") {
       return 'home';
     } else {
       return 'login';
     }
-  
-  
-
   }
 
   static Future<void> setRegisteredNotVerified() async {

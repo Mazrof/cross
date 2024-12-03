@@ -88,13 +88,12 @@ String? validatePassword(String? password) {
 }
 
 String maskEmail(String email) {
-  String emailUsername = email.split('@')[0];
-  String emailDomain = email.split('@')[1];
-
-  String maskedUsername =
-      "${emailUsername.substring(0, 2)}***${emailUsername[emailUsername.length - 1]}";
-
-  return "$maskedUsername@$emailDomain";
+  final parts = email.split('@');
+  final username = parts[0];
+  final domain = parts[1];
+  final maskedUsername = username.replaceRange(
+      1, username.length - 1, '*' * (username.length - 2));
+  return '$maskedUsername@$domain';
 }
 
 class AppValidator {

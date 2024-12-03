@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart'; // Adjust as necessary
 import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as necessary
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
@@ -30,7 +31,12 @@ class SplashScreen extends StatelessWidget {
             } else if (state is SplashAuthenticated) {
               // Navigate to authenticated screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kHome);
+                if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
+                    'user') {
+                  context.go(AppRouter.kHome);
+                  print('user');
+                } else
+                  context.go(AppRouter.kNavBar);
               });
               return Container();
             } else if (state is SplashUnauthenticated) {

@@ -24,6 +24,14 @@ class StoryViewerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider _getImageProvider(String url) {
+      if (url.startsWith('http') || url.startsWith('https')) {
+        return NetworkImage(url);
+      } else {
+        return AssetImage(url);
+      }
+    }
+
     return BlocProvider(
       create: (_) => StoryViewerCubit(),
       child: BlocConsumer<StoryViewerCubit, double>(
@@ -48,9 +56,9 @@ class StoryViewerScreen extends StatelessWidget {
               child: Stack(
                 children: [
                   Center(
-                    child: Image.file(
-                      File(imageUrl),
-                      fit: BoxFit.fitHeight,
+                    child: Image(
+                      image: _getImageProvider(imageUrl),
+                      fit: BoxFit.fill,
                     ),
                   ),
                   Positioned(

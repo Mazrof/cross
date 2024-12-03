@@ -10,7 +10,7 @@ class SignupState extends Equatable {
 
   SignupState({
     this.state = CubitState.initial,
-    this.errorMessage,
+    this.errorMessage='',
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
     this.isPrivacyPolicyAccepted = false,

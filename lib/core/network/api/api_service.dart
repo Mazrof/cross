@@ -1,58 +1,45 @@
 import 'dart:convert';
-
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:telegram/core/local/user_access_token.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = endPointDev ;
+  final CookieJar cookieJar;
+  static const String baseUrl = "http://192.168.100.3:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
-
-  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
-
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
-  Dio dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(milliseconds: 30000),
-      receiveTimeout: const Duration(milliseconds: 30000),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${UserAccessToken.accessToken}',
-      },
-      validateStatus: (int? status) {
-        return (status ?? 0) < 500;
-      },
-    ),
-  );
 
-  void initialize(String token) {
-    dio.options.headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+  Dio dio;
+
+  ApiService()
+      : cookieJar = PersistCookieJar(storage: FileStorage('./cookies')),
+        dio = Dio(BaseOptions(
+          baseUrl: baseUrl,
+          receiveDataWhenStatusError: true,
+          connectTimeout: const Duration(milliseconds: 30000),
+          receiveTimeout: const Duration(milliseconds: 30000),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (int? status) {
+            return (status ?? 0) < 500;
+          },
+        )) {
+    dio.interceptors.add(CookieManager(cookieJar));
   }
 
   Future<Response> get({
     required String endPoint,
-    Object? data,
-    String? token,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
       Response response = await dio.get(
         '$baseUrl/$endPoint',
-        data: data,
+        queryParameters: queryParameters,
       );
 
       print(response.data);
@@ -61,7 +48,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
@@ -75,16 +62,9 @@ class ApiService {
   Future<Response> post({
     required String endPoint,
     Object? data,
-    String? token,
   }) async {
     try {
       String url = '$baseUrl/$endPoint';
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
       final response = await dio.post(url, data: data);
       print(response.data);
       print(response.statusCode);
@@ -92,7 +72,7 @@ class ApiService {
         print(response.data);
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
@@ -105,17 +85,9 @@ class ApiService {
 
   Future<Response> put({
     required String endPoint,
-    String? token,
     Map<String, dynamic>? body,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -125,7 +97,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
@@ -138,16 +110,8 @@ class ApiService {
 
   Future<Response> delete({
     required String endPoint,
-    String? token,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -156,7 +120,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
@@ -169,17 +133,9 @@ class ApiService {
 
   Future<Response> patch({
     required String endPoint,
-    String? token,
     Object? data,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -189,7 +145,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
@@ -235,54 +191,15 @@ class ApiService {
     }
   }
 
-  // Future<bool> verifyToken(String token) async {
-  //   const String verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-  //   const String siteKey = '6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
-  //   final requestBody = {
-  //     "event": {
-  //       "token": token,
-  //       "expectedAction": "signup",
-  //       "siteKey": siteKey,
-  //     }
-  //   };
-
-  //   try {
-  //     final response = await Dio().post(
-  //       verifyUrl,
-  //       data: jsonEncode(requestBody),
-  //       options: Options(
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       ),
-  //     );
-
-  //     final jsonResponse = response.data;
-  //     final isValid = jsonResponse['tokenProperties']['valid'] == true;
-  //     final score = jsonResponse['riskAnalysis']['score'];
-  //     final action = jsonResponse['tokenProperties']['action'];
-
-  //     print('Verification Score: $score, Action: $action');
-
-  //     // You can set a threshold score if needed, usually above 0.5
-  //     return isValid && score >= 0.5;
-  //   } catch (e) {
-  //     print('Error verifying reCAPTCHA Enterprise token: $e');
-  //     return false;
-  //   }
-  // }
-
   Future<Response> getForSearch({
     required String endPoint,
-    String? token,
-    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      dio.options.headers =
-          token == null ? {} : {'Authorization': 'Bearer $token'};
-
-      Response response =
-          await dio.get('$baseUrl/$endPoint', queryParameters: data);
+      Response response = await dio.get(
+        '$baseUrl/$endPoint',
+        queryParameters: queryParameters,
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {

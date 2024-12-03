@@ -2,19 +2,18 @@ import 'package:bloc/bloc.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/domain/entity/user.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/unban_user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/banned_users_state.dart';
 
 class BannedUsersCubit extends Cubit<BannedUsersState> {
-  final GetUsersLocalUseCase getUsersLocalUseCase;
+  
   final GetUsersUseCase getUsersUseCase;
   final UnBanUserUseCase unBanUserUseCase;
   final NetworkManager networkManager;
 
   BannedUsersCubit({
-    required this.getUsersLocalUseCase,
+
     required this.getUsersUseCase,
     required this.unBanUserUseCase,
     required this.networkManager,

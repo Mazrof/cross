@@ -185,7 +185,7 @@ class SignUpForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                if (signupController.formKey.currentState!.validate()) {
+                if (signupController.formKey.currentState!.validate()==true) {
                   signupController.signUp();
                 }
               },

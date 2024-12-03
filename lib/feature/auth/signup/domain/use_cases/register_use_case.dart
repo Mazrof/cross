@@ -4,18 +4,18 @@ import 'package:telegram/core/use_cases/use_case.dart';
 import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart';
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart';
 
-class RegisterUseCase extends BaseUseCase<String, SignUpBodyModel> {
+class RegisterUseCase extends BaseUseCase<void, SignUpBodyModel> {
   final SignUpRepository signUpRepo;
 
   RegisterUseCase(this.signUpRepo);
 
   @override
-  Future<Either<Failure, String>> call(SignUpBodyModel parameter) async {
+  Future<Either<Failure, void>> call(SignUpBodyModel parameter) async {
     try {
-      final response = await signUpRepo.register(parameter);
-      return response;
-    } catch (error) {
-      return left(ServerFailure(message: error.toString()));
+      await signUpRepo.register(parameter);
+      return Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
     }
   }
 }

@@ -88,10 +88,10 @@ class LoginCubit extends Cubit<LoginState> {
 
     result.fold((l) {
       emit(state.copyWith(
-          state: LoginStatusEnum.error, error: 'something went wrong'));
+          state: LoginStatusEnum.error,
+          error: l.message ?? 'something went wrong'));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success, error: ''));
-      setloged();
     });
   }
 
@@ -108,10 +108,10 @@ class LoginCubit extends Cubit<LoginState> {
 
     result.fold((l) {
       emit(state.copyWith(
-          state: LoginStatusEnum.error, error: 'something went wrong'));
+          state: LoginStatusEnum.error,
+          error: l.message ?? 'something went wrong'));
     }, (r) {
       emit(state.copyWith(state: LoginStatusEnum.success, error: ''));
-      setloged();
     });
   }
 
@@ -139,7 +139,6 @@ class LoginCubit extends Cubit<LoginState> {
     }, (unit) async {
       resetTimer();
       emit(state.copyWith(state: LoginStatusEnum.success));
-      setloged();
     });
   }
 
@@ -174,10 +173,6 @@ class LoginCubit extends Cubit<LoginState> {
         ));
       }
     });
-  }
-
-  void setloged() {
-    CacheHelper.write(key: 'loged', value: 'true');
   }
 
   void resetTimer() {

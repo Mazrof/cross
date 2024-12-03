@@ -180,7 +180,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return BlocProvider.value(
           value: sl<VerifyMailCubit>()
             ..sendVerificationMail(
-                param['method'] as String,
+                param['method'] as String,  
                 HiveCash.read(
                     boxName: "register_info", key: param['method'] as String)!),
           child: VerifyMailScreen(

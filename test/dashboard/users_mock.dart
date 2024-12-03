@@ -7,8 +7,6 @@ import 'package:mockito/mockito.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/dashboard/data/model/user_model.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/ban_user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/user_state.dart';
@@ -20,8 +18,6 @@ import 'users_mock.mocks.dart';
   NetworkManager,
   GetUsersUseCase,
   BanUserUseCase,
-  GetUsersLocalUseCase,
-  SaveUsersUseCase,
 ])
 void main() {
   TestWidgetsFlutterBinding
@@ -29,8 +25,7 @@ void main() {
   late MockNetworkManager mockNetworkManager;
   late MockGetUsersUseCase mockGetUsersUseCase;
   late MockBanUserUseCase mockBanUserUseCase;
-  late MockGetUsersLocalUseCase mockGetUsersLocalUseCase;
-  late MockSaveUsersUseCase mockSaveUsersUseCase;
+
   late UsersCubit usersCubit;
 
   Future<void> wait(int milliseconds) async {
@@ -41,14 +36,11 @@ void main() {
     mockNetworkManager = MockNetworkManager();
     mockGetUsersUseCase = MockGetUsersUseCase();
     mockBanUserUseCase = MockBanUserUseCase();
-    mockGetUsersLocalUseCase = MockGetUsersLocalUseCase();
-    mockSaveUsersUseCase = MockSaveUsersUseCase();
+
     usersCubit = UsersCubit(
       networkManager: mockNetworkManager,
       getUsersUseCase: mockGetUsersUseCase,
       banUserUseCase: mockBanUserUseCase,
-      getUsersLocalUseCase: mockGetUsersLocalUseCase,
-      saveUsersUseCase: mockSaveUsersUseCase,
     );
   });
 
@@ -93,7 +85,9 @@ void main() {
       'emits [loading, success] when fetchUsers is called and network is not connected',
       build: () {
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => false);
-        when(mockGetUsersLocalUseCase.call()).thenAnswer((_) async => users);
+
+        usersCubit
+            .emit(UsersState(users: [users[0]], currState: CubitState.success));
         return usersCubit;
       },
       act: (cubit) async {
@@ -101,7 +95,7 @@ void main() {
         await wait(500);
       },
       expect: () => [
-        UsersState(users: [], currState: CubitState.loading),
+        UsersState(users: [users[0]], currState: CubitState.loading),
         UsersState(users: [users[0]], currState: CubitState.success),
       ],
     );

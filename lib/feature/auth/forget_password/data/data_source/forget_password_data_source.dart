@@ -18,7 +18,7 @@ class ForgetPasswordDataSourceImp implements ForgetPasswordDataSource {
     print('ForgetPasswordDataSourceImp: forgetPassword');
     String endpoint = 'auth/request-password-reset';
     try {
-      final response = await apiService.get(
+      final response = await apiService.post(
         endPoint: endpoint,
         data: {'email': email},
       );
