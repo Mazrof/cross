@@ -12,11 +12,10 @@ class ApiService {
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
-
   Dio dio;
 
   ApiService()
-      : cookieJar = PersistCookieJar(storage: FileStorage('./cookies')),
+      : cookieJar = CookieJar(),
         dio = Dio(BaseOptions(
           baseUrl: baseUrl,
           receiveDataWhenStatusError: true,

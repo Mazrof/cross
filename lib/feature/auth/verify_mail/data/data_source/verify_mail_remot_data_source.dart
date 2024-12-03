@@ -48,6 +48,8 @@ class VerifyMailDataSourceImp extends VerifyMailDataSource {
   Future<Either<Failure, bool>> verifyOtp(VerifyMailData data) async {
     String target = ApiConstants.verifyOtp;
     Map<String, String> requestBody;
+    print('data.method: ${data.email}');
+    print('data.code: ${data.code}');
     if (data.method == 'email') {
       requestBody = {
         'code': data.code,
