@@ -3,7 +3,7 @@ import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 
-class ChatTileWidget extends StatelessWidget {
+class ChatTile extends StatelessWidget {
   final int id;
   final String imageUrl;
   final String title;
@@ -12,7 +12,7 @@ class ChatTileWidget extends StatelessWidget {
   final String time;
   final MessageStatus messageStatus; // Add message status parameter
 
-  const ChatTileWidget({
+  const ChatTile({
     Key? key,
     required this.id,
     required this.imageUrl,
@@ -20,7 +20,7 @@ class ChatTileWidget extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     required this.time,
-    required this.messageStatus, // Initialize the new parameter
+    required this.messageStatus, required String lastSeen, // Initialize the new parameter
   }) : super(key: key);
 
   @override

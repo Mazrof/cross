@@ -30,6 +30,7 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
@@ -173,6 +174,10 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
         ));
+
+    //groups and channels
+
+    sl.registerLazySingleton(() => AddMembersCubit());
   }
 
   static void registerUseCases() {

@@ -9,6 +9,8 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
 
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
@@ -27,7 +29,7 @@ import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart
 
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
-import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/new_group_screen.dart';
 
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
@@ -79,7 +81,6 @@ class AppRouter {
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
-  static const String kNewGroup = '/new_group';
   static const String kContacts = '/contacts';
 
   static const String kNotRobot = '/not_robot';
@@ -89,6 +90,10 @@ class AppRouter {
   static const String kvoiceCall = '/voice_call';
   static const String kcallContact = '/call_contact';
   static const String kNavBar = '/nav_bar';
+
+  //groups
+  static const String kNewGroup = '/new_group';
+  static const String kGroupInfo = '/group_info';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -180,7 +185,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return BlocProvider.value(
           value: sl<VerifyMailCubit>()
             ..sendVerificationMail(
-                param['method'] as String,  
+                param['method'] as String,
                 HiveCash.read(
                     boxName: "register_info", key: param['method'] as String)!),
           child: VerifyMailScreen(
@@ -213,7 +218,19 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kNewGroup,
     builder: (context, state) {
-      return const NewGroupScreen();
+      return BlocProvider.value(
+        value: sl<AddMembersCubit>()..loadMembers(),
+        child: NewGroupScreen(),
+      );
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupInfo,
+    builder: (context, state) {
+      return BlocProvider.value(
+        value: sl<AddMembersCubit>(),
+        child: GroupInfo(),
+      );
     },
   ),
   GoRoute(
