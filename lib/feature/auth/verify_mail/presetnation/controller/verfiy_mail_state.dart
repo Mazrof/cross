@@ -12,7 +12,7 @@ class VerifyMailState extends Equatable {
     this.remainingTime = 60,
     this.method = 'email',
     this.status = VerifyMailStatus.initial,
-    this.errorMessage,
+    this.errorMessage = '',
   });
 
   VerifyMailState copyWith({
@@ -32,4 +32,12 @@ class VerifyMailState extends Equatable {
 
   @override
   List<Object?> get props => [method, status, errorMessage, remainingTime];
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode =>
+      method.hashCode ^
+      status.hashCode ^
+      errorMessage.hashCode ^
+      remainingTime.hashCode;
 }

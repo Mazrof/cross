@@ -100,7 +100,7 @@ class LoginForm extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    context.go(AppRouter.kForgetPassword);
+                   GoRouter.of(context).push(AppRouter.kForgetPassword);
                   },
                   child: const Text(
                     AppStrings.forgetPassword,

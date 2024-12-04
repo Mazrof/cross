@@ -22,67 +22,88 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
       if (state.state == CubitState.loading) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Stories Section
-              Container(
-                color: AppColors.primaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: SizedBox(
-                    height: 115, // Adjust height for the story section
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        AddStoryWidget(),
-                        // Placeholder for story items
-                        for (var story in state.stories)
-                          Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: StoryWidget(
-                              userName: story.userName,
-                              storyUrl: story.mediaUrl,
-                              isSeen: story.isSeen,
-                              userImage: story.userImage,
-                              storyCaption: story.content,
+        return Scaffold(
+          key: _scaffoldKey, // Assign the GlobalKey her
+          drawer: const CAppDrawer(),
+          appBar: CAppBar(
+            leadingIcon: Icons.menu,
+            title: Text('Mazrof'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.search,
+                  size: 30,
+                ),
+              ),
+            ],
+            onLeadingTap: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Stories Section
+                Container(
+                  color: AppColors.primaryColor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: SizedBox(
+                      height: 115, // Adjust height for the story section
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          AddStoryWidget(),
+                          // Placeholder for story items
+                          for (var story in state.stories)
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: StoryWidget(
+                                userName: story.userName,
+                                storyUrl: story.mediaUrl,
+                                isSeen: story.isSeen,
+                                userImage: story.userImage,
+                                storyCaption: story.content,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              // Chat Section
-
-              // Placeholder for chat items
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-
-                itemCount: state.chats.length, // Number of chats
-                itemBuilder: (context, index) {
-                  final chat = state.chats[index];
-                  return Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: ChatTileWidget(
-                        id: chat.id,
-                        imageUrl: chat.imageUrl,
-                        title: chat.name,
-                        subtitle: chat.lastMessage,
-                        onTap: () {
-                          // Chat tap logic
-                        },
-                        time: chat.time,
-                        messageStatus: chat.messageStatus, // Add message status
-                      ));
-                },
-              ),
-            ],
+                // Chat Section
+          
+                // Placeholder for chat items
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+          
+                  itemCount: state.chats.length, // Number of chats
+                  itemBuilder: (context, index) {
+                    final chat = state.chats[index];
+                    return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: ChatTileWidget(
+                          id: chat.id,
+                          imageUrl: chat.imageUrl,
+                          title: chat.name,
+                          subtitle: chat.lastMessage,
+                          onTap: () {
+                            // Chat tap logic
+                          },
+                          time: chat.time,
+                          messageStatus: chat.messageStatus, // Add message status
+                        ));
+                  },
+                ),
+              ],
+            ),
           ),
         );
       } else if (state.state == CubitState.failure) {

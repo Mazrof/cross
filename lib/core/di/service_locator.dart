@@ -36,16 +36,9 @@ import 'package:telegram/feature/home/presentation/controller/story/add_story_cu
 import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
 
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
-import 'package:telegram/feature/dashboard/data/data_source/local_data_source/dashboard_data_source.dart';
 import 'package:telegram/feature/dashboard/data/data_source/remote_data_source/dashboard_data_source.dart';
-import 'package:telegram/feature/dashboard/data/repository/dashboard_local_repo.dart';
 import 'package:telegram/feature/dashboard/data/repository/dashboard_remote_repo.dart';
-import 'package:telegram/feature/dashboard/domain/repository/dashboard_local_repo.dart';
 import 'package:telegram/feature/dashboard/domain/repository/dashboard_repo.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_groups.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_groups.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/apply_filter.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/ban_user.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
@@ -144,7 +137,6 @@ class ServiceLocator {
           forgetPasswordUseCase: sl(),
         ));
 
-
     //home
     sl.registerLazySingleton(() => AddStoryCubit());
     sl.registerFactory(() => StoryViewerCubit());
@@ -158,13 +150,10 @@ class ServiceLocator {
           networkManager: sl(),
           getUsersUseCase: sl(),
           banUserUseCase: sl(),
-          getUsersLocalUseCase: sl(),
-          saveUsersUseCase: sl(),
         ));
 
     // banned users cubit
     sl.registerLazySingleton(() => BannedUsersCubit(
-          getUsersLocalUseCase: sl(),
           getUsersUseCase: sl(),
           unBanUserUseCase: sl(),
           networkManager: sl(),
@@ -175,8 +164,6 @@ class ServiceLocator {
           networkManager: sl(),
           getGroupsUseCase: sl(),
           applyFilterUseCase: sl(),
-          getGroupLocalUseCase: sl(),
-          saveGroupsUseCase: sl(),
         ));
 
     //settings
@@ -186,7 +173,6 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
         ));
-
   }
 
   static void registerUseCases() {
@@ -222,12 +208,6 @@ class ServiceLocator {
     sl.registerLazySingleton(() => UnBanUserUseCase(sl()));
     sl.registerLazySingleton(() => ApplyFilterUseCase(sl()));
 
-    //local dashboard
-    sl.registerLazySingleton(() => GetGroupLocalUseCase(sl()));
-    sl.registerLazySingleton(() => SaveGroupsUseCase(sl()));
-    sl.registerLazySingleton(() => SaveUsersUseCase(sl()));
-    sl.registerLazySingleton(() => GetUsersLocalUseCase(sl()));
-
     //settings
     sl.registerLazySingleton(() => FetchSettingsUseCase(
           sl(),
@@ -257,9 +237,9 @@ class ServiceLocator {
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
 
     //dashboard
-    sl.registerLazySingleton<DashboardLocalRepo>(() => DashboardLocalRepoImpl(
-          localDataSource: sl(),
-        ));
+    // sl.registerLazySingleton<DashboardLocalRepo>(() => DashboardLocalRepoImpl(
+    //       localDataSource: sl(),
+    //     ));
     sl.registerLazySingleton<DashboardRepo>(
         () => DashboardRemoteRepoImpl(dataSource: sl()));
 
@@ -289,8 +269,8 @@ class ServiceLocator {
         () => ForgetPasswordDataSourceImp(sl()));
 
     //dashboard
-    sl.registerLazySingleton<DashboardLocalDataSource>(
-        () => DashboardLocalDataSourceImpl());
+    // sl.registerLazySingleton<DashboardLocalDataSource>(
+    //     () => DashboardLocalDataSourceImpl());
     sl.registerLazySingleton<DashboardDataSource>(
         () => DashboardDataSourceImpl());
     //settings

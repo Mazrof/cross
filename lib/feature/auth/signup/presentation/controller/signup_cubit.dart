@@ -73,6 +73,7 @@ class SignUpCubit extends Cubit<SignupState> {
           state: CubitState.failure,
           errorMessage: 'Please accept the privacy policy',
         ));
+        print('signUp1.1');
         return;
       }
       if (state.state != CubitState.loading) {
@@ -83,7 +84,6 @@ class SignUpCubit extends Cubit<SignupState> {
           emit(state.copyWith(
             state: CubitState.failure,
             errorMessage: 'No Internet Connection',
-
           ));
           return;
         }
@@ -105,7 +105,7 @@ class SignUpCubit extends Cubit<SignupState> {
         //   ));
         //   return;
         // }
-
+        print('signUp2');
 
         emitSignUpStates(SignUpBodyModel(
           username: usernameController.text.trim(),
@@ -128,11 +128,11 @@ class SignUpCubit extends Cubit<SignupState> {
     id.fold((failure) {
       emit(state.copyWith(
         state: CubitState.failure,
-        errorMessage: 'Something went wrong, please try again',
+        errorMessage: failure.message,
       ));
     }, (unit) async {
       // Call the save data use case here
-      signUpRequestBody.id = unit;
+      
 
       await saveRegisterInfoUseCase
           .call(
@@ -144,7 +144,7 @@ class SignUpCubit extends Cubit<SignupState> {
 
           emit(state.copyWith(
             state: CubitState.failure,
-            errorMessage: 'Something went wrong, please try again',
+            errorMessage: saveFailure.message,
           ));
         }, (saveSuccess) {
           emit(state.copyWith(state: CubitState.success, errorMessage: ''));

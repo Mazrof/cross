@@ -38,7 +38,7 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
             print('Error: ${failure.message}');
             emit(state.copyWith(
                 status: CubitState.failure,
-                errorMessage: 'something went wrong please try again'));
+                errorMessage: failure.message));
           },
           (success) => emit(state.copyWith(status: CubitState.success, errorMessage: '')),
         );

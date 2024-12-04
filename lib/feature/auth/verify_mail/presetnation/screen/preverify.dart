@@ -45,8 +45,8 @@ class PreVerifyScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context
-                      .go(AppRouter.kVerifyMail, extra: {'method': 'email'}),
+                  onPressed: () => GoRouter.of(context)
+                      .push(AppRouter.kVerifyMail, extra: {'method': 'email'}),
                   child: Text(AppStrings.verifyByMail),
                 ),
               ),
@@ -56,8 +56,8 @@ class PreVerifyScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () => context
-                      .go(AppRouter.kVerifyMail, extra: {'method': 'phone'}),
+                  onPressed: () => GoRouter.of(context)
+                      .push(AppRouter.kVerifyMail, extra: {'method': 'phone'}),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
                         color: AppColors.primaryColor), // Set the border color

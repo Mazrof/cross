@@ -10,7 +10,7 @@ class ForgetPasswordState extends Equatable {
   const ForgetPasswordState({
     this.status = CubitState.initial,
     this.email,
-    this.errorMessage,
+    this.errorMessage='',
   });
 
   ForgetPasswordState copyWith({

@@ -202,7 +202,7 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       // emit(const ChatLoading());
       var apiService = sl<ApiService>();
-      final res = await apiService.get(endPoint: '/messages', token: "");
+      final res = await apiService.get(endPoint: '/messages',);
 
       messages = (jsonDecode(res.data) as List)
           .map(

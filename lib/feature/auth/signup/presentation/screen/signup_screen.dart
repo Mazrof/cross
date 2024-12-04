@@ -27,12 +27,13 @@ class SignUpScreen extends StatelessWidget {
         return const LogoLoader();
       } else if (state.state == CubitState.success) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go(AppRouter.kPreVerify);
+          GoRouter.of(context).push(AppRouter.kPreVerify);
         });
       } else if (state.state == CubitState.failure) {
         // show error message
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          CSnackBar.showErrorSnackBar(context, 'Error', 'something went wrong');
+          CSnackBar.showErrorSnackBar(
+              context, 'Error', state.errorMessage ?? 'Unknown error');
         });
       }
       // Handle other states if necessary
