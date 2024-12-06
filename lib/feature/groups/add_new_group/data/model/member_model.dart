@@ -1,34 +1,43 @@
-import 'package:telegram/feature/groups/add_new_group/domain/member.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/entity/member.dart';
 
-class MemberModel extends Member{
-  MemberModel({
-    required int id,
-    required String name,
-    required String imageUrl,
-    required String lastSeen,
-  }) : super(
-          id: id,
-          name: name,
-          imageUrl: imageUrl,
-          lastSeen: lastSeen,
-        );
+class MemberModel extends Member {
+  MemberModel(
+      {required super.userId,
+      super.role,
+      super.hasDownloadPermissions,
+      super.hasMessagePermissions});
 
   factory MemberModel.fromJson(Map<String, dynamic> json) {
     return MemberModel(
-      id: json['id'],
-      name: json['name'],
-      imageUrl: json['imageUrl'],
-      lastSeen: json['lastSeen'],
+      userId: json['userId'],
+      role: json['role'],
+      hasDownloadPermissions: json['hasDownloadPermissions'],
+      hasMessagePermissions: json['hasMessagePermissions'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'imageUrl': imageUrl,
-      'lastSeen': lastSeen,
+      'userId': userId,
+      'role': role,
+      'hasDownloadPermissions': hasDownloadPermissions,
+      'hasMessagePermissions': hasMessagePermissions,
     };
   }
-  
+
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MemberModel &&
+          runtimeType == other.runtimeType &&
+          userId == other.userId &&
+          role == other.role &&
+          hasDownloadPermissions == other.hasDownloadPermissions&&
+          hasMessagePermissions == other.hasMessagePermissions
+          ;
+
+  @override
+  int get hashCode =>
+      userId.hashCode ^ role.hashCode ^ hasDownloadPermissions.hashCode ^ hasMessagePermissions.hashCode;
 }

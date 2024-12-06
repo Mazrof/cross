@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/chat_tile_model.dart';
 
 class AddMembersState extends Equatable {
-  final List<MemberModel> allMembers;
-  final List<MemberModel> selectedMembers;
+  final List<chatTileModel> allMembers;
+  final List<chatTileModel> selectedMembers;
   final String groupName; // Keep track of group name only
   final CubitState state;
   final String errorMessage;
@@ -20,8 +20,8 @@ class AddMembersState extends Equatable {
   });
 
   AddMembersState copyWith({
-    List<MemberModel>? allMembers,
-    List<MemberModel>? selectedMembers,
+    List<chatTileModel>? allMembers,
+    List<chatTileModel>? selectedMembers,
     String? groupImageUrl,
     String? groupName,
     CubitState? state,

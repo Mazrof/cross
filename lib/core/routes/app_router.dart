@@ -11,6 +11,10 @@ import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/screen/group_setting_screen.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/screen/permision_screen.dart';
 
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
@@ -20,8 +24,6 @@ import 'package:telegram/feature/on_bording/presentation/screen/on_bording_scree
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
-// import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-// import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 
@@ -47,12 +49,13 @@ import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_o
 import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
-import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
+
+import '../../feature/groups/group_setting/presentation/controller/group_cubit.dart';
 
 class AppRouter {
   static const String kSplash = '/splash';
@@ -94,17 +97,40 @@ class AppRouter {
   //groups
   static const String kNewGroup = '/new_group';
   static const String kGroupInfo = '/group_info';
+  static const String kGroupSetting = '/group_setting';
+  static const String kUserPermission = '/user-permission';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+final route = GoRouter(initialLocation: AppRouter.kGroupSetting, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
       return const PreVerifyScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kUserPermission,
+    builder: (context, state) {
+      final member = state.extra as MembershipModel;
+      return BlocProvider.value(
+          value: sl<PermisionCubit>()..addData(member),
+          child: EditPermissionsScreen(
+            member: member,
+          ));
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupSetting,
+    builder: (context, state) {
+      return BlocProvider.value(
+          value: sl<GroupCubit>()..fetchGroupDetails(1),
+          child: const GroupSettingsScreen(
+            groupId: 1,
+          ));
     },
   ),
   GoRoute(
