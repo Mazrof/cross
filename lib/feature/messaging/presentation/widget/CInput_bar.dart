@@ -76,7 +76,6 @@ class CinputBar extends StatelessWidget {
                       enabledBorder: InputBorder.none,
                     ),
                     onChanged: (text) {
-                      print(text);
                       if (controller.text != "") {
                         sl<ChatCubit>().typingMessage();
                       } else {
