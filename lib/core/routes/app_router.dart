@@ -9,8 +9,10 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_screen.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/screen/group_setting_screen.dart';
@@ -99,17 +101,27 @@ class AppRouter {
   static const String kGroupInfo = '/group_info';
   static const String kGroupSetting = '/group_setting';
   static const String kUserPermission = '/user-permission';
+  static const String kGroupScreen = '/group_screen';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kGroupSetting, routes: [
+final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
       return const PreVerifyScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupScreen,
+    builder: (context, state) {
+      final groupData = state.extra as GroupsModel;
+      return GroupScreen(
+        groupData: groupData,
+      );
     },
   ),
   GoRoute(

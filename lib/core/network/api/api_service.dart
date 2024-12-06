@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  final CookieJar cookieJar;
+final PersistCookieJar cookieJar;
   static const String baseUrl = "http://192.168.100.3:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
@@ -14,21 +15,16 @@ class ApiService {
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
   Dio dio;
 
-  ApiService()
-      : cookieJar = CookieJar(),
-        dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          receiveDataWhenStatusError: true,
-          connectTimeout: const Duration(milliseconds: 30000),
-          receiveTimeout: const Duration(milliseconds: 30000),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          validateStatus: (int? status) {
-            return (status ?? 0) < 500;
-          },
-        )) {
+  // Private named constructor
+  ApiService._internal(this.cookieJar, this.dio);
+
+  // Factory constructor to create an instance of ApiService asynchronously
+  static Future<ApiService> create() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
+    final dio = Dio(BaseOptions(baseUrl: baseUrl));
     dio.interceptors.add(CookieManager(cookieJar));
+    return ApiService._internal(cookieJar, dio);
   }
 
   Future<Response> get({

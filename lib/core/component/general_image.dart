@@ -63,6 +63,13 @@ class GeneralImage extends StatelessWidget {
       Colors.red,
       Colors.brown,
       Colors.teal,
+      Colors.amber,
+      Colors.cyan,
+      Colors.deepOrange,
+      Colors.deepPurple,
+      Colors.indigo,
+      Colors.lime,
+      Colors.pink,
     ];
     return colors[username.hashCode % colors.length];
   }

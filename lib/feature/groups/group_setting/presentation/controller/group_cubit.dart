@@ -1,13 +1,40 @@
 import 'package:bloc/bloc.dart';
+import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
 import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/remove_member_user.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/update_group_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/update_member_role.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_state.dart';
 
 class GroupCubit extends Cubit<GroupState> {
-  GroupCubit() : super(GroupState());
+  GroupCubit(
+    this.fetchGroupDetailsUseCase,
+    this.updateMemberRoleUseCase,
+    this.addMemberUseCase,
+    this.removeMemberUseCase,
+    this.deleteGroupUseCase,
+    this.updateGroupDetailsUseCase,
+    this.networkManager,
+    this.fetchGroupMembersUseCase,
+  ) : super(GroupState());
+
+  final FetchGroupDetailsUseCase fetchGroupDetailsUseCase;
+
+  final UpdateMemberRoleUseCase updateMemberRoleUseCase;
+  final AddMembersUseCase addMemberUseCase;
+  final RemoveMemberUseCase removeMemberUseCase;
+  final DeleteGroupUseCase deleteGroupUseCase;
+  final UpdateGroupDetailsUseCase updateGroupDetailsUseCase;
+  final NetworkManager networkManager;
+  final FetchGroupMembersUseCase fetchGroupMembersUseCase;
 
   void fetchGroupDetails(int groupId) async {
     //simulate loading

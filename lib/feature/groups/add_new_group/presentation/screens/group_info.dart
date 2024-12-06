@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +17,7 @@ import 'package:telegram/feature/groups/add_new_group/presentation/controller/ad
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart'; // Import the cubit
 
 class GroupInfo extends StatefulWidget {
-  GroupInfo({super.key});
+  const GroupInfo({super.key});
 
   @override
   _GroupInfoState createState() => _GroupInfoState();
@@ -25,6 +26,7 @@ class GroupInfo extends StatefulWidget {
 class _GroupInfoState extends State<GroupInfo> {
   final TextEditingController _nameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  File? _selectedImage; // Store the selected image as a File
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +47,13 @@ class _GroupInfoState extends State<GroupInfo> {
           if (state.state == CubitState.failure) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               CSnackBar.showErrorSnackBar(
-                  context, 'Error', state.errorMessage!);
+                  context, 'Error', state.errorMessage ?? 'An error occurred');
             });
           }
-
-          if (state.state == CubitState.success &&
-              state.groupImageUrl != null &&
-              state.groupName.isNotEmpty) {
+          if (state.state == CubitState.success) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              GoRouter.of(context).pop();
-              // GoRouter.of(context)
-              //     .pushReplacement(AppRouter.kNewGroup);
+              GoRouter.of(context).go(AppRouter.kGroupScreen,
+                  extra: sl<AddMembersCubit>().state.group);
             });
           }
 
@@ -67,43 +65,44 @@ class _GroupInfoState extends State<GroupInfo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      width: AppSizes.iconXlg,
-                      height: AppSizes.iconXlg,
-                      decoration: state.groupImageUrl == null ||
-                              state.groupImageUrl!.isEmpty
-                          ? BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.primaryColor,
-                            )
-                          : null,
-                      child: state.groupImageUrl == null ||
-                              state.groupImageUrl!.isEmpty
-                          ? IconButton(
-                              icon:
-                                  const Icon(Icons.photo, color: Colors.white),
-                              onPressed: () async {
-                                final pickedFile = await _picker.pickImage(
-                                    source: ImageSource.gallery);
+                    // Group image container
+                    GestureDetector(
+                      onTap: () async {
+                        final pickedFile = await _picker.pickImage(
+                            source: ImageSource.gallery);
 
-                                if (pickedFile != null) {
-                                  // Update the state with the selected image URL
-                                  sl<AddMembersCubit>()
-                                      .setGroupImageUrl(pickedFile.path);
-
-                                  CSnackBar.showSuccessSnackBar(
-                                      context, 'success', 'image uploaded');
-                                }
-                              },
-                            )
-                          : ClipOval(
-                              child: Image.file(
-                                File(state.groupImageUrl!),
-                                fit: BoxFit.cover,
+                        if (pickedFile != null) {
+                          setState(() {
+                            _selectedImage = File(pickedFile.path);
+                          });
+                          sl<AddMembersCubit>()
+                              .setGroupImageUrl(pickedFile.path);
+                          CSnackBar.showSuccessSnackBar(
+                              context, 'Success', 'Image uploaded');
+                        }
+                      },
+                      child: Container(
+                        width: AppSizes.iconXlg,
+                        height: AppSizes.iconXlg,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primaryColor,
+                        ),
+                        child: _selectedImage == null
+                            ? const Icon(Icons.photo, color: Colors.white)
+                            : ClipOval(
+                                child: Image.file(
+                                  _selectedImage!,
+                                  fit: BoxFit.cover,
+                                  width: AppSizes.iconXlg,
+                                  height: AppSizes.iconXlg,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                     const SizedBox(width: AppSizes.sm),
+
+                    // Group name input field
                     Expanded(
                       child: TextField(
                         controller: _nameController,
@@ -137,8 +136,7 @@ class _GroupInfoState extends State<GroupInfo> {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         onPressed: () {
-          // Create the group with selected members
-          GoRouter.of(context).push(AppRouter.kGroupInfo);
+          sl<AddMembersCubit>().createGroup();
         },
         child: const Icon(Icons.check),
       ),

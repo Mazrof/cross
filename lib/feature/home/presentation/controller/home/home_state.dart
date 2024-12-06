@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/domain/entity/story.dart';
 import 'package:telegram/feature/home/domain/entity/chat.dart';
 
 class HomeState extends Equatable {
   final List<Story> stories;
-  final List<Chat> chats;
+  final List<ChatModel> chats;
   final CubitState state;
   final bool hasOwnStory;
 
@@ -18,7 +19,7 @@ class HomeState extends Equatable {
 
   HomeState copyWith({
     List<Story>? stories,
-    List<Chat>? chats,
+    List<ChatModel>? chats,
     CubitState? state,
     bool? hasOwnStory,
   }) {

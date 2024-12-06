@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 
@@ -20,7 +21,8 @@ class ChatTile extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     required this.time,
-    required this.messageStatus, required String lastSeen, // Initialize the new parameter
+    required this.messageStatus,
+    required String lastSeen, // Initialize the new parameter
   }) : super(key: key);
 
   @override
@@ -64,9 +66,7 @@ class ChatTile extends StatelessWidget {
           // Status Indicator Icon
         ],
       ),
-      leading: Avatar(
-        imageUrl: imageUrl,
-      ),
+      leading: GeneralImage(username: title, imageUrl: imageUrl),
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyMedium,

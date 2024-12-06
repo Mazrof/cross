@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/general_image.dart';
 
 class ChatGroupTile extends StatelessWidget {
   final int id;
@@ -24,9 +25,7 @@ class ChatGroupTile extends StatelessWidget {
     Color? iconColor;
 
     return ListTile(
-      leading: Avatar(
-        imageUrl: imageUrl,
-      ),
+      leading: GeneralImage(username: title, imageUrl: imageUrl),
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyMedium,

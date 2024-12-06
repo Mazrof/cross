@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/shimmer.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
@@ -71,11 +73,9 @@ class NewGroupScreen extends StatelessWidget {
                           children: [
                             Column(
                               children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(member.imageUrl),
-                                  radius: 24,
-                                ),
+                                GeneralImage(
+                                    username: member.name,
+                                    imageUrl: member.imageUrl),
                                 const SizedBox(height: 4),
                                 Text(
                                   member.name,
@@ -90,8 +90,7 @@ class NewGroupScreen extends StatelessWidget {
                               right: -5,
                               child: GestureDetector(
                                 onTap: () {
-                                  context
-                                      .read<AddMembersCubit>()
+                                 sl<AddMembersCubit>()
                                       .toggleMember(member);
                                 },
                                 child: const CircleAvatar(
@@ -126,7 +125,7 @@ class NewGroupScreen extends StatelessWidget {
                     title: member.name,
                     lastSeen: member.lastSeen,
                     onTap: () {
-                      context.read<AddMembersCubit>().toggleMember(member);
+                      sl<AddMembersCubit>().toggleMember(member);
                     },
                   );
                 },
