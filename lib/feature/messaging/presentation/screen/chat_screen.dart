@@ -104,13 +104,6 @@ class ChatScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    // const PopupMenu([
-                    //   {'icon': Icons.volume_up, 'value': 'Mute'},
-                    //   {'icon': Icons.search, 'value': 'Search'},
-                    //   {'icon': Icons.copy, 'value': 'Change Background'},
-                    //   {'icon': Icons.clear, 'value': 'Clear History'},
-                    //   {'icon': Icons.delete, 'value': 'Delete Chat'},
-                    // ]),
                   ],
                 ),
           body: Stack(
