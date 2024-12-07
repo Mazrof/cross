@@ -30,6 +30,21 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/groups/add_new_group/data/data_source/data_source.dart';
+import 'package:telegram/feature/groups/add_new_group/data/repository/create_group_imp.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/use_case/create_group_use_case.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
+import 'package:telegram/feature/groups/group_setting/data/data_source/group_setting_data_srouce.dart';
+import 'package:telegram/feature/groups/group_setting/data/repository/group_setting.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/remove_member_user.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/update_group_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/update_member_role.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/controller/group_cubit.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
 
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
@@ -72,6 +87,8 @@ import 'package:telegram/feature/settings/domainsettings/usecases/update_setting
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
+
+import '../../feature/groups/add_new_group/domain/repository/create_group_repo.dart';
 
 final sl = GetIt.instance;
 
@@ -140,7 +157,7 @@ class ServiceLocator {
     //home
     sl.registerLazySingleton(() => AddStoryCubit());
     sl.registerFactory(() => StoryViewerCubit());
-    sl.registerFactory(() => HomeCubit());
+    sl.registerLazySingleton(() => HomeCubit());
 
     // nav bar
     sl.registerLazySingleton(() => NavCubit());
@@ -173,6 +190,27 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
         ));
+
+    //groups and channels
+
+    sl.registerLazySingleton(() => AddMembersCubit(
+          sl(),
+          sl(),
+          sl(),
+        ));
+
+    sl.registerLazySingleton(() => GroupCubit(
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+        ));
+
+    sl.registerLazySingleton(() => PermisionCubit());
   }
 
   static void registerUseCases() {
@@ -215,6 +253,20 @@ class ServiceLocator {
     sl.registerLazySingleton(() => UpdateSettingsUseCase(
           sl(),
         ));
+
+    /// groups and channels
+    sl.registerLazySingleton(() => AddMembersUseCase(sl()));
+    sl.registerLazySingleton(() => CreateGroupUseCase(sl()));
+
+    //
+
+    sl.registerLazySingleton(() => RemoveMemberUseCase(sl()));
+    sl.registerLazySingleton(() => UpdateGroupDetailsUseCase(sl()));
+    sl.registerLazySingleton(() => DeleteGroupUseCase(sl()));
+    sl.registerLazySingleton(() => AddMembersUseCase(sl()));
+    sl.registerLazySingleton(() => FetchGroupDetailsUseCase(sl()));
+    sl.registerLazySingleton(() => FetchGroupMembersUseCase(sl()));
+    sl.registerLazySingleton(() => UpdateMemberRoleUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -246,6 +298,12 @@ class ServiceLocator {
     //settings
     sl.registerLazySingleton<UserSettingsRepo>(
         () => UserSettingsRepoImpl(remoteDataSource: sl()));
+
+    /// groups and channels
+    sl.registerLazySingleton<CreateGroupRepository>(
+        () => GroupRepositoryImpl(sl()));
+
+    sl.registerLazySingleton(() => GroupSettingRepositoryImpl(sl()));
   }
 
   static void registerDataSources() {
@@ -277,12 +335,20 @@ class ServiceLocator {
     sl.registerLazySingleton<UserSettingsRemoteDataSource>(
       () => UserSettingsRemoteDataSourceImpl(),
     );
+
+    //  groups and channels
+    sl.registerLazySingleton<CreateGroupDataSource>(
+        () => CreatGroupDataSourceMpl());
+
+    sl.registerLazySingleton<GroupRemoteDataSource>(
+        () => GroupRemoteDataSourceImpl(sl()));
   }
 
   static void registerSingletons() {
     sl.registerLazySingleton(() => RecaptchaService());
 
-    sl.registerSingleton<ApiService>(ApiService());
+    sl.registerSingletonAsync<ApiService>(
+        () async => await ApiService.create());
     sl.registerLazySingleton<SocketService>(() => SocketService());
     sl.registerLazySingleton<Dio>(() => Dio());
     sl.registerLazySingleton<NetworkInfo>(

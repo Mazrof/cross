@@ -18,7 +18,9 @@ class CallContactScreen extends StatelessWidget {
         },
         title: const Text(AppStrings.selectContact),
       ),
-      body: const ContactList(),
+      body: const ContactList(
+       
+      ),
     );
   }
 }

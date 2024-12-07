@@ -12,9 +12,8 @@ class CAppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username =
-        HiveCash.read(boxName: 'register_info', key: 'username') ?? 'Unknown';
-    final email =
-        HiveCash.read(boxName: 'register_info', key: 'email') ?? 'Unknown';
+        HiveCash.read(boxName: 'register_info', key: 'username') ?? '';
+    final email = HiveCash.read(boxName: 'register_info', key: 'email') ?? '';
 
     return Drawer(
       child: ListView(
@@ -43,7 +42,7 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.group,
             title: 'New Group',
             onTilePressed: () {
-              context.go(AppRouter.kNewGroup);
+              GoRouter.of(context).push(AppRouter.kNewGroup);
             },
           ),
           DrawerListTile(
@@ -55,14 +54,14 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.notifications,
             title: 'New Channel',
             onTilePressed: () {
-              context.go(AppRouter.kNewChannel);
+              GoRouter.of(context).push(AppRouter.kNewChannel);
             },
           ),
           DrawerListTile(
             iconData: Icons.person,
             title: 'Contacts',
             onTilePressed: () {
-              context.go(AppRouter.kContacts);
+              GoRouter.of(context).push(AppRouter.kContacts);
             },
           ),
           DrawerListTile(
@@ -79,7 +78,7 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.settings,
             title: 'Settings',
             onTilePressed: () {
-              context.go(AppRouter.ksettings);
+              GoRouter.of(context).push(AppRouter.ksettings);
             },
           ),
           const Divider(),

@@ -23,6 +23,7 @@ class HomeCubit extends Cubit<HomeState> {
           sender: 'John Doe',
           messageStatus: MessageStatus.delivered,
           time: '10:30 AM',
+          lastSeen: '10:30 AM',
         ),
         ChatModel(
           id: 2,
@@ -32,6 +33,7 @@ class HomeCubit extends Cubit<HomeState> {
           sender: 'Jane Smith',
           messageStatus: MessageStatus.loading,
           time: '9:15 AM',
+          lastSeen: '9:15 AM',
         ),
       ];
 

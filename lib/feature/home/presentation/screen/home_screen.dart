@@ -77,19 +77,19 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 // Chat Section
-          
+
                 // Placeholder for chat items
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-          
+
                   itemCount: state.chats.length, // Number of chats
                   itemBuilder: (context, index) {
                     final chat = state.chats[index];
                     return Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
-                        child: ChatTileWidget(
+                        child: ChatTile(
                           id: chat.id,
                           imageUrl: chat.imageUrl,
                           title: chat.name,
@@ -98,7 +98,8 @@ class HomeScreen extends StatelessWidget {
                             // Chat tap logic
                           },
                           time: chat.time,
-                          messageStatus: chat.messageStatus, // Add message status
+                          messageStatus: chat.messageStatus,
+                          lastSeen: '', // Add message status
                         ));
                   },
                 ),
@@ -194,7 +195,7 @@ class HomeContent extends StatelessWidget {
             itemCount: state.chats.length, // Number of chats
             itemBuilder: (context, index) {
               final chat = state.chats[index];
-              return ChatTileWidget(
+              return ChatTile(
                 id: chat.id,
                 imageUrl: chat.imageUrl,
                 title: chat.name,
@@ -204,7 +205,8 @@ class HomeContent extends StatelessWidget {
                   // Chat tap logic
                 },
                 time: chat.time,
-                messageStatus: chat.messageStatus, // Add message status
+                messageStatus: chat.messageStatus,
+                lastSeen: '', // Add message status
               );
             },
           ),

@@ -67,7 +67,9 @@ class ContactsScreen extends StatelessWidget {
                 ?.copyWith(color: AppColors.grey),
           ),
         ),
-        const ContactList()
+        // const ContactList(
+
+        // )
       ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryColor,
@@ -128,11 +130,14 @@ class ContactsScreen extends StatelessWidget {
                 //   ),
                 // ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Create Contact'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Create Contact'),
+                  ),
                 ),
               ],
             ),

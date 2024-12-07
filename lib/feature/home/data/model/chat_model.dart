@@ -10,6 +10,7 @@ class ChatModel extends Chat {
     required String sender,
     required MessageStatus messageStatus,
     required String time,
+    required String lastSeen,
   }) : super(
           id: id,
           name: name,
@@ -18,6 +19,7 @@ class ChatModel extends Chat {
           sender: sender,
           messageStatus: messageStatus,
           time: time,
+          lastSeen: lastSeen,
         );
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class ChatModel extends Chat {
       sender: json['sender'],
       messageStatus: MessageStatus.values[json['messageStatus']],
       time: json['time'],
+      lastSeen: json['lastSeen'],
     );
   }
 
@@ -41,6 +44,7 @@ class ChatModel extends Chat {
       'sender': sender,
       'messageStatus': messageStatus.index,
       'time': time,
+      'lastSeen': lastSeen,
     };
   }
 }

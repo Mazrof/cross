@@ -9,6 +9,14 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_screen.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/screen/group_setting_screen.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/screen/permision_screen.dart';
 
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
@@ -18,8 +26,6 @@ import 'package:telegram/feature/on_bording/presentation/screen/on_bording_scree
 import 'package:telegram/feature/auth/signup/presentation/controller/signup_cubit.dart';
 import 'package:telegram/feature/auth/signup/presentation/screen/signup_screen.dart';
 
-// import 'package:telegram/feature/auth/signup/presentation/screen/success_screen.dart';
-// import 'package:telegram/feature/auth/verfiy_mail/presentation/screen/verify_mail.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart';
 
@@ -27,7 +33,7 @@ import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart
 
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
 import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
-import 'package:telegram/feature/contacts/presentation/screen/new_group_screen.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/screens/new_group_screen.dart';
 
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/screen/preverify.dart';
@@ -45,12 +51,13 @@ import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_o
 import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
-import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_log.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/voice_call.dart';
+
+import '../../feature/groups/group_setting/presentation/controller/group_cubit.dart';
 
 class AppRouter {
   static const String kSplash = '/splash';
@@ -79,7 +86,6 @@ class AppRouter {
 
   // My Contacts Routes
   static const String kNewChannel = '/new_channel';
-  static const String kNewGroup = '/new_group';
   static const String kContacts = '/contacts';
 
   static const String kNotRobot = '/not_robot';
@@ -89,6 +95,13 @@ class AppRouter {
   static const String kvoiceCall = '/voice_call';
   static const String kcallContact = '/call_contact';
   static const String kNavBar = '/nav_bar';
+
+  //groups
+  static const String kNewGroup = '/new_group';
+  static const String kGroupInfo = '/group_info';
+  static const String kGroupSetting = '/group_setting';
+  static const String kUserPermission = '/user-permission';
+  static const String kGroupScreen = '/group_screen';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -100,6 +113,36 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     path: AppRouter.kPreVerify,
     builder: (context, state) {
       return const PreVerifyScreen();
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupScreen,
+    builder: (context, state) {
+      final groupData = state.extra as GroupsModel;
+      return GroupScreen(
+        groupData: groupData,
+      );
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kUserPermission,
+    builder: (context, state) {
+      final member = state.extra as MembershipModel;
+      return BlocProvider.value(
+          value: sl<PermisionCubit>()..addData(member),
+          child: EditPermissionsScreen(
+            member: member,
+          ));
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupSetting,
+    builder: (context, state) {
+      return BlocProvider.value(
+          value: sl<GroupCubit>()..fetchGroupDetails(1),
+          child: const GroupSettingsScreen(
+            groupId: 1,
+          ));
     },
   ),
   GoRoute(
@@ -180,7 +223,7 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
       return BlocProvider.value(
           value: sl<VerifyMailCubit>()
             ..sendVerificationMail(
-                param['method'] as String,  
+                param['method'] as String,
                 HiveCash.read(
                     boxName: "register_info", key: param['method'] as String)!),
           child: VerifyMailScreen(
@@ -213,7 +256,19 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kNewGroup,
     builder: (context, state) {
-      return const NewGroupScreen();
+      return BlocProvider.value(
+        value: sl<AddMembersCubit>()..loadMembers(),
+        child: NewGroupScreen(),
+      );
+    },
+  ),
+  GoRoute(
+    path: AppRouter.kGroupInfo,
+    builder: (context, state) {
+      return BlocProvider.value(
+        value: sl<AddMembersCubit>(),
+        child: GroupInfo(),
+      );
     },
   ),
   GoRoute(
