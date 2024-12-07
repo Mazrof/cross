@@ -12,10 +12,23 @@ class Avatar extends StatelessWidget {
       width: AppSizes.iconLg,
       height: AppSizes.iconLg,
       decoration: BoxDecoration(
-        image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.fill),
-        // color: Colors.white,
+        //if you want to add image from assets
+        image: DecorationImage(
+          image: _getImageProvider(imageUrl),
+          fit: BoxFit.fill,
+        ),
+
+        color: Colors.white,
         shape: BoxShape.circle,
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String url) {
+    if (url.startsWith('http') || url.startsWith('https')) {
+      return NetworkImage(url);
+    } else {
+      return AssetImage(url);
+    }
   }
 }

@@ -5,8 +5,8 @@ enum LoginStatusEnum {
   error,
   suspended,
   suspendedComplete,
+  idle,
 }
-
 
 enum CubitState {
   initial,
@@ -14,3 +14,5 @@ enum CubitState {
   success,
   failure,
 }
+
+enum MessageStatus { loading, sent, delivered, read }

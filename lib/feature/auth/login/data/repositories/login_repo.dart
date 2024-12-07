@@ -11,10 +11,13 @@ class LoginRepositoryImpl implements LoginRepository {
   LoginRepositoryImpl({required this.loginRemoteDataSource});
 
   @override
-  Future<Either<Failure, Unit>> login(
-      {required LoginRequestBody loginModel}) async {
-    await loginRemoteDataSource.login(loginModel: loginModel);
-    return const Right(unit);
+  Future<Either<Failure, bool>> login(LoginRequestBody loginModel) async {
+    try {
+      return Right(await loginRemoteDataSource.login(loginModel));
+
+    } catch (e) {
+      return Left(ServerFailure(message:e.toString()));
+    }
   }
 
   @override
@@ -22,7 +25,7 @@ class LoginRepositoryImpl implements LoginRepository {
     try {
       return Right(await loginRemoteDataSource.signInWithGoogle());
     } catch (e) {
-      return Left(ServerFailure(message: e as String));
+      return Left(ServerFailure(message:e.toString()));
     }
   }
 
@@ -31,7 +34,7 @@ class LoginRepositoryImpl implements LoginRepository {
     try {
       return Right(await loginRemoteDataSource.signInWithGithub(context));
     } catch (e) {
-      return Left(ServerFailure(message: e as String));
+      return Left(ServerFailure(message:e.toString()));
     }
   }
 }

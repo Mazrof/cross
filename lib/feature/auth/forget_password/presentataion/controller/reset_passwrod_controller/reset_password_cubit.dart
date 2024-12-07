@@ -33,12 +33,14 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   final formKey = GlobalKey<FormState>();
 
   void togglePasswordVisibility() {
-    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
+    emit(state.copyWith(
+        isPasswordVisible: !state.isPasswordVisible, errorMessage: ''));
   }
 
   void toggleConfirmPasswordVisibility() {
     emit(state.copyWith(
-        isConfirmPasswordVisible: !state.isConfirmPasswordVisible));
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible,
+        errorMessage: ''));
   }
 
   void resetPassword() async {
@@ -49,7 +51,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
             errorMessage: 'Password and confirm password does not match'));
         return;
       }
-      emit(state.copyWith(state: CubitState.loading));
+      emit(state.copyWith(state: CubitState.loading, errorMessage: ''));
       final response = await networkManager.isConnected();
       if (response) {
         final result = await resetPasswordUsecase(
@@ -60,15 +62,12 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
                 state: CubitState.failure,
                 errorMessage: failure.message)), (success) {
           logOutUseCase();
-          emit(state.copyWith(state: CubitState.success));
+          emit(state.copyWith(state: CubitState.success, errorMessage: ''));
         });
-      }
-      else 
-      {
+      } else {
         emit(state.copyWith(
-            state: CubitState.failure,
-            errorMessage: 'No Internet Connection'));
-      } 
+            state: CubitState.failure, errorMessage: 'No Internet Connection'));
+      }
     }
   }
 

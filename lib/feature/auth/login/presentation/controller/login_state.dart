@@ -11,7 +11,7 @@ class LoginState extends Equatable {
 
   const LoginState({
     this.state = LoginStatusEnum.init,
-    this.error,
+    this.error='',
     this.rememberMe = false,
     this.obscureText = true,
     this.remainingAttempts = 3,

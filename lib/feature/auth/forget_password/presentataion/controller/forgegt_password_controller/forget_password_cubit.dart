@@ -28,14 +28,19 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
   void sendResetLink() async {
     if (appValidator.isFormValid(formKey)) {
       emit(state.copyWith(
-          status: CubitState.loading, email: emailController.text));
+          status: CubitState.loading, email: emailController.text, errorMessage: ''));
       final response = await networkManager.isConnected();
       if (response) {
+        print('Email: ${emailController.text}');
         final result = await forgetPasswordUseCase(emailController.text);
         result.fold(
-          (failure) => emit(state.copyWith(
-              status: CubitState.failure, errorMessage: failure.message)),
-          (success) => emit(state.copyWith(status: CubitState.success)),
+          (failure) {
+            print('Error: ${failure.message}');
+            emit(state.copyWith(
+                status: CubitState.failure,
+                errorMessage: failure.message));
+          },
+          (success) => emit(state.copyWith(status: CubitState.success, errorMessage: '')),
         );
       } else {
         emit(state.copyWith(

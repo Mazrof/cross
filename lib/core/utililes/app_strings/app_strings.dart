@@ -165,6 +165,17 @@ class AppStrings {
   static const String deleteAllCalls = "Delete All Calls";
 
 
+  //home
+  static const String search = 'Search';
+  static const String weSentYouAnSms =
+      'Please Enter code we sent you on your phone';
+
+  //cache
+  static const String cacheError = 'Cache Error';
+  static const String refreshToken = 'refreshToken';
+
+
+
 
   /// Dashboard
   static const String dashboard = 'Dashboard';

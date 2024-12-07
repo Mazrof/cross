@@ -6,6 +6,7 @@ import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/csocial_icons.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
@@ -25,11 +26,17 @@ class LoginScreen extends StatelessWidget {
       builder: (context, state) {
         if (state.state == LoginStatusEnum.loading) {
           return const LogoLoader();
+        
         } else if (state.state == LoginStatusEnum.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go(AppRouter.kHome);
+            if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
+                'user') {
+               GoRouter.of(context).push(AppRouter.kHome);
+            } else {
+             GoRouter.of(context).push(AppRouter.kNavBar);
+            }
           });
-          return const LogoLoader();
+          
         } else if (state.state == LoginStatusEnum.error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.error!);

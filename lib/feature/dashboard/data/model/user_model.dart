@@ -3,12 +3,12 @@ import 'package:telegram/feature/dashboard/domain/entity/user.dart';
 class UserModel extends User {
   UserModel({
     required String id,
-    required String username,
-    required bool status,
-    required String email,
-    required String bio,
-    required bool activeNow,
-    required String phone,
+    String? username,
+    bool? status,
+    String? email,
+    String? bio,
+    bool? activeNow,
+    String? phone,
   }) : super(
           id: id,
           username: username,
@@ -22,12 +22,12 @@ class UserModel extends User {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'].toString(),
-      username: json['username'] as String,
-      status: json['status'] as bool,
-      email: json['email'] as String,
-      bio: json['bio'] as String,
-      activeNow: json['activeNow'] as bool,
-      phone: json['phone'] as String,
+      username: json['username'] as String?,
+      status: json['status'] as bool?,
+      email: json['email'] as String?,
+      bio: json['bio'] as String?,
+      activeNow: json['activeNow'] as bool?,
+      phone: json['phone'] as String?,
     );
   }
 

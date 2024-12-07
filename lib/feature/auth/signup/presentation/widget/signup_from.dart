@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
@@ -23,59 +21,30 @@ class SignUpForm extends StatelessWidget {
       key: signupController.formKey,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall, // Set the text style here
-                  key: signupController.firstNameKey,
-                  controller: signupController.firstNameController,
-                  decoration: InputDecoration(
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .apply(color: AppColors.grey),
-                    hintText: AppStrings.enterYourFirstName,
-                    labelText: AppStrings.firstName,
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(width: AppSizes.md),
-              Expanded(
-                child: TextFormField(
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall, // Set the text style here
-                  key: signupController.lastNameKey,
-                  controller: signupController.lastNameController,
-                  decoration: InputDecoration(
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .apply(color: AppColors.grey),
-                    hintText: AppStrings.enterYourLastName,
-                    labelText: AppStrings.lastName,
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ],
+          TextFormField(
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall, // Set the text style here
+            key: signupController.usernameKey,
+            controller: signupController.usernameController,
+            decoration: InputDecoration(
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .apply(color: AppColors.grey),
+              hintText: AppStrings.username,
+              labelText: AppStrings.username,
+              prefixIcon: const Icon(Iconsax.user),
+            ),
+            validator:
+
+                // validate username
+                (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your username';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSizes.spaceBetweenInputField),
           TextFormField(
@@ -216,10 +185,9 @@ class SignUpForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                context.go(AppRouter.kNotRobot);
-                // if (signupController.formKey.currentState!.validate()) {
-                //   signupController.signUp();
-                // }
+                if (signupController.formKey.currentState!.validate()==true) {
+                  signupController.signUp();
+                }
               },
               child: const Text(AppStrings.signUp),
             ),

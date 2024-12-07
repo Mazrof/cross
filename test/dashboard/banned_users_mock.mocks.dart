@@ -5,22 +5,18 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i2;
 
-import 'package:connectivity_plus/connectivity_plus.dart' as _i7;
+import 'package:connectivity_plus/connectivity_plus.dart' as _i6;
 import 'package:dartz/dartz.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:telegram/core/error/faliure.dart' as _i9;
-import 'package:telegram/core/network/network_manager.dart' as _i6;
-import 'package:telegram/feature/dashboard/data/model/user_model.dart' as _i10;
-import 'package:telegram/feature/dashboard/domain/repository/dashboard_local_repo.dart'
-    as _i5;
+import 'package:telegram/core/error/faliure.dart' as _i8;
+import 'package:telegram/core/network/network_manager.dart' as _i5;
+import 'package:telegram/feature/dashboard/data/model/user_model.dart' as _i9;
 import 'package:telegram/feature/dashboard/domain/repository/dashboard_repo.dart'
     as _i3;
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart'
-    as _i12;
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart'
-    as _i8;
+    as _i7;
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/unban_user.dart'
-    as _i11;
+    as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -66,33 +62,22 @@ class _FakeEither_2<L, R> extends _i1.SmartFake implements _i4.Either<L, R> {
         );
 }
 
-class _FakeDashboardLocalRepo_3 extends _i1.SmartFake
-    implements _i5.DashboardLocalRepo {
-  _FakeDashboardLocalRepo_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [NetworkManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkManager extends _i1.Mock implements _i6.NetworkManager {
+class MockNetworkManager extends _i1.Mock implements _i5.NetworkManager {
   MockNetworkManager() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.ConnectivityResult get connectionStatus => (super.noSuchMethod(
+  _i6.ConnectivityResult get connectionStatus => (super.noSuchMethod(
         Invocation.getter(#connectionStatus),
-        returnValue: _i7.ConnectivityResult.bluetooth,
-      ) as _i7.ConnectivityResult);
+        returnValue: _i6.ConnectivityResult.bluetooth,
+      ) as _i6.ConnectivityResult);
 
   @override
-  set connectionStatus(_i7.ConnectivityResult? _connectionStatus) =>
+  set connectionStatus(_i6.ConnectivityResult? _connectionStatus) =>
       super.noSuchMethod(
         Invocation.setter(
           #connectionStatus,
@@ -102,19 +87,19 @@ class MockNetworkManager extends _i1.Mock implements _i6.NetworkManager {
       );
 
   @override
-  _i2.StreamSubscription<List<_i7.ConnectivityResult>>
+  _i2.StreamSubscription<List<_i6.ConnectivityResult>>
       get connectivitySubscription => (super.noSuchMethod(
             Invocation.getter(#connectivitySubscription),
             returnValue:
-                _FakeStreamSubscription_0<List<_i7.ConnectivityResult>>(
+                _FakeStreamSubscription_0<List<_i6.ConnectivityResult>>(
               this,
               Invocation.getter(#connectivitySubscription),
             ),
-          ) as _i2.StreamSubscription<List<_i7.ConnectivityResult>>);
+          ) as _i2.StreamSubscription<List<_i6.ConnectivityResult>>);
 
   @override
   set connectivitySubscription(
-          _i2.StreamSubscription<List<_i7.ConnectivityResult>>?
+          _i2.StreamSubscription<List<_i6.ConnectivityResult>>?
               _connectivitySubscription) =>
       super.noSuchMethod(
         Invocation.setter(
@@ -125,11 +110,11 @@ class MockNetworkManager extends _i1.Mock implements _i6.NetworkManager {
       );
 
   @override
-  _i2.Stream<_i7.ConnectivityResult> get connectionStatusStream =>
+  _i2.Stream<_i6.ConnectivityResult> get connectionStatusStream =>
       (super.noSuchMethod(
         Invocation.getter(#connectionStatusStream),
-        returnValue: _i2.Stream<_i7.ConnectivityResult>.empty(),
-      ) as _i2.Stream<_i7.ConnectivityResult>);
+        returnValue: _i2.Stream<_i6.ConnectivityResult>.empty(),
+      ) as _i2.Stream<_i6.ConnectivityResult>);
 
   @override
   _i2.Future<bool> isConnected() => (super.noSuchMethod(
@@ -153,7 +138,7 @@ class MockNetworkManager extends _i1.Mock implements _i6.NetworkManager {
 /// A class which mocks [GetUsersUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetUsersUseCase extends _i1.Mock implements _i8.GetUsersUseCase {
+class MockGetUsersUseCase extends _i1.Mock implements _i7.GetUsersUseCase {
   MockGetUsersUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -168,28 +153,28 @@ class MockGetUsersUseCase extends _i1.Mock implements _i8.GetUsersUseCase {
       ) as _i3.DashboardRepo);
 
   @override
-  _i2.Future<_i4.Either<_i9.Failure, List<_i10.UserModel>>> call() =>
+  _i2.Future<_i4.Either<_i8.Failure, List<_i9.UserModel>>> call() =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
         returnValue:
-            _i2.Future<_i4.Either<_i9.Failure, List<_i10.UserModel>>>.value(
-                _FakeEither_2<_i9.Failure, List<_i10.UserModel>>(
+            _i2.Future<_i4.Either<_i8.Failure, List<_i9.UserModel>>>.value(
+                _FakeEither_2<_i8.Failure, List<_i9.UserModel>>(
           this,
           Invocation.method(
             #call,
             [],
           ),
         )),
-      ) as _i2.Future<_i4.Either<_i9.Failure, List<_i10.UserModel>>>);
+      ) as _i2.Future<_i4.Either<_i8.Failure, List<_i9.UserModel>>>);
 }
 
 /// A class which mocks [UnBanUserUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUnBanUserUseCase extends _i1.Mock implements _i11.UnBanUserUseCase {
+class MockUnBanUserUseCase extends _i1.Mock implements _i10.UnBanUserUseCase {
   MockUnBanUserUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -204,47 +189,19 @@ class MockUnBanUserUseCase extends _i1.Mock implements _i11.UnBanUserUseCase {
       ) as _i3.DashboardRepo);
 
   @override
-  _i2.Future<_i4.Either<_i9.Failure, bool>> call(String? userID) =>
+  _i2.Future<_i4.Either<_i8.Failure, bool>> call(String? userID) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [userID],
         ),
-        returnValue: _i2.Future<_i4.Either<_i9.Failure, bool>>.value(
-            _FakeEither_2<_i9.Failure, bool>(
+        returnValue: _i2.Future<_i4.Either<_i8.Failure, bool>>.value(
+            _FakeEither_2<_i8.Failure, bool>(
           this,
           Invocation.method(
             #call,
             [userID],
           ),
         )),
-      ) as _i2.Future<_i4.Either<_i9.Failure, bool>>);
-}
-
-/// A class which mocks [GetUsersLocalUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetUsersLocalUseCase extends _i1.Mock
-    implements _i12.GetUsersLocalUseCase {
-  MockGetUsersLocalUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i5.DashboardLocalRepo get repository => (super.noSuchMethod(
-        Invocation.getter(#repository),
-        returnValue: _FakeDashboardLocalRepo_3(
-          this,
-          Invocation.getter(#repository),
-        ),
-      ) as _i5.DashboardLocalRepo);
-
-  @override
-  _i2.Future<List<_i10.UserModel>> call() => (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [],
-        ),
-        returnValue: _i2.Future<List<_i10.UserModel>>.value(<_i10.UserModel>[]),
-      ) as _i2.Future<List<_i10.UserModel>>);
+      ) as _i2.Future<_i4.Either<_i8.Failure, bool>>);
 }

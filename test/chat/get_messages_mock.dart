@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 
 import 'get_messages_mock.mocks.dart';
+
 
 @GenerateMocks([ApiService])
 void main() {
@@ -20,7 +20,7 @@ void main() {
     // Arrange
     when(mockApiService.get(
             endPoint: '${AppStrings.serverUrl}/messages',
-            token: anyNamed('token')))
+            ))
         .thenAnswer(
       (_) async => Response(
         data: {

@@ -9,7 +9,7 @@ class ResetPasswordState extends Equatable {
 
   const ResetPasswordState({
     this.state = CubitState.initial,
-    this.errorMessage,
+    this.errorMessage='',
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
   });

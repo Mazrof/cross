@@ -9,7 +9,6 @@ import 'package:connectivity_plus/connectivity_plus.dart' as _i10;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:flutter/material.dart' as _i12;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i14;
 import 'package:telegram/core/error/faliure.dart' as _i6;
 import 'package:telegram/core/network/network_manager.dart' as _i9;
 import 'package:telegram/core/validator/app_validator.dart' as _i11;
@@ -18,7 +17,7 @@ import 'package:telegram/feature/auth/signup/data/model/sign_up_body_model.dart'
 import 'package:telegram/feature/auth/signup/domain/repositories/sign_up_repo.dart'
     as _i2;
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart'
-    as _i15;
+    as _i14;
 import 'package:telegram/feature/auth/signup/domain/use_cases/register_use_case.dart'
     as _i5;
 import 'package:telegram/feature/auth/signup/domain/use_cases/save_register_info_use_case.dart'
@@ -254,15 +253,6 @@ class MockRecaptchaService extends _i1.Mock implements _i13.RecaptchaService {
   }
 
   @override
-  String get siteKey => (super.noSuchMethod(
-        Invocation.getter(#siteKey),
-        returnValue: _i14.dummyValue<String>(
-          this,
-          Invocation.getter(#siteKey),
-        ),
-      ) as String);
-
-  @override
   _i4.Future<bool> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
@@ -294,7 +284,7 @@ class MockRecaptchaService extends _i1.Mock implements _i13.RecaptchaService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCheckRecaptchaTocken extends _i1.Mock
-    implements _i15.CheckRecaptchaTocken {
+    implements _i14.CheckRecaptchaTocken {
   MockCheckRecaptchaTocken() {
     _i1.throwOnMissingStub(this);
   }

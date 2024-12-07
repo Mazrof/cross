@@ -1,25 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+class CAppDrawer extends StatelessWidget {
+  const CAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final username =
+        HiveCash.read(boxName: 'register_info', key: 'username') ?? 'Unknown';
+    final email =
+        HiveCash.read(boxName: 'register_info', key: 'email') ?? 'Unknown';
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const UserAccountsDrawerHeader(
-            accountName: Text('Your Name'),
-            accountEmail: Text('your.email@example.com'),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('assets/your_profile_picture.png'),
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
             ),
+            accountName: Text(
+              username,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.whiteColor,
+                  ),
+            ),
+            accountEmail: Text(
+              email,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.whiteColor,
+                  ),
+            ),
+            currentAccountPicture:
+                Avatar(imageUrl: AppAssetsStrings.general_person),
           ),
           DrawerListTile(
             iconData: Icons.group,
             title: 'New Group',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kNewGroup);
+            },
           ),
           DrawerListTile(
             iconData: Icons.lock,
@@ -29,12 +54,16 @@ class AppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.notifications,
             title: 'New Channel',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kNewChannel);
+            },
           ),
           DrawerListTile(
             iconData: Icons.person,
             title: 'Contacts',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kContacts);
+            },
           ),
           DrawerListTile(
             iconData: Icons.phone,
@@ -49,7 +78,9 @@ class AppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.settings,
             title: 'Settings',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.ksettings);
+            },
           ),
           const Divider(),
           DrawerListTile(

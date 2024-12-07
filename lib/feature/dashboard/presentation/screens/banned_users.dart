@@ -60,37 +60,42 @@ class BanneUsersPage extends StatelessWidget {
               child: Text(user.id),
             ),
             title: Text(
-              user.username,
+              user.username ?? 'Unknown',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Email: ${user.email} ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey.withOpacity(0.7))),
-                Text('Bio: ${user.bio}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey.withOpacity(0.7))),
-                Text('Phone: ${user.phone}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: AppColors.grey.withOpacity(0.7))),
+                if (user.email != null)
+                  Text('Email: ${user.email} ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey.withOpacity(0.7))),
+                if (user.bio != null)
+                  Text('Bio: ${user.bio}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey.withOpacity(0.7))),
+                if (user.phone != null)
+                  Text('Phone: ${user.phone}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColors.grey.withOpacity(0.7))),
                 Row(
                   children: [
                     Icon(
-                      user.activeNow ? Icons.circle : Icons.circle_outlined,
-                      color: user.activeNow ? Colors.green : Colors.red,
+                      user.activeNow == true
+                          ? Icons.circle
+                          : Icons.circle_outlined,
+                      color: user.activeNow == true ? Colors.green : Colors.red,
                       size: 12,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      user.activeNow ? 'Active Now' : 'Inactive',
+                      user.activeNow == true ? 'Active Now' : 'Inactive',
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall!
@@ -110,7 +115,8 @@ class BanneUsersPage extends StatelessWidget {
                 Future<bool> result = sl<BannedUsersCubit>().unbanUser(user.id);
                 if (await result) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('User ${user.username} unbanned',
+                      content: Text(
+                          'User ${user.username ?? 'Unknown'} unbanned',
                           style: Theme.of(context).textTheme.bodySmall),
                       backgroundColor: AppColors.primaryColor.withOpacity(.5)));
                 }

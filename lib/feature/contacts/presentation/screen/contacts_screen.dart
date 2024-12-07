@@ -16,7 +16,9 @@ class ContactsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CAppBar(
-          onLeadingTap: () {},
+          onLeadingTap: () {
+            context.go(AppRouter.kHome);
+          },
           showBackButton: true,
           title: const Text(
             "Contacts",

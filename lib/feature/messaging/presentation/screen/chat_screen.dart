@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cinput_bar.dart';
@@ -12,6 +14,7 @@ import 'package:telegram/feature/messaging/presentation/widget/message_list.dart
 import 'package:telegram/feature/messaging/presentation/widget/reciever_details.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
@@ -30,7 +33,14 @@ class ChatScreen extends StatelessWidget {
         return Scaffold(
           appBar: state.selectionState == false && state.editingState == false
               ? CAppBar(
-                  onLeadingTap: () {},
+                  onLeadingTap: () {
+                    context.go(AppRouter.kHome);
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) {
+                        context.read<ChatCubit>().close();
+                      },
+                    );
+                  },
                   title: const RecieverDetails(
                     userName: "Kiro",
                     state: AppStrings.waitingInternet,

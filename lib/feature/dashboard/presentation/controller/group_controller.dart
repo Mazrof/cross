@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_groups.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_groups.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/apply_filter.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/group_state.dart';
@@ -11,15 +9,12 @@ class GroupsCubit extends Cubit<GroupsState> {
   GroupsCubit(
       {required this.getGroupsUseCase,
       required this.networkManager,
-      required this.saveGroupsUseCase,
-      required this.getGroupLocalUseCase,
       required this.applyFilterUseCase})
       : super(GroupsState(groups: []));
 
   GetGroupsUseCase getGroupsUseCase;
   NetworkManager networkManager;
-  SaveGroupsUseCase saveGroupsUseCase;
-  GetGroupLocalUseCase getGroupLocalUseCase;
+ 
   ApplyFilterUseCase applyFilterUseCase;
 
   void fetchGroups() async {
@@ -30,8 +25,10 @@ class GroupsCubit extends Cubit<GroupsState> {
         emit(state.copyWith(currState: CubitState.success, errorMessage: null));
         return;
       }
+      print('fetchGroups');
 
       final result = await getGroupsUseCase.call();
+      print(result);
 
       result.fold(
         (failure) {
@@ -39,7 +36,7 @@ class GroupsCubit extends Cubit<GroupsState> {
               currState: CubitState.failure, errorMessage: failure.message));
         },
         (groups) {
-          saveGroupsUseCase.call(groups);
+          // saveGroupsUseCase.call(groups);
           //sort groups from the sorted to unfiltered
           groups.sort((a, b) => a.hasFilter ? 1 : -1);
 
@@ -72,7 +69,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         (failure) {
           emit(state.copyWith(
               currState: CubitState.failure, errorMessage: failure.message));
-              return false;
+          return false;
         },
         (success) {
           fetchGroups();

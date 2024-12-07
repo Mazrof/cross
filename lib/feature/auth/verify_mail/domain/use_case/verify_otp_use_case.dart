@@ -12,10 +12,10 @@ class VerifyOtpUseCase extends BaseUseCase <void, VerifyMailData> {
   );
 
   @override
-  Future<Either<Failure, void>> call(param) async {
+  Future<Either<Failure, bool>> call(param) async {
     try {
-      await verifyMailBaseRepository.verifyOtp(param);
-      return Right(null);
+      return await verifyMailBaseRepository.verifyOtp(param);
+      
     } catch (e) {
       return Left(e as Failure);
     }

@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:telegram/core/error/internet_check.dart';
 import 'package:telegram/core/local/cache_helper.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
 
@@ -29,17 +30,15 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
+import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
+import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
+
 import 'package:telegram/feature/bottom_nav/presentaion/controller/nav_controller.dart';
-import 'package:telegram/feature/dashboard/data/data_source/local_data_source/dashboard_data_source.dart';
 import 'package:telegram/feature/dashboard/data/data_source/remote_data_source/dashboard_data_source.dart';
-import 'package:telegram/feature/dashboard/data/repository/dashboard_local_repo.dart';
 import 'package:telegram/feature/dashboard/data/repository/dashboard_remote_repo.dart';
-import 'package:telegram/feature/dashboard/domain/repository/dashboard_local_repo.dart';
 import 'package:telegram/feature/dashboard/domain/repository/dashboard_repo.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_groups.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_groups.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/apply_filter.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/ban_user.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_groups.dart';
@@ -65,7 +64,12 @@ import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_r
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
-
+import 'package:telegram/feature/settings/datasettings/datasource/remotedata/user_settings_remote_data_source.dart';
+import 'package:telegram/feature/settings/datasettings/repos/user_settings_repo_impl.dart';
+import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/fetch_settings_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/update_settings_use_case.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
@@ -74,7 +78,8 @@ final sl = GetIt.instance;
 class ServiceLocator {
   static void init() {
     CacheHelper.init();
-    
+    HiveCash.init();
+
     registerSingletons();
     registerDataSources();
     registerRepositories();
@@ -132,6 +137,11 @@ class ServiceLocator {
           forgetPasswordUseCase: sl(),
         ));
 
+    //home
+    sl.registerLazySingleton(() => AddStoryCubit());
+    sl.registerFactory(() => StoryViewerCubit());
+    sl.registerFactory(() => HomeCubit());
+
     // nav bar
     sl.registerLazySingleton(() => NavCubit());
 
@@ -140,28 +150,29 @@ class ServiceLocator {
           networkManager: sl(),
           getUsersUseCase: sl(),
           banUserUseCase: sl(),
-          getUsersLocalUseCase: sl(),
-          saveUsersUseCase: sl(),
-
-         
-    ));
+        ));
 
     // banned users cubit
     sl.registerLazySingleton(() => BannedUsersCubit(
-          getUsersLocalUseCase: sl(),
           getUsersUseCase: sl(),
           unBanUserUseCase: sl(),
           networkManager: sl(),
-    ));
+        ));
 
     // group cubit
     sl.registerLazySingleton(() => GroupsCubit(
           networkManager: sl(),
           getGroupsUseCase: sl(),
           applyFilterUseCase: sl(),
-          getGroupLocalUseCase: sl(),
-          saveGroupsUseCase: sl(),
-    ));
+        ));
+
+    //settings
+    sl.registerLazySingleton(() => UserSettingsCubit(
+          fetchSettingsUseCase: sl(),
+          updateSettingsUseCase: sl(),
+          appValidator: sl(),
+          networkManager: sl(),
+        ));
   }
 
   static void registerUseCases() {
@@ -197,11 +208,13 @@ class ServiceLocator {
     sl.registerLazySingleton(() => UnBanUserUseCase(sl()));
     sl.registerLazySingleton(() => ApplyFilterUseCase(sl()));
 
-    //local dashboard
-    sl.registerLazySingleton(() => GetGroupLocalUseCase(sl()));
-    sl.registerLazySingleton(() => SaveGroupsUseCase(sl()));
-    sl.registerLazySingleton(() => SaveUsersUseCase(sl()));
-    sl.registerLazySingleton(() => GetUsersLocalUseCase(sl()));
+    //settings
+    sl.registerLazySingleton(() => FetchSettingsUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => UpdateSettingsUseCase(
+          sl(),
+        ));
   }
 
   static void registerRepositories() {
@@ -224,11 +237,15 @@ class ServiceLocator {
         ForgetPasswordRepositoryImpl(forgetPasswordRemoteDataSource: sl()));
 
     //dashboard
-    sl.registerLazySingleton<DashboardLocalRepo>(() => DashboardLocalRepoImpl(
-          localDataSource: sl(),
-        ));
+    // sl.registerLazySingleton<DashboardLocalRepo>(() => DashboardLocalRepoImpl(
+    //       localDataSource: sl(),
+    //     ));
     sl.registerLazySingleton<DashboardRepo>(
         () => DashboardRemoteRepoImpl(dataSource: sl()));
+
+    //settings
+    sl.registerLazySingleton<UserSettingsRepo>(
+        () => UserSettingsRepoImpl(remoteDataSource: sl()));
   }
 
   static void registerDataSources() {
@@ -238,9 +255,7 @@ class ServiceLocator {
 
     //signup
     sl.registerLazySingleton<SignUpRemoteDataSource>(
-        () => SignUpRemoteDataSourceImp(
-              apiService: sl(),
-            ));
+        () => SignUpRemoteDataSourceImp());
 
     sl.registerLazySingleton<SignUpLocalDataSource>(
         () => SignUpLocalDataSourceImp());
@@ -254,10 +269,14 @@ class ServiceLocator {
         () => ForgetPasswordDataSourceImp(sl()));
 
     //dashboard
-    sl.registerLazySingleton<DashboardLocalDataSource>(
-        () => DashboardLocalDataSourceImpl());
+    // sl.registerLazySingleton<DashboardLocalDataSource>(
+    //     () => DashboardLocalDataSourceImpl());
     sl.registerLazySingleton<DashboardDataSource>(
         () => DashboardDataSourceImpl());
+    //settings
+    sl.registerLazySingleton<UserSettingsRemoteDataSource>(
+      () => UserSettingsRemoteDataSourceImpl(),
+    );
   }
 
   static void registerSingletons() {
@@ -271,6 +290,7 @@ class ServiceLocator {
 
     sl.registerLazySingleton<InternetConnectionChecker>(
         () => InternetConnectionChecker());
+
     sl.registerLazySingleton<NetworkManager>(() => (NetworkManager()));
     sl.registerLazySingleton<AppValidator>(() => AppValidator());
   }

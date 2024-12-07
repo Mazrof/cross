@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/data/model/user_model.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/save_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/ban_user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/user_state.dart';
@@ -12,15 +9,13 @@ class UsersCubit extends Cubit<UsersState> {
   final NetworkManager networkManager;
   final GetUsersUseCase getUsersUseCase;
   final BanUserUseCase banUserUseCase;
-  final GetUsersLocalUseCase getUsersLocalUseCase;
-  final SaveUsersUseCase saveUsersUseCase;
+ 
 
   UsersCubit({
     required this.networkManager,
     required this.getUsersUseCase,
     required this.banUserUseCase,
-    required this.getUsersLocalUseCase,
-    required this.saveUsersUseCase,
+    
   }) : super(UsersState(users: []));
 
   void fetchUsers() async {
@@ -41,8 +36,8 @@ class UsersCubit extends Cubit<UsersState> {
               currState: CubitState.failure, errorMessage: failure.message));
         },
         (users) {
-          saveUsersUseCase.call(users);
-          users = users.where((user) => user.status).toList();
+         
+          users = users.where((user) => user.status!).toList();
           emit(state.copyWith(
               users: users, currState: CubitState.success, errorMessage: null));
         },

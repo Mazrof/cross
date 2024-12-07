@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 
-
 abstract class Failure extends Equatable {
   final String message;
 
@@ -17,9 +16,7 @@ class DataBaseFailure extends Failure {
 }
 
 class ServerFailure extends Failure {
-
-
-  const ServerFailure( {required super.message});
+  const ServerFailure({required super.message});
   factory ServerFailure.fromDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -49,8 +46,8 @@ class ServerFailure extends Failure {
   }
   factory ServerFailure.fromDioResponse(int statusCode, dynamic response) {
     if (statusCode == 404 || statusCode == 400) {
-      return const ServerFailure(
-        message: AppStrings.badResponseMessage,
+      return ServerFailure(
+        message: response['message'] ?? AppStrings.badResponseMessage,
       );
     } else if (statusCode == 500) {
       return const ServerFailure(
@@ -58,9 +55,14 @@ class ServerFailure extends Failure {
       );
     } else if (statusCode == 401) {
       return const ServerFailure(
-         message: AppStrings.errorUnauthorized,
+        message: AppStrings.errorUnauthorized,
       );
     }
-    return const ServerFailure(message: AppStrings.badResponseMessage);
+    return ServerFailure(
+      message: response['message'] ?? AppStrings.badResponseMessage,
+    );
   }
+
+  @override
+  String toString() => message;
 }

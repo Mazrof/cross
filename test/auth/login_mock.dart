@@ -65,7 +65,7 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [loading, success] when login is successful',
       build: () {
-        when(mockLoginUseCase.call(any)).thenAnswer((_) async => Right(unit));
+        when(mockLoginUseCase.call(any)).thenAnswer((_) async => Right(true));
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
         when(mockAppValidator.isFormValid(any)).thenReturn(true);
 
@@ -88,7 +88,8 @@ void main() {
       'emits [loading, error] when login fails',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
-          (_) async => Left(ServerFailure(message: 'Invalid credentials')),
+          (_) async =>
+              Left(ServerFailure(message: 'Invalid email or password')),
         );
 
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
@@ -107,7 +108,7 @@ void main() {
         const LoginState(state: LoginStatusEnum.loading),
         const LoginState(
           state: LoginStatusEnum.error,
-          error: 'Invalid credentials',
+          error: 'Invalid email or password',
           remainingAttempts: 2,
         ),
       ],
@@ -120,7 +121,8 @@ void main() {
       'emits [loading, suspended] when login fails three times',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
-          (_) async => Left(ServerFailure(message: 'Invalid credentials')),
+          (_) async =>
+              Left(ServerFailure(message: 'Invalid email or password')),
         );
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => true);
         when(mockAppValidator.isFormValid(any)).thenReturn(true);
@@ -141,27 +143,27 @@ void main() {
         const LoginState(state: LoginStatusEnum.loading),
         const LoginState(
           state: LoginStatusEnum.error,
-          error: 'Invalid credentials',
+          error: 'Invalid email or password',
           remainingAttempts: 2,
         ),
         const LoginState(
           state: LoginStatusEnum.loading,
-          error: 'Invalid credentials',
+          error: "",
           remainingAttempts: 2,
         ),
         const LoginState(
           state: LoginStatusEnum.error,
-          error: 'Invalid credentials',
+          error: 'Invalid email or password',
           remainingAttempts: 1,
         ),
         const LoginState(
           state: LoginStatusEnum.loading,
-          error: 'Invalid credentials',
+          error: '',
           remainingAttempts: 1,
         ),
         const LoginState(
           state: LoginStatusEnum.suspended,
-          error: 'Invalid credentials',
+          error: 'You have reached the maximum number of attempts',
           remainingAttempts: 0,
         ),
       ],
@@ -171,7 +173,8 @@ void main() {
       'emits [loading, error] when no internet connection',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
-          (_) async => Left(ServerFailure(message: 'Invalid credentials')),
+          (_) async =>
+              Left(ServerFailure(message: 'Invalid email or password')),
         );
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => false);
         when(mockAppValidator.isFormValid(any)).thenReturn(true);
@@ -197,7 +200,8 @@ void main() {
       'emits [error] when form validation fails',
       build: () {
         when(mockLoginUseCase.call(any)).thenAnswer(
-          (_) async => Left(ServerFailure(message: 'Invalid credentials')),
+          (_) async =>
+              Left(ServerFailure(message: 'Invalid email or password')),
         );
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => false);
         when(mockAppValidator.isFormValid(any)).thenReturn(false);
