@@ -189,7 +189,7 @@ class ChatCubit extends Cubit<ChatState> {
           Message(
             id: message["id"],
             isDate: false,
-            sender: "01",
+            sender: message['senderId'].toString(),
             content: message["content"],
             time: formatter.format(dateTime),
             isGIF: false,

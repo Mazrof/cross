@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/widget/cmessage_widget.dart';
@@ -26,10 +27,12 @@ class MessageList extends StatelessWidget {
             } else {
               return ChatMessage(
                 message: messages[i].content,
-                isSender: true,
+                isSender: messages[i].sender ==
+                    HiveCash.read(boxName: 'register_info', key: 'id')
+                        .toString(),
                 time: messages[i].time,
                 index: i,
-                id: messages[i].id != null ? messages[i].id : -1,
+                id: messages[i].id,
                 isGIF: messages[i].isGIF,
               );
             }

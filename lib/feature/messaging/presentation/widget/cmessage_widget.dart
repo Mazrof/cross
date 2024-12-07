@@ -46,7 +46,8 @@ class ChatMessage extends StatelessWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment:
+          isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         GestureDetector(
           onLongPress: () {

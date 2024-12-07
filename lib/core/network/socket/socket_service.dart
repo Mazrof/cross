@@ -44,11 +44,11 @@ class SocketService {
 
       if (myId == 100) {
         cookie =
-            "connect.sid=s%3AlrmFtpoztV1nNMqlSnFMH2PqPtyL7I1M.zExLbadKE98%2BvCNvNo%2F4z%2FWhl0KuhX9nUiG9v8HhR1E; Expires=Sat, 07 Dec 2024 15:07:23 GMT; Path=/; HttpOnly";
+            "connect.sid=s%3Amn70TzShTeI-qEzpL0z_jny4Ay7PNWd2.cTUrUmE8BCA%2F9toaw88kqPOv2eMfzxtTm8gYD4TlvIo; Expires=Sat, 07 Dec 2024 17:58:59 GMT; Path=/; HttpOnly";
       } else {
         {
           cookie =
-              "connect.sid=s%3A5PGtu_QD1aiOvSaN3SmFIw-XldczvEHb.MQPE66eGP6Dpn5xjudG3BHT%2FMarwP2H7YzSnGGSTNzc; Expires=Sat, 07 Dec 2024 14:07:21 GMT; Path=/; HttpOnly";
+              "connect.sid=s%3AAEglyLqE1YJ_kFUFRHSIgzFFq1qtxeNr.bGa28l1Vm3ca0wvc3WR16hOqs6W8ZK3XVx1tc4hzihM; Expires=Sat, 07 Dec 2024 18:05:09 GMT; Path=/; HttpOnly";
         }
       }
 
