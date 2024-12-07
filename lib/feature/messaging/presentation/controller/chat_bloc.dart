@@ -104,14 +104,19 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  void sendMessage(String message, bool isGIF) {
+  void sendMessage(
+    String message,
+    String senderId,
+    String receiverId,
+    bool isGIF,
+  ) {
     // TODO
     // Generate a unique id for each message
     // Send it to the backend
 
     print(message);
 
-    sl<SocketService>().socket.emit(
+    sl<SocketService>().socket!.emit(
       "message:sent",
       {
         "content": message,
@@ -119,8 +124,8 @@ class ChatCubit extends Cubit<ChatState> {
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
         "isForward": false,
-        // "participantId": 2,
-        "senderId": 1 // Will be deleted after mirging auth,
+        "participantId": 42,
+        "senderId": int.parse(senderId) // Will be deleted after mirging auth,
       },
     );
 
@@ -175,21 +180,23 @@ class ChatCubit extends Cubit<ChatState> {
     // TODO
     // userId == my id -> update id with backend id - else - add to messages list
 
-    final updatedMessages = List<Message>.from(state.messages);
+    // final updatedMessages = List<Message>.from(state.messages);
 
-    updatedMessages[updatedMessages.length - 1].setId(message["id"]);
+    // updatedMessages[updatedMessages.length - 1].setId();
 
-    print(updatedMessages[updatedMessages.length - 1]);
+    // print(updatedMessages[updatedMessages.length - 1]);
 
-    // final updatedMessages = List<Message>.from(currentState.messages)
-    //   ..add(
-    //     Message(
-    //       isDate: false,
-    //       sender: "01",
-    //       content: message["content"],
-    //       time: message["createdAt"],
-    //     ),
-    //   );
+    final updatedMessages = List<Message>.from(state.messages)
+      ..add(
+        Message(
+          id: message["id"],
+          isDate: false,
+          sender: "01",
+          content: message["content"],
+          time: message["createdAt"],
+          isGIF: false,
+        ),
+      );
     emit(state.copyWith(messages: updatedMessages, receivedState: true));
   }
 
@@ -202,7 +209,9 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       // emit(const ChatLoading());
       var apiService = sl<ApiService>();
-      final res = await apiService.get(endPoint: '/messages',);
+      final res = await apiService.get(
+        endPoint: '/messages',
+      );
 
       messages = (jsonDecode(res.data) as List)
           .map(

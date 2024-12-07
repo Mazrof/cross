@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
@@ -17,10 +18,14 @@ import 'package:telegram/feature/night_mode/presentation/controller/night_mode_c
 import 'package:go_router/go_router.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key});
+  ChatScreen({super.key, required this.chatId});
+
+  final String chatId;
 
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
+  String receiverId = "";
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,18 @@ class ChatScreen extends StatelessWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         });
+
+        // Hard Code the Ids
+        String myId =
+            HiveCash.read(boxName: 'register_info', key: 'id').toString();
+
+        if (myId == "100") {
+          receiverId = "102";
+        } else {
+          receiverId = "100";
+        }
+
+        print(receiverId);
 
         return Scaffold(
           appBar: state.selectionState == false && state.editingState == false
@@ -126,9 +143,7 @@ class ChatScreen extends StatelessWidget {
                       scrollController: _scrollController,
                     ),
                   ),
-                  CinputBar(
-                    controller: controller,
-                  ),
+                  CinputBar(controller: controller, receiverId: receiverId),
                 ],
               ),
             ],

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
@@ -9,32 +10,25 @@ import 'package:telegram/feature/messaging/presentation/controller/chat_state.da
 class SocketService {
   static const String server = AppStrings.socketUrl;
 
-  IO.Socket socket;
+  IO.Socket? socket;
 
-  SocketService()
-      : socket = IO.io(
-          'http://10.0.2.2:3000',
-          IO.OptionBuilder()
-              .setTransports(['websocket'])
-              .disableAutoConnect()
-              .build(),
-        ) {}
+  SocketService();
 
   void setUpListeners() {
-    socket.on('connect', (_) {
+    socket!.on('connect', (_) {
       print('Connected to server');
     });
 
-    socket.on('message:receive', (data) {
+    socket!.on('message:receive', (data) {
       print(data);
       sl<ChatCubit>().receiveMessage(data);
     });
 
-    socket.on('message:edited', (data) {
+    socket!.on('message:edited', (data) {
       print("Message Edited!");
     });
 
-    socket.on(
+    socket!.on(
       'disconnect',
       (_) {
         print('Disconnected from server');
@@ -44,7 +38,32 @@ class SocketService {
 
   void connect() async {
     try {
-      socket = socket.connect();
+      // hard coded
+      int myId = HiveCash.read(boxName: 'register_info', key: 'id');
+      String cookie = "";
+
+      if (myId == 100) {
+        cookie =
+            "connect.sid=s%3AlrmFtpoztV1nNMqlSnFMH2PqPtyL7I1M.zExLbadKE98%2BvCNvNo%2F4z%2FWhl0KuhX9nUiG9v8HhR1E; Expires=Sat, 07 Dec 2024 15:07:23 GMT; Path=/; HttpOnly";
+      } else {
+        {
+          cookie =
+              "connect.sid=s%3A5PGtu_QD1aiOvSaN3SmFIw-XldczvEHb.MQPE66eGP6Dpn5xjudG3BHT%2FMarwP2H7YzSnGGSTNzc; Expires=Sat, 07 Dec 2024 14:07:21 GMT; Path=/; HttpOnly";
+        }
+      }
+
+      socket = IO.io(
+        'http://10.0.2.2:3000',
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .setExtraHeaders(
+              {'cookie': cookie},
+            )
+            .disableAutoConnect()
+            .build(),
+      );
+
+      socket = socket!.connect();
 
       setUpListeners();
     } catch (e) {
@@ -59,3 +78,5 @@ class SocketService {
     }
   }
 }
+
+           // "connect.sid=s%3AjiBDjpx1VZq2QEuFm7e3eyurc5Py_2IB.UGGHk1l5hCO%2F%2FK6%2B4oHI7LM2Ib4nrJrFxw9fqDR4BSY; Expires=Sat, 07 Dec 2024 13:08:04 GMT; Path=/; HttpOnly";

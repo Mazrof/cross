@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -201,7 +203,10 @@ class HomeContent extends StatelessWidget {
                 title: chat.name,
                 subtitle: chat.lastMessage,
                 onTap: () {
-                  sl<HomeCubit>().loadHomeData();
+                  GoRouter.of(context)
+                      .push('${AppRouter.kMessaging}/${chat.id}');
+
+                  // sl<HomeCubit>().loadHomeData();
                   // Chat tap logic
                 },
                 time: chat.time,

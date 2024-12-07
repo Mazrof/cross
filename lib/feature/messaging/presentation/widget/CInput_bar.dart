@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
 
 class CinputBar extends StatelessWidget {
-  CinputBar({required this.controller, super.key});
+  CinputBar({required this.controller, required this.receiverId});
+
+  final String receiverId;
 
   final TextEditingController controller;
   final FocusNode _focusNode = FocusNode();
@@ -56,7 +59,12 @@ class CinputBar extends StatelessWidget {
                       onContentInserted: (data) {
                         // Handle the inserted content here
                         // send the gif
-                        sl<ChatCubit>().sendMessage(data.uri, true);
+                        sl<ChatCubit>().sendMessage(
+                          data.uri,
+                          HiveCash.read(boxName: "register_info", key: 'id'),
+                          receiverId,
+                          true,
+                        );
                       },
                     ),
 
@@ -89,6 +97,7 @@ class CinputBar extends StatelessWidget {
             ),
             InputBarTrailing(
               controller: controller,
+              receiverId: receiverId,
             )
           ],
         ),

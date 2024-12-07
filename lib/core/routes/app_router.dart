@@ -146,13 +146,17 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
     },
   ),
   GoRoute(
-    path: AppRouter.kMessaging,
+    path: '${AppRouter.kMessaging}/:id',
     builder: (context, state) {
+      final id = state.pathParameters['id']!;
+
       return BlocProvider(
         create: (context) => sl<ChatCubit>()
           ..getMessages()
           ..startSocket(),
-        child: ChatScreen(),
+        child: ChatScreen(
+          chatId: id,
+        ),
       );
     },
   ),
