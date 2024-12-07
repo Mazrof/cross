@@ -29,7 +29,7 @@ class MessageList extends StatelessWidget {
                 isSender: true,
                 time: messages[i].time,
                 index: i,
-                id: messages[i].id,
+                id: messages[i].id != null ? messages[i].id : -1,
                 isGIF: messages[i].isGIF,
               );
             }

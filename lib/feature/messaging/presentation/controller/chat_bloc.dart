@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
@@ -105,42 +107,32 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void sendMessage(
-    String message,
-    String senderId,
-    String receiverId,
-    bool isGIF,
+    Message newMessage,
   ) {
     // TODO
     // Generate a unique id for each message
     // Send it to the backend
 
-    print(message);
+    print(newMessage.toString());
 
     sl<SocketService>().socket!.emit(
       "message:sent",
       {
-        "content": message,
+        "content": newMessage.content,
         "status": "pinned", //or null
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
         "isForward": false,
         "participantId": 42,
-        "senderId": int.parse(senderId) // Will be deleted after mirging auth,
+        "senderId":
+            int.parse(newMessage.sender) // Will be deleted after mirging auth,
       },
     );
 
     // final currentState = state as TypingMessage;
     final updatedMessages = List<Message>.from(state.messages)
       ..add(
-        Message(
-          isGIF: isGIF,
-          isDate: false,
-          sender: "01",
-          content: message,
-          time: "00:00",
-          // Assign front-end id
-          id: 0,
-        ),
+        newMessage,
       );
     emit(state.copyWith(messages: updatedMessages, messagesLoadedState: true));
   }
@@ -180,23 +172,30 @@ class ChatCubit extends Cubit<ChatState> {
     // TODO
     // userId == my id -> update id with backend id - else - add to messages list
 
-    // final updatedMessages = List<Message>.from(state.messages);
-
-    // updatedMessages[updatedMessages.length - 1].setId();
+    var updatedMessages = List<Message>.from(state.messages);
 
     // print(updatedMessages[updatedMessages.length - 1]);
 
-    final updatedMessages = List<Message>.from(state.messages)
-      ..add(
-        Message(
-          id: message["id"],
-          isDate: false,
-          sender: "01",
-          content: message["content"],
-          time: message["createdAt"],
-          isGIF: false,
-        ),
-      );
+    int myId = HiveCash.read(boxName: "register_info", key: 'id');
+
+    if (myId == message["senderId"]) {
+      updatedMessages[updatedMessages.length - 1].setId(message["id"]);
+    } else {
+      final DateTime dateTime = DateTime.parse(message["createdAt"]);
+      final DateFormat formatter = DateFormat('HH:mm');
+
+      updatedMessages = List<Message>.from(state.messages)
+        ..add(
+          Message(
+            id: message["id"],
+            isDate: false,
+            sender: "01",
+            content: message["content"],
+            time: formatter.format(dateTime),
+            isGIF: false,
+          ),
+        );
+    }
     emit(state.copyWith(messages: updatedMessages, receivedState: true));
   }
 

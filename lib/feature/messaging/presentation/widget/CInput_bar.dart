@@ -3,6 +3,7 @@ import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
 
@@ -59,11 +60,21 @@ class CinputBar extends StatelessWidget {
                       onContentInserted: (data) {
                         // Handle the inserted content here
                         // send the gif
+
+                        String myId =
+                            HiveCash.read(boxName: "register_info", key: 'id');
+                        final DateTime now = DateTime.now();
+
+                        Message newMessage = new Message(
+                            content: data.uri,
+                            id: -1,
+                            isDate: false,
+                            isGIF: true,
+                            sender: myId,
+                            time: now.toString());
+
                         sl<ChatCubit>().sendMessage(
-                          data.uri,
-                          HiveCash.read(boxName: "register_info", key: 'id'),
-                          receiverId,
-                          true,
+                          newMessage,
                         );
                       },
                     ),

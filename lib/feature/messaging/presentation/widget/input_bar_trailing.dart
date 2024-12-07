@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 
 class InputBarTrailing extends StatelessWidget {
@@ -32,13 +34,25 @@ class InputBarTrailing extends StatelessWidget {
                     );
                   } else {
                     // Send The Message
-                    sl<ChatCubit>().sendMessage(
-                      controller.text,
-                      HiveCash.read(boxName: "register_info", key: 'id')
-                          .toString(),
-                      receiverId,
-                      false,
+                    // Make New Message Object
+
+                    String myId =
+                        HiveCash.read(boxName: "register_info", key: 'id')
+                            .toString();
+
+                    final DateTime now = DateTime.now();
+                    final DateFormat formatter = DateFormat('HH:mm');
+
+                    Message newMessage = new Message(
+                      content: controller.text,
+                      isDate: false,
+                      isGIF: false,
+                      id: -1,
+                      sender: myId,
+                      time: formatter.format(now).toString(),
                     );
+
+                    sl<ChatCubit>().sendMessage(newMessage);
                   }
 
                   // clean the controller text
