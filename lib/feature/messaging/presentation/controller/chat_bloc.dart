@@ -41,6 +41,8 @@ class ChatCubit extends Cubit<ChatState> {
     emit(state.copyWith(
       editingState: true,
     ));
+
+    print("test");
   }
 
   void editMessage(int id, int index, String newContent) {
@@ -49,6 +51,14 @@ class ChatCubit extends Cubit<ChatState> {
     state.messages[index].content = newContent;
 
     var updatedMessages = state.messages;
+
+    sl<SocketService>().socket!.emit(
+      "message:edit",
+      {
+        "id": id,
+        "content": newContent,
+      },
+    );
 
     emit(state.copyWith(
       editingState: false,
@@ -63,14 +73,54 @@ class ChatCubit extends Cubit<ChatState> {
 
     // TODO
     // Uncomment when available
+  }
 
-    // sl<SocketService>().socket.emit(
-    //   "message:edit",
-    //   {
-    //     "id": id,
-    //     "content": "Hello",
-    //   },
-    // );
+  void messageEdited(dynamic data) {
+    print(data);
+
+    // if senderId == myId -> do nothing else update by Id
+
+    int myId = HiveCash.read(boxName: "register_info", key: 'id');
+
+    if (myId != data['senderId']) {
+      var updatedMesssages = List<Message>.from(state.messages);
+      for (int i = 0; i < updatedMesssages.length; i++) {
+        if (updatedMesssages[i].id == data['id']) {
+          // edit the message
+          updatedMesssages[i].content = data['content'];
+          break;
+        }
+      }
+
+      if (sl<ChatCubit>().isClosed) print("Closed");
+
+      emit(state.copyWith(messages: updatedMesssages));
+      print("test");
+    }
+  }
+
+  void messageDeleted(data) {
+    print(data);
+
+    // if senderId == myId -> do nothing else update by Id
+
+    int myId = HiveCash.read(boxName: "register_info", key: 'id');
+
+    if (myId != data['senderId']) {
+      var updatedMesssages = List<Message>.from(state.messages);
+      for (int i = 0; i < updatedMesssages.length; i++) {
+        if (updatedMesssages[i].id == data['id']) {
+          // edit the message
+          updatedMesssages.removeAt(i);
+          break;
+        }
+      }
+
+      if (sl<ChatCubit>().isClosed) print("Closed");
+
+      emit(state.copyWith(messages: updatedMesssages));
+      print("test");
+    }
   }
 
   void defaultState() {
@@ -140,10 +190,10 @@ class ChatCubit extends Cubit<ChatState> {
   void deleteMessage(int id, int index) {
     print(id);
 
-    // sl<SocketService>().socket.emit(
-    //   "message:delete",
-    //   {"id": id},
-    // );
+    sl<SocketService>().socket!.emit(
+      "message:delete",
+      {"id": id},
+    );
 
     final updatedMessages = state.messages;
 
@@ -197,6 +247,7 @@ class ChatCubit extends Cubit<ChatState> {
         );
     }
     emit(state.copyWith(messages: updatedMessages, receivedState: true));
+    print("test");
   }
 
   // Get the prev Messages

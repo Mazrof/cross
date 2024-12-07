@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
@@ -51,12 +52,14 @@ class ChatScreen extends StatelessWidget {
           appBar: state.selectionState == false && state.editingState == false
               ? CAppBar(
                   onLeadingTap: () {
+                    // WidgetsBinding.instance.addPostFrameCallback(
+                    //   (_) {
+                    //     context.read<ChatCubit>().close();
+                    //   },
+                    // );
+                    // sl<SocketService>().socket!.close();
+
                     context.go(AppRouter.kHome);
-                    WidgetsBinding.instance.addPostFrameCallback(
-                      (_) {
-                        context.read<ChatCubit>().close();
-                      },
-                    );
                   },
                   title: const RecieverDetails(
                     userName: "Kiro",
