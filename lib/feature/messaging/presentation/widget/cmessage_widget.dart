@@ -1,9 +1,12 @@
+import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/core/utililes/constant/constants.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
@@ -17,8 +20,10 @@ class ChatMessage extends StatelessWidget {
   final int index;
   final int id;
   final bool isGIF;
+  final bool isReply;
+  String? replyMessage;
 
-  const ChatMessage({
+  ChatMessage({
     super.key,
     required this.message,
     required this.isSender,
@@ -29,6 +34,8 @@ class ChatMessage extends StatelessWidget {
     required this.index,
     required this.id,
     required this.isGIF,
+    required this.isReply,
+    this.replyMessage,
   });
 
   @override
@@ -113,6 +120,29 @@ class ChatMessage extends StatelessWidget {
                           ),
                         ),
                       ),
+                    if (isReply)
+                      // render the refernced message
+                      Container(
+                        padding: EdgeInsets.all(AppSizes.xs),
+                        decoration: BoxDecoration(
+                          color: AppColors.grey,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                              8.0,
+                            ),
+                            topLeft: Radius.circular(
+                              8.0,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          replyMessage!,
+                          style: const TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     isGIF
                         ? Image.asset(
                             "assets/gif/success.gif",
@@ -137,15 +167,15 @@ class ChatMessage extends StatelessWidget {
                             fontSize: 12,
                           ),
                         ),
-                        if (isSender)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Icon(
-                              _getStatusIcon(),
-                              color: _getStatusColor(),
-                              size: 16,
-                            ),
+                        // if (isSender)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Icon(
+                            _getStatusIcon(),
+                            color: _getStatusColor(),
+                            size: 16,
                           ),
+                        ),
                       ],
                     ),
                   ],
@@ -178,3 +208,15 @@ class ChatMessage extends StatelessWidget {
     }
   }
 }
+
+              // if replying to message
+              // child: BubbleSpecialOne(
+              //   text: message,
+              //   color:
+              //       isSender ? AppColors.lightBlueColor : AppColors.whiteColor,
+              //   delivered: isDelivered,
+              //   seen: isSeen,
+              //   isSender: isSender,
+              //   sent: true, // to be changed according to network status
+              // ),
+

@@ -11,22 +11,31 @@ import 'package:telegram/feature/messaging/presentation/controller/chat_state.da
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit()
-      : super(ChatState(
-          messages: [],
-          messagesLoadedState: false,
-          selectionState: false,
-          typingState: false,
-          index: -1,
-          editingState: false,
-          error: false,
-          errorMessage: "",
-          id: -1,
-          receivedState: false,
-          xCoordiate: -1,
-          yCoordiate: -1,
-          height: -1,
-          width: -1,
-        ));
+      : super(
+          ChatState(
+            messages: [],
+            messagesLoadedState: false,
+            selectionState: false,
+            typingState: false,
+            index: -1,
+            editingState: false,
+            error: false,
+            errorMessage: "",
+            id: -1,
+            receivedState: false,
+            xCoordiate: -1,
+            yCoordiate: -1,
+            height: -1,
+            width: -1,
+            replyState: false,
+          ),
+        );
+
+  @override
+  void emit(ChatState state) {
+    // Always emit the state without comparing
+    super.emit(state);
+  }
 
   Future<void> startSocket() async {
     // Start the socket connection
@@ -43,6 +52,10 @@ class ChatCubit extends Cubit<ChatState> {
     ));
 
     print("test");
+  }
+
+  void replyingToMessage() {
+    emit(state.copyWith(replyState: true));
   }
 
   void editMessage(int id, int index, String newContent) {
@@ -83,19 +96,29 @@ class ChatCubit extends Cubit<ChatState> {
     int myId = HiveCash.read(boxName: "register_info", key: 'id');
 
     if (myId != data['senderId']) {
-      var updatedMesssages = List<Message>.from(state.messages);
-      for (int i = 0; i < updatedMesssages.length; i++) {
-        if (updatedMesssages[i].id == data['id']) {
+      var updatedMessages = state.messages
+          .map(
+            (item) => Message(
+                content: item.content,
+                id: item.id,
+                isDate: item.isDate,
+                isGIF: item.isGIF,
+                sender: item.sender,
+                time: item.time,
+                isReply: item.isReply),
+          )
+          .toList();
+
+      for (int i = 0; i < updatedMessages.length; i++) {
+        if (updatedMessages[i].id == data['id']) {
           // edit the message
-          updatedMesssages[i].content = data['content'];
+          updatedMessages[i].content = data['content'];
           break;
         }
       }
 
-      if (sl<ChatCubit>().isClosed) print("Closed");
-
-      emit(state.copyWith(messages: updatedMesssages));
-      print("test");
+      emit(state.copyWith(
+          messages: updatedMessages, editingState: false, error: true));
     }
   }
 
@@ -107,19 +130,28 @@ class ChatCubit extends Cubit<ChatState> {
     int myId = HiveCash.read(boxName: "register_info", key: 'id');
 
     if (myId != data['senderId']) {
-      var updatedMesssages = List<Message>.from(state.messages);
-      for (int i = 0; i < updatedMesssages.length; i++) {
-        if (updatedMesssages[i].id == data['id']) {
+      var updatedMessages = state.messages
+          .map(
+            (item) => Message(
+                content: item.content,
+                id: item.id,
+                isDate: item.isDate,
+                isGIF: item.isGIF,
+                sender: item.sender,
+                time: item.time,
+                isReply: item.isReply),
+          )
+          .toList();
+
+      for (int i = 0; i < updatedMessages.length; i++) {
+        if (updatedMessages[i].id == data['message']['id']) {
           // edit the message
-          updatedMesssages.removeAt(i);
+          updatedMessages.removeAt(i);
           break;
         }
       }
 
-      if (sl<ChatCubit>().isClosed) print("Closed");
-
-      emit(state.copyWith(messages: updatedMesssages));
-      print("test");
+      emit(state.copyWith(messages: updatedMessages));
     }
   }
 
@@ -187,6 +219,48 @@ class ChatCubit extends Cubit<ChatState> {
     emit(state.copyWith(messages: updatedMessages, messagesLoadedState: true));
   }
 
+  void replyToMessage(Message replyMessage) {
+    sl<SocketService>().socket!.emit(
+      "message:sent",
+      {
+        "content": replyMessage.content,
+        "status": "pinned", //or null
+        "durationInMinutes": null, // can be null
+        "isAnnouncement": true, // for group announcement
+        "isForward": false,
+        "participantId": 42,
+        "senderId": int.parse(replyMessage.sender),
+        "replyTo": sl<ChatCubit>().state.id,
+      },
+    );
+
+    // final currentState = state as TypingMessage;
+    final updatedMessages = List<Message>.from(state.messages);
+
+    String replyMessageText = "";
+
+    // if reply get the text of the message being replied to
+    for (int i = 0; i < updatedMessages.length; i++) {
+      if (updatedMessages[i].id == state.id) {
+        replyMessageText = updatedMessages[i].content;
+        break;
+      }
+    }
+
+    replyMessage.replyMessage = replyMessageText;
+
+    updatedMessages.add(replyMessage);
+
+    emit(state.copyWith(
+      messages: updatedMessages,
+      messagesLoadedState: true,
+      id: -1,
+      index: -1,
+      replyState: false,
+      selectionState: false,
+    ));
+  }
+
   void deleteMessage(int id, int index) {
     print(id);
 
@@ -234,17 +308,33 @@ class ChatCubit extends Cubit<ChatState> {
       final DateTime dateTime = DateTime.parse(message["createdAt"]);
       final DateFormat formatter = DateFormat('HH:mm');
 
-      updatedMessages = List<Message>.from(state.messages)
-        ..add(
-          Message(
-            id: message["id"],
-            isDate: false,
-            sender: message['senderId'].toString(),
-            content: message["content"],
-            time: formatter.format(dateTime),
-            isGIF: false,
-          ),
-        );
+      print(message['replyTo']);
+
+      updatedMessages = List<Message>.from(state.messages);
+      String replyMessage = "";
+
+      if (message['replyTo'].toString() != 'null') {
+        // if reply get the text of the message being replied to
+        for (int i = 0; i < updatedMessages.length; i++) {
+          if (updatedMessages[i].id == message['replyTo']) {
+            replyMessage = updatedMessages[i].content;
+            break;
+          }
+        }
+      }
+
+      updatedMessages.add(
+        Message(
+          id: message["id"],
+          isDate: false,
+          sender: message['senderId'].toString(),
+          content: message["content"],
+          time: formatter.format(dateTime),
+          isGIF: false,
+          isReply: message['replyTo'].toString() != 'null',
+          replyMessage: replyMessage,
+        ),
+      );
     }
     emit(state.copyWith(messages: updatedMessages, receivedState: true));
     print("test");
@@ -272,6 +362,7 @@ class ChatCubit extends Cubit<ChatState> {
               content: e['content'],
               time: e['timestamp'],
               id: 0,
+              isReply: false,
             ),
           )
           .toList();

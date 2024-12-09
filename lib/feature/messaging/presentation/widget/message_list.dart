@@ -28,15 +28,20 @@ class MessageList extends StatelessWidget {
               if (state.messages[i].isDate) {
                 return MessageDate(date: state.messages[i].content);
               } else {
-                return ChatMessage(
-                  message: state.messages[i].content,
-                  isSender: state.messages[i].sender ==
-                      HiveCash.read(boxName: 'register_info', key: 'id')
-                          .toString(),
-                  time: state.messages[i].time,
-                  index: i,
-                  id: state.messages[i].id,
-                  isGIF: state.messages[i].isGIF,
+                return Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: ChatMessage(
+                    message: state.messages[i].content,
+                    isSender: state.messages[i].sender ==
+                        HiveCash.read(boxName: 'register_info', key: 'id')
+                            .toString(),
+                    time: state.messages[i].time,
+                    index: i,
+                    id: state.messages[i].id,
+                    isGIF: state.messages[i].isGIF,
+                    isReply: state.messages[i].isReply,
+                    replyMessage: state.messages[i].replyMessage,
+                  ),
                 );
               }
             },
@@ -59,11 +64,15 @@ class MessageList extends StatelessWidget {
                     // top: 100 - 78 + MediaQuery.of(context).viewInsets.bottom,
                     child: ChatMessage(
                       message: messages[(sl<ChatCubit>().state).index].content,
-                      isSender: true,
+                      isSender: state
+                              .messages[(sl<ChatCubit>().state).index].sender ==
+                          HiveCash.read(boxName: 'register_info', key: 'id')
+                              .toString(),
                       time: messages[(sl<ChatCubit>().state).index].time,
                       index: (sl<ChatCubit>().state).index,
                       id: (sl<ChatCubit>().state).id,
                       isGIF: messages[(sl<ChatCubit>().state).index].isGIF,
+                      isReply: messages[(sl<ChatCubit>().state).index].isReply,
                     ),
                   ),
                 ],

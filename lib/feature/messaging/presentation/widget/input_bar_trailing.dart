@@ -44,13 +44,13 @@ class InputBarTrailing extends StatelessWidget {
                     final DateFormat formatter = DateFormat('HH:mm');
 
                     Message newMessage = new Message(
-                      content: controller.text,
-                      isDate: false,
-                      isGIF: false,
-                      id: -1,
-                      sender: myId,
-                      time: formatter.format(now).toString(),
-                    );
+                        content: controller.text,
+                        isDate: false,
+                        isGIF: false,
+                        id: -1,
+                        sender: myId,
+                        time: formatter.format(now).toString(),
+                        isReply: false);
 
                     sl<ChatCubit>().sendMessage(newMessage);
                   }

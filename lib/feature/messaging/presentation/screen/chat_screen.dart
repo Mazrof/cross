@@ -114,6 +114,13 @@ class ChatScreen extends StatelessWidget {
                       },
                     ),
                     IconButton(
+                      onPressed: () {
+                        sl<ChatCubit>().replyingToMessage();
+                        // sl<ChatCubit>().replyToMessage(state.id);
+                      },
+                      icon: const Icon(Icons.reply),
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.edit_outlined),
                       color: AppColors.whiteColor,
                       onPressed: () {
@@ -146,7 +153,7 @@ class ChatScreen extends StatelessWidget {
                       scrollController: _scrollController,
                     ),
                   ),
-                  CinputBar(controller: controller, receiverId: receiverId),
+                  CinputBar(receiverId: receiverId),
                 ],
               ),
             ],

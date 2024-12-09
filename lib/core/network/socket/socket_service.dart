@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
@@ -48,17 +49,12 @@ class SocketService {
     try {
       // hard coded
       int myId = HiveCash.read(boxName: 'register_info', key: 'id');
-      String cookie = "";
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.txt');
 
-      if (myId == 100) {
-        cookie =
-            "connect.sid=s%3AQJAqGoJ3smbD-NGe1WBLpm2dgzJcALWB.ZVOS5TmJxS7LcnqmNurgaw94dD%2F3SHZjrbi%2FBbOgV%2BE; Expires=Sat, 07 Dec 2024 23:36:42 GMT; Path=/; HttpOnly";
-      } else {
-        {
-          cookie =
-              "connect.sid=s%3AUQunNs26NkFsRQmx4-vZF3tgxOdfdt-F.tzwcijNxIQftf50WAnf6bAQD1XdSuep6G9JJqY0tnuw; Expires=Sat, 07 Dec 2024 23:32:22 GMT; Path=/; HttpOnly";
-        }
-      }
+      String cookie = await file.readAsString();
+
+      cookie = cookie.substring(1, cookie.length - 1);
 
       socket = IO.io(
         'http://10.0.2.2:3000',

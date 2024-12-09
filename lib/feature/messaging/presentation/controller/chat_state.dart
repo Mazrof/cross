@@ -14,10 +14,11 @@ class ChatState extends Equatable {
   final bool messagesLoadedState;
   final bool editingState;
   final bool receivedState;
+  final bool replyState;
   final bool error;
   final String errorMessage;
 
-  ChatState({
+  const ChatState({
     required this.messages,
     required this.index,
     required this.id,
@@ -30,6 +31,7 @@ class ChatState extends Equatable {
     required this.messagesLoadedState,
     required this.editingState,
     required this.receivedState,
+    required this.replyState,
     required this.error,
     required this.errorMessage,
   });
@@ -49,6 +51,7 @@ class ChatState extends Equatable {
     bool? receivedState,
     bool? error,
     String? errorMessage,
+    bool? replyState,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
@@ -65,11 +68,11 @@ class ChatState extends Equatable {
       receivedState: receivedState ?? this.receivedState,
       error: error ?? this.error,
       errorMessage: errorMessage ?? this.errorMessage,
+      replyState: replyState ?? this.replyState,
     );
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
         messages,
         index,
@@ -85,5 +88,6 @@ class ChatState extends Equatable {
         receivedState,
         error,
         errorMessage,
+        replyState
       ];
 }
