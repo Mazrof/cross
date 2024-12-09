@@ -7,8 +7,8 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-final PersistCookieJar cookieJar;
-  static const String baseUrl = "http://192.168.100.3:3000/api/v1";
+  final PersistCookieJar cookieJar;
+  static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
@@ -32,6 +32,7 @@ final PersistCookieJar cookieJar;
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.get(
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
@@ -43,7 +44,7 @@ final PersistCookieJar cookieJar;
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -59,6 +60,7 @@ final PersistCookieJar cookieJar;
     Object? data,
   }) async {
     try {
+      await _loadCookies();
       String url = '$baseUrl/$endPoint';
       final response = await dio.post(url, data: data);
       print(response.data);
@@ -67,7 +69,7 @@ final PersistCookieJar cookieJar;
         print(response.data);
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -83,6 +85,7 @@ final PersistCookieJar cookieJar;
     Map<String, dynamic>? body,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -92,7 +95,7 @@ final PersistCookieJar cookieJar;
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -107,6 +110,7 @@ final PersistCookieJar cookieJar;
     required String endPoint,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -115,7 +119,7 @@ final PersistCookieJar cookieJar;
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -131,6 +135,7 @@ final PersistCookieJar cookieJar;
     Object? data,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -140,7 +145,7 @@ final PersistCookieJar cookieJar;
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -191,6 +196,7 @@ final PersistCookieJar cookieJar;
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.get(
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
@@ -216,6 +222,11 @@ final PersistCookieJar cookieJar;
     };
     final response = await dio.post('$baseUrl/$target', data: body);
     return response;
+  }
+
+  Future<void> _loadCookies() async {
+    final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+    print('Loaded cookies: $cookies');
   }
 
   static Exception _handleError(dynamic e) {
