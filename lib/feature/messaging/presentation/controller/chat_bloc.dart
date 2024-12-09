@@ -6,6 +6,7 @@ import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/socket/socket_service.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
@@ -28,6 +29,9 @@ class ChatCubit extends Cubit<ChatState> {
             height: -1,
             width: -1,
             replyState: false,
+            members: [],
+            chatType: ChatType.PersonalChat,
+            participantId: -1,
           ),
         );
 
@@ -86,6 +90,15 @@ class ChatCubit extends Cubit<ChatState> {
 
     // TODO
     // Uncomment when available
+  }
+
+  void init(
+      {required List members,
+      required ChatType chatType,
+      required int participantId}) {
+    super.state.chatType = chatType;
+    super.state.participantId = participantId;
+    super.state.members = members;
   }
 
   void messageEdited(dynamic data) {

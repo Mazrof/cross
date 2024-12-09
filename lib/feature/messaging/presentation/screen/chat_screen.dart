@@ -19,9 +19,7 @@ import 'package:telegram/feature/night_mode/presentation/controller/night_mode_c
 import 'package:go_router/go_router.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key, required this.chatId});
-
-  final String chatId;
+  ChatScreen({super.key});
 
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();

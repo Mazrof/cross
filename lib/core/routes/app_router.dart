@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/forgegt_password_controller/forget_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_cubit.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
@@ -148,15 +149,18 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: '${AppRouter.kMessaging}/:id',
     builder: (context, state) {
-      final id = state.pathParameters['id']!;
+      final participantId = int.parse(state.pathParameters['id']!);
 
       return BlocProvider(
         create: (context) => sl<ChatCubit>()
+          ..init(
+            chatType: ChatType.PersonalChat,
+            participantId: participantId,
+            members: [],
+          )
           ..getMessages()
           ..startSocket(),
-        child: ChatScreen(
-          chatId: id,
-        ),
+        child: ChatScreen(),
       );
     },
   ),

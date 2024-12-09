@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 
 class ChatState extends Equatable {
@@ -17,8 +18,11 @@ class ChatState extends Equatable {
   final bool replyState;
   final bool error;
   final String errorMessage;
+  int participantId;
+  ChatType chatType;
+  List members; // Contains the list of users
 
-  const ChatState({
+  ChatState({
     required this.messages,
     required this.index,
     required this.id,
@@ -34,6 +38,9 @@ class ChatState extends Equatable {
     required this.replyState,
     required this.error,
     required this.errorMessage,
+    required this.chatType,
+    required this.participantId,
+    required this.members,
   });
 
   ChatState copyWith({
@@ -52,6 +59,9 @@ class ChatState extends Equatable {
     bool? error,
     String? errorMessage,
     bool? replyState,
+    int? participantId,
+    ChatType? chatType,
+    List? members,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
@@ -69,6 +79,9 @@ class ChatState extends Equatable {
       error: error ?? this.error,
       errorMessage: errorMessage ?? this.errorMessage,
       replyState: replyState ?? this.replyState,
+      participantId: participantId ?? this.participantId,
+      chatType: chatType ?? this.chatType,
+      members: members ?? this.members,
     );
   }
 
@@ -88,6 +101,9 @@ class ChatState extends Equatable {
         receivedState,
         error,
         errorMessage,
-        replyState
+        replyState,
+        chatType,
+        participantId,
+        members,
       ];
 }

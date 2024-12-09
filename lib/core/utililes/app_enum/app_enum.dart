@@ -16,3 +16,9 @@ enum CubitState {
 }
 
 enum MessageStatus { loading, sent, delivered, read }
+
+enum ChatType{
+  PersonalChat,
+  Group,
+  Channel
+}
