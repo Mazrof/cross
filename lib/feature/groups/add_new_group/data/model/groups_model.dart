@@ -14,7 +14,7 @@ class GroupsModel extends Group {
   factory GroupsModel.fromJson(Map<String, dynamic> json) {
     return GroupsModel(
       imageUrl: json['imageUrl'],
-      admins: [],
+      admins: 0 ,
       id: json['id'],
       groupSize: json['groupSize'],
       name: json['community']['name'],

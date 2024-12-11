@@ -9,6 +9,8 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_subscriber.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
@@ -32,7 +34,7 @@ import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart'
 import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 
 import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
-import 'package:telegram/feature/contacts/presentation/screen/new_channel_screen.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/screen/new_channel_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/new_group_screen.dart';
 
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
@@ -85,7 +87,6 @@ class AppRouter {
   static const String kMessaging = '/messaging';
 
   // My Contacts Routes
-  static const String kNewChannel = '/new_channel';
   static const String kContacts = '/contacts';
 
   static const String kNotRobot = '/not_robot';
@@ -103,12 +104,24 @@ class AppRouter {
   static const String kUserPermission = '/user-permission';
   static const String kGroupScreen = '/group_screen';
 
+  //channels
+  static const String kNewChannel = '/new_channel';
+  static const String kAddSubscribers = '/add_sub';
+
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
   }
 }
 
 final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
+  GoRoute(
+    path: AppRouter.kAddSubscribers,
+    builder: (context, state) {
+      return BlocProvider.value(
+          value: sl<AddChannelCubit>()..loadSubscribers(),
+          child: AddSubscriber());
+    },
+  ),
   GoRoute(
     path: AppRouter.kPreVerify,
     builder: (context, state) {
@@ -250,7 +263,10 @@ final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
   GoRoute(
     path: AppRouter.kNewChannel,
     builder: (context, state) {
-      return NewChannelScreen();
+      return BlocProvider.value(
+        value: sl<AddChannelCubit>(),
+        child: NewGroupScreen(),
+      );
     },
   ),
   GoRoute(

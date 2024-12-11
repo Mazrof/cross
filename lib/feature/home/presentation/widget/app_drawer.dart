@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
@@ -35,8 +36,10 @@ class CAppDrawer extends StatelessWidget {
                     color: AppColors.whiteColor,
                   ),
             ),
-            currentAccountPicture:
-                Avatar(imageUrl: AppAssetsStrings.general_person),
+            currentAccountPicture: GeneralImage(
+              username: username,
+              imageUrl: '',
+            ),
           ),
           DrawerListTile(
             iconData: Icons.group,
@@ -54,7 +57,7 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.notifications,
             title: 'New Channel',
             onTilePressed: () {
-              GoRouter.of(context).push(AppRouter.kNewChannel);
+              GoRouter.of(context).push(AppRouter.kAddSubscribers);
             },
           ),
           DrawerListTile(

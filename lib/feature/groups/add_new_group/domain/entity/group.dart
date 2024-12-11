@@ -5,7 +5,7 @@ class Group extends Equatable {
   final String name;
   final bool privacy;
   final int groupSize;
-  final List<int> admins;
+  final int admins;
   final String imageUrl;
 
   Group({

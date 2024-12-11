@@ -103,6 +103,21 @@ class GroupSettingsScreen extends StatelessWidget {
                 },
               ),
               const Divider(),
+               SwitchListTile(
+                activeColor: AppColors.primaryColor,
+                activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
+                inactiveThumbColor: AppColors.grey,
+                inactiveTrackColor: AppColors.grey.withOpacity(0.5),
+                title: Text(
+                  'make it private',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                value: state.group!.privacy, //TODO: Get value from cubit
+                onChanged: (value) {
+                  sl<GroupCubit>().toggleNotifications(groupId, value);
+                },
+              ),
+              const Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextButton.icon(
@@ -186,6 +201,7 @@ class GroupSettingsScreen extends StatelessWidget {
                                   Text('set admin'),
                                 ],
                               )),
+                              
                         ],
                       ),
                     );

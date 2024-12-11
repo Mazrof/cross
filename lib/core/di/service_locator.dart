@@ -30,6 +30,12 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/channels/create_channel/data/data_source/add_channel_data_source.dart';
+import 'package:telegram/feature/channels/create_channel/data/repo/add_channel_repository.dart';
+import 'package:telegram/feature/channels/create_channel/domain/repository/add_channel_repo.dart';
+import 'package:telegram/feature/channels/create_channel/domain/use_case/add_subscribers_use_case.dart';
+import 'package:telegram/feature/channels/create_channel/domain/use_case/creat_channel_use_case.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/data/data_source/data_source.dart';
 import 'package:telegram/feature/groups/add_new_group/data/repository/create_group_imp.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
@@ -37,6 +43,7 @@ import 'package:telegram/feature/groups/add_new_group/domain/use_case/create_gro
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/data/data_source/group_setting_data_srouce.dart';
 import 'package:telegram/feature/groups/group_setting/data/repository/group_setting.dart';
+import 'package:telegram/feature/groups/group_setting/domain/repository/group_setting_repository.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_members_use_case.dart';
@@ -89,6 +96,7 @@ import 'package:telegram/feature/splash_screen/presentation/controller/splash_cu
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 
 import '../../feature/groups/add_new_group/domain/repository/create_group_repo.dart';
+import '../../feature/groups/group_setting/domain/use_case/add_member_use_case.dart';
 
 final sl = GetIt.instance;
 
@@ -211,6 +219,8 @@ class ServiceLocator {
         ));
 
     sl.registerLazySingleton(() => PermisionCubit());
+
+    sl.registerLazySingleton(() => AddChannelCubit(sl(), sl(), sl()));
   }
 
   static void registerUseCases() {
@@ -263,10 +273,14 @@ class ServiceLocator {
     sl.registerLazySingleton(() => RemoveMemberUseCase(sl()));
     sl.registerLazySingleton(() => UpdateGroupDetailsUseCase(sl()));
     sl.registerLazySingleton(() => DeleteGroupUseCase(sl()));
-    sl.registerLazySingleton(() => AddMembersUseCase(sl()));
+    sl.registerLazySingleton(() => AddMemberUseCase(sl()));
     sl.registerLazySingleton(() => FetchGroupDetailsUseCase(sl()));
     sl.registerLazySingleton(() => FetchGroupMembersUseCase(sl()));
     sl.registerLazySingleton(() => UpdateMemberRoleUseCase(sl()));
+
+    //channel
+    sl.registerLazySingleton(() => CreateChannelUseCase(sl()));
+    sl.registerLazySingleton(() => AddSubscribersUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -303,7 +317,11 @@ class ServiceLocator {
     sl.registerLazySingleton<CreateGroupRepository>(
         () => GroupRepositoryImpl(sl()));
 
-    sl.registerLazySingleton(() => GroupSettingRepositoryImpl(sl()));
+    sl.registerLazySingleton<GroupSettingRepository>(
+        () => GroupSettingRepositoryImpl(sl()));
+
+    sl.registerLazySingleton<ChannelRepository>(
+        () => ChannelRepositoryImpl(sl()));
   }
 
   static void registerDataSources() {
@@ -342,6 +360,9 @@ class ServiceLocator {
 
     sl.registerLazySingleton<GroupRemoteDataSource>(
         () => GroupRemoteDataSourceImpl(sl()));
+
+    sl.registerLazySingleton<ChannelRemoteDataSource>(
+        () => ChannelRemoteDataSourceImpl());
   }
 
   static void registerSingletons() {

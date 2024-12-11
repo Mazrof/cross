@@ -72,7 +72,10 @@ class GroupCubit extends Cubit<GroupState> {
     ));
   }
 
-  void toggleNotifications(int groupId, bool isMuted) async {}
+
+  void toggleNotifications(int groupId, bool isMuted) async {
+    
+  }
 
   void togglePrivacy(int groupId) async {}
 

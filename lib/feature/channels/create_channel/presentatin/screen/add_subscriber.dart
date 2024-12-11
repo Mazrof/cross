@@ -4,17 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
-import 'package:telegram/core/component/shimmer.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/core/routes/app_router.dart';
-import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_state.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/chat_group_tile.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 
-class NewGroupScreen extends StatelessWidget {
+
+class AddSubscriber extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +26,9 @@ class NewGroupScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("New Group"),
+            const Text("New Channel"),
             Text(
-              "up to 1000 members",
+              "up to 1000 subscribers",
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: AppColors.grey,
                   ),
@@ -36,7 +36,7 @@ class NewGroupScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: BlocBuilder<AddMembersCubit, AddMembersState>(
+      body: BlocBuilder<AddChannelCubit, AddChannelState>(
           builder: (context, state) {
         if (state.state == CubitState.loading) {
           return const Center(
@@ -50,8 +50,8 @@ class NewGroupScreen extends StatelessWidget {
 
         return Column(
           children: [
-            // Selected Members Section
-            if (state.selectedMembers.isNotEmpty)
+            // Selected Subscribers Section
+            if (state.selectedSubscribers.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -59,9 +59,9 @@ class NewGroupScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: state.selectedMembers.length,
+                    itemCount: state.selectedSubscribers.length,
                     itemBuilder: (context, index) {
-                      final member = state.selectedMembers[index];
+                      final subscriber = state.selectedSubscribers[index];
                       return SizedBox(
                         width: 70,
                         child: Stack(
@@ -70,11 +70,11 @@ class NewGroupScreen extends StatelessWidget {
                             Column(
                               children: [
                                 GeneralImage(
-                                    username: member.name,
-                                    imageUrl: member.imageUrl),
+                                    username: subscriber.name,
+                                    imageUrl: subscriber.imageUrl),
                                 const SizedBox(height: 4),
                                 Text(
-                                  member.name,
+                                  subscriber.name,
                                   style: const TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -86,7 +86,8 @@ class NewGroupScreen extends StatelessWidget {
                               right: -5,
                               child: GestureDetector(
                                 onTap: () {
-                                  sl<AddMembersCubit>().toggleMember(member);
+                                  sl<AddChannelCubit>()
+                                      .toggleSubscriber(subscriber);
                                 },
                                 child: const CircleAvatar(
                                   radius: 10,
@@ -106,21 +107,20 @@ class NewGroupScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            // Available Members List
+            // Available Subscribers List
             Expanded(
               child: ListView.builder(
-                itemCount: state.allMembers.length,
+                itemCount: state.allSubscribers.length,
                 itemBuilder: (context, index) {
-                  final member = state.allMembers[index];
-                  final isSelected = state.selectedMembers.contains(member);
+                  final subscriber = state.allSubscribers[index];
 
                   return ChatGroupTile(
-                    id: member.id,
-                    imageUrl: member.imageUrl,
-                    title: member.name,
-                    lastSeen: member.lastSeen,
+                    id: subscriber.id,
+                    imageUrl: subscriber.imageUrl,
+                    title: subscriber.name,
+                    lastSeen: subscriber.lastSeen,
                     onTap: () {
-                      sl<AddMembersCubit>().toggleMember(member);
+                      sl<AddChannelCubit>().toggleSubscriber(subscriber);
                     },
                   );
                 },
@@ -133,8 +133,8 @@ class NewGroupScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         onPressed: () {
-          // Create the group with selected members
-          GoRouter.of(context).push(AppRouter.kGroupInfo);
+          // Proceed to channel settings or create channel
+          sl<AddChannelCubit>().createChannel();
         },
         child: const Icon(Icons.check),
       ),

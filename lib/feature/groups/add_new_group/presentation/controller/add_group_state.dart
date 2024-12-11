@@ -38,7 +38,7 @@ class AddMembersState extends Equatable {
       selectedMembers: selectedMembers ?? this.selectedMembers,
       state: state ?? this.state,
       groupImageUrl: groupImageUrl ?? this.groupImageUrl,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage ?? "",
       group: group ?? this.group,
     );
   }

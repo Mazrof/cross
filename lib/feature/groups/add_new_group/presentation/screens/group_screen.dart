@@ -7,7 +7,7 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 
 class GroupScreen extends StatelessWidget {
-  const GroupScreen({super.key, required this.groupData});
+  const GroupScreen({required this.groupData});
   final GroupsModel groupData;
 
   @override

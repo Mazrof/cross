@@ -19,5 +19,5 @@ class AppAssetsStrings {
   static const String verifyMail = 'assets/verify_mail/verify_mail.png';  
 
   //home
-  static const String general_person = 'assets/images/general_person.png';
+  // static const String general_person = 'assets/images/general_person.png';
 }
