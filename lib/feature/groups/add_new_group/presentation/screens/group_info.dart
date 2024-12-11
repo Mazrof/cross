@@ -31,6 +31,7 @@ class GroupInfo extends StatelessWidget {
             CSnackBar.showErrorSnackBar(
                 context, 'Error', state.errorMessage ?? 'An error occurred');
           });
+          print("here");
         }
 
         return GroupInfoPage();
