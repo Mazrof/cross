@@ -95,7 +95,7 @@ class GroupSettingsScreen extends StatelessWidget {
                 inactiveTrackColor: AppColors.grey.withOpacity(0.5),
                 title: Text(
                   'Mute Notifications',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 value: true, //TODO: Get value from cubit
                 onChanged: (value) {
@@ -103,14 +103,14 @@ class GroupSettingsScreen extends StatelessWidget {
                 },
               ),
               const Divider(),
-               SwitchListTile(
+              SwitchListTile(
                 activeColor: AppColors.primaryColor,
                 activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
                 inactiveThumbColor: AppColors.grey,
                 inactiveTrackColor: AppColors.grey.withOpacity(0.5),
                 title: Text(
                   'make it private',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 value: state.group!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
@@ -201,7 +201,6 @@ class GroupSettingsScreen extends StatelessWidget {
                                   Text('set admin'),
                                 ],
                               )),
-                              
                         ],
                       ),
                     );

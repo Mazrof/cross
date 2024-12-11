@@ -23,7 +23,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
   ) : super(AddMembersState(
           groupName: '',
           selectedMembers: [],
-          state: CubitState.initial,
+          state: GroupStatus.initial,
           errorMessage: '',
         ));
 
@@ -39,7 +39,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
     emit(AddMembersState(
       groupName: '',
       selectedMembers: [],
-      state: CubitState.initial,
+      state: GroupStatus.initial,
       errorMessage: '',
       allMembers: members,
     ));
@@ -55,7 +55,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
     }
 
     emit(state.copyWith(
-        selectedMembers: selectedMembers, state: CubitState.initial));
+        selectedMembers: selectedMembers, state: GroupStatus.initial));
   }
 
   void setGroupName(String groupName) {
@@ -67,25 +67,27 @@ class AddMembersCubit extends Cubit<AddMembersState> {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         emit(state.copyWith(
-            groupImageUrl: pickedFile.path, state: CubitState.initial));
+            groupImageUrl: pickedFile.path, state: GroupStatus.initial));
       }
     } catch (e) {
       emit(state.copyWith(
           errorMessage: 'Failed to select image: $e',
-          state: CubitState.failure));
+          state: GroupStatus.failure));
     }
   }
 
   Future<void> createGroup() async {
     try {
-      emit(state.copyWith(state: CubitState.loading));
+      emit(state.copyWith(state: GroupStatus.loadinginfo));
 
       bool isConnected = await networkManager.isConnected();
       if (!isConnected) {
         emit(state.copyWith(
-            errorMessage: 'No internet connection', state: CubitState.failure));
+            errorMessage: 'No internet connection',
+            state: GroupStatus.failure));
         return;
       }
+      print('creating group');
 
       final group = GroupsModel(
         id: 0,
@@ -93,30 +95,34 @@ class AddMembersCubit extends Cubit<AddMembersState> {
         imageUrl: state.groupImageUrl ?? '',
         groupSize: 100,
         privacy: true,
-        admins:
-        HiveCash.read(boxName: "register_info", key: 'id')
-      
-
       );
       print(group.toJson());
+      print('group going');
 
       final GroupsModel? result = await createGroupUseCase(group);
       print(result);
 
       if (result != null) {
-        // await addMembersUseCase(
-        //   result.id,
-        //   state.selectedMembers.map((e) => MemberModel(userId: e.id)).toList(),
-        // );
-        emit(state.copyWith(state: CubitState.success, group: result));
+        print('group created');
+        if (state.selectedMembers.isEmpty) {
+          emit(state.copyWith(state: GroupStatus.success, group: result));
+          return;
+        }
+        await addMembersUseCase(
+          result.id,
+          state.selectedMembers.map((e) => MemberModel(userId: e.id)).toList(),
+        );
+        print('members added');
+        emit(state.copyWith(state: GroupStatus.success, group: result));
       } else {
         emit(state.copyWith(
-            errorMessage: 'Failed to create group', state: CubitState.failure));
+            errorMessage: 'Failed to create group',
+            state: GroupStatus.failure));
       }
     } catch (e) {
       print(e.toString());
       emit(state.copyWith(
-          errorMessage: e.toString(), state: CubitState.failure));
+          errorMessage: e.toString(), state: GroupStatus.failure));
     }
   }
 }

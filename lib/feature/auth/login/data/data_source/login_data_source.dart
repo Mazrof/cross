@@ -35,14 +35,13 @@ class LoginDataSourceImp implements LoginDataSource {
           'password': loginModel.password,
         },
       );
-      
+
       print('Login Response: ${response.data}');
       if (response.statusCode == 201 || response.statusCode == 200) {
-         final cookies = await _apiService.cookieJar
+        final cookies = await _apiService.cookieJar
             .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));
         print('Cookies: $cookies');
 
-      
         int id = response.data['data']['user']['id'];
         String userType = response.data['data']['user']['user_type'];
 
@@ -102,14 +101,17 @@ class LoginDataSourceImp implements LoginDataSource {
     print('Who Am I Response: ${whoAmIResponse.data}');
     if (whoAmIResponse.statusCode == 201 || whoAmIResponse.statusCode == 200) {
       // Get user data and store it
-      var userData = whoAmIResponse.data['data']['user'];
+      var userData = whoAmIResponse.data['data']['user']['user'];
       var user = RegisterData.fromJson(userData);
       var userJson = jsonEncode(user.toJson());
-      HiveCash.write(
-        boxName: 'register_info',
-        key: 'user',
-        value: userJson,
-      );
+      for (var key in user.toJson().keys) {
+        print('key: $key');
+        HiveCash.write(
+          boxName: 'register_info',
+          key: key,
+          value: user.toJson()[key],
+        );
+      }
     }
   }
 

@@ -15,6 +15,7 @@ class CAppDrawer extends StatelessWidget {
     final username =
         HiveCash.read(boxName: 'register_info', key: 'username') ?? '';
     final email = HiveCash.read(boxName: 'register_info', key: 'email') ?? '';
+    print(username);
 
     return Drawer(
       child: ListView(

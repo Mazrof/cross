@@ -19,14 +19,16 @@ class GroupInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddMembersCubit, AddMembersState>(
       builder: (context, state) {
-        if (state.state == CubitState.loading) {
+        if (state.state == GroupStatus.loadinginfo) {
           return const LogoLoader();
-        } else if (state.state == CubitState.success) {
+        } else if (state.state == GroupStatus.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            GoRouter.of(context).go(AppRouter.kGroupScreen,
+            print(sl<AddMembersCubit>().state.group);
+
+            GoRouter.of(context).pushReplacement(AppRouter.kGroupScreen,
                 extra: sl<AddMembersCubit>().state.group);
           });
-        } else if (state.state == CubitState.failure) {
+        } else if (state.state == GroupStatus.failure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(
                 context, 'Error', state.errorMessage ?? 'An error occurred');

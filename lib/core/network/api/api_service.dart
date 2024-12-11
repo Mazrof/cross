@@ -3,10 +3,10 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../../error/faliure.dart';
-import 'package:telegram/core/local/hive.dart';
 
 class ApiService {
   final PersistCookieJar cookieJar;
@@ -24,15 +24,19 @@ class ApiService {
   static Future<ApiService> create() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
-    final dio = Dio(BaseOptions(baseUrl: baseUrl));
+    final dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
+      sendTimeout: Duration(seconds: 5),
+    ));
     dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(InterceptorsWrapper(
-      onError: (DioError e, ErrorInterceptorHandler handler) async {
-        if (e.response?.statusCode == 401) {
-          // Unauthorized, try to refresh authentication
-          await ApiService._internal(cookieJar, dio)._refreshAuthentication();
+      onError: (DioError error, ErrorInterceptorHandler handler) async {
+        if (error.response?.statusCode == 401) {
+          await ApiService._internal(cookieJar, dio).howAmI();
           // Retry the original request
-          final options = e.requestOptions;
+          final options = error.requestOptions;
           final response = await dio.request(
             options.path,
             options: Options(
@@ -44,26 +48,28 @@ class ApiService {
           );
           return handler.resolve(response);
         }
-        return handler.next(e);
+        return handler.next(error);
       },
     ));
     return ApiService._internal(cookieJar, dio);
   }
 
-  Future<void> _refreshAuthentication() async {
+  Future<void> howAmI() async {
     var endp = 'auth/whoami';
-    final whoAmIResponse = await dio.get('$baseUrl/$endp');
+    final whoAmIResponse = await dio.get(endp);
     print('Who Am I Response: ${whoAmIResponse.data}');
     if (whoAmIResponse.statusCode == 201 || whoAmIResponse.statusCode == 200) {
       // Get user data and store it
       var userData = whoAmIResponse.data['data']['user'];
       var user = RegisterData.fromJson(userData);
-      var userJson = jsonEncode(user.toJson());
-      HiveCash.write(
-        boxName: 'register_info',
-        key: 'user',
-        value: userJson,
-      );
+      for (var key in user.toJson().keys) {
+        print('key: $key');
+        HiveCash.write(
+          boxName: 'register_info',
+          key: key,
+          value: user.toJson()[key],
+        );
+      }
     }
   }
 
@@ -84,7 +90,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -109,7 +115,7 @@ class ApiService {
         print(response.data);
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -135,7 +141,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -159,7 +165,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -185,7 +191,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -197,7 +203,7 @@ class ApiService {
   }
 
   Future<bool> verifyToken(String token) async {
-    final String secretKey = '6LfFCIsqAAAAAD_X_EKtkmf6WElq4XKqLVrANB';
+    final String secretKey = '6LfFCIsqAAAAAD_X_EIbKtkmf6WElq4XKqLVrANB';
     final String verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
     try {

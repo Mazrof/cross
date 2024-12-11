@@ -8,7 +8,7 @@ class AddMembersState extends Equatable {
   final List<ChatModel> allMembers;
   final List<ChatModel> selectedMembers;
   final String groupName; // Keep track of group name only
-  final CubitState state;
+  final GroupStatus state;
   final String errorMessage;
   final String? groupImageUrl;
   final GroupsModel? group;
@@ -18,7 +18,7 @@ class AddMembersState extends Equatable {
     required this.groupName,
     this.allMembers = const [],
     this.selectedMembers = const [],
-    this.state = CubitState.initial,
+    this.state = GroupStatus.initial,
     this.errorMessage = '',
     this.group,
   });
@@ -28,7 +28,7 @@ class AddMembersState extends Equatable {
     List<ChatModel>? selectedMembers,
     String? groupImageUrl,
     String? groupName,
-    CubitState? state,
+    GroupStatus? state,
     String? errorMessage,
     GroupsModel? group,
   }) {

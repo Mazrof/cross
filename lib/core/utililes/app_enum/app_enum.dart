@@ -16,3 +16,10 @@ enum CubitState {
 }
 
 enum MessageStatus { loading, sent, delivered, read }
+enum GroupStatus {
+  initial,
+  loadinginfo,
+  loadingmembers,
+  success,
+  failure,
+}
