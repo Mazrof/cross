@@ -20,14 +20,13 @@ class TTabBar extends StatelessWidget implements PreferredSizeWidget {
       color: dark ? AppColors.darkBackgroundColor : AppColors.whiteColor,
       child: TabBar(
         indicatorWeight: 2,
+        dividerHeight: 0,
         isScrollable: false, // Make the TabBar non-scrollable
         labelStyle: Theme.of(context).textTheme.bodyMedium,
         indicatorColor: AppColors.primaryColor,
         unselectedLabelColor: AppColors.grey,
         labelColor: dark ? AppColors.whiteColor : AppColors.primaryColor,
-        tabs: tabs
-            .map((tab) => Expanded(child: tab))
-            .toList(), // Use Expanded for each tab
+        tabs: tabs.map((tab) => tab).toList(), // Use Expanded for each tab
       ),
     );
   }

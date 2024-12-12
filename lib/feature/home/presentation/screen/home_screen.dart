@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -91,7 +92,7 @@ class ShimmerLoadingContent extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: SizedBox(
-              height: 115,
+              height: ScreenHelper.getScreenHeight(context) * .3,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 5, // Number of placeholder items
@@ -110,7 +111,8 @@ class ShimmerLoadingContent extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
+        SizedBox(
+          height: ScreenHelper.getScreenHeight(context) * .3,
           child: ListView.builder(
             itemCount: 10, // Number of placeholder items
             itemBuilder: (context, index) => Shimmer.fromColors(
@@ -163,36 +165,38 @@ class HomeContent extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 expandedTitleScale: 1,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stories Section
-                    Container(
-                      color: AppColors.primaryColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: SizedBox(
-                          height: 115, // Adjust height for the story section
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              AddStoryWidget(),
-                              // Placeholder for story items
-                              for (var story in state.stories)
-                                StoryWidget(
-                                  userName: story.userName,
-                                  storyUrl: story.mediaUrl,
-                                  isSeen: story.isSeen,
-                                  userImage: story.userImage,
-                                  storyCaption: story.content,
-                                ),
-                            ],
+                title: SizedBox(
+                  height: ScreenHelper.getScreenHeight(context) * .3,
+                  child: ListView(
+                    children: [
+                      // Stories Section
+                      Container(
+                        color: AppColors.primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: SizedBox(
+                            height: ScreenHelper.getScreenHeight(context) * .3,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                AddStoryWidget(),
+                                // Placeholder for story items
+                                for (var story in state.stories)
+                                  StoryWidget(
+                                    userName: story.userName,
+                                    storyUrl: story.mediaUrl,
+                                    isSeen: story.isSeen,
+                                    userImage: story.userImage,
+                                    storyCaption: story.content,
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
