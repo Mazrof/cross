@@ -9,6 +9,8 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
+import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_state.dart';
 
@@ -95,7 +97,7 @@ class GroupSettingsScreen extends StatelessWidget {
                 inactiveTrackColor: AppColors.grey.withOpacity(0.5),
                 title: Text(
                   'Mute Notifications',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 value: true, //TODO: Get value from cubit
                 onChanged: (value) {
@@ -110,11 +112,17 @@ class GroupSettingsScreen extends StatelessWidget {
                 inactiveTrackColor: AppColors.grey.withOpacity(0.5),
                 title: Text(
                   'make it private',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 value: state.group!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
-                  sl<GroupCubit>().toggleNotifications(groupId, value);
+                  sl<GroupCubit>().updateGroupDetails(
+                      groupId,
+                      GroupUpdateData(
+                          name: state.group!.name,
+                          privacy: state.group!.privacy,
+                          groupSize: state.group!.groupSize,
+                          imageUrl: state.group!.imageUrl));
                 },
               ),
               const Divider(),
@@ -158,13 +166,13 @@ class GroupSettingsScreen extends StatelessWidget {
                             GoRouter.of(context)
                                 .push(AppRouter.kUserPermission, extra: member);
                           } else if (value == 'remove') {
-                            // context
-                            //     .read<GroupCubit>()
-                            //     .removeMember(groupId, member.id);
+                            sl<GroupCubit>()
+                                .removeMember(groupId, member.userId);
                           } else if (value == 'admin') {
-                            // context
-                            //     .read<GroupCubit>()
-                            //     .setAdmin(groupId, member.id);
+                            sl<GroupCubit>().updateMemberRole(
+                                groupId,
+                                MemberModel(
+                                    userId: member.userId, role: 'admin'));
                           }
                         },
                         itemBuilder: (context) => [

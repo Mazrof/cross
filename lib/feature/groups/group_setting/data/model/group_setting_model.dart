@@ -34,4 +34,21 @@ class GroupModel extends GroupEntity {
       'imageUrl': imageUrl,
     };
   }
+
+  // copy with 
+  GroupModel copyWith({
+    int? id,
+    int? groupSize,
+    String? name,
+    bool? privacy,
+    String? imageUrl,
+  }) {
+    return GroupModel(
+      id: id ?? this.id,
+      groupSize: groupSize ?? this.groupSize,
+      name: name ?? this.name,
+      privacy: privacy ?? this.privacy,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
+  }
 }

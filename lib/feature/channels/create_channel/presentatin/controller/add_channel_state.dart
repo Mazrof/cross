@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 
 class AddChannelState extends Equatable {
   final String channelName;
   final String? channelImageUrl;
-  final List<ChatModel> selectedSubscribers;
-  final List<ChatModel> allSubscribers;
+  final List<chatTileData> selectedSubscribers;
+  final List<chatTileData> allSubscribers;
   final CubitState state;
   final String? errorMessage;
   final ChannelModel? channel;
@@ -31,15 +32,14 @@ class AddChannelState extends Equatable {
       allSubscribers: [],
       state: CubitState.initial,
       privacy: false,
-      
     );
   }
 
   AddChannelState copyWith({
     String? channelName,
     String? channelImageUrl,
-    List<ChatModel>? selectedSubscribers,
-    List<ChatModel>? allSubscribers,
+    List<chatTileData>? selectedSubscribers,
+    List<chatTileData>? allSubscribers,
     CubitState? state,
     String? errorMessage,
     ChannelModel? channel,

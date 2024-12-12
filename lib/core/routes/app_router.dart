@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
@@ -113,289 +114,308 @@ class AppRouter {
   }
 }
 
-final route = GoRouter(initialLocation: AppRouter.kSplash, routes: [
-  GoRoute(
-    path: AppRouter.kAddSubscribers,
-    builder: (context, state) {
-      return BlocProvider.value(
-          value: sl<AddChannelCubit>()..loadSubscribers(),
-          child: AddSubscriber());
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kPreVerify,
-    builder: (context, state) {
-      return const PreVerifyScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kGroupScreen,
-    builder: (context, state) {
-      final groupData = state.extra as GroupsModel;
-      return GroupScreen(
-        groupData: groupData,
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kUserPermission,
-    builder: (context, state) {
-      final member = state.extra as MembershipModel;
-      return BlocProvider.value(
-          value: sl<PermisionCubit>()..addData(member),
-          child: EditPermissionsScreen(
-            member: member,
-          ));
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kGroupSetting,
-    builder: (context, state) {
-      return BlocProvider.value(
-          value: sl<GroupCubit>()..fetchGroupDetails(1),
-          child: const GroupSettingsScreen(
-            groupId: 1,
-          ));
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kMessaging,
-    builder: (context, state) {
-      return BlocProvider(
-        create: (context) => sl<ChatCubit>()
-          ..getMessages()
-          ..startSocket(),
-        child: ChatScreen(),
-      );
-    },
-  ),
-  GoRoute(
-      path: AppRouter.kResetPassword,
+final route = GoRouter(
+  initialLocation: AppRouter.kSplash,
+  routes: [
+    GoRoute(
+      path: AppRouter.kAddSubscribers,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<ResetPasswordCubit>(),
-          child: ResetPasswordScreen(),
+            value: sl<AddChannelCubit>()..loadSubscribers(),
+            child: AddSubscriber());
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kPreVerify,
+      builder: (context, state) {
+        return const PreVerifyScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kGroupScreen,
+      builder: (context, state) {
+        final groupData = state.extra as GroupsModel;
+        return GroupScreen(
+          groupData: groupData,
         );
-      }),
-  GoRoute(
-    path: AppRouter.kHome,
-    builder: (context, state) {
-      return BlocProvider.value(
-          value: sl<HomeCubit>()..loadHomeData(), child: HomeScreen());
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kOnBoarding,
-    builder: (context, state) {
-      return BlocProvider<OnBordingCubit>.value(
-        value: sl<OnBordingCubit>(),
-        child: const OnBordingScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kSplash,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<SplashCubit>()..startAnimation(),
-        child: const SplashScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kLogin,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<LoginCubit>(),
-        child: const LoginScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kSignUp,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<SignUpCubit>(),
-        child: const SignUpScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kprivacyAndSecurity,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: PrivacySecurityScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kVerifyMail,
-    builder: (context, state) {
-      final param = state.extra as Map<String, dynamic>;
-      return BlocProvider.value(
-          value: sl<VerifyMailCubit>()
-            ..sendVerificationMail(
-                param['method'] as String,
-                HiveCash.read(
-                    boxName: "register_info", key: param['method'] as String)!),
-          child: VerifyMailScreen(
-            method: param['method'] as String,
-          ));
-    },
-  ),
-  GoRoute(
-      path: AppRouter.kForgetPassword,
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kUserPermission,
+      builder: (context, state) {
+        final member = state.extra as MembershipModel;
+        return BlocProvider.value(
+            value: sl<PermisionCubit>()..addData(member),
+            child: EditPermissionsScreen(
+              member: member,
+            ));
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kGroupSetting,
       builder: (context, state) {
         return BlocProvider.value(
-            value: sl<ForgetPasswordCubit>(),
-            child: const ForgetPasswordScreen());
-      }),
-  GoRoute(
-    path: AppRouter.ksettings,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>()..loadSettings(),
-        child: SettingsScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kNewChannel,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<AddChannelCubit>(),
-        child: NewGroupScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kNewGroup,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<AddMembersCubit>()..loadMembers(),
-        child: NewGroupScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kGroupInfo,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<AddMembersCubit>(),
-        child: GroupInfo(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kContacts,
-    builder: (context, state) {
-      return ContactsScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kautoDeleteMessages,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: AutodelMessagesScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.keditProfile,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>()..loadSettings(),
-        child: EditProfileScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kProfile,
-    builder: (context, state) {
-      return const ProfileScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.klastSeenOnline,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: LastseenOnlineScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kblockedUsers,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: BlockedUsersScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kprofilePhotoSecurity,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: ProfilePhotoSecurityScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kblockUser,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<UserSettingsCubit>(),
-        child: BlockUserScreen(),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kLogoLoader,
-    builder: (context, state) {
-      return const LogoLoader();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kcallLog,
-    builder: (context, state) {
-      return CallLogScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kvoiceCall,
-    builder: (context, state) {
-      return VoiceCallScreen(
-        isMuted: false,
-        speakerMode: false,
-        callStatus: "Waiting",
-        contactName: "Caller",
-        contactImage: "",
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kcallContact,
-    builder: (context, state) {
-      return CallContactScreen();
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kglobalSearch,
-    builder: (context, state) {
-      return GlobalSearchScreen(isTyping: true);
-    },
-  ),
-  GoRoute(
-    path: AppRouter.kNavBar,
-    builder: (context, state) {
-      return BlocProvider.value(
-        value: sl<NavCubit>(),
-        child: BottomNavBar(),
-      );
-    },
-  ),
-]);
+            value: sl<GroupCubit>()..fetchGroupDetails(1),
+            child: const GroupSettingsScreen(
+              groupId: 1,
+            ));
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kMessaging,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) => sl<ChatCubit>()
+            ..getMessages()
+            ..startSocket(),
+          child: ChatScreen(),
+        );
+      },
+    ),
+    GoRoute(
+        path: AppRouter.kResetPassword,
+        builder: (context, state) {
+          return BlocProvider.value(
+            value: sl<ResetPasswordCubit>(),
+            child: ResetPasswordScreen(),
+          );
+        }),
+    GoRoute(
+      path: AppRouter.kHome,
+      builder: (context, state) {
+        return BlocProvider.value(
+            value: sl<HomeCubit>()..loadHomeData(), child: HomeScreen());
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kOnBoarding,
+      builder: (context, state) {
+        return BlocProvider<OnBordingCubit>.value(
+          value: sl<OnBordingCubit>(),
+          child: const OnBordingScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kSplash,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<SplashCubit>()..startAnimation(),
+          child: const SplashScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kLogin,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<LoginCubit>(),
+          child: const LoginScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kSignUp,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<SignUpCubit>(),
+          child: const SignUpScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kprivacyAndSecurity,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: PrivacySecurityScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kVerifyMail,
+      builder: (context, state) {
+        final param = state.extra as Map<String, dynamic>;
+        return BlocProvider.value(
+            value: sl<VerifyMailCubit>()
+              ..sendVerificationMail(
+                  param['method'] as String,
+                  HiveCash.read(
+                      boxName: "register_info",
+                      key: param['method'] as String)!),
+            child: VerifyMailScreen(
+              method: param['method'] as String,
+            ));
+      },
+    ),
+    GoRoute(
+        path: AppRouter.kForgetPassword,
+        builder: (context, state) {
+          return BlocProvider.value(
+              value: sl<ForgetPasswordCubit>(),
+              child: const ForgetPasswordScreen());
+        }),
+    GoRoute(
+      path: AppRouter.ksettings,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>()..loadSettings(),
+          child: SettingsScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kNewChannel,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<AddChannelCubit>(),
+          child: NewGroupScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kNewGroup,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<AddMembersCubit>()..loadMembers(),
+          child: NewGroupScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kGroupInfo,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<AddMembersCubit>(),
+          child: GroupInfo(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kContacts,
+      builder: (context, state) {
+        return ContactsScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kautoDeleteMessages,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: AutodelMessagesScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.keditProfile,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>()..loadSettings(),
+          child: EditProfileScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kProfile,
+      builder: (context, state) {
+        return const ProfileScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.klastSeenOnline,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: LastseenOnlineScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kblockedUsers,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: BlockedUsersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kprofilePhotoSecurity,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: ProfilePhotoSecurityScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kblockUser,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: BlockUserScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kLogoLoader,
+      builder: (context, state) {
+        return const LogoLoader();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kcallLog,
+      builder: (context, state) {
+        return CallLogScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kvoiceCall,
+      builder: (context, state) {
+        return VoiceCallScreen(
+          isMuted: false,
+          speakerMode: false,
+          callStatus: "Waiting",
+          contactName: "Caller",
+          contactImage: "",
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kcallContact,
+      builder: (context, state) {
+        return CallContactScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kglobalSearch,
+      builder: (context, state) {
+        return GlobalSearchScreen(isTyping: true);
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kNavBar,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<NavCubit>(),
+          child: BottomNavBar(),
+        );
+      },
+    ),
+  ],
+  observers: [
+    GoRouterObserver(),
+  ],
+);
+
+class GoRouterObserver extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    print('Navigated to ${route.settings.name}');
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    print('Returned from ${route.settings.name}');
+  }
+}

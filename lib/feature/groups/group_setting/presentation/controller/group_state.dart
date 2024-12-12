@@ -9,6 +9,7 @@ class GroupState extends Equatable {
   final List<MembershipModel> members;
   final String? errorMessage;
   final CubitState state;
+  
 
 
   GroupState({

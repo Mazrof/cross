@@ -185,7 +185,7 @@ class ServiceLocator {
         ));
 
     // group cubit
-    sl.registerLazySingleton(() => GroupsCubit(
+    sl.registerFactory(() => GroupsCubit(
           networkManager: sl(),
           getGroupsUseCase: sl(),
           applyFilterUseCase: sl(),

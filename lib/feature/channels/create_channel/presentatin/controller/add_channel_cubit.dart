@@ -8,6 +8,7 @@ import 'package:telegram/feature/channels/create_channel/data/model/subscriber_m
 import 'package:telegram/feature/channels/create_channel/domain/use_case/add_subscribers_use_case.dart';
 import 'package:telegram/feature/channels/create_channel/domain/use_case/creat_channel_use_case.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_state.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 
@@ -23,12 +24,28 @@ class AddChannelCubit extends Cubit<AddChannelState> {
   final AddSubscribersUseCase addSubscribersUseCase;
 
   void loadSubscribers() {
-    List<ChatModel> subscribers = sl<HomeCubit>().state.chats;
     AddChannelState.initial();
+    final String id = HiveCash.read(boxName: "register_info", key: "id");
+    List<chatTileData> members = sl<HomeCubit>()
+        .state
+        .contacts
+        .map((e) => chatTileData(
+            imageUrl: "",
+            name: e.participants.first.userId == id
+                ? e.participants.last.name
+                : e.participants.first.name,
+            id: e.participants.first.userId == id
+                ? e.participants.last.userId as int
+                : e.participants.first.userId as int,
+            lastSeen: e.lastMessage.timestamp))
+        .toList();
+
+    emit(state.copyWith(allSubscribers: members));
   }
 
-  void toggleSubscriber(ChatModel subscriber) {
-    final selectedSubscribers = List<ChatModel>.from(state.selectedSubscribers);
+  void toggleSubscriber(chatTileData subscriber) {
+    final selectedSubscribers =
+        List<chatTileData>.from(state.selectedSubscribers);
 
     if (selectedSubscribers.contains(subscriber)) {
       selectedSubscribers.remove(subscriber);
@@ -84,7 +101,8 @@ class AddChannelCubit extends Cubit<AddChannelState> {
           state.selectedSubscribers
               .map((e) => SubscriberModel(
                     userId: e.id,
-                    role: 'member',
+                    role: "member",
+                    channelId: result.id,
                     hasDownloadPermissions: true,
                   ))
               .toList(),

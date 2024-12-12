@@ -26,17 +26,15 @@ class LoginScreen extends StatelessWidget {
       builder: (context, state) {
         if (state.state == LoginStatusEnum.loading) {
           return const LogoLoader();
-        
         } else if (state.state == LoginStatusEnum.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
                 'user') {
-               GoRouter.of(context).push(AppRouter.kHome);
+              GoRouter.of(context).push(AppRouter.kHome);
             } else {
-             GoRouter.of(context).push(AppRouter.kNavBar);
+              GoRouter.of(context).push(AppRouter.kNavBar);
             }
           });
-          
         } else if (state.state == LoginStatusEnum.error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.error!);

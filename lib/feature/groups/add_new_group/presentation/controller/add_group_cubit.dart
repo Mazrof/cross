@@ -9,6 +9,7 @@ import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
+import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/use_case/create_group_use_case.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
@@ -34,7 +35,22 @@ class AddMembersCubit extends Cubit<AddMembersState> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   void loadMembers() {
-    List<ChatModel> members = sl<HomeCubit>().state.chats;
+    //convert conatacts in home to chatTileData and pass it to allMembers
+    final String id = HiveCash.read(boxName: "register_info", key: "id");
+    List<chatTileData> members = sl<HomeCubit>()
+        .state
+        .contacts
+        .map((e) => chatTileData(
+            imageUrl: "",
+            name: e.participants.first.userId == id
+                ? e.participants.last.name
+                : e.participants.first.name,
+            id: e.participants.first.userId == id
+                ? e.participants.last.userId as int
+                : e.participants.first.userId as int,
+            lastSeen: e.lastMessage.timestamp))
+        .toList();
+
     nameController.clear();
     emit(AddMembersState(
       groupName: '',
@@ -45,8 +61,8 @@ class AddMembersCubit extends Cubit<AddMembersState> {
     ));
   }
 
-  void toggleMember(ChatModel member) {
-    final selectedMembers = List<ChatModel>.from(state.selectedMembers);
+  void toggleMember(chatTileData member) {
+    final selectedMembers = List<chatTileData>.from(state.selectedMembers);
 
     if (selectedMembers.contains(member)) {
       selectedMembers.remove(member);
@@ -110,7 +126,12 @@ class AddMembersCubit extends Cubit<AddMembersState> {
         }
         await addMembersUseCase(
           result.id,
-          state.selectedMembers.map((e) => MemberModel(userId: e.id)).toList(),
+          state.selectedMembers
+              .map((e) => MemberModel(
+                  userId: e.id,
+                
+                  ))
+              .toList(),
         );
         print('members added');
         emit(state.copyWith(state: GroupStatus.success, group: result));
