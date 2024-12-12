@@ -9,19 +9,21 @@ class NightModeCubit extends Cubit<bool> {
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     var isDarkMode = brightness == Brightness.dark;
     final isDarkModeFromCache = CacheHelper.read(key: 'isDarkMode');
-    isDarkMode = isDarkModeFromCache ==true?true:false;
+    isDarkMode = isDarkModeFromCache == "true" ? true : false;
 
-      return isDarkMode;
+    return isDarkMode;
   }
 
   void toggleNightMode() {
-    CacheHelper.write(key: 'isDarkMode', value: !state);
+    CacheHelper.write(
+        key: 'isDarkMode', value: !state == true ? "true" : "false");
     emit(!state);
   }
 
   void setNightMode(bool isNightMode) {
     // Save the state in local storage
-    CacheHelper.write(key: 'isDarkMode', value: isNightMode);
+    CacheHelper.write(
+        key: 'isDarkMode', value: isNightMode == true ? "true" : "false");
     emit(isNightMode);
   }
 }

@@ -33,22 +33,22 @@ class SplashScreen extends StatelessWidget {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
                     'user') {
-                  context.go(AppRouter.kHome);
+                  GoRouter.of(context).go(AppRouter.kHome);
                   print('user');
                 } else
-                  context.go(AppRouter.kNavBar);
+                  GoRouter.of(context).go(AppRouter.kNavBar);
               });
               return Container();
             } else if (state is SplashUnauthenticated) {
               // Navigate to unauthenticated screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kLogin);
+                GoRouter.of(context).go(AppRouter.kLogin);
               });
               return Container();
             } else if (state is SplashEmailVerificationRequired) {
               // Navigate to email verification screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go(AppRouter.kPreVerify);
+                GoRouter.of(context).go(AppRouter.kVerifyMail);
               });
               return Container();
             } else if (state is AnimationInProgress ||
