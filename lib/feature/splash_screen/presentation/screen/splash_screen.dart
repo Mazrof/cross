@@ -48,7 +48,7 @@ class SplashScreen extends StatelessWidget {
             } else if (state is SplashEmailVerificationRequired) {
               // Navigate to email verification screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                GoRouter.of(context).go(AppRouter.kVerifyMail);
+                GoRouter.of(context).go(AppRouter.kPreVerify);
               });
               return Container();
             } else if (state is AnimationInProgress ||

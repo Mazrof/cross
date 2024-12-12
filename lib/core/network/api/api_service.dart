@@ -1,10 +1,13 @@
-import 'dart:convert';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
+import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
 import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../../error/faliure.dart';
 
@@ -16,6 +19,7 @@ class ApiService {
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
   Dio dio;
+  bool _howAmICalled = false;
 
   // Private named constructor
   ApiService._internal(this.cookieJar, this.dio);
@@ -34,7 +38,8 @@ class ApiService {
     dio.interceptors.add(InterceptorsWrapper(
       onError: (DioError error, ErrorInterceptorHandler handler) async {
         if (error.response?.statusCode == 401) {
-          await ApiService._internal(cookieJar, dio).howAmI();
+          await ApiService._internal(cookieJar, dio)
+              ._retryWithHowAmI(error.requestOptions);
           // Retry the original request
           final options = error.requestOptions;
           final response = await dio.request(
@@ -54,23 +59,23 @@ class ApiService {
     return ApiService._internal(cookieJar, dio);
   }
 
-  Future<void> howAmI() async {
-    var endp = 'auth/whoami';
-    final whoAmIResponse = await dio.get(endp);
-    print('Who Am I Response: ${whoAmIResponse.data}');
-    if (whoAmIResponse.statusCode == 201 || whoAmIResponse.statusCode == 200) {
-      // Get user data and store it
-      var userData = whoAmIResponse.data['data']['user'];
-      var user = RegisterData.fromJson(userData);
-      for (var key in user.toJson().keys) {
-        print('key: $key');
-        HiveCash.write(
-          boxName: 'register_info',
-          key: key,
-          value: user.toJson()[key],
-        );
-      }
+  Future<void> _retryWithHowAmI(RequestOptions requestOptions) async {
+    if (!_howAmICalled) {
+      await howAmI();
+      _howAmICalled = true;
+    } else {
+      // GoRouter.of(context).go(AppRoutes.login);
     }
+  }
+
+  Future<void> howAmI() async {
+    sl<LoginDataSource>().login(
+      LoginRequestBody(
+        email: HiveCash.read(boxName: 'register_info', key: "email"),
+        password:
+            HiveCash.read(boxName: 'register_info', key: "password_not_hashed"),
+      ),
+    );
   }
 
   Future<Response> get({
@@ -86,7 +91,10 @@ class ApiService {
 
       print(response.data);
       print(response.statusCode);
-
+      print('iam here');
+      print(response.data);
+      print(response.statusCode);
+      print('iam here');
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {

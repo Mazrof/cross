@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
@@ -19,6 +22,7 @@ class EditPermissionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('EditPermissionsScreen');
     return Scaffold(
       appBar: CAppBar(
         leadingIcon: Icons.arrow_back,
@@ -29,6 +33,13 @@ class EditPermissionsScreen extends StatelessWidget {
       ),
       body: BlocBuilder<PermisionCubit, PermisionState>(
         builder: (context, state) {
+          if (state.state == CubitState.failure) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              CSnackBar.showErrorSnackBar(
+                  context, 'Error', state.message ?? 'An error occurred');
+            });
+          }
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -65,9 +76,7 @@ class EditPermissionsScreen extends StatelessWidget {
                   value: true,
                   groupValue: state.membershipModel!.hasDownloadPermissions,
                   onChanged: (value) {
-                    context
-                        .read<PermisionCubit>()
-                        .toggleDownloadPermissions(value!);
+                    sl<PermisionCubit>().toggleDownloadPermissions(value!);
                   },
                 ),
                 RadioListTile<bool>(
@@ -80,9 +89,7 @@ class EditPermissionsScreen extends StatelessWidget {
                   value: false,
                   groupValue: state.membershipModel!.hasDownloadPermissions,
                   onChanged: (value) {
-                    context
-                        .read<PermisionCubit>()
-                        .toggleDownloadPermissions(value!);
+                    sl<PermisionCubit>().toggleDownloadPermissions(value!);
                   },
                 ),
                 const Divider(),
@@ -101,9 +108,7 @@ class EditPermissionsScreen extends StatelessWidget {
                   value: true,
                   groupValue: state.membershipModel!.hasMessagePermissions,
                   onChanged: (value) {
-                    context
-                        .read<PermisionCubit>()
-                        .toggleMessagePermissions(value!);
+                    sl<PermisionCubit>().toggleMessagePermissions(value!);
                   },
                 ),
                 RadioListTile<bool>(
@@ -116,9 +121,7 @@ class EditPermissionsScreen extends StatelessWidget {
                   value: false,
                   groupValue: state.membershipModel!.hasMessagePermissions,
                   onChanged: (value) {
-                    context
-                        .read<PermisionCubit>()
-                        .toggleMessagePermissions(value!);
+                    sl<PermisionCubit>().toggleMessagePermissions(value!);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -129,13 +132,7 @@ class EditPermissionsScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final cubit = context.read<PermisionCubit>();
-          // cubit.editMemberData(
-          //   hasDownloadPermissions:
-          //       cubit.state.membershipModel.hasDownloadPermissions,
-          //   hasMessagePermissions:
-          //       cubit.state.membershipModel.hasMessagePermissions,
-          // );
+          sl<PermisionCubit>().editMemberData();
           GoRouter.of(context).pop();
         },
         child: const Icon(

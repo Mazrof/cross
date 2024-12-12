@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
@@ -11,6 +12,7 @@ import 'package:telegram/feature/channels/create_channel/presentatin/controller/
 import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddChannelCubit extends Cubit<AddChannelState> {
   AddChannelCubit(
@@ -22,6 +24,8 @@ class AddChannelCubit extends Cubit<AddChannelState> {
   final NetworkManager networkManager;
   final CreateChannelUseCase createChannelUseCase;
   final AddSubscribersUseCase addSubscribersUseCase;
+  final ImagePicker _picker = ImagePicker();
+  final nameController = TextEditingController();
 
   void loadSubscribers() {
     AddChannelState.initial();
@@ -43,6 +47,8 @@ class AddChannelCubit extends Cubit<AddChannelState> {
     emit(state.copyWith(allSubscribers: members));
   }
 
+
+
   void toggleSubscriber(chatTileData subscriber) {
     final selectedSubscribers =
         List<chatTileData>.from(state.selectedSubscribers);
@@ -56,13 +62,25 @@ class AddChannelCubit extends Cubit<AddChannelState> {
     emit(state.copyWith(selectedSubscribers: selectedSubscribers));
   }
 
+  Future<void> selectChannelImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        emit(state.copyWith(
+            channelImageUrl: pickedFile.path, state: CubitState.initial));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+          errorMessage: 'Failed to select image: $e',
+          state: CubitState.failure));
+    }
+  }
+
   void setChannelName(String name) {
     emit(state.copyWith(channelName: name));
   }
 
-  void setChannelImageUrl(String imageUrl) {
-    emit(state.copyWith(channelImageUrl: imageUrl));
-  }
+ 
 
   void setChannelPrivacy(bool isPublic) {
     emit(state.copyWith(

@@ -1,12 +1,11 @@
-
+import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/data/model/story_model.dart';
 
-
-class HomeState {
+class HomeState extends Equatable {
   final CubitState state;
   final List<StoryModel> stories;
   final List<GroupModel> groups;
@@ -40,4 +39,9 @@ class HomeState {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props =>
+      [state, stories, groups, channels, contacts, errorMessage];
 }

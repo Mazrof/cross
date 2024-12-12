@@ -22,6 +22,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
 
   @override
   Future<GroupModel> fetchGroupDetails(int groupId) async {
+    print('fetching group details');
     final response = await apiService.get(endPoint: 'groups/$groupId');
     return GroupModel.fromJson(response.data['data']['group']);
   }
@@ -79,11 +80,18 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
 
   @override
   Future<List<MembershipModel>> fetchMembers(int groupId) async {
-    final respons = await apiService.get(
-      endPoint: 'groups/$groupId/members',
-    );
-    return respons.data['data']['members']
-        .map<MemberModel>((e) => MemberModel.fromJson(e))
-        .toList();
+    print("Fetching members");
+    final response = await apiService.get(endPoint: 'groups/$groupId/members');
+    print("in the data source");
+    if (response.statusCode == 200) {
+      final members = response.data?['data']?['members'];
+      if (members is List) {
+        return members.map((e) => MembershipModel.fromJson(e)).toList();
+      } else {
+        throw Exception('Invalid response format: Members missing');
+      }
+    } else {
+      throw Exception('Failed to fetch members: ${response.statusCode}');
+    }
   }
 }

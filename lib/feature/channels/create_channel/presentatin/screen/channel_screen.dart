@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 
-class GroupScreen extends StatelessWidget {
-  const GroupScreen({required this.groupData});
-  final GroupsModel groupData;
+class ChannelScreen extends StatelessWidget {
+  const ChannelScreen({required this.channelData});
+  final ChannelModel channelData;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +23,12 @@ class GroupScreen extends StatelessWidget {
           child: Row(
             children: [
               GeneralImage(
-                username: groupData.name,
+                username: channelData.name,
                 imageUrl: 'https://via.placeholder.com/150',
               ),
               Column(
                 children: [
-                  Text(groupData.name,
+                  Text(channelData.name,
                       style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
@@ -35,7 +36,7 @@ class GroupScreen extends StatelessWidget {
           ),
           onTap: () {
             GoRouter.of(context)
-                .push(AppRouter.kGroupSetting, extra: groupData.id);
+                .push(AppRouter.KChannelSetting, extra: channelData.id);
           },
         ),
       ),

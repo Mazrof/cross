@@ -24,6 +24,7 @@ class GroupInfo extends StatelessWidget {
         } else if (state.state == GroupStatus.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             print(sl<AddMembersCubit>().state.group);
+            GoRouter.of(context).pop();
 
             GoRouter.of(context).pushReplacement(AppRouter.kGroupScreen,
                 extra: sl<AddMembersCubit>().state.group);

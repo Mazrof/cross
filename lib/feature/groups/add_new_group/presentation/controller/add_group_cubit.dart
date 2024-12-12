@@ -35,21 +35,12 @@ class AddMembersCubit extends Cubit<AddMembersState> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   void loadMembers() {
+    print('loading members');
+
     //convert conatacts in home to chatTileData and pass it to allMembers
-    final String id = HiveCash.read(boxName: "register_info", key: "id");
-    List<chatTileData> members = sl<HomeCubit>()
-        .state
-        .contacts
-        .map((e) => chatTileData(
-            imageUrl: "",
-            name: e.participants.first.userId == id
-                ? e.participants.last.name
-                : e.participants.first.name,
-            id: e.participants.first.userId == id
-                ? e.participants.last.userId as int
-                : e.participants.first.userId as int,
-            lastSeen: e.lastMessage.timestamp))
-        .toList();
+    final int id = HiveCash.read(boxName: "register_info", key: "id");
+    List<chatTileData> members = convertChatModelToChatTileData(
+        sl<HomeCubit>().state.contacts, id.toString());
 
     nameController.clear();
     emit(AddMembersState(
@@ -61,7 +52,24 @@ class AddMembersCubit extends Cubit<AddMembersState> {
     ));
   }
 
+  List<chatTileData> convertChatModelToChatTileData(
+      List<ChatModel> chats, String currentUserId) {
+    return chats.map((chat) {
+      final participant = chat.participants.first.userId == currentUserId
+          ? chat.participants.last
+          : chat.participants.first;
+
+      return chatTileData(
+        id: int.parse(participant.userId),
+        name: participant.name,
+        imageUrl: "", // Assuming imageUrl is not available in ChatModel
+        lastSeen: participant.lastSeen,
+      );
+    }).toList();
+  }
+
   void toggleMember(chatTileData member) {
+    print('toggling member');
     final selectedMembers = List<chatTileData>.from(state.selectedMembers);
 
     if (selectedMembers.contains(member)) {
@@ -128,8 +136,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
           result.id,
           state.selectedMembers
               .map((e) => MemberModel(
-                  userId: e.id,
-                
+                    userId: e.id,
                   ))
               .toList(),
         );

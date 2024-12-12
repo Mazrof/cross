@@ -48,29 +48,18 @@ class LoginDataSourceImp implements LoginDataSource {
         // Store the access token and refresh token in the cache
         if (loginModel.rememberMe == true) {
           CacheHelper.write(key: 'loged', value: 'true');
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: loginModel.email,
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: loginModel.password,
-          );
-        } else {
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: '',
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: '',
-          );
-          //cash the email and password
         }
+
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'email',
+          value: loginModel.email,
+        );
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'password_not_hashed',
+          value: loginModel.password,
+        );
         HiveCash.write(
           boxName: 'register_info',
           key: 'id',

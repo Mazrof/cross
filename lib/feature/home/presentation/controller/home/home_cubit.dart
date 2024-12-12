@@ -1,16 +1,32 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/data/model/story_model.dart';
+import 'package:telegram/feature/home/domain/use_cases/fetch_channels_use_case.dart';
+import 'package:telegram/feature/home/domain/use_cases/fetch_contacts_use_case.dart';
+import 'package:telegram/feature/home/domain/use_cases/fetch_groups_use_case.dart';
+import 'package:telegram/feature/home/domain/use_cases/fetch_story_use_case.dart';
 import '../../../../channels/create_channel/data/model/channel_model.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeState());
+  HomeCubit({
+    required this.fetchStoriesUseCase,
+    required this.fetchGroupsUseCase,
+    required this.fetchChannelsUseCase,
+    required this.fetchContactsUseCase,
+    required this.networkManager,
+  }) : super(HomeState());
 
+  final FetchStoriesUseCase fetchStoriesUseCase;
+  final FetchGroupsUseCase fetchGroupsUseCase;
+  final FetchChannelsUseCase fetchChannelsUseCase;
+  final FetchContactsUseCase fetchContactsUseCase;
+  final NetworkManager networkManager;
   Future<void> loadHomeData() async {
     emit(state.copyWith(state: CubitState.loading));
 

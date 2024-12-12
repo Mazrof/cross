@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
@@ -36,9 +37,13 @@ class GroupSettingsScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.delete),
             onPressed: () {
-              // Navigate to Edit Group Screen
+              CSnackBar.showErrorDialog(context, 
+                  'Are you sure you want to delete this group?', () {
+                sl<GroupCubit>().deleteGroup(groupId);
+                GoRouter.of(context).pop();
+              });
             },
           ),
         ],
@@ -74,7 +79,7 @@ class GroupSettingsScreen extends StatelessWidget {
                                   ),
                         ),
                         Text(
-                          '${state.members.length} members',
+                          '${state.group!.groupSize} Members',
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     color: Colors.white,
@@ -99,7 +104,7 @@ class GroupSettingsScreen extends StatelessWidget {
                   'Mute Notifications',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                value: true, //TODO: Get value from cubit
+                value: state.ismute, //TODO: Get value from cubit
                 onChanged: (value) {
                   sl<GroupCubit>().toggleNotifications(groupId, value);
                 },
@@ -116,6 +121,7 @@ class GroupSettingsScreen extends StatelessWidget {
                 ),
                 value: state.group!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
+                  sl<GroupCubit>().togglePrivacy(groupId);
                   sl<GroupCubit>().updateGroupDetails(
                       groupId,
                       GroupUpdateData(
@@ -130,7 +136,8 @@ class GroupSettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextButton.icon(
                   onPressed: () {
-                    // Navigate to Add Member Screen
+                    GoRouter.of(context)
+                        .push(AppRouter.kAddmembers, extra: state.group);
                   },
                   icon: const Icon(Icons.add, color: AppColors.primaryColor),
                   label: const Text(
@@ -170,9 +177,14 @@ class GroupSettingsScreen extends StatelessWidget {
                                 .removeMember(groupId, member.userId);
                           } else if (value == 'admin') {
                             sl<GroupCubit>().updateMemberRole(
-                                groupId,
-                                MemberModel(
-                                    userId: member.userId, role: 'admin'));
+                              MemberModel(
+                                  userId: member.userId,
+                                  role: 'admin',
+                                  hasDownloadPermissions:
+                                      member.hasDownloadPermissions,
+                                  hasMessagePermissions:
+                                      member.hasMessagePermissions),
+                            );
                           }
                         },
                         itemBuilder: (context) => [

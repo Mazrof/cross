@@ -41,7 +41,7 @@ class VerifyMailScreen extends StatelessWidget {
               context, 'Mail Sent', AppStrings.codeSent);
         });
       } else if (state.status == VerifyMailStatus.loading) {
-        return LogoLoader();
+        return const LogoLoader();
       }
 
       return VerifyMailPage(method: method);
@@ -54,6 +54,7 @@ class VerifyMailPage extends StatefulWidget {
     required this.method,
     super.key,
   });
+
   final String method;
 
   @override
@@ -61,17 +62,17 @@ class VerifyMailPage extends StatefulWidget {
 }
 
 class _VerifyMailPageState extends State<VerifyMailPage> {
-  late TextEditingController _otpController;
+  late TextEditingController otpController;
 
   @override
   void initState() {
     super.initState();
-    _otpController = TextEditingController();
+    otpController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _otpController.dispose();
+    otpController.dispose();
     super.dispose();
   }
 
@@ -82,14 +83,12 @@ class _VerifyMailPageState extends State<VerifyMailPage> {
 
     return Scaffold(
       appBar: CAppBar(
-        title: Text(''),
+        title: const Text(''),
         leadingIcon: Icons.arrow_back,
         onLeadingTap: () {
           context.go(AppRouter.kPreVerify);
         },
       ),
-      //wrap with form
-
       body: Form(
         key: sl<VerifyMailCubit>().formKey,
         child: Padding(
@@ -144,7 +143,7 @@ class _VerifyMailPageState extends State<VerifyMailPage> {
                   child: PinCodeTextField(
                     appContext: context,
                     length: 6,
-                    controller: _otpController,
+                    controller: otpController,
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
                       borderRadius:
@@ -162,7 +161,7 @@ class _VerifyMailPageState extends State<VerifyMailPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      final otpCode = _otpController.text.trim();
+                      final otpCode = otpController.text.trim();
                       if (otpCode.isEmpty) {
                         CSnackBar.showErrorSnackBar(
                             context, 'Error', 'Please enter the OTP code.');

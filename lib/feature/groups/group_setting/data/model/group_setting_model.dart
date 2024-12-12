@@ -21,7 +21,7 @@ class GroupModel extends GroupEntity {
       groupSize: json['groupSize'],
       name: json['community']['name'],
       privacy: json['community']['privacy'],
-      imageUrl: json['imageUrl'],
+      imageUrl: json['community']['imageURL'],
     );
   }
 
@@ -35,7 +35,7 @@ class GroupModel extends GroupEntity {
     };
   }
 
-  // copy with 
+  // copy with
   GroupModel copyWith({
     int? id,
     int? groupSize,

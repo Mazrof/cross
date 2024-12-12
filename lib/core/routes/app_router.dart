@@ -11,13 +11,16 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
-import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_subscriber.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_new_subscribers_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_screen.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/controller/add_members_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/permision_cubit.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/screen/add_new_members_screen.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/screen/group_setting_screen.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/screen/permision_screen.dart';
 
@@ -104,10 +107,13 @@ class AppRouter {
   static const String kGroupSetting = '/group_setting';
   static const String kUserPermission = '/user-permission';
   static const String kGroupScreen = '/group_screen';
+  static const String kAddmembers = '/add_members';
 
   //channels
   static const String kNewChannel = '/new_channel';
   static const String kAddSubscribers = '/add_sub';
+  static const String kChannelScreen = '/channel_screen';
+  static const String KChannelSetting = 'channel_setting';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -120,15 +126,23 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kAddSubscribers,
       builder: (context, state) {
-        return BlocProvider.value(
-            value: sl<AddChannelCubit>()..loadSubscribers(),
-            child: AddSubscriber());
+        return AddNewSubscribersScreen();
       },
     ),
     GoRoute(
       path: AppRouter.kPreVerify,
       builder: (context, state) {
         return const PreVerifyScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kAddmembers,
+      builder: (context, state) {
+        final groupData = state.extra as GroupModel;
+        return BlocProvider.value(
+          value: sl<MembersCubit>()..fetchGroupDetails(groupData),
+          child: AddNewMembersScreen(),
+        );
       },
     ),
     GoRoute(
@@ -154,10 +168,11 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kGroupSetting,
       builder: (context, state) {
-        return BlocProvider.value(
-            value: sl<GroupCubit>()..fetchGroupDetails(1),
-            child: const GroupSettingsScreen(
-              groupId: 1,
+        final int groupId = state.extra as int;
+        return BlocProvider(
+            create: (context) => sl<GroupCubit>()..fetchGroupDetails(groupId),
+            child: GroupSettingsScreen(
+              groupId: groupId,
             ));
       },
     ),

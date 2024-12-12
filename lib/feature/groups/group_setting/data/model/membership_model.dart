@@ -5,7 +5,7 @@ class MembershipModel extends MembershipEntity {
     required int groupId,
     required int userId,
     required String role,
-    required bool status,
+    required bool active,
     required bool hasDownloadPermissions,
     required bool hasMessagePermissions,
     required String username,
@@ -14,7 +14,7 @@ class MembershipModel extends MembershipEntity {
           groupId: groupId,
           userId: userId,
           role: role,
-          status: status,
+          status: active,
           hasDownloadPermissions: hasDownloadPermissions,
           hasMessagePermissions: hasMessagePermissions,
           username: username,
@@ -26,11 +26,11 @@ class MembershipModel extends MembershipEntity {
       groupId: json['groupId'],
       userId: json['userId'],
       role: json['role'],
-      status: json['status'],
+      active: json['active'],
       hasDownloadPermissions: json['hasDownloadPermissions'],
       hasMessagePermissions: json['hasMessagePermissions'],
-      username: json['username'],
-      imageUrl: json['imageUrl'],
+      username: json['users']['username'],
+      imageUrl: json['imageUrl'] ?? '',
     );
   }
 
@@ -53,7 +53,7 @@ class MembershipModel extends MembershipEntity {
     int? groupId,
     int? userId,
     String? role,
-    bool? status,
+    bool? active,
     bool? hasDownloadPermissions,
     bool? hasMessagePermissions,
     String? username,
@@ -63,7 +63,7 @@ class MembershipModel extends MembershipEntity {
       groupId: groupId ?? this.groupId,
       userId: userId ?? this.userId,
       role: role ?? this.role,
-      status: status ?? this.status,
+      active: status ?? this.status,
       hasDownloadPermissions:
           hasDownloadPermissions ?? this.hasDownloadPermissions,
       hasMessagePermissions:
