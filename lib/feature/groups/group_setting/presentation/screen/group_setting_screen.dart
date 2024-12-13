@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
+import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_state.dart';
 
@@ -34,9 +37,13 @@ class GroupSettingsScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.delete),
             onPressed: () {
-              // Navigate to Edit Group Screen
+              CSnackBar.showErrorDialog(context, 
+                  'Are you sure you want to delete this group?', () {
+                sl<GroupCubit>().deleteGroup(groupId);
+                GoRouter.of(context).pop();
+              });
             },
           ),
         ],
@@ -72,7 +79,7 @@ class GroupSettingsScreen extends StatelessWidget {
                                   ),
                         ),
                         Text(
-                          '${state.members.length} members',
+                          '${state.group!.groupSize} Members',
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     color: Colors.white,
@@ -95,11 +102,33 @@ class GroupSettingsScreen extends StatelessWidget {
                 inactiveTrackColor: AppColors.grey.withOpacity(0.5),
                 title: Text(
                   'Mute Notifications',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                value: true, //TODO: Get value from cubit
+                value: state.ismute, //TODO: Get value from cubit
                 onChanged: (value) {
                   sl<GroupCubit>().toggleNotifications(groupId, value);
+                },
+              ),
+              const Divider(),
+              SwitchListTile(
+                activeColor: AppColors.primaryColor,
+                activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
+                inactiveThumbColor: AppColors.grey,
+                inactiveTrackColor: AppColors.grey.withOpacity(0.5),
+                title: Text(
+                  'make it private',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: state.group!.privacy, //TODO: Get value from cubit
+                onChanged: (value) {
+                  sl<GroupCubit>().togglePrivacy(groupId);
+                  sl<GroupCubit>().updateGroupDetails(
+                      groupId,
+                      GroupUpdateData(
+                          name: state.group!.name,
+                          privacy: state.group!.privacy,
+                          groupSize: state.group!.groupSize,
+                          imageUrl: state.group!.imageUrl));
                 },
               ),
               const Divider(),
@@ -107,7 +136,8 @@ class GroupSettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextButton.icon(
                   onPressed: () {
-                    // Navigate to Add Member Screen
+                    GoRouter.of(context)
+                        .push(AppRouter.kAddmembers, extra: state.group);
                   },
                   icon: const Icon(Icons.add, color: AppColors.primaryColor),
                   label: const Text(
@@ -143,13 +173,18 @@ class GroupSettingsScreen extends StatelessWidget {
                             GoRouter.of(context)
                                 .push(AppRouter.kUserPermission, extra: member);
                           } else if (value == 'remove') {
-                            // context
-                            //     .read<GroupCubit>()
-                            //     .removeMember(groupId, member.id);
+                            sl<GroupCubit>()
+                                .removeMember(groupId, member.userId);
                           } else if (value == 'admin') {
-                            // context
-                            //     .read<GroupCubit>()
-                            //     .setAdmin(groupId, member.id);
+                            sl<GroupCubit>().updateMemberRole(
+                              MemberModel(
+                                  userId: member.userId,
+                                  role: 'admin',
+                                  hasDownloadPermissions:
+                                      member.hasDownloadPermissions,
+                                  hasMessagePermissions:
+                                      member.hasMessagePermissions),
+                            );
                           }
                         },
                         itemBuilder: (context) => [

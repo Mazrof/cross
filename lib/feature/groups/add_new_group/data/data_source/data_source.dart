@@ -17,7 +17,6 @@ class CreatGroupDataSourceMpl extends CreateGroupDataSource {
 
   Future<GroupsModel> createGroup(GroupsModel group) async {
     final response = await apiService.post(
-      
       endPoint: 'groups/',
       data: group.toJson(),
     );
@@ -26,10 +25,15 @@ class CreatGroupDataSourceMpl extends CreateGroupDataSource {
   }
 
   Future<void> addMembers(int id, List<MemberModel> members) async {
-    await apiService.post(
-      endPoint: 'groups/${id}/members',
-      data: members.map((e) => e.toJson()).toList(),
+    print('members: $members');
+    print('adding members to group with id:');
+    await Future.wait(
+      members.map((member) async {
+        await apiService.post(
+          endPoint: 'groups/$id/members',
+          data: member.toJson(),
+        );
+      }),
     );
-    
   }
 }

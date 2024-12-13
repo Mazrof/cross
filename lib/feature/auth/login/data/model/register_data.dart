@@ -1,12 +1,11 @@
-import 'package:equatable/equatable.dart';
-
-class RegisterData extends Equatable {
+class RegisterData {
   final int id;
   final String username;
   final String password;
-  final DateTime? passwordChangedAt;
   final String email;
   final String phone;
+  final bool isEmailVerified;
+  final bool isPhoneVerified;
   final String? photo;
   final String? bio;
   final String? screenName;
@@ -20,20 +19,19 @@ class RegisterData extends Equatable {
   final String profilePicVisibility;
   final String storyVisibility;
   final String readReceiptsEnabled;
-  final bool lastSeenVisibility;
+  final String lastSeenVisibility;
   final bool groupAddPermission;
-  final bool isEmailVerified;
-  final bool isPhoneVerified;
   final String? privateKey;
-  final String publicKey;
+  final String? publicKey;
 
-  const RegisterData({
+  RegisterData({
     required this.id,
     required this.username,
     required this.password,
-    this.passwordChangedAt,
     required this.email,
     required this.phone,
+    required this.isEmailVerified,
+    required this.isPhoneVerified,
     this.photo,
     this.bio,
     this.screenName,
@@ -49,71 +47,39 @@ class RegisterData extends Equatable {
     required this.readReceiptsEnabled,
     required this.lastSeenVisibility,
     required this.groupAddPermission,
-    required this.isEmailVerified,
-    required this.isPhoneVerified,
     this.privateKey,
-    required this.publicKey,
+    this.publicKey,
   });
 
-  @override
-  List<Object?> get props => [
-        id,
-        username,
-        password,
-        passwordChangedAt,
-        email,
-        phone,
-        photo,
-        bio,
-        screenName,
-        status,
-        lastSeen,
-        activeNow,
-        providerType,
-        providerId,
-        autoDownloadSizeLimit,
-        maxLimitFileSize,
-        profilePicVisibility,
-        storyVisibility,
-        readReceiptsEnabled,
-        lastSeenVisibility,
-        groupAddPermission,
-        isEmailVerified,
-        isPhoneVerified,
-        privateKey,
-        publicKey,
-      ];
-
   factory RegisterData.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'] ?? json;
     return RegisterData(
-      id: json['id'],
-      username: json['username'],
-      password: json['password'],
-      passwordChangedAt: json['passwordChangedAt'] != null
-          ? DateTime.parse(json['passwordChangedAt'])
+      id: userJson['id'] ?? 0,
+      username: userJson['username'] ?? '',
+      password: userJson['password'] ?? '',
+      email: userJson['email'] ?? '',
+      phone: userJson['phone'] ?? '',
+      isEmailVerified: userJson['isEmailVerified'] ?? false,
+      isPhoneVerified: userJson['isPhoneVerified'] ?? false,
+      photo: userJson['photo'],
+      bio: userJson['bio'],
+      screenName: userJson['screenName'],
+      status: userJson['status'] ?? false,
+      lastSeen: userJson['lastSeen'] != null
+          ? DateTime.parse(userJson['lastSeen'])
           : null,
-      email: json['email'],
-      phone: json['phone'],
-      photo: json['photo'],
-      bio: json['bio'],
-      screenName: json['screenName'],
-      status: json['status'],
-      lastSeen:
-          json['lastSeen'] != null ? DateTime.parse(json['lastSeen']) : null,
-      activeNow: json['activeNow'],
-      providerType: json['providerType'],
-      providerId: json['providerId'],
-      autoDownloadSizeLimit: json['autoDownloadSizeLimit'],
-      maxLimitFileSize: json['maxLimitFileSize'],
-      profilePicVisibility: json['profilePicVisibility'],
-      storyVisibility: json['storyVisibility'],
-      readReceiptsEnabled: json['readReceiptsEnabled'],
-      lastSeenVisibility: json['lastSeenVisibility'],
-      groupAddPermission: json['groupAddPermission'],
-      isEmailVerified: json['isEmailVerified'],
-      isPhoneVerified: json['isPhoneVerified'],
-      privateKey: json['privateKey'],
-      publicKey: json['publicKey'],
+      activeNow: userJson['activeNow'] ?? false,
+      providerType: userJson['providerType'],
+      providerId: userJson['providerId'],
+      autoDownloadSizeLimit: userJson['autoDownloadSizeLimit'],
+      maxLimitFileSize: userJson['maxLimitFileSize'],
+      profilePicVisibility: userJson['profilePicVisibility'] ?? '',
+      storyVisibility: userJson['storyVisibility'] ?? '',
+      readReceiptsEnabled: userJson['readReceiptsEnabled'] ?? '',
+      lastSeenVisibility: userJson['lastSeenVisibility'] ?? '',
+      groupAddPermission: userJson['groupAddPermission'] ?? false,
+      privateKey: userJson['privateKey'],
+      publicKey: userJson['publicKey'],
     );
   }
 
@@ -122,28 +88,26 @@ class RegisterData extends Equatable {
       'id': id,
       'username': username,
       'password': password,
-      'passwordChangedAt': passwordChangedAt?.toIso8601String(),
       'email': email,
       'phone': phone,
-      'photo': photo,
-      'bio': bio,
-      'screenName': screenName,
+      if (photo != null) 'photo': photo,
+      if (bio != null) 'bio': bio,
+      if (screenName != null) 'screenName': screenName,
       'status': status,
-      'lastSeen': lastSeen?.toIso8601String(),
+      if (lastSeen != null) 'lastSeen': lastSeen!.toIso8601String(),
       'activeNow': activeNow,
-      'providerType': providerType,
-      'providerId': providerId,
-      'autoDownloadSizeLimit': autoDownloadSizeLimit,
-      'maxLimitFileSize': maxLimitFileSize,
+      if (providerType != null) 'providerType': providerType,
+      if (providerId != null) 'providerId': providerId,
+      if (autoDownloadSizeLimit != null)
+        'autoDownloadSizeLimit': autoDownloadSizeLimit,
+      if (maxLimitFileSize != null) 'maxLimitFileSize': maxLimitFileSize,
       'profilePicVisibility': profilePicVisibility,
       'storyVisibility': storyVisibility,
       'readReceiptsEnabled': readReceiptsEnabled,
       'lastSeenVisibility': lastSeenVisibility,
       'groupAddPermission': groupAddPermission,
-      'isEmailVerified': isEmailVerified,
-      'isPhoneVerified': isPhoneVerified,
-      'privateKey': privateKey,
-      'publicKey': publicKey,
+      if (privateKey != null) 'privateKey': privateKey,
+      if (publicKey != null) 'publicKey': publicKey,
     };
   }
 }

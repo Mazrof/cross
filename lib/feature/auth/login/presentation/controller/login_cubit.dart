@@ -35,11 +35,10 @@ class LoginCubit extends Cubit<LoginState> {
       //then check if there is an email and password in the box
 
       var email = HiveCash.read<String>(boxName: 'register_info', key: 'email');
-      var password =
-          HiveCash.read<String>(boxName: 'register_info', key: 'password');
-      if (email != null && password != null) {
+
+      if (email != null) {
         emailController.text = email;
-        passwordController.text = password;
+
         emit(state.copyWith(rememberMe: true));
       }
     }

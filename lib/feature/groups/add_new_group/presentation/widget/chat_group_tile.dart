@@ -15,7 +15,7 @@ class ChatGroupTile extends StatelessWidget {
     required this.imageUrl,
     required this.title,
     required this.onTap,
-    required this.lastSeen,
+    required this.lastSeen, required bool isSelected,
   }) : super(key: key);
 
   @override

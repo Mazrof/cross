@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/cnight_mode_switch.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
-import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
 class CAppDrawer extends StatelessWidget {
@@ -14,6 +14,7 @@ class CAppDrawer extends StatelessWidget {
     final username =
         HiveCash.read(boxName: 'register_info', key: 'username') ?? '';
     final email = HiveCash.read(boxName: 'register_info', key: 'email') ?? '';
+    print(username);
 
     return Drawer(
       child: ListView(
@@ -35,9 +36,12 @@ class CAppDrawer extends StatelessWidget {
                     color: AppColors.whiteColor,
                   ),
             ),
-            currentAccountPicture:
-                Avatar(imageUrl: AppAssetsStrings.general_person),
+            currentAccountPicture: GeneralImage(
+              username: username,
+              imageUrl: '',
+            ),
           ),
+
           DrawerListTile(
             iconData: Icons.group,
             title: 'New Group',
@@ -54,7 +58,7 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.notifications,
             title: 'New Channel',
             onTilePressed: () {
-              GoRouter.of(context).push(AppRouter.kNewChannel);
+              GoRouter.of(context).push(AppRouter.kAddSubscribers);
             },
           ),
           DrawerListTile(
@@ -81,6 +85,11 @@ class CAppDrawer extends StatelessWidget {
               GoRouter.of(context).push(AppRouter.ksettings);
             },
           ),
+          ListTile(
+            title: Text('Night Mode',
+                style: Theme.of(context).textTheme.bodyMedium),
+            trailing: CNightModeSwitch(),
+          ),
           const Divider(),
           DrawerListTile(
             iconData: Icons.person_add,
@@ -92,6 +101,15 @@ class CAppDrawer extends StatelessWidget {
             title: 'Telegram FAQ',
             onTilePressed: () {},
           ),
+
+          // SwitchListTile(
+          //   title: Text('Night Mode',
+          //       style: Theme.of(context).textTheme.bodyMedium),
+          //   value: sl<NightModeCubit>().state,
+          //   onChanged: (value) {
+          //     sl<NightModeCubit>().toggleNightMode();
+          //   },
+          // ),
         ],
       ),
     );

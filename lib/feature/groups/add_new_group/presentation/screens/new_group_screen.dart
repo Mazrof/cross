@@ -15,10 +15,9 @@ import 'package:telegram/feature/groups/add_new_group/presentation/widget/chat_g
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 
 class NewGroupScreen extends StatelessWidget {
-  const NewGroupScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    print("NewGroupScreen");
     return Scaffold(
       appBar: CAppBar(
         onLeadingTap: () {
@@ -44,12 +43,6 @@ class NewGroupScreen extends StatelessWidget {
           return const Center(
             child: ShimmerLoadingList(), // This widget will show shimmer effect
           );
-        }
-
-        if (state.state == CubitState.failure) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
-          });
         }
 
         return Column(
@@ -90,8 +83,7 @@ class NewGroupScreen extends StatelessWidget {
                               right: -5,
                               child: GestureDetector(
                                 onTap: () {
-                                 sl<AddMembersCubit>()
-                                      .toggleMember(member);
+                                  sl<AddMembersCubit>().toggleMember(member);
                                 },
                                 child: const CircleAvatar(
                                   radius: 10,
@@ -126,7 +118,7 @@ class NewGroupScreen extends StatelessWidget {
                     lastSeen: member.lastSeen,
                     onTap: () {
                       sl<AddMembersCubit>().toggleMember(member);
-                    },
+                    }, isSelected: isSelected,
                   );
                 },
               ),

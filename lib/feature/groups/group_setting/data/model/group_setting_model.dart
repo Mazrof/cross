@@ -21,7 +21,7 @@ class GroupModel extends GroupEntity {
       groupSize: json['groupSize'],
       name: json['community']['name'],
       privacy: json['community']['privacy'],
-      imageUrl: json['imageUrl'],
+      imageUrl: json['community']['imageURL'],
     );
   }
 
@@ -33,5 +33,22 @@ class GroupModel extends GroupEntity {
       'privacy': privacy,
       'imageUrl': imageUrl,
     };
+  }
+
+  // copy with
+  GroupModel copyWith({
+    int? id,
+    int? groupSize,
+    String? name,
+    bool? privacy,
+    String? imageUrl,
+  }) {
+    return GroupModel(
+      id: id ?? this.id,
+      groupSize: groupSize ?? this.groupSize,
+      name: name ?? this.name,
+      privacy: privacy ?? this.privacy,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 
 class CSnackBar {
@@ -46,20 +47,24 @@ class CSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  static void showErrorDialog(BuildContext context, String message) {
+  static void showErrorDialog(
+      BuildContext context, String message, Function onConfirm) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).textTheme.bodyLarge!.color== AppColors.whiteColor? AppColors.blackColor: AppColors.whiteColor,
-          title:  Text(
-            'Error',
-            style:Theme.of(context).textTheme.bodyLarge!.apply(color:AppColors.errorColor,)
-          ),
+          backgroundColor: Theme.of(context).textTheme.bodyLarge!.color ==
+                  AppColors.whiteColor
+              ? AppColors.blackColor
+              : AppColors.whiteColor,
+          title: Text('Error',
+              style: Theme.of(context).textTheme.bodyLarge!.apply(
+                    color: AppColors.errorColor,
+                  )),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-               Icon(
+              Icon(
                 Icons.error,
                 color: Theme.of(context).textTheme.bodyLarge!.color,
                 size: 40,
@@ -67,7 +72,7 @@ class CSnackBar {
               const SizedBox(height: 10),
               Text(
                 message,
-                style:Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -75,12 +80,19 @@ class CSnackBar {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                GoRouter.of(context).pop(); // Close the dialog
               },
-              child: const Text(
-                'Close',
-                style: TextStyle(color: AppColors.primaryColor  )
-              ),
+              child: const Text('Close',
+                  style: TextStyle(color: AppColors.primaryColor)),
+            ),
+            TextButton(
+              onPressed: () {
+                onConfirm();
+                GoRouter.of(context).pop(); // Close the dialog
+                GoRouter.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Confirm',
+                  style: TextStyle(color: AppColors.primaryColor)),
             ),
           ],
         );

@@ -24,6 +24,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
 
   final otpController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+ 
 
   /// **Start the OTP Timer**
   void startOtpTimer() {
