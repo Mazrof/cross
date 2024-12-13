@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
@@ -22,6 +24,8 @@ class ChatScreen extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
+  String receiverId = "";
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
@@ -30,16 +34,30 @@ class ChatScreen extends StatelessWidget {
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         });
 
+        // Hard Code the Ids
+        String myId =
+            HiveCash.read(boxName: 'register_info', key: 'id').toString();
+
+        if (myId == "100") {
+          receiverId = "102";
+        } else {
+          receiverId = "100";
+        }
+
+        print(receiverId);
+
         return Scaffold(
           appBar: state.selectionState == false && state.editingState == false
               ? CAppBar(
                   onLeadingTap: () {
+                    // WidgetsBinding.instance.addPostFrameCallback(
+                    //   (_) {
+                    //     context.read<ChatCubit>().close();
+                    //   },
+                    // );
+                    // sl<SocketService>().socket!.close();
+
                     context.go(AppRouter.kHome);
-                    WidgetsBinding.instance.addPostFrameCallback(
-                      (_) {
-                        context.read<ChatCubit>().close();
-                      },
-                    );
                   },
                   title: const RecieverDetails(
                     userName: "Kiro",
@@ -94,6 +112,13 @@ class ChatScreen extends StatelessWidget {
                       },
                     ),
                     IconButton(
+                      onPressed: () {
+                        sl<ChatCubit>().replyingToMessage();
+                        // sl<ChatCubit>().replyToMessage(state.id);
+                      },
+                      icon: const Icon(Icons.reply),
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.edit_outlined),
                       color: AppColors.whiteColor,
                       onPressed: () {
@@ -104,13 +129,6 @@ class ChatScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    // const PopupMenu([
-                    //   {'icon': Icons.volume_up, 'value': 'Mute'},
-                    //   {'icon': Icons.search, 'value': 'Search'},
-                    //   {'icon': Icons.copy, 'value': 'Change Background'},
-                    //   {'icon': Icons.clear, 'value': 'Clear History'},
-                    //   {'icon': Icons.delete, 'value': 'Delete Chat'},
-                    // ]),
                   ],
                 ),
           body: Stack(
@@ -133,9 +151,7 @@ class ChatScreen extends StatelessWidget {
                       scrollController: _scrollController,
                     ),
                   ),
-                  CinputBar(
-                    controller: controller,
-                  ),
+                  CinputBar(receiverId: receiverId),
                 ],
               ),
             ],
