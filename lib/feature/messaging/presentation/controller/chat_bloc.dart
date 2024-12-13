@@ -355,8 +355,6 @@ class ChatCubit extends Cubit<ChatState> {
 
   // Get the prev Messages
   Future<dynamic> getMessages() async {
-    Dio dio = sl<Dio>();
-
     List<Message> messages = [];
 
     try {

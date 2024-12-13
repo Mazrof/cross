@@ -7,8 +7,6 @@ import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:telegram/core/component/capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/routes/app_router.dart';
@@ -294,7 +292,6 @@ class HomeContent extends StatelessWidget {
             ),
           ],
         ),
-
       ),
     );
   }
