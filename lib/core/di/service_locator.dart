@@ -222,7 +222,7 @@ class ServiceLocator {
           sl(),
         ));
 
-    sl.registerFactory(() => GroupCubit(
+    sl.registerLazySingleton(() => GroupCubit(
           sl(),
           sl(),
           sl(),

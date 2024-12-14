@@ -18,7 +18,7 @@ class MemberModel extends Member {
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': userId,
+      'memberId': userId,
       'role': role,
       'hasDownloadPermissions': hasDownloadPermissions,
       'hasMessagePermissions': hasMessagePermissions,

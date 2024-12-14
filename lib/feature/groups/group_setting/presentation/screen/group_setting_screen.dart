@@ -64,9 +64,7 @@ class GroupSettingsScreen extends StatelessWidget {
                 color: AppColors.primaryColor,
                 child: Row(
                   children: [
-                    GeneralImage(
-                        username: state.group!.name,
-                        imageUrl: state.group!.imageUrl),
+                    GeneralImage(username: state.group!.name, imageUrl: ""),
                     const SizedBox(width: AppSizes.sm),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +102,8 @@ class GroupSettingsScreen extends StatelessWidget {
                   'Mute Notifications',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                value: state.ismute,
+                value:
+                    state.ismute, // This should reflect the current mute state
                 onChanged: (value) {
                   sl<GroupCubit>().toggleNotifications(groupId, value);
                 },
@@ -121,14 +120,8 @@ class GroupSettingsScreen extends StatelessWidget {
                 ),
                 value: state.group!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
-                  sl<GroupCubit>().togglePrivacy(groupId);
-                  sl<GroupCubit>().updateGroupDetails(
-                      groupId,
-                      GroupUpdateData(
-                          name: state.group!.name,
-                          privacy: state.group!.privacy,
-                          groupSize: state.group!.groupSize,
-                          imageUrl: state.group!.imageUrl));
+                  sl<GroupCubit>().togglePrivacy(groupId, value);
+                 
                 },
               ),
               const Divider(),

@@ -46,9 +46,7 @@ class GroupCubit extends Cubit<GroupState> {
   final FetchGroupMembersUseCase fetchGroupMembersUseCase;
   final MuteUseCase muteUseCase;
 
-  
-
-   List<chatTileData> convertChatModelToChatTileData(
+  List<chatTileData> convertChatModelToChatTileData(
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
       return chatTileData(
@@ -67,8 +65,9 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
-      await muteUseCase(groupId, isMuted);
+
       emit(state.copyWith(ismute: isMuted));
+      // await muteUseCase(groupId, isMuted);  //waiting back-end 
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -77,15 +76,22 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  void togglePrivacy(int groupId) async {
+  void togglePrivacy(int groupId, bool val) async {
     try {
       if (networkManager.isConnected() == false) {
         emit(state.copyWith(
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
-      final updatedGroup =
-          state.group!.copyWith(privacy: !state.group!.privacy);
+
+      print('toggling privacy');
+      print(state);
+      final updatedGroup = state.group!.copyWith(privacy: val);
+      print(updatedGroup.privacy);
+
+      emit(state.copyWith(group: updatedGroup));
+
+      print('mmmmmmmmmmmmmmmmmmmm');
       await updateGroupDetailsUseCase(
           groupId,
           GroupUpdateData(
@@ -94,7 +100,6 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
-      emit(state.copyWith(group: updatedGroup));
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -120,8 +125,10 @@ class GroupCubit extends Cubit<GroupState> {
     try {
       final group = await fetchGroupDetailsUseCase(groupId);
       print('fetching group members');
+      print(group);
       final members = await fetchGroupMembersUseCase(groupId);
       print('fetched group members');
+      print(members);
       emit(state.copyWith(
         state: CubitState.success,
         group: group,

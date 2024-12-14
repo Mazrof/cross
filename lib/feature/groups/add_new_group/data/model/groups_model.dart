@@ -43,6 +43,22 @@ class GroupsModel extends Group {
           privacy == other.privacy &&
           groupSize == other.groupSize;
 
+  //copy with
+  GroupsModel copyWith({
+    String? name,
+    bool? privacy,
+    int? groupSize,
+    String? imageUrl,
+  }) {
+    return GroupsModel(
+      name: name ?? this.name,
+      privacy: privacy ?? this.privacy,
+      groupSize: groupSize ?? this.groupSize,
+      imageUrl: imageUrl ?? this.imageUrl,
+      id: id ?? this.id,
+    );
+  }
+
   @override
   int get hashCode => name.hashCode ^ privacy.hashCode ^ groupSize.hashCode;
 }

@@ -40,19 +40,33 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     );
   }
 
+  // @override
+  // Future<void> addMember(int groupId, List<MemberModel> members) async {
+  //   await apiService.post(
+  //     endPoint: 'groups/$groupId/members',
+  //     data: [
+  //       for (final member in members)
+  //         {
+  //           'userId': member.userId,
+  //           'role': member.role,
+  //           "hasDownloadPermissions": member.hasDownloadPermissions,
+  //           "hasMessagePermissions": member.hasMessagePermissions,
+  //         }
+  //     ],
+  //   );
+  // }
+  
   @override
-  Future<void> addMember(int groupId, List<MemberModel> members) async {
-    await apiService.post(
-      endPoint: 'groups/$groupId/members',
-      data: [
-        for (final member in members)
-          {
-            'userId': member.userId,
-            'role': member.role,
-            "hasDownloadPermissions": member.hasDownloadPermissions,
-            "hasMessagePermissions": member.hasMessagePermissions,
-          }
-      ],
+   Future<void> addMember(int id, List<MemberModel> members) async {
+    print('members: $members');
+    print('adding members to group with id:');
+    await Future.wait(
+      members.map((member) async {
+        await apiService.post(
+          endPoint: 'groups/$id/members',
+          data: member.toJson(),
+        );
+      }),
     );
   }
 
@@ -72,7 +86,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
 
   @override
   Future<void> updateGroupDetails(int groupId, GroupUpdateData data) async {
-    await apiService.post(endPoint: 'groups/$groupId', data: {
+    await apiService.patch(endPoint: 'groups/$groupId', data: {
       'name': data.name,
       'privacy': data.privacy,
       'imageUrl': data.imageUrl,
@@ -101,7 +115,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     await apiService.post(
       endPoint: 'notifications/mute',
       data: {
-        'chat_id': groupId.toString(),
+        'chat_id': groupId,
         'mute': isMuted,
       },
     );

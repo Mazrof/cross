@@ -113,7 +113,7 @@ class AddNewMembersScreen extends StatelessWidget {
                     id: member.id,
                     imageUrl: member.imageUrl,
                     title: member.name,
-                    lastSeen: member.lastSeen,
+                    lastSeen: member.lastSeen??" ",
                     onTap: () {
                       sl<MembersCubit>().toggleMember(member);
                     },

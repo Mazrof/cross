@@ -12,6 +12,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_state.dart';
 import 'package:telegram/feature/home/presentation/widget/add_stroy.dart';
@@ -272,6 +273,7 @@ class HomeContent extends StatelessWidget {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
+                      print(state.groups[index].lastMessage);
                       final group = state.groups[index];
                       return GroupTile(
                         id: group.id,
@@ -284,19 +286,19 @@ class HomeContent extends StatelessWidget {
                             ? group.lastMessage!.createdAt.hour.toString()
                             : '',
                         onTap: () {
-                          // GoRouter.of(context).push(
-                          //   AppRouter.kGroupScreen,
-                          //   extra: GroupsModel(
-                          //     id: group.id,
-                          //     name: group.name,
-                          //     privacy: group.privacy,
-                          //     groupSize: group.groupSize!,
-                          //     imageUrl: group.imageUrl,
-                          //   ),
-                          // );
                           GoRouter.of(context).push(
-                            '${AppRouter.kMessaging}/$index/group',
+                            AppRouter.kGroupScreen,
+                            extra: GroupModel(
+                              id: group.id,
+                              name: group.name,
+                              privacy: group.privacy,
+                              groupSize: group.groupSize!,
+                              imageUrl: group.imageUrl??'',
+                            ),
                           );
+                          // GoRouter.of(context).push(
+                          //   '${AppRouter.kMessaging}/$index/group',
+                          // );
                         },
                         lastSeen: '',
                       );
@@ -308,7 +310,6 @@ class HomeContent extends StatelessWidget {
             ),
           ],
         ),
-
       ),
     );
   }

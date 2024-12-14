@@ -148,7 +148,7 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kGroupScreen,
       builder: (context, state) {
-        final groupData = state.extra as GroupsModel;
+        final groupData = state.extra as GroupModel;
         return GroupScreen(
           groupData: groupData,
         );

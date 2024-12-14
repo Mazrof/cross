@@ -27,11 +27,10 @@ class MembersCubit extends Cubit<MembersState> {
   List<chatTileData> convertChatModelToChatTileData(
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
-    
       return chatTileData(
         id: chat.id,
         name: chat.secondUser.username,
-        imageUrl: chat.secondUser.photo??'',
+        imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),
       );
     }).toList();
@@ -72,6 +71,7 @@ class MembersCubit extends Cubit<MembersState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
+      print(state.selectedMembers);
       await addMemberUseCase(
           state.group!.id,
           state.selectedMembers.map((e) {
