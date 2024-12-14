@@ -122,7 +122,7 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  initialLocation: AppRouter.kSplash,
+  initialLocation: AppRouter.kglobalSearch,
   routes: [
     GoRoute(
       path: AppRouter.kAddSubscribers,
@@ -417,7 +417,7 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kglobalSearch,
       builder: (context, state) {
-        return GlobalSearchScreen(isTyping: true);
+        return GlobalSearchPage();
       },
     ),
     GoRoute(

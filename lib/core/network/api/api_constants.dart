@@ -21,26 +21,22 @@ class ApiConstants {
   static const githubRedirectUrl =
       'https://telegram-clone-a4785.firebaseapp.com/__/auth/handler';
 
-
-
 //  get  groups         groups/
 //  post  creat group   groups/
 
-// members         post     groups/:id/members/invitation     link invitation 
-// 		get      groups/:id/members        get group members 
+// members         post     groups/:id/members/invitation     link invitation
+// 		get      groups/:id/members        get group members
 // 		post     groups/:id/members        add members
-// 		patch    groups/:id/members/:id    update member role message  by admin only 
-// 		delete   groups/:id/members/:id  
+// 		patch    groups/:id/members/:id    update member role message  by admin only
+// 		delete   groups/:id/members/:id
 
+  static const getGroups = 'groups/';
+  static const createGroup = 'groups/';
+  static const linkInvitation = 'groups/:id/members/invitation';
+  static const getGroupMembers = 'groups/:id/members';
+  static const addMembers = 'groups/:id/members';
+  static const updateMemberRole = 'groups/:id/members/:id';
+  static const deleteMember = 'groups/:id/members/:id';
 
-
-static const getGroups = 'groups/'; 
-static const createGroup = 'groups/';
-static const linkInvitation = 'groups/:id/members/invitation';
-static const getGroupMembers = 'groups/:id/members';
-static const addMembers = 'groups/:id/members';
-static const updateMemberRole = 'groups/:id/members/:id';
-static const deleteMember = 'groups/:id/members/:id';
-
-
+  static const globalSearchQuery = "search";
 }

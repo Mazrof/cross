@@ -84,8 +84,8 @@ class App extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: TAppTheme.darkTheme,
                   darkTheme: TAppTheme.darkTheme,
-                  // themeMode: ThemeMode.light,
-                  themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
+                  themeMode: ThemeMode.light,
+                  // themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );
               },

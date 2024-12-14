@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/search/Presentation/Widget/search_result_tile.dart';
 
-class GlobalSearchScreen extends StatelessWidget {
-  final bool isTyping;
-
-  const GlobalSearchScreen({super.key, required this.isTyping});
+class GlobalSearchPage extends StatelessWidget {
+  const GlobalSearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // final iconColor =
+    //     Theme.of(context).textTheme.titleLarge?.color ?? Colors.brown;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -18,7 +19,7 @@ class GlobalSearchScreen extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Theme.of(context).textTheme.titleLarge!.color,
+                color: Colors.brown,
               ),
               onPressed: () {},
             ),
@@ -34,13 +35,11 @@ class GlobalSearchScreen extends StatelessWidget {
             ),
           ),
           actions: [
-            isTyping
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    color: Theme.of(context).textTheme.titleLarge!.color,
-                    onPressed: () {},
-                  )
-                : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.search),
+              color: Colors.blue,
+              onPressed: () {},
+            )
           ],
           bottom: TabBar(
             tabs: const [

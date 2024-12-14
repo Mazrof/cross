@@ -12,7 +12,7 @@ class SearchAppBar extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).textTheme.titleLarge!.color,
+            color: Colors.brown,
           ),
           onPressed: () {},
         ),
@@ -29,7 +29,7 @@ class SearchAppBar extends StatelessWidget {
         isTyping
             ? IconButton(
                 icon: const Icon(Icons.clear),
-                color: Theme.of(context).textTheme.titleLarge!.color,
+                color: Colors.brown,
                 onPressed: () {},
               )
             : const SizedBox.shrink(),
