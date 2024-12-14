@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/error/excpetions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telegram/core/local/cache_helper.dart';
@@ -41,6 +43,14 @@ class LoginDataSourceImp implements LoginDataSource {
         final cookies = await _apiService.cookieJar
             .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));
         print('Cookies: $cookies');
+
+
+        final directory = await getApplicationDocumentsDirectory();
+        // Specify the file path (you can change the file name or extension)
+        final file = File('${directory.path}/my_file.txt');
+
+        // Write the content to the file
+        await file.writeAsString(cookies.toString());
 
         int id = response.data['data']['user']['id'];
         String userType = response.data['data']['user']['user_type'];

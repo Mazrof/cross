@@ -297,7 +297,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => RemoveMemberUseCase(sl()));
     sl.registerLazySingleton(() => UpdateGroupDetailsUseCase(sl()));
     sl.registerLazySingleton(() => DeleteGroupUseCase(sl()));
-    sl.registerLazySingleton(() => AddMemberUseCase(sl()));
+
     sl.registerLazySingleton(() => FetchGroupDetailsUseCase(sl()));
     sl.registerLazySingleton(() => FetchGroupMembersUseCase(sl()));
     sl.registerLazySingleton(() => UpdateMemberRoleUseCase(sl()));
