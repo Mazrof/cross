@@ -76,6 +76,8 @@ import 'package:telegram/feature/settings/datasettings/repos/user_settings_repo_
 import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
 import 'package:telegram/feature/settings/domainsettings/usecases/fetch_settings_use_case.dart';
 import 'package:telegram/feature/settings/domainsettings/usecases/update_settings_use_case.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/block_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
@@ -144,7 +146,6 @@ class ServiceLocator {
           forgetPasswordUseCase: sl(),
         ));
 
-
     //home
     sl.registerLazySingleton(() => AddStoryCubit());
     sl.registerFactory(() => StoryViewerCubit());
@@ -186,7 +187,14 @@ class ServiceLocator {
           appValidator: sl(),
           networkManager: sl(),
         ));
-
+    sl.registerLazySingleton(() => PrivacyCubit(
+          fetchSettingsUseCase: sl(),
+          updateSettingsUseCase: sl(),
+        ));
+    sl.registerLazySingleton(() => BlockCubit(
+          fetchSettingsUseCase: sl(),
+          updateSettingsUseCase: sl(),
+        ));
   }
 
   static void registerUseCases() {

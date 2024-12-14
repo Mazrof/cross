@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
@@ -15,6 +17,9 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserSettingsCubit, UserSettingsState>(
       builder: (context, state) {
+        if (state.state == CubitState.loading) {
+          return LogoLoader();
+        }
         return EditProfilePage(
           state: state,
         );
@@ -35,21 +40,16 @@ class EditProfilePage extends StatelessWidget {
     final phoneNumberController =
         TextEditingController(text: state.phoneNumber);
 
-    void saveSettings() {
-      context.read<UserSettingsCubit>().saveSettings(
-            state.profileImage,
-            screenNameController.text,
-            userNameController.text,
-            phoneNumberController.text,
-            bioController.text,
-            "Online",
-            state.autoDeleteTimer,
-            state.lastSeenPrivacy,
-            state.profilePhotoPrivacy,
-            state.enableReadReceipt,
-            state.blockedUsers,
-            state.contacts,
-          );
+    void saveSettings() async {
+      final cubit = context.read<UserSettingsCubit>();
+
+      await cubit.saveSettings(
+        newScreenName: screenNameController.text,
+        newUserName: userNameController.text,
+        newPhoneNumber: phoneNumberController.text,
+        newBio: bioController.text,
+      );
+      cubit.loadSettings();
     }
 
     return Scaffold(

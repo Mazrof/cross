@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_state.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
 enum PrivacyOption { everybody, myContacts, nobody }
@@ -35,7 +36,7 @@ extension AutoDelOptionExtension on AutoDelOption {
 }
 
 class RadioTile extends StatelessWidget {
-  final UserSettingsState state;
+  final PrivacyState state;
   final String label;
   final String groupValue;
   final ValueChanged<String?> onChanged;

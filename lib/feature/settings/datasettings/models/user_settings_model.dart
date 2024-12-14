@@ -1,32 +1,38 @@
 import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 
 class UserSettingsBodyModel extends UserSettingsEntity {
-  final String profileImage;
-  final String screenName;
-  final String userName;
-  final String phoneNumber;
-  final String bio;
-  final String status;
-  final String autoDeleteTimer;
-  final String lastSeenPrivacy;
-  final String profilePhotoPrivacy;
-  final bool enableReadReceipt;
-  final List<String> blockedUsers;
-  final List<String> contacts;
+  final String? profileImage;
+  final String? screenName;
+  final String? userName;
+  final String? phoneNumber;
+  final String? bio;
+  final String? status;
+  final String? autoDeleteTimer;
+  final String? lastSeenPrivacy;
+  final String? profilePhotoPrivacy;
+  final String? enableReadReceipt;
+  final String? storyVisibility;
+  final int? maxFileSize;
+  final int? maxDownloadSize;
+  final List<String>? blockedUsers;
+  final List<String>? contacts;
 
   UserSettingsBodyModel({
-    required this.profileImage,
-    required this.screenName,
-    required this.userName,
-    required this.phoneNumber,
-    required this.bio,
-    required this.status,
-    required this.autoDeleteTimer,
-    required this.lastSeenPrivacy,
-    required this.profilePhotoPrivacy,
-    required this.enableReadReceipt,
-    required this.blockedUsers,
-    required this.contacts,
+    this.profileImage,
+    this.screenName,
+    this.userName,
+    this.phoneNumber,
+    this.bio,
+    this.status,
+    this.autoDeleteTimer,
+    this.lastSeenPrivacy,
+    this.profilePhotoPrivacy,
+    this.enableReadReceipt,
+    this.blockedUsers,
+    this.contacts,
+    this.storyVisibility,
+    this.maxFileSize,
+    this.maxDownloadSize,
   }) : super(
           profileImage: profileImage,
           screenName: screenName,
@@ -40,24 +46,36 @@ class UserSettingsBodyModel extends UserSettingsEntity {
           enableReadReceipt: enableReadReceipt,
           blockedUsers: blockedUsers,
           contacts: contacts,
+          storyVisibility: storyVisibility,
+          maxFileSize: maxFileSize,
+          maxDownloadSize: maxDownloadSize,
         );
 
   Map<String, dynamic> toJson() {
-    final body = {
-      'profile_image': profileImage,
-      'screen_name': screenName,
-      'user_name': userName,
-      'phone_number': phoneNumber,
-      'bio': bio,
-      'status': status,
-      'auto_del_timer': autoDeleteTimer,
-      'last_seen_privacy': lastSeenPrivacy,
-      'profile_photo_privacy': profilePhotoPrivacy,
-      'enable_read_receipt': enableReadReceipt,
-      'blocked_users': blockedUsers,
-      'contacts': contacts,
-    };
-    return body;
+    final Map<String, dynamic> json = {};
+    if (profileImage != null) json['photo'] = profileImage;
+    if (screenName != null) json['screenName'] = screenName;
+    if (userName != null) json['username'] = userName;
+    if (phoneNumber != null) json['phone'] = phoneNumber;
+    if (bio != null) json['bio'] = bio;
+    // if (status != null) json['status'] = status;
+    // if (autoDeleteTimer != null) json['auto_del_timer'] = autoDeleteTimer;
+    if (lastSeenPrivacy != null) json['lastSeenVisibility'] = lastSeenPrivacy;
+    if (profilePhotoPrivacy != null) {
+      json['profilePicVisibility'] = profilePhotoPrivacy;
+    }
+    if (enableReadReceipt != null) {
+      json['readReceiptsEnabled'] = enableReadReceipt;
+    }
+    // if (blockedUsers != null) json['blocked_users'] = blockedUsers;
+    // if (contacts != null) json['contacts'] = contacts;
+    if (storyVisibility != null) json['storyVisibility'] = storyVisibility;
+    if (maxFileSize != null) json['maxLimitFileSize'] = maxFileSize;
+    if (maxDownloadSize != null) {
+      json['autoDownloadSizeLimit'] = maxDownloadSize;
+    }
+
+    return json;
   }
 
   UserSettingsEntity toEntity() {
@@ -74,6 +92,9 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       enableReadReceipt: enableReadReceipt,
       blockedUsers: blockedUsers,
       contacts: contacts,
+      storyVisibility: storyVisibility,
+      maxFileSize: maxFileSize,
+      maxDownloadSize: maxDownloadSize,
     );
   }
 
@@ -91,24 +112,32 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       enableReadReceipt: entity.enableReadReceipt,
       blockedUsers: entity.blockedUsers,
       contacts: entity.contacts,
+      storyVisibility: entity.storyVisibility,
+      maxFileSize: entity.maxFileSize,
+      maxDownloadSize: entity.maxDownloadSize,
     );
   }
   factory UserSettingsBodyModel.fromJson(Map<String, dynamic> json) {
+    final userJson = json['data']?['user'] ?? {};
     return UserSettingsBodyModel(
-      profileImage: json['profile_image'],
-      screenName: json['screen_name'],
-      userName: json['user_name'],
-      phoneNumber: json['phone_number'],
-      bio: json['bio'],
-      status: json['status'],
-      autoDeleteTimer: json['auto_del_timer'],
-      lastSeenPrivacy: json['last_seen_privacy'],
-      profilePhotoPrivacy: json['profile_photo_privacy'],
-      enableReadReceipt: json['enable_read_receipt'],
-      blockedUsers: List<String>.from(json['blocked_users']),
-      contacts: List<String>.from(json['contacts']),
+      profileImage: userJson['photo'],
+      screenName: userJson['screenName'],
+      userName: userJson['username'],
+      phoneNumber: userJson['phone'],
+      bio: userJson['bio'],
+      status: null,
+      autoDeleteTimer: null,
+      lastSeenPrivacy: userJson['lastSeenVisibility'],
+      profilePhotoPrivacy: userJson['profilePicVisibility'],
+      enableReadReceipt: userJson['readReceiptsEnabled'],
+      blockedUsers: [],
+      contacts: [],
+      storyVisibility: userJson['storyVisibility'],
+      maxFileSize: userJson['maxLimitFileSize'],
+      maxDownloadSize: userJson['autoDownloadSizeLimit'],
     );
   }
+
   static empty() {
     return UserSettingsBodyModel(
       profileImage: "",
@@ -120,7 +149,10 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       autoDeleteTimer: "",
       lastSeenPrivacy: "",
       profilePhotoPrivacy: "",
-      enableReadReceipt: true,
+      enableReadReceipt: '',
+      storyVisibility: '',
+      maxFileSize: 0,
+      maxDownloadSize: 0,
       blockedUsers: [],
       contacts: [],
     );
