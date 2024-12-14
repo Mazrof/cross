@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/feature/home/presentation/controller/story/add_story_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/story/stroy_cubit.dart';
 
@@ -32,8 +30,8 @@ class StoryViewerScreen extends StatelessWidget {
       }
     }
 
-    return BlocProvider(
-      create: (_) => StoryViewerCubit(),
+    return BlocProvider.value(
+      value: sl<StoryViewerCubit>(),
       child: BlocConsumer<StoryViewerCubit, double>(
         listener: (context, progress) {
           if (progress >= 1.0) {

@@ -1,34 +1,81 @@
-import 'dart:convert';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
+import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
+import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  final CookieJar cookieJar;
-  static const String baseUrl = "http://192.168.100.3:3000/api/v1";
+  final PersistCookieJar cookieJar;
+  static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
   Dio dio;
+  bool _howAmICalled = false;
 
-  ApiService()
-      : cookieJar = CookieJar(),
-        dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          receiveDataWhenStatusError: true,
-          connectTimeout: const Duration(milliseconds: 30000),
-          receiveTimeout: const Duration(milliseconds: 30000),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          validateStatus: (int? status) {
-            return (status ?? 0) < 500;
-          },
-        )) {
+  // Private named constructor
+  ApiService._internal(this.cookieJar, this.dio);
+
+  // Factory constructor to create an instance of ApiService asynchronously
+  static Future<ApiService> create() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
+    final dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
+      sendTimeout: Duration(seconds: 5),
+    ));
     dio.interceptors.add(CookieManager(cookieJar));
+    dio.interceptors.add(InterceptorsWrapper(
+      onError: (DioError error, ErrorInterceptorHandler handler) async {
+        if (error.response?.statusCode == 401) {
+          await ApiService._internal(cookieJar, dio)
+              ._retryWithHowAmI(error.requestOptions);
+          // Retry the original request
+          final options = error.requestOptions;
+          final response = await dio.request(
+            options.path,
+            options: Options(
+              method: options.method,
+              headers: options.headers,
+            ),
+            data: options.data,
+            queryParameters: options.queryParameters,
+          );
+          return handler.resolve(response);
+        }
+        return handler.next(error);
+      },
+    ));
+    return ApiService._internal(cookieJar, dio);
+  }
+
+  Future<void> _retryWithHowAmI(RequestOptions requestOptions) async {
+    if (!_howAmICalled) {
+      await howAmI();
+      _howAmICalled = true;
+    } else {
+      // GoRouter.of(context).go(AppRoutes.login);
+    }
+  }
+
+  Future<void> howAmI() async {
+    sl<LoginDataSource>().login(
+      LoginRequestBody(
+        email: HiveCash.read(boxName: 'register_info', key: "email"),
+        password:
+            HiveCash.read(boxName: 'register_info', key: "password_not_hashed"),
+      ),
+    );
   }
 
   Future<Response> get({
@@ -36,6 +83,7 @@ class ApiService {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.get(
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
@@ -43,11 +91,14 @@ class ApiService {
 
       print(response.data);
       print(response.statusCode);
-
+      print('iam here');
+      print(response.data);
+      print(response.statusCode);
+      print('iam here');
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -63,6 +114,7 @@ class ApiService {
     Object? data,
   }) async {
     try {
+      await _loadCookies();
       String url = '$baseUrl/$endPoint';
       final response = await dio.post(url, data: data);
       print(response.data);
@@ -71,7 +123,7 @@ class ApiService {
         print(response.data);
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -87,6 +139,7 @@ class ApiService {
     Map<String, dynamic>? body,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -96,7 +149,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -111,6 +164,7 @@ class ApiService {
     required String endPoint,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -119,7 +173,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -135,6 +189,7 @@ class ApiService {
     Object? data,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -144,7 +199,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -195,6 +250,7 @@ class ApiService {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      await _loadCookies();
       Response response = await dio.get(
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
@@ -220,6 +276,11 @@ class ApiService {
     };
     final response = await dio.post('$baseUrl/$target', data: body);
     return response;
+  }
+
+  Future<void> _loadCookies() async {
+    final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+    print('Loaded cookies: $cookies');
   }
 
   static Exception _handleError(dynamic e) {

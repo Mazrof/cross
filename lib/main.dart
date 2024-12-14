@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:telegram/core/local/hive_helper.dart';
 import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
@@ -44,6 +44,8 @@ Future<void> _initializeApp() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.init();
+
+  // await Firebase.initializeApp();
 
   Bloc.observer = MyBlocObserver();
 
@@ -80,7 +82,7 @@ class App extends StatelessWidget {
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
-                  theme: TAppTheme.lightTheme,
+                  theme: TAppTheme.darkTheme,
                   darkTheme: TAppTheme.darkTheme,
                   // themeMode: ThemeMode.light,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,

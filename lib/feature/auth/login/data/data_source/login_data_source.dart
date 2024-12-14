@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/error/excpetions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telegram/core/local/cache_helper.dart';
@@ -35,43 +37,39 @@ class LoginDataSourceImp implements LoginDataSource {
           'password': loginModel.password,
         },
       );
-      
+
       print('Login Response: ${response.data}');
       if (response.statusCode == 201 || response.statusCode == 200) {
-         final cookies = await _apiService.cookieJar
+        final cookies = await _apiService.cookieJar
             .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));
         print('Cookies: $cookies');
 
-      
+
+        final directory = await getApplicationDocumentsDirectory();
+        // Specify the file path (you can change the file name or extension)
+        final file = File('${directory.path}/my_file.txt');
+
+        // Write the content to the file
+        await file.writeAsString(cookies.toString());
+
         int id = response.data['data']['user']['id'];
         String userType = response.data['data']['user']['user_type'];
 
         // Store the access token and refresh token in the cache
         if (loginModel.rememberMe == true) {
           CacheHelper.write(key: 'loged', value: 'true');
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: loginModel.email,
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: loginModel.password,
-          );
-        } else {
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: '',
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: '',
-          );
-          //cash the email and password
         }
+
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'email',
+          value: loginModel.email,
+        );
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'password_not_hashed',
+          value: loginModel.password,
+        );
         HiveCash.write(
           boxName: 'register_info',
           key: 'id',
@@ -102,14 +100,17 @@ class LoginDataSourceImp implements LoginDataSource {
     print('Who Am I Response: ${whoAmIResponse.data}');
     if (whoAmIResponse.statusCode == 201 || whoAmIResponse.statusCode == 200) {
       // Get user data and store it
-      var userData = whoAmIResponse.data['data']['user'];
+      var userData = whoAmIResponse.data['data']['user']['user'];
       var user = RegisterData.fromJson(userData);
       var userJson = jsonEncode(user.toJson());
-      HiveCash.write(
-        boxName: 'register_info',
-        key: 'user',
-        value: userJson,
-      );
+      for (var key in user.toJson().keys) {
+        print('key: $key');
+        HiveCash.write(
+          boxName: 'register_info',
+          key: key,
+          value: user.toJson()[key],
+        );
+      }
     }
   }
 

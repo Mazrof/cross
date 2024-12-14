@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -19,6 +21,8 @@ class AddStoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final username =
+        HiveCash.read(boxName: 'register_info', key: 'username') ?? '';
     final ImagePicker _picker = ImagePicker();
 
     return BlocProvider.value(
@@ -37,7 +41,7 @@ class AddStoryWidget extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      Avatar(imageUrl: AppAssetsStrings.general_person),
+                      GeneralImage(username: username, imageUrl: ''),
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -92,7 +96,7 @@ class AddStoryWidget extends StatelessWidget {
                   children: [
                     Stack(
                       children: [
-                        Avatar(imageUrl: AppAssetsStrings.general_person),
+                        GeneralImage(username: username, imageUrl: ''),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -123,7 +127,7 @@ class AddStoryWidget extends StatelessWidget {
           } else {
             // Show the selected story and allow caption input
             return StoryWidget(
-              userImage: AppAssetsStrings.general_person,
+              userImage: '',
               userName: 'My Story',
               isSeen: true,
               storyUrl: storyPath,
