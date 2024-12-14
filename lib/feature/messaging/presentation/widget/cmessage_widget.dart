@@ -21,6 +21,7 @@ class ChatMessage extends StatelessWidget {
   final int id;
   final bool isGIF;
   final bool isReply;
+  final bool isForward;
   String? replyMessage;
 
   ChatMessage({
@@ -35,6 +36,7 @@ class ChatMessage extends StatelessWidget {
     required this.id,
     required this.isGIF,
     required this.isReply,
+    required this.isForward,
     this.replyMessage,
   });
 
@@ -142,6 +144,24 @@ class ChatMessage extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
+                      ),
+                    if (isForward)
+                      // render text showing that it is forwarded message
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                          Text(
+                            "Forwarded Message",
+                            style: const TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     isGIF
                         ? Image.asset(

@@ -34,40 +34,40 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> loadHomeData() async {
     emit(state.copyWith(state: CubitState.loading));
 
-    try {
-      // Simultaneously fetch all required data
-      // final responses = await Future.wait([
-      //   fetchStories(),
-      //   // fetchGroups(),
-      //   // fetchChannels(),
-      //   fetchContacts(),
-      // ]);
+    // try {
+    // Simultaneously fetch all required data
+    // final responses = await Future.wait([
+    //   fetchStories(),
+    //   // fetchGroups(),
+    //   // fetchChannels(),
+    //   fetchContacts(),
+    // ]);
 
-      final contacts = await fetchContacts();
+    final contacts = await fetchContacts();
 
-      final stories = await fetchStories();
+    final stories = await fetchStories();
 
-      // final stories = responses[0] as List<StoryModel>;
-      // final contacts = responses[1] as List<ChatModel>;
-      // // final groups = responses[1] as List<GroupModel>;
-      // // final channels = responses[2] as List<ChannelModel>;
+    // final stories = responses[0] as List<StoryModel>;
+    // final contacts = responses[1] as List<ChatModel>;
+    // // final groups = responses[1] as List<GroupModel>;
+    // // final channels = responses[2] as List<ChannelModel>;
 
-      // // Sort stories by `isSeen` to display unseen stories first
-      // stories.sort((a, b) => a.isSeen ? 1 : -1);
+    // // Sort stories by `isSeen` to display unseen stories first
+    // stories.sort((a, b) => a.isSeen ? 1 : -1);
 
-      emit(
-        state.copyWith(
-          state: CubitState.success,
-          stories: stories,
-          // groups: groups,
-          // channels: channels,
-          contacts: contacts,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(
-          state: CubitState.failure, errorMessage: e.toString()));
-    }
+    emit(
+      state.copyWith(
+        state: CubitState.success,
+        stories: stories,
+        // groups: groups,
+        // channels: channels,
+        contacts: contacts,
+      ),
+    );
+    // } catch (e) {
+    //   emit(state.copyWith(
+    //       state: CubitState.failure, errorMessage: e.toString()));
+    // }
   }
 
   Future<List<StoryModel>> fetchStories() async {
@@ -262,20 +262,23 @@ class HomeCubit extends Cubit<HomeState> {
       },
     );
 
-    print(response);
-
     response = response.data as List;
+
+    print(response[0]['lastMessage']);
 
     return List.generate(
       (response as List).length,
       (index) => ChatModel(
-        chatId: index.toString(),
+        chatId: (response[index]['id']).toString(),
         participants: List.generate(
           1,
           (i) => Participant(
             userId: (response[index]['secondUser']['id']).toString(),
             name: response[index]['secondUser']['username'],
             lastSeen: '12:15',
+            publicKey: response[index]['secondUser']['publicKey'],
+            phone: response[index]['secondUser']['phone'],
+            imageUrl: response[index]['secondUser']['photo'] ?? " ",
           ),
         ),
         lastMessage: LastMessage(

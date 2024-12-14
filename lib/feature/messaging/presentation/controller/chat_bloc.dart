@@ -7,6 +7,8 @@ import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/feature/home/data/model/chat_model.dart';
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
@@ -29,9 +31,10 @@ class ChatCubit extends Cubit<ChatState> {
             height: -1,
             width: -1,
             replyState: false,
-            members: [],
-            chatType: ChatType.PersonalChat,
-            participantId: -1,
+            // chatType: ChatType.PersonalChat,
+            // members: [],
+            // chatType: ChatType.PersonalChat,
+            // participantId: -1,
           ),
         );
 
@@ -41,11 +44,23 @@ class ChatCubit extends Cubit<ChatState> {
     super.emit(state);
   }
 
+  void init({
+    required int chatIndex,
+    required ChatType chatType,
+  }) {
+    super.state.chatType = chatType;
+    super.state.chatIndex = chatIndex;
+  }
+
   Future<void> startSocket() async {
     // Start the socket connection
     SocketService socketService = sl<SocketService>();
 
     socketService.connect();
+  }
+
+  void notTyping() {
+    emit(state.copyWith(typingState: false));
   }
 
   void editingMessage(int index, int id) {
@@ -92,15 +107,6 @@ class ChatCubit extends Cubit<ChatState> {
     // Uncomment when available
   }
 
-  void init(
-      {required List members,
-      required ChatType chatType,
-      required int participantId}) {
-    super.state.chatType = chatType;
-    super.state.participantId = participantId;
-    super.state.members = members;
-  }
-
   void messageEdited(dynamic data) {
     print(data);
 
@@ -112,13 +118,16 @@ class ChatCubit extends Cubit<ChatState> {
       var updatedMessages = state.messages
           .map(
             (item) => Message(
-                content: item.content,
-                id: item.id,
-                isDate: item.isDate,
-                isGIF: item.isGIF,
-                sender: item.sender,
-                time: item.time,
-                isReply: item.isReply),
+              content: item.content,
+              id: item.id,
+              isDate: item.isDate,
+              isGIF: item.isGIF,
+              sender: item.sender,
+              time: item.time,
+              isReply: item.isReply,
+              isForward: item.isForward,
+              participantId: item.participantId,
+            ),
           )
           .toList();
 
@@ -146,13 +155,16 @@ class ChatCubit extends Cubit<ChatState> {
       var updatedMessages = state.messages
           .map(
             (item) => Message(
-                content: item.content,
-                id: item.id,
-                isDate: item.isDate,
-                isGIF: item.isGIF,
-                sender: item.sender,
-                time: item.time,
-                isReply: item.isReply),
+              content: item.content,
+              id: item.id,
+              isDate: item.isDate,
+              isGIF: item.isGIF,
+              sender: item.sender,
+              time: item.time,
+              isReply: item.isReply,
+              isForward: item.isForward,
+              participantId: item.participantId,
+            ),
           )
           .toList();
 
@@ -217,19 +229,25 @@ class ChatCubit extends Cubit<ChatState> {
         "status": "pinned", //or null
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
-        "isForward": false,
-        "participantId": 42,
+        "isForward": newMessage.isForward,
+        "participantId": int.parse(newMessage.participantId),
         "senderId":
             int.parse(newMessage.sender) // Will be deleted after mirging auth,
       },
     );
 
     // final currentState = state as TypingMessage;
-    final updatedMessages = List<Message>.from(state.messages)
-      ..add(
+
+    if (!newMessage.isForward) {
+      final updatedMessages = List<Message>.from(state.messages);
+      updatedMessages.add(
         newMessage,
       );
-    emit(state.copyWith(messages: updatedMessages, messagesLoadedState: true));
+      emit(
+          state.copyWith(messages: updatedMessages, messagesLoadedState: true));
+    } else {
+      unselectMessage();
+    }
   }
 
   void replyToMessage(Message replyMessage) {
@@ -346,6 +364,8 @@ class ChatCubit extends Cubit<ChatState> {
           isGIF: false,
           isReply: message['replyTo'].toString() != 'null',
           replyMessage: replyMessage,
+          isForward: message['isForward'],
+          participantId: (message['participantId']).toString(),
         ),
       );
     }
@@ -357,26 +377,33 @@ class ChatCubit extends Cubit<ChatState> {
   Future<dynamic> getMessages() async {
     List<Message> messages = [];
 
+    final chat =
+        sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!];
+
     try {
       // emit(const ChatLoading());
       var apiService = sl<ApiService>();
       final res = await apiService.get(
-        endPoint: '/messages',
+        endPoint: 'chats/${chat.chatId}',
       );
 
-      messages = (jsonDecode(res.data) as List)
-          .map(
-            (e) => Message(
-              isGIF: false,
-              isDate: false,
-              sender: e['senderId'],
-              content: e['content'],
-              time: e['timestamp'],
-              id: 0,
-              isReply: false,
-            ),
-          )
-          .toList();
+      print(res.data[0]['replyTo']);
+
+      List data = res.data;
+
+      messages = (data.map(
+        (e) => Message(
+          isGIF: false,
+          isDate: false,
+          sender: (e['senderId']).toString(),
+          content: e['content'],
+          time: DateFormat('HH:mm').format(DateTime.parse(e['createdAt'])),
+          id: e["id"],
+          isReply: e['replyTo'] != null,
+          isForward: e['isForward'],
+          participantId: (e["participantId"]).toString(),
+        ),
+      )).toList();
 
       emit(state.copyWith(messages: messages, messagesLoadedState: true));
       return res;

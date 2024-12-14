@@ -177,24 +177,28 @@ final route = GoRouter(
             ));
       },
     ),
-  GoRoute(
-    path: '${AppRouter.kMessaging}/:id',
-    builder: (context, state) {
-      final participantId = int.parse(state.pathParameters['id']!);
+    GoRoute(
+      path: '${AppRouter.kMessaging}/:index/:chatType',
+      builder: (context, state) {
+        final chatIndex = int.parse(state.pathParameters['index']!);
 
-      return BlocProvider(
-        create: (context) => sl<ChatCubit>()
-          ..init(
-            chatType: ChatType.PersonalChat,
-            participantId: participantId,
-            members: [],
-          )
-          ..getMessages()
-          ..startSocket(),
-        child: ChatScreen(),
-      );
-    },
-  ),
+        final chatType = ChatType.values.firstWhere(
+          (e) =>
+              e.toString().split('.').last == state.pathParameters['chatType']!,
+        );
+
+        return BlocProvider(
+          create: (context) => sl<ChatCubit>()
+            ..init(
+              chatType: chatType,
+              chatIndex: chatIndex,
+            )
+            ..getMessages()
+            ..startSocket(),
+          child: ChatScreen(),
+        );
+      },
+    ),
     GoRoute(
         path: AppRouter.kResetPassword,
         builder: (context, state) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class ChatModel {
   final String chatId;
   final List<Participant> participants;
@@ -40,18 +39,28 @@ class Participant {
   final String userId;
   final String name;
   final String lastSeen;
+  final String publicKey;
+  final String imageUrl;
+  final String phone;
 
   Participant({
     required this.userId,
     required this.name,
     required this.lastSeen,
+    required this.publicKey,
+    required this.imageUrl,
+    required this.phone,
   });
 
+  // to be changed
   factory Participant.fromJson(Map<String, dynamic> json) {
     return Participant(
       userId: json['userId'],
       name: json['name'],
       lastSeen: json['lastSeen'],
+      publicKey: '',
+      imageUrl: '',
+      phone: '',
     );
   }
 
