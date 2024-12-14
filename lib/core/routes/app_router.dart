@@ -37,7 +37,6 @@ import 'package:telegram/feature/messaging/presentation/screen/chat_screen.dart'
 
 import 'package:telegram/feature/profile/presentation/screen/profile_screen.dart';
 
-import 'package:telegram/feature/contacts/presentation/screen/contacts_screen.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/screen/new_channel_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/new_group_screen.dart';
 
@@ -197,9 +196,8 @@ final route = GoRouter(
         }),
     GoRoute(
       path: AppRouter.kHome,
-      builder: (context, state) {
-        return BlocProvider.value(
-            value: sl<HomeCubit>()..loadHomeData(), child: HomeScreen());
+      builder: (context, state) { 
+        return HomeScreen();
       },
     ),
     GoRoute(
@@ -304,12 +302,6 @@ final route = GoRouter(
           value: sl<AddMembersCubit>(),
           child: GroupInfo(),
         );
-      },
-    ),
-    GoRoute(
-      path: AppRouter.kContacts,
-      builder: (context, state) {
-        return ContactsScreen();
       },
     ),
     GoRoute(

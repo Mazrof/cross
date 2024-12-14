@@ -51,4 +51,8 @@ class HiveCash {
     final box = Hive.box(boxName);
     await box.clear();
   }
+
+  static Future<void> deleteAllBoxes() async {
+    await Hive.deleteFromDisk();
+  }
 }

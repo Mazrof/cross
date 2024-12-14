@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_state.dart';
@@ -27,24 +31,28 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-      if (state.state == CubitState.loading) {
+    return BlocProvider.value(
+      value: sl<HomeCubit>()..loadHomeData(),
+      child: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+        if (state.state == CubitState.loading) {
+          return _buildScaffold(
+            context,
+            body: ShimmerLoadingContent(),
+          );
+        } else if (state.state == CubitState.failure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(
+                context, 'Error', 'Failed to load data');
+          });
+        }
+
+        // Success State
         return _buildScaffold(
           context,
-          body: ShimmerLoadingContent(),
+          body: HomeContent(state: state),
         );
-      } else if (state.state == CubitState.failure) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          CSnackBar.showErrorSnackBar(context, 'Error', 'Failed to load data');
-        });
-      }
-
-      // Success State
-      return _buildScaffold(
-        context,
-        body: HomeContent(state: state),
-      );
-    });
+      }),
+    );
   }
 
   Widget _buildScaffold(BuildContext context, {required Widget body}) {
@@ -152,8 +160,8 @@ class HomeContent extends StatelessWidget {
               bottom: TTabBar(
                 tabs: [
                   Tab(text: 'Contacts'),
-                  Tab(text: 'Groups'),
                   Tab(text: 'Channels'),
+                  Tab(text: 'Groups'),
                 ],
               ),
               automaticallyImplyLeading: false,
@@ -166,7 +174,7 @@ class HomeContent extends StatelessWidget {
                 ),
                 expandedTitleScale: 1,
                 title: SizedBox(
-                  height: ScreenHelper.getScreenHeight(context) * .3,
+                  height: ScreenHelper.getScreenHeight(context) * .2,
                   child: ListView(
                     children: [
                       // Stories Section
@@ -176,7 +184,7 @@ class HomeContent extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16.0),
                           child: SizedBox(
-                            height: ScreenHelper.getScreenHeight(context) * .3,
+                            height: ScreenHelper.getScreenHeight(context) * .13,
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
@@ -211,24 +219,18 @@ class HomeContent extends StatelessWidget {
                     (context, index) {
                       final chat = state.contacts[index];
                       return ChatTile(
-                        id: int.parse(chat.chatId),
+                        id: chat.id,
                         imageUrl: "",
-                        title: chat.participants.first.userId ==
-                                HiveCash.read(
-                                    boxName: "register_info", key: "id")
-                            ? chat.participants.last.name
-                            : chat.participants.first.name,
-                        subtitle: chat.lastMessage.content,
-                        time: chat.lastMessage.timestamp,
+                        title: chat.secondUser.username,
+                        subtitle: chat.lastMessage!.content,
+                        time: chat.lastMessage!.createdAt.toString(),
                         messageStatus: MessageStatus.delivered,
                         onTap: () {
-                          // Open chat screen
+                          GoRouter.of(context).push(
+                            '${AppRouter.kMessaging}/$index/channel',
+                          );
                         },
-                        lastSeen: chat.participants.first.userId ==
-                                HiveCash.read(
-                                    boxName: "register_info", key: "id")
-                            ? chat.participants.last.lastSeen
-                            : chat.participants.first.lastSeen,
+                        lastSeen: chat.secondUser.lastSeen.toString(),
                       );
                     },
                     childCount: state.contacts.length,
@@ -246,10 +248,16 @@ class HomeContent extends StatelessWidget {
                         id: channel.id,
                         imageUrl: channel.imageUrl ?? "",
                         title: channel.name,
-                        subtitle: "last message",
-                        time: '12:15',
+                        subtitle: channel.lastMessage != null
+                            ? channel.lastMessage!.content
+                            : '',
+                        time: channel.lastMessage != null
+                            ? channel.lastMessage!.createdAt.toString()
+                            : '',
                         onTap: () {
-                          // Open channel screen
+                          GoRouter.of(context).push(
+                            '${AppRouter.kMessaging}/$index/channel',
+                          );
                         },
                         lastSeen: '',
                       );
@@ -269,10 +277,26 @@ class HomeContent extends StatelessWidget {
                         id: group.id,
                         imageUrl: group.imageUrl ?? "",
                         title: group.name,
-                        subtitle: 'last message',
-                        time: '12:15',
+                        subtitle: group.lastMessage != null
+                            ? group.lastMessage!.content
+                            : '',
+                        time: group.lastMessage != null
+                            ? group.lastMessage!.createdAt.hour.toString()
+                            : '',
                         onTap: () {
-                          // Open group screen
+                          // GoRouter.of(context).push(
+                          //   AppRouter.kGroupScreen,
+                          //   extra: GroupsModel(
+                          //     id: group.id,
+                          //     name: group.name,
+                          //     privacy: group.privacy,
+                          //     groupSize: group.groupSize!,
+                          //     imageUrl: group.imageUrl,
+                          //   ),
+                          // );
+                          GoRouter.of(context).push(
+                            '${AppRouter.kMessaging}/$index/group',
+                          );
                         },
                         lastSeen: '',
                       );

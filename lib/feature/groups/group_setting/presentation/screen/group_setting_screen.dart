@@ -39,8 +39,8 @@ class GroupSettingsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              CSnackBar.showErrorDialog(context, 
-                  'Are you sure you want to delete this group?', () {
+              CSnackBar.showErrorDialog(
+                  context, 'Are you sure you want to delete this group?', () {
                 sl<GroupCubit>().deleteGroup(groupId);
                 GoRouter.of(context).pop();
               });
@@ -104,7 +104,7 @@ class GroupSettingsScreen extends StatelessWidget {
                   'Mute Notifications',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                value: state.ismute, //TODO: Get value from cubit
+                value: state.ismute,
                 onChanged: (value) {
                   sl<GroupCubit>().toggleNotifications(groupId, value);
                 },

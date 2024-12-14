@@ -12,7 +12,7 @@ class GroupsModel extends Group {
 
   factory GroupsModel.fromJson(Map<String, dynamic> json) {
     return GroupsModel(
-      imageUrl: json['community']['imageUrl'],
+      imageUrl: json['community']['imageURL'],
       id: json['id'],
       groupSize: json['groupSize'],
       name: json['community']['name'],
@@ -22,7 +22,7 @@ class GroupsModel extends Group {
 
   Map<String, dynamic> toJson() {
     return {
-      'imageUrl': imageUrl,
+      'imageURL': imageUrl,
       'name': name,
       'privacy': privacy,
       'groupSize': groupSize,

@@ -1,93 +1,74 @@
-import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
+import 'package:telegram/feature/home/data/model/last_message_model.dart';
 
+class ChatModel extends Equatable {
+  final int id;
 
-class ChatModel {
-  final String chatId;
-  final List<Participant> participants;
-  final LastMessage lastMessage;
-  final String cursor;
+  final String type;
+  final LastMessage? lastMessage;
+  final int messagesCount;
+  final SecondUser secondUser;
 
   ChatModel({
-    required this.chatId,
-    required this.participants,
-    required this.lastMessage,
-    required this.cursor,
+    required this.id,
+    required this.type,
+    this.lastMessage,
+    required this.messagesCount,
+    required this.secondUser,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
-      chatId: json['chatId'],
-      participants: (json['participants'] as List)
-          .map((participant) => Participant.fromJson(participant))
-          .toList(),
-      lastMessage: LastMessage.fromJson(json['lastMessage']),
-      cursor: json['cursor'],
+      id: json['id'],
+      type: json['type'],
+      lastMessage: json['lastMessage'] != null
+          ? LastMessage.fromJson(json['lastMessage'])
+          : null,
+      messagesCount: json['messagesCount'],
+      secondUser: SecondUser.fromJson(json['secondUser']),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'chatId': chatId,
-      'participants':
-          participants.map((participant) => participant.toJson()).toList(),
-      'lastMessage': lastMessage.toJson(),
-      'cursor': cursor,
-    };
-  }
+  @override
+  List<Object?> get props => [id, type, lastMessage, messagesCount, secondUser];
 }
 
-class Participant {
-  final String userId;
-  final String name;
-  final String lastSeen;
+class SecondUser extends Equatable {
+  final int id;
+  final String username;
+  final String? photo;
+  final String? screenName;
+  final String phone;
+  final String publicKey;
+  final DateTime? lastSeen;
+  final bool activeNow;
 
-  Participant({
-    required this.userId,
-    required this.name,
-    required this.lastSeen,
+  SecondUser({
+    required this.id,
+    required this.username,
+    this.photo,
+    this.screenName,
+    required this.phone,
+    required this.publicKey,
+    this.lastSeen,
+    required this.activeNow,
   });
 
-  factory Participant.fromJson(Map<String, dynamic> json) {
-    return Participant(
-      userId: json['userId'],
-      name: json['name'],
-      lastSeen: json['lastSeen'],
+  factory SecondUser.fromJson(Map<String, dynamic> json) {
+    return SecondUser(
+      id: json['id'],
+      username: json['username'],
+      photo: json['photo'],
+      screenName: json['screenName'],
+      phone: json['phone'],
+      publicKey: json['publicKey'],
+      lastSeen:
+          json['lastSeen'] != null ? DateTime.parse(json['lastSeen']) : null,
+      activeNow: json['activeNow'],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'name': name,
-      'lastSeen': lastSeen,
-    };
-  }
-}
-
-class LastMessage {
-  final String messageId;
-  final String content;
-  final String timestamp;
-
-  LastMessage({
-    required this.messageId,
-    required this.content,
-    required this.timestamp,
-  });
-
-  factory LastMessage.fromJson(Map<String, dynamic> json) {
-    return LastMessage(
-      messageId: json['messageId'],
-      content: json['content'],
-      timestamp: json['timestamp'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'messageId': messageId,
-      'content': content,
-      'timestamp': timestamp,
-    };
-  }
+  @override
+  List<Object?> get props =>
+      [id, username, photo, screenName, phone, publicKey, lastSeen, activeNow];
 }

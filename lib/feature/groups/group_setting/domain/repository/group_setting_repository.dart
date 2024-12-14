@@ -13,4 +13,5 @@ abstract class GroupSettingRepository {
   Future<void> deleteGroup(int groupId);
   Future<void> updateGroupDetails(int groupId, GroupUpdateData data);
   Future<List<MembershipModel>> fetchMembers(int groupId);
+  Future<void> muteToggle(int groupId, bool isMuted);
 }

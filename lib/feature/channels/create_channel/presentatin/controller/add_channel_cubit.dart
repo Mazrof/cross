@@ -29,25 +29,18 @@ class AddChannelCubit extends Cubit<AddChannelState> {
 
   void loadSubscribers() {
     AddChannelState.initial();
-    final String id = HiveCash.read(boxName: "register_info", key: "id");
-    List<chatTileData> members = sl<HomeCubit>()
-        .state
-        .contacts
-        .map((e) => chatTileData(
-            imageUrl: "",
-            name: e.participants.first.userId == id
-                ? e.participants.last.name
-                : e.participants.first.name,
-            id: e.participants.first.userId == id
-                ? e.participants.last.userId as int
-                : e.participants.first.userId as int,
-            lastSeen: e.lastMessage.timestamp))
-        .toList();
+    List<ChatModel> members = sl<HomeCubit>().state.contacts;
+    List<chatTileData> sub = members.map((chat) {
+      return chatTileData(
+        id: chat.id,
+        name: chat.secondUser.username,
+        imageUrl: chat.secondUser.photo ?? '',
+        lastSeen: chat.secondUser.lastSeen.toString(),
+      );
+    }).toList();
 
-    emit(state.copyWith(allSubscribers: members));
+    emit(state.copyWith(allSubscribers: sub));
   }
-
-
 
   void toggleSubscriber(chatTileData subscriber) {
     final selectedSubscribers =
@@ -79,8 +72,6 @@ class AddChannelCubit extends Cubit<AddChannelState> {
   void setChannelName(String name) {
     emit(state.copyWith(channelName: name));
   }
-
- 
 
   void setChannelPrivacy(bool isPublic) {
     emit(state.copyWith(

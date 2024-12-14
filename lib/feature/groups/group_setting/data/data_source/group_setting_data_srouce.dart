@@ -13,6 +13,7 @@ abstract class GroupRemoteDataSource {
   Future<void> deleteGroup(int groupId);
   Future<void> updateGroupDetails(int groupId, GroupUpdateData data);
   Future<List<MembershipModel>> fetchMembers(int groupId);
+  Future<void> muteToggle(int groupId, bool isMuted);
 }
 
 class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
@@ -93,5 +94,16 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     } else {
       throw Exception('Failed to fetch members: ${response.statusCode}');
     }
+  }
+
+  @override
+  Future<void> muteToggle(int groupId, bool isMuted) async {
+    await apiService.post(
+      endPoint: 'notifications/mute',
+      data: {
+        'chat_id': groupId.toString(),
+        'mute': isMuted,
+      },
+    );
   }
 }

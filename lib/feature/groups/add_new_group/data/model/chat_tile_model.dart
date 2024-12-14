@@ -17,7 +17,7 @@ class chatTileModel extends chatTileData {
     return chatTileModel(
       id: json['id'],
       name: json['name'],
-      imageUrl: json['imageUrl'],
+      imageUrl: json['imageURL'],
       lastSeen: json['lastSeen'],
     );
   }
@@ -26,7 +26,7 @@ class chatTileModel extends chatTileData {
     return {
       'id': id,
       'name': name,
-      'imageUrl': imageUrl,
+      'imageURL': imageUrl,
       'lastSeen': lastSeen,
     };
   }

@@ -25,7 +25,6 @@ class MemberModel extends Member {
     };
   }
 
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -33,11 +32,13 @@ class MemberModel extends Member {
           runtimeType == other.runtimeType &&
           userId == other.userId &&
           role == other.role &&
-          hasDownloadPermissions == other.hasDownloadPermissions&&
-          hasMessagePermissions == other.hasMessagePermissions
-          ;
+          hasDownloadPermissions == other.hasDownloadPermissions &&
+          hasMessagePermissions == other.hasMessagePermissions;
 
   @override
   int get hashCode =>
-      userId.hashCode ^ role.hashCode ^ hasDownloadPermissions.hashCode ^ hasMessagePermissions.hashCode;
+      userId.hashCode ^
+      role.hashCode ^
+      hasDownloadPermissions.hashCode ^
+      hasMessagePermissions.hashCode;
 }
