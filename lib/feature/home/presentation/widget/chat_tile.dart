@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/component/general_image.dart';
+import 'package:telegram/core/formatter/formatter.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 
@@ -58,7 +59,7 @@ class ChatTile extends StatelessWidget {
         children: [
           // Time Text
           Text(
-            time,
+            time != "" ? TAppFormatter.formatDate(DateTime.parse(time)) : time,
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: Colors.grey,
                 ),

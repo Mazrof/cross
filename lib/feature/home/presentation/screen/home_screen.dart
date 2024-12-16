@@ -229,10 +229,8 @@ class HomeContent extends StatelessWidget {
                         time: chat.lastMessage!.createdAt.toString(),
                         messageStatus: MessageStatus.delivered,
                         onTap: () {
-
                           GoRouter.of(context).push(
                             '${AppRouter.kMessaging}/$index/channel',
-
                           );
                         },
                         lastSeen: chat.secondUser.lastSeen.toString(),
@@ -297,7 +295,7 @@ class HomeContent extends StatelessWidget {
                               name: group.name,
                               privacy: group.privacy,
                               groupSize: group.groupSize!,
-                              imageUrl: group.imageUrl??'',
+                              imageUrl: group.imageUrl ?? '',
                             ),
                           );
                           // GoRouter.of(context).push(

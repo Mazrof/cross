@@ -42,7 +42,7 @@ class ChatScreen extends StatelessWidget {
       List contactNames = [];
 
       for (var contact in contacts) {
-        contactNames.add(contact.participants[0].name);
+        contactNames.add(contact.secondUser.username);
       }
 
       return await showModalBottomSheet<String>(
@@ -58,7 +58,7 @@ class ChatScreen extends StatelessWidget {
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(contacts[index].participants[0].name),
+                title: Text(contacts[index].secondUser.username),
                 onTap: () {
                   // setState(() {
                   //   _controller.text = '@${_contacts[index]} ';
@@ -67,7 +67,7 @@ class ChatScreen extends StatelessWidget {
                   if (sl<ChatCubit>().state.selectionState) {
                     // if selected then return participantId
 
-                    Navigator.pop(context, contacts[index].chatId);
+                    Navigator.pop(context, contacts[index].id.toString());
                   }
                 },
               );
@@ -114,15 +114,15 @@ class ChatScreen extends StatelessWidget {
                           userName: sl<HomeCubit>()
                               .state
                               .contacts[sl<ChatCubit>().state.chatIndex!]
-                              .participants[0]
-                              .name,
+                              .secondUser
+                              .username,
                           state: AppStrings.waitingInternet,
                           avatar: Avatar(
                             imageUrl: sl<HomeCubit>()
                                 .state
                                 .contacts[sl<ChatCubit>().state.chatIndex!]
-                                .participants[0]
-                                .imageUrl,
+                                .secondUser
+                                .username,
                           ),
                         ),
                         showBackButton: true,
