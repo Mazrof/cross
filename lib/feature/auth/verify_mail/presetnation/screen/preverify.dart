@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -9,11 +10,15 @@ import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 class PreVerifyScreen extends StatelessWidget {
   const PreVerifyScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CAppBar(
+        showBackButton: true,
+        onLeadingTap: () {
+          GoRouter.of(context).pop();
+        },
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.padding * 2),

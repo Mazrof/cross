@@ -2,14 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
+import 'package:telegram/feature/home/data/model/channel_data_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
+import 'package:telegram/feature/home/data/model/group_data_model.dart';
 import 'package:telegram/feature/home/data/model/story_model.dart';
 
 class HomeState extends Equatable {
   final CubitState state;
   final List<StoryModel> stories;
-  final List<GroupModel> groups;
-  final List<ChannelModel> channels;
+  final List<GroupDataModel> groups;
+  final List<ChannelDataModel> channels;
   final List<ChatModel> contacts;
   final String errorMessage;
 
@@ -25,8 +27,8 @@ class HomeState extends Equatable {
   HomeState copyWith({
     CubitState? state,
     List<StoryModel>? stories,
-    List<GroupModel>? groups,
-    List<ChannelModel>? channels,
+    List<GroupDataModel>? groups,
+    List<ChannelDataModel>? channels,
     List<ChatModel>? contacts,
     String? errorMessage,
   }) {

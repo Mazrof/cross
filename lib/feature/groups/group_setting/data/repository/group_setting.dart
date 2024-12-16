@@ -44,4 +44,9 @@ class GroupSettingRepositoryImpl implements GroupSettingRepository {
   Future<List<MembershipModel>> fetchMembers(int groupId) {
     return remoteDataSource.fetchMembers(groupId);
   }
+
+  @override
+  Future<void> muteToggle(int groupId, bool isMuted) {
+    return remoteDataSource.muteToggle(groupId, isMuted);
+  }
 }

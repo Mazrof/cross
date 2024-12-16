@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/cnight_mode_switch.dart';
 import 'package:telegram/core/component/general_image.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
@@ -100,6 +101,17 @@ class CAppDrawer extends StatelessWidget {
             iconData: Icons.help_outline,
             title: 'Telegram FAQ',
             onTilePressed: () {},
+          ),
+
+          Divider(),
+          DrawerListTile(
+            iconData: Icons.exit_to_app,
+            title: 'Logout',
+            onTilePressed: () {
+              // HiveCash.deleteAllBoxes();
+              CacheHelper.write(key: 'loged', value: 'false');
+              GoRouter.of(context).go(AppRouter.kLogin);
+            },
           ),
 
           // SwitchListTile(
