@@ -25,10 +25,11 @@ enum GroupStatus {
   failure,
 }
 
+enum ChatType { PersonalChat, Group, Channel }
 
-enum ChatType{
-  PersonalChat,
-  Group,
-  Channel
+enum SearchCategory {
+  users,
+  channels,
+  groups,
+  chats,
 }
-

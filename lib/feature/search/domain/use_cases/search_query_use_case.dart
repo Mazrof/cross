@@ -18,7 +18,7 @@ class SearchQueryUseCase extends BaseUseCase<GlobalSearchEntity, String> {
       var result = await globalSearchRepo.globalSearch(parameter);
       return result;
     } catch (e) {
-      return left(eitherM() as Failure);
+      return left(e as Failure);
     }
   }
 }

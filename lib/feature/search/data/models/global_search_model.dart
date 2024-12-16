@@ -2,9 +2,9 @@ import 'package:telegram/feature/search/domain/entities/global_search_entity.dar
 
 class GlobalSearchModel extends GlobalSearchEntity {
   final List<String> chats;
-  final List<Channel> channelResult;
-  final List<User> userResult;
-  final List<Group> groupResult;
+  final List<ChannelSearchResult> channelResult;
+  final List<UserSearchResult> userResult;
+  final List<GroupSearchResult> groupResult;
   GlobalSearchModel({
     required this.chats,
     required this.channelResult,
@@ -29,7 +29,7 @@ class GlobalSearchModel extends GlobalSearchEntity {
     final data = json['data'] ?? {};
 
     final users = (data['users'] as List<dynamic>? ?? []).map((userJson) {
-      return User(
+      return UserSearchResult(
         id: userJson['id'] as int,
         name: userJson['name'] as String,
         picVisibility: userJson['profilepicvisibility'] as String,
@@ -38,14 +38,14 @@ class GlobalSearchModel extends GlobalSearchEntity {
 
     final channels =
         (data['channels'] as List<dynamic>? ?? []).map((channelJson) {
-      return Channel(
+      return ChannelSearchResult(
         id: channelJson['id'] as int,
         name: channelJson['name'] as String,
       );
     }).toList();
 
     final groups = (data['groups'] as List<dynamic>? ?? []).map((groupJson) {
-      return Group(
+      return GroupSearchResult(
         id: groupJson['id'] as int,
         name: groupJson['name'] as String,
       );

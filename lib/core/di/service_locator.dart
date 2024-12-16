@@ -96,6 +96,11 @@ import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_r
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+import 'package:telegram/feature/search/Presentation/controller/global_search_cubit.dart';
+import 'package:telegram/feature/search/data/data_source/global_search_remote_data_source.dart';
+import 'package:telegram/feature/search/data/repos/global_search_repo_impl.dart';
+import 'package:telegram/feature/search/domain/repos/global_search_repo.dart';
+import 'package:telegram/feature/search/domain/use_cases/search_query_use_case.dart';
 import 'package:telegram/feature/settings/datasettings/datasource/remotedata/user_settings_remote_data_source.dart';
 import 'package:telegram/feature/settings/datasettings/repos/user_settings_repo_impl.dart';
 import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
@@ -245,6 +250,12 @@ class ServiceLocator {
           sl(),
           sl(),
         ));
+
+    //search
+
+    sl.registerLazySingleton(() => GlobalSearchCubit(
+          searchQueryUseCase: sl(),
+        ));
   }
 
   static void registerUseCases() {
@@ -312,6 +323,9 @@ class ServiceLocator {
     sl.registerLazySingleton(() => FetchGroupsUseCase(repository: sl()));
     sl.registerLazySingleton(() => FetchChannelsUseCase(repository: sl()));
     sl.registerLazySingleton(() => FetchContactsUseCase(repository: sl()));
+
+    //search
+    sl.registerLazySingleton(() => SearchQueryUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -358,6 +372,11 @@ class ServiceLocator {
 
     sl.registerLazySingleton<HomeRepository>(
         () => HomeRepositoryImpl(remoteDataSource: sl()));
+
+    //search
+    sl.registerLazySingleton<GlobalSearchRepo>(
+      () => GlobalSearchRepoImpl(remoteDataSource: sl()),
+    );
   }
 
   static void registerDataSources() {
@@ -404,6 +423,10 @@ class ServiceLocator {
     // Data sources
     sl.registerLazySingleton<HomeRemoteDataSource>(
         () => HomeRemoteDataSourceImpl());
+    //search
+    sl.registerLazySingleton<GlobalSearchRemoteDataSource>(
+      () => GlobalSearchRemoteDataSourceImpl(apiService: sl()),
+    );
   }
 
   static void registerSingletons() {

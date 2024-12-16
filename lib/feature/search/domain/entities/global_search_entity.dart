@@ -1,27 +1,28 @@
-class Channel {
+class ChannelSearchResult {
   final int id;
   final String name;
-  Channel({required this.id, required this.name});
+  ChannelSearchResult({required this.id, required this.name});
 }
 
-class User {
+class UserSearchResult {
   final int id;
   final String name;
   final String picVisibility;
-  User({required this.id, required this.name, required this.picVisibility});
+  UserSearchResult(
+      {required this.id, required this.name, required this.picVisibility});
 }
 
-class Group {
+class GroupSearchResult {
   final int id;
   final String name;
-  Group({required this.id, required this.name});
+  GroupSearchResult({required this.id, required this.name});
 }
 
 class GlobalSearchEntity {
   final List<String> chats;
-  final List<Channel> channelResult;
-  final List<User> userResult;
-  final List<Group> groupResult;
+  final List<ChannelSearchResult> channelResult;
+  final List<UserSearchResult> userResult;
+  final List<GroupSearchResult> groupResult;
 
   GlobalSearchEntity(
       {required this.chats,

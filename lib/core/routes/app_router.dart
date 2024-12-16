@@ -48,6 +48,7 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mai
 import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
+import 'package:telegram/feature/search/Presentation/controller/global_search_cubit.dart';
 
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
@@ -417,7 +418,10 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kglobalSearch,
       builder: (context, state) {
-        return GlobalSearchPage();
+        return BlocProvider(
+          create: (context) => sl<GlobalSearchCubit>(),
+          child: GlobalSearchScreen(),
+        );
       },
     ),
     GoRoute(

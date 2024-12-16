@@ -4,14 +4,14 @@ import 'package:telegram/feature/search/data/models/global_search_model.dart';
 
 import 'package:http/http.dart' as http;
 
-abstract class GlobalSearchDataSource {
+abstract class GlobalSearchRemoteDataSource {
   Future<GlobalSearchModel> searchGlobal(String searchQuery);
 }
 
-class GlobalSearchRemoteDataSource extends GlobalSearchDataSource {
+class GlobalSearchRemoteDataSourceImpl extends GlobalSearchRemoteDataSource {
   final ApiService _apiService;
 
-  GlobalSearchRemoteDataSource({
+  GlobalSearchRemoteDataSourceImpl({
     required ApiService apiService,
   }) : _apiService = apiService;
 
@@ -22,6 +22,7 @@ class GlobalSearchRemoteDataSource extends GlobalSearchDataSource {
           endPoint: ApiConstants.globalSearchQuery,
           queryParameters: {"query": searchQuery});
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Search successful");
         return GlobalSearchModel.fromJson(response.data);
       } else {
         throw Exception(
