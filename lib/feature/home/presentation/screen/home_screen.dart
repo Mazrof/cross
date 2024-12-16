@@ -6,6 +6,7 @@ import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
 import 'package:telegram/core/local/hive.dart';
+
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -13,6 +14,7 @@ import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
+
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_state.dart';
 import 'package:telegram/feature/home/presentation/widget/add_stroy.dart';
@@ -227,8 +229,10 @@ class HomeContent extends StatelessWidget {
                         time: chat.lastMessage!.createdAt.toString(),
                         messageStatus: MessageStatus.delivered,
                         onTap: () {
+
                           GoRouter.of(context).push(
                             '${AppRouter.kMessaging}/$index/channel',
+
                           );
                         },
                         lastSeen: chat.secondUser.lastSeen.toString(),

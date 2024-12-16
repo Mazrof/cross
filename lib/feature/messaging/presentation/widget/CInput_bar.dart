@@ -5,14 +5,15 @@ import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
 import 'package:telegram/feature/messaging/presentation/widget/input_bar_trailing.dart';
 
 class CinputBar extends StatelessWidget {
-  CinputBar({super.key, required this.receiverId});
+  CinputBar({super.key, required this.showContactModal});
 
-  final String receiverId;
+  final void Function() showContactModal;
 
   // final TextEditingController controller;
   final FocusNode _focusNode = FocusNode();
@@ -40,10 +41,14 @@ class CinputBar extends StatelessWidget {
             sender: myId,
             time: formatter.format(now).toString(),
             isReply: true,
+            isForward: false,
+            participantId: sl<HomeCubit>()
+                .state
+                .contacts[sl<ChatCubit>().state.chatIndex!]
+                .chatId,
           );
 
           sl<ChatCubit>().replyToMessage(replyMessage);
-
         } else if (sl<ChatCubit>().state.editingState) {
           // Edit the message
           sl<ChatCubit>().editMessage(
@@ -58,13 +63,19 @@ class CinputBar extends StatelessWidget {
           final DateFormat formatter = DateFormat('HH:mm');
 
           Message newMessage = Message(
-              content: text,
-              isDate: false,
-              isGIF: false,
-              id: -1,
-              sender: myId,
-              time: formatter.format(now).toString(),
-              isReply: false);
+            content: text,
+            isDate: false,
+            isGIF: false,
+            id: -1,
+            sender: myId,
+            time: formatter.format(now).toString(),
+            isReply: false,
+            isForward: false,
+            participantId: sl<HomeCubit>()
+                .state
+                .contacts[sl<ChatCubit>().state.chatIndex!]
+                .chatId,
+          );
 
           sl<ChatCubit>().sendMessage(newMessage);
         }
@@ -93,9 +104,24 @@ class CinputBar extends StatelessWidget {
           ),
         ),
       ],
+      onTextChanged: (text) {
+        if (text == "") {
+          sl<ChatCubit>().notTyping();
+        } else {
+          sl<ChatCubit>().typingMessage();
+
+          /// Cannotttttttttttttttttt Mention in Personal Chat
+          if (text[text.length - 1] == '@') {
+            // check if last entered character is @ -> show mention modalSheet
+            showContactModal();
+          }
+        }
+      },
     );
   }
 }
+
+
 
 
 // Padding(

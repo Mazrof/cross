@@ -10,11 +10,10 @@ import 'package:telegram/feature/messaging/presentation/widget/cmessage_widget.d
 import 'package:telegram/feature/messaging/presentation/widget/message_date.dart';
 
 class MessageList extends StatelessWidget {
-  final List<Message> messages;
+  // final List<Message> messages;
   final scrollController;
 
-  const MessageList(
-      {super.key, required this.messages, required this.scrollController});
+  const MessageList({super.key, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +40,7 @@ class MessageList extends StatelessWidget {
                     isGIF: state.messages[i].isGIF,
                     isReply: state.messages[i].isReply,
                     replyMessage: state.messages[i].replyMessage,
+                    isForward: state.messages[i].isForward,
                   ),
                 );
               }
@@ -63,16 +63,21 @@ class MessageList extends StatelessWidget {
                     // right: 50,
                     // top: 100 - 78 + MediaQuery.of(context).viewInsets.bottom,
                     child: ChatMessage(
-                      message: messages[(sl<ChatCubit>().state).index].content,
+                      message:
+                          state.messages[(sl<ChatCubit>().state).index].content,
                       isSender: state
                               .messages[(sl<ChatCubit>().state).index].sender ==
                           HiveCash.read(boxName: 'register_info', key: 'id')
                               .toString(),
-                      time: messages[(sl<ChatCubit>().state).index].time,
+                      time: state.messages[(sl<ChatCubit>().state).index].time,
                       index: (sl<ChatCubit>().state).index,
                       id: (sl<ChatCubit>().state).id,
-                      isGIF: messages[(sl<ChatCubit>().state).index].isGIF,
-                      isReply: messages[(sl<ChatCubit>().state).index].isReply,
+                      isGIF:
+                          state.messages[(sl<ChatCubit>().state).index].isGIF,
+                      isReply:
+                          state.messages[(sl<ChatCubit>().state).index].isReply,
+                      isForward: state
+                          .messages[(sl<ChatCubit>().state).index].isForward,
                     ),
                   ),
                 ],

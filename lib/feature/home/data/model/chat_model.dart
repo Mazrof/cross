@@ -65,6 +65,7 @@ class SecondUser extends Equatable {
       lastSeen:
           json['lastSeen'] != null ? DateTime.parse(json['lastSeen']) : null,
       activeNow: json['activeNow'],
+
     );
   }
 
