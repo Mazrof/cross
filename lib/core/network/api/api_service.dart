@@ -4,11 +4,9 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
-import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
 import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
-import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
@@ -18,6 +16,7 @@ class ApiService {
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
+
   Dio dio;
   bool _howAmICalled = false;
 
@@ -30,17 +29,17 @@ class ApiService {
     final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
     final dio = Dio(BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: Duration(seconds: 5),
-      receiveTimeout: Duration(seconds: 5),
-      sendTimeout: Duration(seconds: 5),
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5),
+      sendTimeout: const Duration(seconds: 5),
     ));
+
     dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(InterceptorsWrapper(
       onError: (DioError error, ErrorInterceptorHandler handler) async {
         if (error.response?.statusCode == 401) {
-          await ApiService._internal(cookieJar, dio)
-              ._retryWithHowAmI(error.requestOptions);
-          // Retry the original request
+          final apiService = ApiService._internal(cookieJar, dio);
+          await apiService._retryWithHowAmI();
           final options = error.requestOptions;
           final response = await dio.request(
             options.path,
@@ -56,26 +55,35 @@ class ApiService {
         return handler.next(error);
       },
     ));
+
     return ApiService._internal(cookieJar, dio);
   }
 
-  Future<void> _retryWithHowAmI(RequestOptions requestOptions) async {
+  /// Handles retry on 401 with a single login attempt
+  Future<void> _retryWithHowAmI() async {
     if (!_howAmICalled) {
+      _howAmICalled = true; // Prevent multiple calls
       await howAmI();
-      _howAmICalled = true;
-    } else {
-      // GoRouter.of(context).go(AppRoutes.login);
     }
   }
 
+  /// Perform login using stored credentials
   Future<void> howAmI() async {
-    sl<LoginDataSource>().login(
-      LoginRequestBody(
-        email: HiveCash.read(boxName: 'register_info', key: "email"),
-        password:
-            HiveCash.read(boxName: 'register_info', key: "password_not_hashed"),
-      ),
-    );
+    final email = HiveCash.read(boxName: 'register_info', key: "email");
+    final password =
+        HiveCash.read(boxName: 'register_info', key: "password_not_hashed");
+
+    if (email != null && password != null) {
+      try {
+        await sl<LoginDataSource>().login(
+          LoginRequestBody(email: email, password: password),
+        );
+      } catch (e) {
+        print("Login failed during retry: $e");
+      }
+    } else {
+      print("Missing email or password in local storage.");
+    }
   }
 
   Future<Response> get({
@@ -98,7 +106,8 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
+        ;
       }
     } catch (e) {
       if (e is DioException) {
@@ -123,13 +132,13 @@ class ApiService {
         print(response.data);
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
       }
     } catch (e) {
       if (e is DioException) {
         throw ServerFailure.fromDioError(e);
       } else {
-        throw ServerFailure(message: e.toString());
+        throw _handleError(e);
       }
     }
   }
@@ -149,7 +158,8 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
+      
       }
     } catch (e) {
       if (e is DioException) {
@@ -173,7 +183,8 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
+        ;
       }
     } catch (e) {
       if (e is DioException) {
@@ -199,7 +210,8 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw response;
+        throw ServerFailure(message: response.data['message']);
+        ;
       }
     } catch (e) {
       if (e is DioException) {

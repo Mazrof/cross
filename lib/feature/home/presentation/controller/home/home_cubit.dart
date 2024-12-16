@@ -7,14 +7,14 @@ import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
+import 'package:telegram/feature/home/data/model/channel_data_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
+import 'package:telegram/feature/home/data/model/group_data_model.dart';
 import 'package:telegram/feature/home/data/model/story_model.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_channels_use_case.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_contacts_use_case.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_groups_use_case.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_story_use_case.dart';
-import '../../../../channels/create_channel/data/model/channel_model.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -43,7 +43,12 @@ class HomeCubit extends Cubit<HomeState> {
     //   fetchContacts(),
     // ]);
 
-    final contacts = await fetchContacts();
+      final stories = responses[0] as List<StoryModel>;
+      final groups = responses[1] as List<GroupDataModel>;
+      final channels = responses[2] as List<ChannelDataModel>;
+      final contacts = responses[3] as List<ChatModel>;
+      print('formt the cubit ${groups}');
+
 
     final stories = await fetchStories();
 
@@ -62,233 +67,90 @@ class HomeCubit extends Cubit<HomeState> {
         // groups: groups,
         // channels: channels,
         contacts: contacts,
-      ),
-    );
-    // } catch (e) {
-    //   emit(state.copyWith(
-    //       state: CubitState.failure, errorMessage: e.toString()));
-    // }
+
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        state: CubitState.failure,
+        errorMessage: e.toString() ?? 'An error occurred',
+      ));
+    }
+
   }
 
   Future<List<StoryModel>> fetchStories() async {
     // Replace with your API call
-    await Future.delayed(Duration(seconds: 1)); // Simulate API delay
-    return [
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-      StoryModel(
-        id: '1',
-        createdAt: DateTime.now().subtract(Duration(hours: 1)),
-        viewCount: 120,
-        status: 'active',
-        mediaType: 'image',
-        mediaUrl: 'https://example.com/story1.jpg',
-        content: 'Story content',
-        userName: 'Alice',
-        userImage: '',
-        isSeen: false,
-        isOwner: false,
-      ),
-    ];
+
+    try {
+      if (networkManager.isConnected() == 'false') {
+        emit(state.copyWith(
+            state: CubitState.failure, errorMessage: 'No internet connection'));
+        return [];
+      }
+
+      final stories = await fetchStoriesUseCase();
+      return stories;
+    } catch (e) {
+      print('error from cubit $e');
+      return [];
+    }
   }
 
-  Future<List<GroupModel>> fetchGroups() async {
+  Future<List<GroupDataModel>> fetchGroups() async {
     // Replace with your API call
-    await Future.delayed(Duration(seconds: 1)); // Simulate API delay
-    return [
-      GroupModel(
-        id: 102,
-        groupSize: 14,
-        name: 'Group Name',
-        privacy: true,
-        imageUrl: "https://example.com/group-image.jpg",
-      ),
-      GroupModel(
-        id: 102,
-        groupSize: 14,
-        name: 'Group Name',
-        privacy: true,
-        imageUrl: "https://example.com/group-image.jpg",
-      ),
-      GroupModel(
-        id: 102,
-        groupSize: 14,
-        name: 'Group Name',
-        privacy: true,
-        imageUrl: "https://example.com/group-image.jpg",
-      ),
-      GroupModel(
-        id: 102,
-        groupSize: 14,
-        name: 'Group Name',
-        privacy: true,
-        imageUrl: "https://example.com/group-image.jpg",
-      ),
-    ];
+    print('fetching groups');
+
+    try {
+      if (networkManager.isConnected() == 'false') {
+        emit(state.copyWith(
+            state: CubitState.failure, errorMessage: 'No internet connection'));
+        return [];
+      }
+
+      final groups = await fetchGroupsUseCase();
+      print('groups from cubit ${groups}');
+      return groups;
+    } catch (e) {
+      print('error from cubit $e');
+      return [];
+    }
   }
 
-  Future<List<ChannelModel>> fetchChannels() async {
+  Future<List<ChannelDataModel>> fetchChannels() async {
     // Replace with your API call
-    await Future.delayed(Duration(seconds: 1)); // Simulate API delay
-    return [
-      ChannelModel(
-        id: 1,
-        canAddComments: true,
-        name: 'General Chat',
-        privacy: true,
-        imageUrl: 'https://example.com/channel-image.jpg',
-      ),
-      ChannelModel(
-        id: 1,
-        canAddComments: true,
-        name: 'General Chat',
-        privacy: true,
-        imageUrl: 'https://example.com/channel-image.jpg',
-      ),
-      ChannelModel(
-        id: 1,
-        canAddComments: true,
-        name: 'General Chat',
-        privacy: true,
-        imageUrl: 'https://example.com/channel-image.jpg',
-      ),
-      ChannelModel(
-        id: 1,
-        canAddComments: true,
-        name: 'General Chat',
-        privacy: true,
-        imageUrl: 'https://example.com/channel-image.jpg',
-      ),
-    ];
+    print('fetching channels');
+    try {
+      if (networkManager.isConnected() == 'false') {
+        emit(state.copyWith(
+            state: CubitState.failure, errorMessage: 'No internet connection'));
+        return [];
+      }
+
+      final channels = await fetchChannelsUseCase();
+      return channels;
+    } catch (e) {
+      print('error from cubit $e');
+      return [];
+    }
   }
 
   Future<List<ChatModel>> fetchContacts() async {
+    print('fetching contacts');
     // Replace with your API call
-    // await Future.delayed(Duration(seconds: 1)); // Simulate API delay
 
-    dynamic response = await sl<ApiService>().get(
-      endPoint: "chats/my-chats",
-      queryParameters: {
-        "type": "personalChat",
-      },
-    );
+    try {
+      if (networkManager.isConnected() == 'false') {
+        emit(state.copyWith(
+            state: CubitState.failure, errorMessage: 'No internet connection'));
+        return [];
+      }
 
-    response = response.data as List;
+      final contacts = await fetchContactsUseCase();
+      return contacts;
+    } catch (e) {
+      print('error from cubit $e');
+      return [];
+    }
 
-    print(response[0]['lastMessage']);
-
-    return List.generate(
-      (response as List).length,
-      (index) => ChatModel(
-        chatId: (response[index]['id']).toString(),
-        participants: List.generate(
-          1,
-          (i) => Participant(
-            userId: (response[index]['secondUser']['id']).toString(),
-            name: response[index]['secondUser']['username'],
-            lastSeen: '12:15',
-            publicKey: response[index]['secondUser']['publicKey'],
-            phone: response[index]['secondUser']['phone'],
-            imageUrl: response[index]['secondUser']['photo'] ?? " ",
-          ),
-        ),
-        lastMessage: LastMessage(
-          content: response[index]['lastMessage']['content'],
-          timestamp: DateFormat('HH:mm').format(
-              DateTime.parse(response[index]['lastMessage']['createdAt'])),
-          messageId: (response[index]['lastMessage']['id']).toString(),
-        ),
-        cursor: 'cursor',
-      ),
-    );
   }
 }

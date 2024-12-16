@@ -49,6 +49,7 @@ import 'package:telegram/feature/groups/group_setting/domain/repository/group_se
 import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/mute_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/remove_member_user.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/update_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/update_member_role.dart';
@@ -223,7 +224,8 @@ class ServiceLocator {
           sl(),
         ));
 
-    sl.registerFactory(() => GroupCubit(
+    sl.registerLazySingleton(() => GroupCubit(
+          sl(),
           sl(),
           sl(),
           sl(),
@@ -312,6 +314,10 @@ class ServiceLocator {
     sl.registerLazySingleton(() => FetchGroupsUseCase(repository: sl()));
     sl.registerLazySingleton(() => FetchChannelsUseCase(repository: sl()));
     sl.registerLazySingleton(() => FetchContactsUseCase(repository: sl()));
+
+    sl.registerLazySingleton(() => MuteUseCase(
+          sl(),
+        ));
   }
 
   static void registerRepositories() {

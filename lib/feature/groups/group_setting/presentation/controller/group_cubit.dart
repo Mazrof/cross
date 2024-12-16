@@ -10,6 +10,7 @@ import 'package:telegram/feature/groups/group_setting/domain/entity/group_update
 import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/domain/use_case/mute_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/remove_member_user.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/update_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/update_member_role.dart';
@@ -27,6 +28,7 @@ class GroupCubit extends Cubit<GroupState> {
     this.updateGroupDetailsUseCase,
     this.networkManager,
     this.fetchGroupMembersUseCase,
+    this.muteUseCase,
   ) : super(GroupState(
           state: CubitState.initial,
           allMembers: [],
@@ -42,26 +44,30 @@ class GroupCubit extends Cubit<GroupState> {
   final UpdateGroupDetailsUseCase updateGroupDetailsUseCase;
   final NetworkManager networkManager;
   final FetchGroupMembersUseCase fetchGroupMembersUseCase;
+  final MuteUseCase muteUseCase;
 
   List<chatTileData> convertChatModelToChatTileData(
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
-      final participant = chat.participants.first.userId == currentUserId
-          ? chat.participants.last
-          : chat.participants.first;
-
       return chatTileData(
-        id: int.parse(participant.userId),
-        name: participant.name,
-        imageUrl: "", // Assuming imageUrl is not available in ChatModel
-        lastSeen: participant.lastSeen,
+        id: chat.id,
+        name: chat.secondUser.username,
+        imageUrl: chat.secondUser.photo ?? '',
+        lastSeen: chat.secondUser.lastSeen.toString(),
       );
     }).toList();
   }
 
   void toggleNotifications(int groupId, bool isMuted) async {
     try {
+      if (networkManager.isConnected() == false) {
+        emit(state.copyWith(
+            state: CubitState.failure, errorMessage: 'No Internet Connection'));
+        return;
+      }
+
       emit(state.copyWith(ismute: isMuted));
+      // await muteUseCase(groupId, isMuted);  //waiting back-end 
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -70,15 +76,22 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  void togglePrivacy(int groupId) async {
+  void togglePrivacy(int groupId, bool val) async {
     try {
       if (networkManager.isConnected() == false) {
         emit(state.copyWith(
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
-      final updatedGroup =
-          state.group!.copyWith(privacy: !state.group!.privacy);
+
+      print('toggling privacy');
+      print(state);
+      final updatedGroup = state.group!.copyWith(privacy: val);
+      print(updatedGroup.privacy);
+
+      emit(state.copyWith(group: updatedGroup));
+
+      print('mmmmmmmmmmmmmmmmmmmm');
       await updateGroupDetailsUseCase(
           groupId,
           GroupUpdateData(
@@ -87,7 +100,6 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
-      emit(state.copyWith(group: updatedGroup));
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -113,8 +125,10 @@ class GroupCubit extends Cubit<GroupState> {
     try {
       final group = await fetchGroupDetailsUseCase(groupId);
       print('fetching group members');
+      print(group);
       final members = await fetchGroupMembersUseCase(groupId);
       print('fetched group members');
+      print(members);
       emit(state.copyWith(
         state: CubitState.success,
         group: group,
@@ -165,7 +179,6 @@ class GroupCubit extends Cubit<GroupState> {
       ));
     }
   }
-
 
   void removeMember(int groupId, int memberId) async {
     try {

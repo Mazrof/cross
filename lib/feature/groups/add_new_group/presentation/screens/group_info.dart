@@ -13,6 +13,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 
 class GroupInfo extends StatelessWidget {
   @override
@@ -27,7 +28,12 @@ class GroupInfo extends StatelessWidget {
             GoRouter.of(context).pop();
 
             GoRouter.of(context).pushReplacement(AppRouter.kGroupScreen,
-                extra: sl<AddMembersCubit>().state.group);
+                extra: GroupModel(
+                    groupSize: state.group!.groupSize,
+                    name: state.group!.name,
+                    id: state.group!.id,
+                    privacy: state.group!.privacy,
+                    imageUrl: ""));
           });
         } else if (state.state == GroupStatus.failure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
