@@ -74,8 +74,8 @@ class AddChannelCubit extends Cubit<AddChannelState> {
   }
 
   void setChannelPrivacy(bool isPublic) {
-    emit(state.copyWith(
-        privacy: isPublic ? true : false, state: CubitState.initial));
+    emit(state.copyWith(state: CubitState.loading));
+    emit(state.copyWith(privacy: isPublic, state: CubitState.initial));
   }
 
   Future<void> createChannel() async {

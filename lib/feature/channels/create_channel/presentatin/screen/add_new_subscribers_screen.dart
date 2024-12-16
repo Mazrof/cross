@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/shimmer.dart';
 import 'package:telegram/core/di/service_locator.dart';
@@ -10,6 +11,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_state.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
+import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/chat_group_tile.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
@@ -17,7 +19,7 @@ import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimme
 class AddNewSubscribersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("NewGroupScreen");
+    print("new channel screen");
     return Scaffold(
       appBar: CAppBar(
         onLeadingTap: () {
@@ -27,9 +29,9 @@ class AddNewSubscribersScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("New Group"),
+            const Text("New Channel"),
             Text(
-              "up to 1000 members",
+              "add unlimited subscribers",
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: AppColors.grey,
                   ),
@@ -131,6 +133,7 @@ class AddNewSubscribersScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         onPressed: () {
+          // Create the group with selected members
           GoRouter.of(context).push(AppRouter.kNewChannel);
         },
         child: const Icon(Icons.check),

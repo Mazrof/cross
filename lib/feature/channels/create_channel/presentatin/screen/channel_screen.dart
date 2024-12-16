@@ -22,7 +22,7 @@ class ChannelScreen extends StatelessWidget {
             children: [
               GeneralImage(
                 username: channelData.name,
-                imageUrl: 'https://via.placeholder.com/150',
+                imageUrl: '',
               ),
               Column(
                 children: [

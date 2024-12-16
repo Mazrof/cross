@@ -14,7 +14,7 @@ class GroupState extends Equatable {
   final bool ismute;
 
   GroupState({
-    this.group,
+     this.group ,
     this.members = const [],
     this.state = CubitState.initial,
     this.errorMessage,

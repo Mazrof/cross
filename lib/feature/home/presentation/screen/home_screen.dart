@@ -111,7 +111,7 @@ class ShimmerLoadingContent extends StatelessWidget {
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
                   child: const StoryWidget(
-                    userName: 'Loading...',
+                    userName: '',
                     storyUrl: '',
                     isSeen: false,
                     userImage: '',

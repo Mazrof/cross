@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
@@ -14,6 +15,8 @@ import 'package:telegram/feature/groups/add_new_group/data/model/member_model.da
 import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_state.dart';
+import 'package:telegram/feature/groups/group_setting/presentation/widget/shimmer_loading_widget._group_setting.dart';
+import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 class GroupSettingsScreen extends StatelessWidget {
   final int groupId;
@@ -51,7 +54,7 @@ class GroupSettingsScreen extends StatelessWidget {
       body: BlocBuilder<GroupCubit, GroupState>(
         builder: (context, state) {
           if (state.state == CubitState.loading) {
-            return LogoLoader();
+            return ShimmerLoadingWidget();
           }
 
           return Column(
@@ -121,7 +124,6 @@ class GroupSettingsScreen extends StatelessWidget {
                 value: state.group!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
                   sl<GroupCubit>().togglePrivacy(groupId, value);
-                 
                 },
               ),
               const Divider(),

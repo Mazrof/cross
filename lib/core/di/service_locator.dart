@@ -247,6 +247,8 @@ class ServiceLocator {
           sl(),
           sl(),
         ));
+
+    sl.registerLazySingleton(() => AddChannelCubit(sl(), sl(), sl()));
   }
 
   static void registerUseCases() {

@@ -51,4 +51,15 @@ class GroupModel extends GroupEntity {
       imageUrl: imageUrl ?? this.imageUrl,
     );
   }
+
+  //empty group
+  static GroupModel empty() {
+    return GroupModel(
+      id: 0,
+      groupSize: 0,
+      name: '',
+      privacy: false,
+      imageUrl: '',
+    );
+  }
 }

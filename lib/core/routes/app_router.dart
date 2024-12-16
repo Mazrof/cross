@@ -11,8 +11,10 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_new_subscribers_screen.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/screen/channel_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
@@ -126,7 +128,19 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kAddSubscribers,
       builder: (context, state) {
-        return AddNewSubscribersScreen();
+        return BlocProvider.value(
+          value: sl<AddChannelCubit>()..loadSubscribers(),
+          child: AddNewSubscribersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kChannelScreen,
+      builder: (context, state) {
+        final channel = state.extra as ChannelModel;
+        return ChannelScreen(
+          channelData: channel,
+        );
       },
     ),
     GoRoute(
@@ -208,7 +222,7 @@ final route = GoRouter(
         }),
     GoRoute(
       path: AppRouter.kHome,
-      builder: (context, state) { 
+      builder: (context, state) {
         return HomeScreen();
       },
     ),
@@ -294,7 +308,7 @@ final route = GoRouter(
       builder: (context, state) {
         return BlocProvider.value(
           value: sl<AddChannelCubit>(),
-          child: NewGroupScreen(),
+          child: NewChannelScreen(),
         );
       },
     ),

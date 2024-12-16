@@ -94,7 +94,7 @@ class ChannelInfoPage extends StatelessWidget {
                       controller: cubit.nameController,
                       style: Theme.of(context).textTheme.bodyMedium,
                       decoration: const InputDecoration(
-                        hintText: "Group Name",
+                        hintText: "Channel Name",
                         hintStyle: TextStyle(color: AppColors.grey),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: AppColors.primaryColor),
@@ -108,51 +108,55 @@ class ChannelInfoPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSizes.md),
+              const SizedBox(height: AppSizes.xl),
+              const SizedBox(height: AppSizes.xl),
+              const SizedBox(height: AppSizes.padding),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Channel Type',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  ListTile(
-                    title: const Text('Public Channel'),
-                    leading: Radio<bool>(
-                      value: true,
-                      groupValue: state.privacy,
-                      onChanged: (value) =>
-                          sl<AddChannelCubit>().setChannelPrivacy(value!),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Private Channel'),
-                    leading: Radio<bool>(
-                      value: false,
-                      groupValue: state.privacy,
-                      onChanged: (value) =>
-                          sl<AddChannelCubit>().setChannelPrivacy(value!),
-                    ),
+                  Column(
+                    children: [
+                      RadioListTile<bool>(
+                        title: Text('Public Channel',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        value: false,
+                        groupValue: state.privacy,
+                        onChanged: (value) =>
+                            sl<AddChannelCubit>().setChannelPrivacy(value!),
+                      ),
+                      RadioListTile<bool>(
+                        title: Text('Private Channel',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        value: true,
+                        groupValue: state.privacy,
+                        onChanged: (value) =>
+                            sl<AddChannelCubit>().setChannelPrivacy(value!),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
-                  if (state.privacy)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Public Link',
-                            prefixText: 't.me/',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'If you set a public link, other people will be able to find and join your channel.\nYou can use a–z, 0–9, and underscores. Minimum length is 5 characters.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                  // if (state.privacy)
+                  //   Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       const TextField(
+                  //         decoration: InputDecoration(
+                  //           labelText: 'Public Link',
+                  //           prefixText: 't.me/',
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 8),
+                  //       const Text(
+                  //         'If you set a public link, other people will be able to find and join your channel.\nYou can use a–z, 0–9, and underscores. Minimum length is 5 characters.',
+                  //         style: TextStyle(fontSize: 12, color: Colors.grey),
+                  //       ),
+                  //       const SizedBox(height: 16),
+                  //     ],
+                  //   ),
                 ],
               ),
             ],

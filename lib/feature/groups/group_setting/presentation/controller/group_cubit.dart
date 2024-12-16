@@ -6,6 +6,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
@@ -34,6 +35,7 @@ class GroupCubit extends Cubit<GroupState> {
           allMembers: [],
           selectedMembers: [],
           ismute: false,
+          group: GroupModel.empty(),
         ));
 
   final FetchGroupDetailsUseCase fetchGroupDetailsUseCase;
@@ -67,7 +69,7 @@ class GroupCubit extends Cubit<GroupState> {
       }
 
       emit(state.copyWith(ismute: isMuted));
-      // await muteUseCase(groupId, isMuted);  //waiting back-end 
+      // await muteUseCase(groupId, isMuted);  //waiting back-end
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
