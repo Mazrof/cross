@@ -97,12 +97,7 @@ class ApiService {
         queryParameters: queryParameters,
       );
 
-      print(response.data);
-      print(response.statusCode);
-      print('iam here');
-      print(response.data);
-      print(response.statusCode);
-      print('iam here');
+ 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -126,10 +121,9 @@ class ApiService {
       await _loadCookies();
       String url = '$baseUrl/$endPoint';
       final response = await dio.post(url, data: data);
-      print(response.data);
-      print(response.statusCode);
+    
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data);
+      
         return response;
       } else {
         throw ServerFailure(message: response.data['message']);
@@ -153,8 +147,7 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: body,
       );
-      print(response.data);
-      print(response.statusCode);
+   
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -178,8 +171,7 @@ class ApiService {
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
-      print(response.data);
-      print(response.statusCode);
+    
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -205,8 +197,7 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
-      print(response.data);
-      print(response.statusCode);
+  
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {

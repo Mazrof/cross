@@ -11,6 +11,14 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/data/model/membership_channel_model.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_state.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/add_more_subscribers_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/cahnnel_permision_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/channel_setting_screen.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_new_subscribers_screen.dart';
@@ -115,7 +123,9 @@ class AppRouter {
   static const String kNewChannel = '/new_channel';
   static const String kAddSubscribers = '/add_sub';
   static const String kChannelScreen = '/channel_screen';
-  static const String KChannelSetting = 'channel_setting';
+  static const String kChannelSetting = '/channel_setting';
+  static const String kAddMoreSubscribers = '/add_more_sub';
+  static const String kEditChannelPermission = '/edit_permission';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -126,11 +136,45 @@ final route = GoRouter(
   initialLocation: AppRouter.kSplash,
   routes: [
     GoRoute(
+      path: AppRouter.kAddMoreSubscribers,
+      builder: (context, state) {
+        final channel = state.extra as ChannelModel;
+        return BlocProvider.value(
+          value: sl<SubscribersCubit>()..loadContacts(channel),
+          child: AddMoreSubscribersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kEditChannelPermission,
+      builder: (context, state) {
+        final member = state.extra as MembershipChannelModel;
+        return BlocProvider.value(
+          value: sl<ChannelPermissionCubit>()..addData(member),
+          child: EditPermissionsChannelScreen(
+            member: member,
+          ),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRouter.kAddSubscribers,
       builder: (context, state) {
         return BlocProvider.value(
           value: sl<AddChannelCubit>()..loadSubscribers(),
           child: AddNewSubscribersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kChannelSetting,
+      builder: (context, state) {
+        final int channelID = state.extra as int;
+        return BlocProvider.value(
+          value: sl<ChannelSettingCubit>()..fetchChannelDetails(channelID),
+          child: ChannelSettingScreen(
+            channelId: channelID,
+          ),
         );
       },
     ),

@@ -6,7 +6,7 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 
 class ChannelScreen extends StatelessWidget {
-  const ChannelScreen({required this.channelData});
+  const ChannelScreen({super.key, required this.channelData});
   final ChannelModel channelData;
 
   @override
@@ -33,8 +33,7 @@ class ChannelScreen extends StatelessWidget {
             ],
           ),
           onTap: () {
-            GoRouter.of(context)
-                .push(AppRouter.KChannelSetting, extra: channelData.id);
+            GoRouter.of(context).push(AppRouter.kChannelSetting, extra: 4);
           },
         ),
       ),

@@ -15,7 +15,6 @@ class ForgetPasswordDataSourceImp implements ForgetPasswordDataSource {
 
   @override
   Future<Either<Failure, void>> forgetPassword(String email) async {
-    print('ForgetPasswordDataSourceImp: forgetPassword');
     String endpoint = 'auth/request-password-reset';
     try {
       final response = await apiService.post(

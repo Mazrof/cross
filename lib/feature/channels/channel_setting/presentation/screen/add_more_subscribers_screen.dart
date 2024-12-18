@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
-import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
-import 'package:telegram/core/component/shimmer.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
-import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_state.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_state.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/chat_group_tile.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 
-class AddNewSubscribersScreen extends StatelessWidget {
+class AddMoreSubscribersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("new channel screen");
+    print("new subscribers screen");
     return Scaffold(
       appBar: CAppBar(
         onLeadingTap: () {
@@ -29,9 +24,9 @@ class AddNewSubscribersScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("New Channel"),
+            const Text("add new subscribers"),
             Text(
-              "add unlimited subscribers",
+              "you can add the number of subscribers you want",
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: AppColors.grey,
                   ),
@@ -39,7 +34,7 @@ class AddNewSubscribersScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: BlocBuilder<AddChannelCubit, AddChannelState>(
+      body: BlocBuilder<SubscribersCubit, SubscribersState>(
           builder: (context, state) {
         if (state.state == CubitState.loading) {
           return const Center(
@@ -85,7 +80,7 @@ class AddNewSubscribersScreen extends StatelessWidget {
                               right: -5,
                               child: GestureDetector(
                                 onTap: () {
-                                  sl<AddChannelCubit>()
+                                  sl<SubscribersCubit>()
                                       .toggleSubscriber(member);
                                 },
                                 child: const CircleAvatar(
@@ -118,9 +113,9 @@ class AddNewSubscribersScreen extends StatelessWidget {
                     id: member.id,
                     imageUrl: member.imageUrl,
                     title: member.name,
-                    lastSeen: member.lastSeen,
+                    lastSeen: member.lastSeen ?? " ",
                     onTap: () {
-                      sl<AddChannelCubit>().toggleSubscriber(member);
+                      sl<SubscribersCubit>().toggleSubscriber(member);
                     },
                     isSelected: isSelected,
                   );
@@ -134,8 +129,8 @@ class AddNewSubscribersScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         onPressed: () {
-          // Create the group with selected members
-          GoRouter.of(context).push(AppRouter.kNewChannel);
+          sl<SubscribersCubit>().addSubscribers();
+          GoRouter.of(context).pop();
         },
         child: const Icon(Icons.check),
       ),

@@ -23,7 +23,6 @@ class GroupCubit extends Cubit<GroupState> {
   GroupCubit(
     this.fetchGroupDetailsUseCase,
     this.updateMemberRoleUseCase,
-    this.addMemberUseCase,
     this.removeMemberUseCase,
     this.deleteGroupUseCase,
     this.updateGroupDetailsUseCase,
@@ -32,16 +31,14 @@ class GroupCubit extends Cubit<GroupState> {
     this.muteUseCase,
   ) : super(GroupState(
           state: CubitState.initial,
-          allMembers: [],
-          selectedMembers: [],
+         
           ismute: false,
           group: GroupModel.empty(),
         ));
 
   final FetchGroupDetailsUseCase fetchGroupDetailsUseCase;
   final UpdateMemberRoleUseCase updateMemberRoleUseCase;
-  final AddMembersUseCase addMemberUseCase;
-  final RemoveMemberUseCase removeMemberUseCase;
+   final RemoveMemberUseCase removeMemberUseCase;
   final DeleteGroupUseCase deleteGroupUseCase;
   final UpdateGroupDetailsUseCase updateGroupDetailsUseCase;
   final NetworkManager networkManager;
@@ -144,18 +141,18 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  void toggleMember(chatTileData member) {
-    final selectedMembers = List<chatTileData>.from(state.selectedMembers);
+  // void toggleMember(chatTileData member) {
+  //   final selectedMembers = List<chatTileData>.from(state.selectedMembers);
 
-    if (selectedMembers.contains(member)) {
-      selectedMembers.remove(member);
-    } else {
-      selectedMembers.add(member);
-    }
+  //   if (selectedMembers.contains(member)) {
+  //     selectedMembers.remove(member);
+  //   } else {
+  //     selectedMembers.add(member);
+  //   }
 
-    emit(state.copyWith(
-        selectedMembers: selectedMembers, state: CubitState.initial));
-  }
+  //   emit(state.copyWith(
+  //       selectedMembers: selectedMembers, state: CubitState.initial));
+  // }
 
   void updateMemberRole(MemberModel member) async {
     try {
