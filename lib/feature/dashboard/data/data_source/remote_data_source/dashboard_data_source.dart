@@ -1,8 +1,5 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:telegram/core/di/service_locator.dart';
-import 'package:telegram/core/local/user_access_token.dart';
+import 'package:telegram/core/error/faliure.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/feature/dashboard/data/model/group_model.dart';
 
@@ -22,17 +19,11 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
   @override
   Future<List<UserModel>> getUsers() async {
-    String endpoint = 'admins/';
+    String endpoint = 'admins/users';
     print('start fetching users');
 
     var response = await apiService.get(
       endPoint: endpoint,
-      token: UserAccessToken.accessToken,
-      data: {
-        'adminId': 1,
-
-        ///----------------------->> This is the issue
-      },
     );
 
     if (response.statusCode == 200) {
@@ -51,20 +42,17 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       return users;
     } else {
-      throw Exception('Failed to load users');
+      throw ServerFailure(message: 'Failed to load users');
     }
   }
 
   @override
   Future<bool> banUser(String userId) async {
     String endpoint = 'admins';
-    final response = await apiService.patch(
-      endPoint: '$endpoint/$userId/ban',
-      token: UserAccessToken.accessToken,
-      data: {
-        'adminId': 1,
-      },
-    );
+    final response =
+        await apiService.patch(endPoint: '$endpoint/$userId', data: {
+      'adminId': 1,
+    });
     return response.statusCode == 200;
   }
 
@@ -72,11 +60,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   Future<bool> unBanUser(String userId) async {
     String endpoint = 'admins';
     final response = await apiService.patch(
-      endPoint: '$endpoint/$userId/ban',
-      token: UserAccessToken.accessToken,
-      data: {
-        'adminId': 1,
-      },
+      endPoint: '$endpoint/$userId',
     );
     return response.statusCode == 200;
   }
@@ -85,14 +69,15 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   Future<List<GroupModel>> getGroups() async {
     String endpoint = 'groups/';
     final response = await apiService.get(
-        endPoint: endpoint, token: UserAccessToken.accessToken);
+      endPoint: endpoint,
+    );
     print(response.statusCode);
     print(response.data);
 
     if (response.statusCode == 200) {
       // Extract the "data" list from the response
       print('i am here');
-      final List<dynamic> groups = response.data['data']['data'];
+      final List<dynamic> groups = response.data['data']['groups'];
       print('here2');
       print(groups);
 
@@ -101,16 +86,15 @@ class DashboardDataSourceImpl implements DashboardDataSource {
           groups.map((json) => GroupModel.fromJson(json)).toList();
       return groupList;
     } else {
-      throw Exception('Failed to load groups');
+      throw ServerFailure(message: 'Failed to load groups');
     }
   }
 
   @override
   Future<bool> applyFilter(String groupId) async {
-    String endpoint = 'groups';
+    String endpoint = 'admins';
     final response = await apiService.post(
-      endPoint: '$endpoint/$groupId/filter',
-      token: UserAccessToken.accessToken,
+      endPoint: '$endpoint/$groupId',
       data: {
         'adminId': 1,
       },

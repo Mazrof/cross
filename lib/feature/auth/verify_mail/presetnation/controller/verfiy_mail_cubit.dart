@@ -24,6 +24,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
 
   final otpController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+ 
 
   /// **Start the OTP Timer**
   void startOtpTimer() {
@@ -63,7 +64,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
       }
       emit(state.copyWith(status: VerifyMailStatus.loading, errorMessage: ''));
 
-      final result = await sendOtpUseCase(param1, param2);
+      final result = await sendOtpUseCase.call(param1, param2);
       if (result.isRight()) {
         startOtpTimer();
         emit(state.copyWith(status: VerifyMailStatus.optSent));
@@ -93,7 +94,7 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
       }
       emit(state.copyWith(status: VerifyMailStatus.loading, errorMessage: ''));
 
-      final result = await sendOtpUseCase(param1, param2);
+      final result = await sendOtpUseCase.call(param1, param2);
       if (result.isRight()) {
         startOtpTimer();
         emit(state.copyWith(status: VerifyMailStatus.optSent));
@@ -133,14 +134,13 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
 
       final data = VerifyMailData(
           method: method, email: param, code: opt); // Create the data object
-      final result = await verifyOtpUseCase(data);
+      final result = await verifyOtpUseCase.call(data);
       if (result.isRight()) {
         _timer?.cancel(); // Stop the timer on successful verification
         emit(state.copyWith(
           status: VerifyMailStatus.success,
           isOtpVerified: true,
         ));
-        verifyMail();
       } else {
         emit(state.copyWith(
           status: VerifyMailStatus.error,
@@ -150,14 +150,9 @@ class VerifyMailCubit extends Cubit<VerifyMailState> {
     } catch (e) {
       emit(state.copyWith(
         status: VerifyMailStatus.error,
-        errorMessage: 'Failed to verify OTP',
+        errorMessage: e.toString(),
       ));
     }
-  }
-
-  /// **Verify Email**
-  void verifyMail() {
-    CacheHelper.write(key: 'registered', value: false);
   }
 
   @override

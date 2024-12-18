@@ -60,7 +60,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
         result.fold(
             (failure) => emit(state.copyWith(
                 state: CubitState.failure,
-                errorMessage: 'something went wrong')), (success) {
+                errorMessage: failure.message)), (success) {
           logOutUseCase();
           emit(state.copyWith(state: CubitState.success, errorMessage: ''));
         });

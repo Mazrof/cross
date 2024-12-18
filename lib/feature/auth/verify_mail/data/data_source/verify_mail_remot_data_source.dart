@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/error/faliure.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/entity/verify_mail_data.dart';
@@ -45,9 +46,10 @@ class VerifyMailDataSourceImp extends VerifyMailDataSource {
   }
 
   Future<Either<Failure, bool>> verifyOtp(VerifyMailData data) async {
-
     String target = ApiConstants.verifyOtp;
     Map<String, String> requestBody;
+    print('data.method: ${data.email}');
+    print('data.code: ${data.code}');
     if (data.method == 'email') {
       requestBody = {
         'code': data.code,
@@ -64,6 +66,9 @@ class VerifyMailDataSourceImp extends VerifyMailDataSource {
     try {
       Response response =
           await apiService.post(endPoint: target, data: requestBody);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        CacheHelper.write(key: 'registered', value: 'false');
+      }
       return response.statusCode == 200 ? Right(true) : Right(false);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/error/excpetions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/network/api/api_service.dart';
+import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../model/login_request_model.dart';
 
 abstract class LoginDataSource {
@@ -30,37 +37,39 @@ class LoginDataSourceImp implements LoginDataSource {
           'password': loginModel.password,
         },
       );
+
       print('Login Response: ${response.data}');
       if (response.statusCode == 201 || response.statusCode == 200) {
-        // Extract the access token and refresh token from the response
+        final cookies = await _apiService.cookieJar
+            .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));
+        print('Cookies: $cookies');
+
+
+        final directory = await getApplicationDocumentsDirectory();
+        // Specify the file path (you can change the file name or extension)
+        final file = File('${directory.path}/my_file.txt');
+
+        // Write the content to the file
+        await file.writeAsString(cookies.toString());
+
         int id = response.data['data']['user']['id'];
         String userType = response.data['data']['user']['user_type'];
 
         // Store the access token and refresh token in the cache
         if (loginModel.rememberMe == true) {
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: loginModel.email,
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: loginModel.password,
-          );
-        } else {
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'email',
-            value: '',
-          );
-          HiveCash.write(
-            boxName: 'register_info',
-            key: 'password',
-            value: '',
-          );
-          //cash the email and password
+          CacheHelper.write(key: 'loged', value: 'true');
         }
+
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'email',
+          value: loginModel.email,
+        );
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'password_not_hashed',
+          value: loginModel.password,
+        );
         HiveCash.write(
           boxName: 'register_info',
           key: 'id',
@@ -71,16 +80,7 @@ class LoginDataSourceImp implements LoginDataSource {
           key: 'user_type',
           value: userType,
         );
-        // var endp = 'auth/whoami';
-        // final whoAmIResponse = await _apiService.get(
-        //   endPoint: endp,
-        // );
-        // print('Who Am I Response: ${whoAmIResponse.data}');
-        // if (whoAmIResponse.statusCode == 201 ||
-        //     whoAmIResponse.statusCode == 200) {
-        //   print('Who Am I Response: ${whoAmIResponse.data}');
-        //   // HiveCash.write(boxName: 'register_info', key: 'user', value: whoAmIResponse.data['data']);
-        // }
+        howAmI();
 
         return response.statusCode == 201 || response.statusCode == 200;
       }
@@ -89,6 +89,28 @@ class LoginDataSourceImp implements LoginDataSource {
     } catch (e) {
       print('Login error: $e');
       throw Exception('Failed to login');
+    }
+  }
+
+  Future<void> howAmI() async {
+    var endp = 'auth/whoami';
+    final whoAmIResponse = await _apiService.get(
+      endPoint: endp,
+    );
+    print('Who Am I Response: ${whoAmIResponse.data}');
+    if (whoAmIResponse.statusCode == 201 || whoAmIResponse.statusCode == 200) {
+      // Get user data and store it
+      var userData = whoAmIResponse.data['data']['user']['user'];
+      var user = RegisterData.fromJson(userData);
+      var userJson = jsonEncode(user.toJson());
+      for (var key in user.toJson().keys) {
+        print('key: $key');
+        HiveCash.write(
+          boxName: 'register_info',
+          key: key,
+          value: user.toJson()[key],
+        );
+      }
     }
   }
 

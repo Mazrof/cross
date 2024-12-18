@@ -20,7 +20,7 @@ void main() {
     // Arrange
     when(mockApiService.get(
             endPoint: '${AppStrings.serverUrl}/messages',
-            token: anyNamed('token')))
+            ))
         .thenAnswer(
       (_) async => Response(
         data: {

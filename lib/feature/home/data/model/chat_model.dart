@@ -1,46 +1,102 @@
-import 'package:telegram/feature/home/domain/entity/chat.dart';
-import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:flutter/material.dart';
 
-class ChatModel extends Chat {
+class ChatModel {
+  final String chatId;
+  final List<Participant> participants;
+  final LastMessage lastMessage;
+  final String cursor;
+
   ChatModel({
-    required int id,
-    required String name,
-    required String imageUrl,
-    required String lastMessage,
-    required String sender,
-    required MessageStatus messageStatus,
-    required String time,
-  }) : super(
-          id: id,
-          name: name,
-          imageUrl: imageUrl,
-          lastMessage: lastMessage,
-          sender: sender,
-          messageStatus: messageStatus,
-          time: time,
-        );
+    required this.chatId,
+    required this.participants,
+    required this.lastMessage,
+    required this.cursor,
+  });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
-      id: json['id'],
-      name: json['name'],
-      imageUrl: json['imageUrl'],
-      lastMessage: json['lastMessage'],
-      sender: json['sender'],
-      messageStatus: MessageStatus.values[json['messageStatus']],
-      time: json['time'],
+      chatId: json['chatId'],
+      participants: (json['participants'] as List)
+          .map((participant) => Participant.fromJson(participant))
+          .toList(),
+      lastMessage: LastMessage.fromJson(json['lastMessage']),
+      cursor: json['cursor'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'chatId': chatId,
+      'participants':
+          participants.map((participant) => participant.toJson()).toList(),
+      'lastMessage': lastMessage.toJson(),
+      'cursor': cursor,
+    };
+  }
+}
+
+class Participant {
+  final String userId;
+  final String name;
+  final String lastSeen;
+  final String publicKey;
+  final String imageUrl;
+  final String phone;
+
+  Participant({
+    required this.userId,
+    required this.name,
+    required this.lastSeen,
+    required this.publicKey,
+    required this.imageUrl,
+    required this.phone,
+  });
+
+  // to be changed
+  factory Participant.fromJson(Map<String, dynamic> json) {
+    return Participant(
+      userId: json['userId'],
+      name: json['name'],
+      lastSeen: json['lastSeen'],
+      publicKey: '',
+      imageUrl: '',
+      phone: '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
       'name': name,
-      'imageUrl': imageUrl,
-      'lastMessage': lastMessage,
-      'sender': sender,
-      'messageStatus': messageStatus.index,
-      'time': time,
+      'lastSeen': lastSeen,
+    };
+  }
+}
+
+class LastMessage {
+  final String messageId;
+  final String content;
+  final String timestamp;
+
+  LastMessage({
+    required this.messageId,
+    required this.content,
+    required this.timestamp,
+  });
+
+  factory LastMessage.fromJson(Map<String, dynamic> json) {
+    return LastMessage(
+      messageId: json['messageId'],
+      content: json['content'],
+      timestamp: json['timestamp'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'messageId': messageId,
+      'content': content,
+      'timestamp': timestamp,
     };
   }
 }

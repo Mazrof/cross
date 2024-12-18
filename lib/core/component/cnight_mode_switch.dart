@@ -16,8 +16,8 @@ class CNightModeSwitch extends StatelessWidget {
       child: BlocBuilder<NightModeCubit, bool>(
         builder: (context, isNightMode) {
           return Container(
-            width: 80,
-            height: 40,
+            width: 60,
+            height: 30,
             decoration: BoxDecoration(
               color: isNightMode ? AppColors.primaryColor : AppColors.grey,
               borderRadius: BorderRadius.circular(20),
@@ -25,10 +25,10 @@ class CNightModeSwitch extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned(
-                  left: isNightMode ? 40 : 0,
+                  left: isNightMode ? 30 : 0,
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: 30,
+                    height: 30,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isNightMode

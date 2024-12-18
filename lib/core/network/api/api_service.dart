@@ -1,63 +1,100 @@
-import 'dart:convert';
-
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:telegram/core/local/user_access_token.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/hive.dart';
+import 'package:telegram/core/network/api/api_constants.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
+import 'package:telegram/feature/auth/login/data/model/login_request_model.dart';
+import 'package:telegram/feature/auth/login/data/model/register_data.dart';
 import '../../error/faliure.dart';
 
 class ApiService {
-  static const String baseUrl = endPointDev ;
+  final PersistCookieJar cookieJar;
+  static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
-
-  static const String endPointDev = "http://192.168.100.3:3000/api/v1";
-
   static const String mockUrl =
       "https://a5df8922-201a-4775-a00a-1f660e42c3f5.mock.pstmn.io";
-  Dio dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(milliseconds: 30000),
-      receiveTimeout: const Duration(milliseconds: 30000),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${UserAccessToken.accessToken}',
-      },
-      validateStatus: (int? status) {
-        return (status ?? 0) < 500;
-      },
-    ),
-  );
+  Dio dio;
+  bool _howAmICalled = false;
 
-  void initialize(String token) {
-    dio.options.headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+  // Private named constructor
+  ApiService._internal(this.cookieJar, this.dio);
+
+  // Factory constructor to create an instance of ApiService asynchronously
+  static Future<ApiService> create() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
+    final dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
+      sendTimeout: Duration(seconds: 5),
+    ));
+    dio.interceptors.add(CookieManager(cookieJar));
+    dio.interceptors.add(InterceptorsWrapper(
+      onError: (DioError error, ErrorInterceptorHandler handler) async {
+        if (error.response?.statusCode == 401) {
+          await ApiService._internal(cookieJar, dio)
+              ._retryWithHowAmI(error.requestOptions);
+          // Retry the original request
+          final options = error.requestOptions;
+          final response = await dio.request(
+            options.path,
+            options: Options(
+              method: options.method,
+              headers: options.headers,
+            ),
+            data: options.data,
+            queryParameters: options.queryParameters,
+          );
+          return handler.resolve(response);
+        }
+        return handler.next(error);
+      },
+    ));
+    return ApiService._internal(cookieJar, dio);
+  }
+
+  Future<void> _retryWithHowAmI(RequestOptions requestOptions) async {
+    if (!_howAmICalled) {
+      await howAmI();
+      _howAmICalled = true;
+    } else {
+      // GoRouter.of(context).go(AppRoutes.login);
+    }
+  }
+
+  Future<void> howAmI() async {
+    sl<LoginDataSource>().login(
+      LoginRequestBody(
+        email: HiveCash.read(boxName: 'register_info', key: "email"),
+        password:
+            HiveCash.read(boxName: 'register_info', key: "password_not_hashed"),
+      ),
+    );
   }
 
   Future<Response> get({
     required String endPoint,
-    Object? data,
-    String? token,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
+      await _loadCookies();
       Response response = await dio.get(
         '$baseUrl/$endPoint',
-        data: data,
+        queryParameters: queryParameters,
       );
 
       print(response.data);
       print(response.statusCode);
-
+      print('iam here');
+      print(response.data);
+      print(response.statusCode);
+      print('iam here');
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -75,16 +112,10 @@ class ApiService {
   Future<Response> post({
     required String endPoint,
     Object? data,
-    String? token,
   }) async {
     try {
+      await _loadCookies();
       String url = '$baseUrl/$endPoint';
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
       final response = await dio.post(url, data: data);
       print(response.data);
       print(response.statusCode);
@@ -105,17 +136,10 @@ class ApiService {
 
   Future<Response> put({
     required String endPoint,
-    String? token,
     Map<String, dynamic>? body,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
+      await _loadCookies();
       Response response = await dio.put(
         '$baseUrl/$endPoint',
         data: body,
@@ -138,16 +162,9 @@ class ApiService {
 
   Future<Response> delete({
     required String endPoint,
-    String? token,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
+      await _loadCookies();
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
@@ -169,17 +186,10 @@ class ApiService {
 
   Future<Response> patch({
     required String endPoint,
-    String? token,
     Object? data,
   }) async {
     try {
-      dio.options.headers = token == null
-          ? {}
-          : {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            };
-
+      await _loadCookies();
       Response response = await dio.patch(
         '$baseUrl/$endPoint',
         data: data,
@@ -235,54 +245,16 @@ class ApiService {
     }
   }
 
-  // Future<bool> verifyToken(String token) async {
-  //   const String verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-  //   const String siteKey = '6LcFx2wqAAAAAP1u80FSm2yTVbNi293Vw7JKfIZU';
-  //   final requestBody = {
-  //     "event": {
-  //       "token": token,
-  //       "expectedAction": "signup",
-  //       "siteKey": siteKey,
-  //     }
-  //   };
-
-  //   try {
-  //     final response = await Dio().post(
-  //       verifyUrl,
-  //       data: jsonEncode(requestBody),
-  //       options: Options(
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       ),
-  //     );
-
-  //     final jsonResponse = response.data;
-  //     final isValid = jsonResponse['tokenProperties']['valid'] == true;
-  //     final score = jsonResponse['riskAnalysis']['score'];
-  //     final action = jsonResponse['tokenProperties']['action'];
-
-  //     print('Verification Score: $score, Action: $action');
-
-  //     // You can set a threshold score if needed, usually above 0.5
-  //     return isValid && score >= 0.5;
-  //   } catch (e) {
-  //     print('Error verifying reCAPTCHA Enterprise token: $e');
-  //     return false;
-  //   }
-  // }
-
   Future<Response> getForSearch({
     required String endPoint,
-    String? token,
-    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      dio.options.headers =
-          token == null ? {} : {'Authorization': 'Bearer $token'};
-
-      Response response =
-          await dio.get('$baseUrl/$endPoint', queryParameters: data);
+      await _loadCookies();
+      Response response = await dio.get(
+        '$baseUrl/$endPoint',
+        queryParameters: queryParameters,
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -304,6 +276,11 @@ class ApiService {
     };
     final response = await dio.post('$baseUrl/$target', data: body);
     return response;
+  }
+
+  Future<void> _loadCookies() async {
+    final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+    print('Loaded cookies: $cookies');
   }
 
   static Exception _handleError(dynamic e) {

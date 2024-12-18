@@ -25,21 +25,16 @@ class LoginScreen extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       builder: (context, state) {
         if (state.state == LoginStatusEnum.loading) {
-          // return const LogoLoader();
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go(AppRouter.kHome);
-          });
+          return const LogoLoader();
         } else if (state.state == LoginStatusEnum.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
                 'user') {
-              context.go(AppRouter.kHome);
+              GoRouter.of(context).push(AppRouter.kHome);
             } else {
-              context.go(AppRouter.kNavBar);
+              GoRouter.of(context).push(AppRouter.kNavBar);
             }
           });
-          return const LogoLoader();
         } else if (state.state == LoginStatusEnum.error) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.error!);

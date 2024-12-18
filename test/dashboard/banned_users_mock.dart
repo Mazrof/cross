@@ -6,7 +6,6 @@ import 'package:mockito/mockito.dart';
 import 'package:telegram/feature/dashboard/data/model/user_model.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
-import 'package:telegram/feature/dashboard/domain/use_cases/local_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/get_users.dart';
 import 'package:telegram/feature/dashboard/domain/use_cases/remote_use_case/unban_user.dart';
 import 'package:telegram/feature/dashboard/presentation/controller/banned_users_state.dart';
@@ -18,22 +17,18 @@ import 'banned_users_mock.mocks.dart';
   NetworkManager,
   GetUsersUseCase,
   UnBanUserUseCase,
-  GetUsersLocalUseCase,
 ])
 void main() {
   late MockNetworkManager mockNetworkManager;
   late MockGetUsersUseCase mockGetUsersUseCase;
   late MockUnBanUserUseCase mockUnBanUserUseCase;
-  late MockGetUsersLocalUseCase mockGetUsersLocalUseCase;
   late BannedUsersCubit bannedUsersCubit;
 
   setUp(() {
     mockNetworkManager = MockNetworkManager();
     mockGetUsersUseCase = MockGetUsersUseCase();
     mockUnBanUserUseCase = MockUnBanUserUseCase();
-    mockGetUsersLocalUseCase = MockGetUsersLocalUseCase();
     bannedUsersCubit = BannedUsersCubit(
-      getUsersLocalUseCase: mockGetUsersLocalUseCase,
       getUsersUseCase: mockGetUsersUseCase,
       unBanUserUseCase: mockUnBanUserUseCase,
       networkManager: mockNetworkManager,
@@ -81,12 +76,14 @@ void main() {
       'emits [loading, success] when fetchBannedUsers is called and network is not connected',
       build: () {
         when(mockNetworkManager.isConnected()).thenAnswer((_) async => false);
-        when(mockGetUsersLocalUseCase.call()).thenAnswer((_) async => users);
+        bannedUsersCubit.emit(BannedUsersState(
+            bannedUsers: [users[0]], currState: CubitState.success));
         return bannedUsersCubit;
       },
       act: (cubit) => cubit.fetchBannedUsers(),
       expect: () => [
-        BannedUsersState(bannedUsers: [], currState: CubitState.loading),
+        BannedUsersState(
+            bannedUsers: [users[0]], currState: CubitState.loading),
         BannedUsersState(
             bannedUsers: [users[0]], currState: CubitState.success),
       ],
