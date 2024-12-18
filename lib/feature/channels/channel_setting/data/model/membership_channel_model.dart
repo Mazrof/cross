@@ -27,11 +27,9 @@ class MembershipChannelModel extends Equatable {
       hasDownloadPermissions: json['hasDownloadPermissions'],
       role: json['role'],
       username: json['users']['username'],
-      imageURL: json['users']['imageURL'],
-      
+      imageURL: json['users']['imageURL'] ?? '', // Fallback if imageURL is null
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
@@ -42,7 +40,6 @@ class MembershipChannelModel extends Equatable {
       'users': {
         'username': username,
       },
-      
     };
   }
 

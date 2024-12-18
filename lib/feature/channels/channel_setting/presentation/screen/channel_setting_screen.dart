@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
@@ -133,11 +134,42 @@ class ChannelSettingScreen extends StatelessWidget {
                 ),
               ),
               const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        state.channel!.invitationLink ?? 'No invitation link',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    IconButton(
+                      icon:
+                          const Icon(Icons.copy, color: AppColors.primaryColor),
+                      onPressed: () {
+                        if (state.channel!.invitationLink != null) {
+                          Clipboard.setData(ClipboardData(
+                              text: state.channel!.invitationLink ?? ""));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Invitation link copied to clipboard'),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
               // Members List
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('    Group Members',
+                  Text('    channel Members',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.grey,
                           )),

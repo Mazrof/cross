@@ -22,34 +22,44 @@ class ChannelSettingRemoteDataSourceImpl
 
   @override
   Future<ChannelModel> fetchChannelDetails(int channelId) async {
-    print(channelId);
-    print('fetchChannelDetails');
+    print("Channel ID: $channelId");
+    print('Fetching channel details...');
 
-    print('i am here here here ');
+    final response = await apiService.get(endPoint: 'channels/$channelId');
 
-    final response = await apiService.get(
-      endPoint: 'channels/$channelId',
-    );
-    print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" + response.data);
-    print(ChannelModel.fromJson(response.data['data']['channel']));
-    return ChannelModel.fromJson(response.data['data']['channel']);
+    print("Raw response: ${response.data}");
+
+    // Ensure the structure matches your expectation
+    final channelData =
+        response.data['data']['channel'] as Map<String, dynamic>;
+    print("Parsed channel data: $channelData");
+
+    // Parse the channel data into ChannelModel
+    final channel = ChannelModel.fromJson(channelData);
+    print("ChannelModel: $channel");
+
+    return channel;
   }
 
-  @override
+@override
   Future<List<MembershipChannelModel>> fetchChannelMembers(
       int channelId) async {
-    print('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+    print('Fetching channel members...');
     final response = await apiService.get(
       endPoint: 'channels/$channelId/members',
     );
-    print(response.data);
-    print('in the memvers ');
-    print('here in the subscripers ');
-    return (response.data['data'] as List)
-        .map((json) => MembershipChannelModel.fromJson(json))
+
+    print(response.data); // Log the response to verify structure
+
+    // Extract the 'members' list from 'data'
+    final members = response.data['data']['members'] as List<dynamic>;
+
+    // Map each member to a MembershipChannelModel
+    return members
+        .map((json) =>
+            MembershipChannelModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
-
   @override
   Future<void> updateMemberRole(
       int channelId, MembershipChannelModel member) async {

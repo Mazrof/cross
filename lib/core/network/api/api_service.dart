@@ -97,12 +97,10 @@ class ApiService {
         queryParameters: queryParameters,
       );
 
- 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
-        ;
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -121,12 +119,11 @@ class ApiService {
       await _loadCookies();
       String url = '$baseUrl/$endPoint';
       final response = await dio.post(url, data: data);
-    
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-      
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -147,12 +144,11 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: body,
       );
-   
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
-      
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -171,11 +167,11 @@ class ApiService {
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
       );
-    
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
         ;
       }
     } catch (e) {
@@ -197,11 +193,11 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
-  
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
         ;
       }
     } catch (e) {

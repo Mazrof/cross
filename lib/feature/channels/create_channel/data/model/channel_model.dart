@@ -20,19 +20,17 @@ class ChannelModel extends Channel {
   // From JSON
   // From JSON
   factory ChannelModel.fromJson(Map<String, dynamic> json) {
-    final community =
-        json['community'] as Map<String, dynamic>?; // Handle null community
+    final community = json['community'] as Map<String, dynamic>?;
 
+    // Ensure all keys exist and are properly handled
     return ChannelModel(
-      id: json['id'] as int,
-      name: community?['name'] as String? ??
-          '', // Default to an empty string if null
-      privacy:
-          community?['privacy'] as bool? ?? false, // Default to false if null
-      canAddComments: json['canAddComments'] as bool,
-      imageUrl: community?['imageURL'] as String?, // Handle optional field
-      invitationLink:
-          json['invitationLink'] as String?, // Handle optional field
+      id: json['id'] as int? ?? 0, // Default to 0 if null
+      name: community?['name'] as String? ?? '', // Default to empty string
+      privacy: community?['privacy'] as bool? ?? false, // Default to false
+      canAddComments:
+          json['canAddComments'] as bool? ?? false, // Default to false
+      imageUrl: community?['imageURL'] as String?,
+      invitationLink: json['invitationLink'] as String?,
     );
   }
 

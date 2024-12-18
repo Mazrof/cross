@@ -110,6 +110,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
     }
 
     try {
+      print('start getting channel details in the cubit ');
       final channel = await fetchChannelDetailsUseCase(channelId);
       print('after the channel fetch ');
       print(channel);
@@ -135,6 +136,8 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+
+      emit(state.copyWith(state: CubitState.loading));
       await updateMemberRoleUseCase(state.channel!.id, member);
 
       final updatedMembers = state.members.map((m) {
@@ -144,6 +147,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         return m;
       }).toList();
       emit(state.copyWith(members: updatedMembers));
+      fetchChannelDetails(state.channel!.id);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -159,10 +163,13 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+
+      emit(state.copyWith(state: CubitState.loading));
       await removeMemberUseCase(channelId, memberId);
       final updatedMembers =
           state.members.where((m) => m.userId != memberId).toList();
       emit(state.copyWith(members: updatedMembers));
+      fetchChannelDetails(channelId);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -178,6 +185,8 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+
+      emit(state.copyWith(state: CubitState.loading));
       await removeMemberUseCase(channelId, memberId);
 
       // Handle leaving the channel, e.g., navigate to another screen
@@ -196,7 +205,10 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+
+      emit(state.copyWith(state: CubitState.loading));
       await deleteChannelUseCase(channelId);
+
       // Handle channel deletion, e.g., navigate to another screen
     } catch (e) {
       emit(state.copyWith(
@@ -213,6 +225,8 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+
+      emit(state.copyWith(state: CubitState.loading));
       await updateChannelDetailsUseCase(channelId, data);
       final updatedChannel = state.channel!.copyWith(
         name: data.name,
@@ -220,6 +234,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         imageUrl: data.imageUrl,
       );
       emit(state.copyWith(channel: updatedChannel));
+      fetchChannelDetails(channelId);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,

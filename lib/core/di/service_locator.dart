@@ -41,7 +41,9 @@ import 'package:telegram/feature/channels/channel_setting/domain/use_case/fetch_
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/remove_subscriber_use_case.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/updatae_subscriber_role_use_case.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/update_channel_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_cubit.dart';
 import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/data/data_source/add_channel_data_source.dart';
 import 'package:telegram/feature/channels/create_channel/data/repo/add_channel_repository.dart';
 import 'package:telegram/feature/channels/create_channel/domain/repository/add_channel_repo.dart';
@@ -266,6 +268,9 @@ class ServiceLocator {
           sl(),
           sl(),
         ));
+    sl.registerLazySingleton(() => SubscribersCubit(sl(), sl()));
+
+    sl.registerLazySingleton(() => ChannelPermissionCubit(sl(), sl()));
   }
 
   static void registerUseCases() {
@@ -350,6 +355,8 @@ class ServiceLocator {
     sl.registerLazySingleton(() => DeleteChannelUseCase(
           sl(),
         ));
+
+    sl.registerLazySingleton(() => FetchChannelSubscriberUseCase(sl()));
   }
 
   static void registerRepositories() {
