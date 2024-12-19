@@ -98,6 +98,7 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
+          
       
     } catch (e) {
       emit(state.copyWith(

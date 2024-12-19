@@ -61,7 +61,9 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         return;
       }
 
-      emit(state.copyWith(isMuted: isMuted));
+      emit(state.copyWith(state: CubitState.loading));
+
+      emit(state.copyWith(isMuted: isMuted, state: CubitState.success));
       // await muteUseCase(channelId, isMuted);  //waiting back-end
     } catch (e) {
       emit(state.copyWith(
@@ -95,7 +97,6 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             imageUrl: state.channel!.imageUrl,
             canAddComments: state.channel!.canAddComments,
           ));
-     
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
