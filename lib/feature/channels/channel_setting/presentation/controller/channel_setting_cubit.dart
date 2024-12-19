@@ -78,6 +78,13 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
+      emit(state.copyWith(state: CubitState.loading));
+      print('toggling privacy');
+      print(state);
+      final updatedGroup = state.channel!.copyWith(privacy: val);
+      print(updatedGroup.privacy);
+
+      emit(state.copyWith(channel: updatedGroup, state: CubitState.success));
 
       await updateChannelDetailsUseCase(
           channelId,
@@ -88,6 +95,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
             imageUrl: state.channel!.imageUrl,
             canAddComments: state.channel!.canAddComments,
           ));
+     
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,

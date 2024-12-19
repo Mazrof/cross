@@ -31,14 +31,13 @@ class GroupCubit extends Cubit<GroupState> {
     this.muteUseCase,
   ) : super(GroupState(
           state: CubitState.initial,
-         
           ismute: false,
           group: GroupModel.empty(),
         ));
 
   final FetchGroupDetailsUseCase fetchGroupDetailsUseCase;
   final UpdateMemberRoleUseCase updateMemberRoleUseCase;
-   final RemoveMemberUseCase removeMemberUseCase;
+  final RemoveMemberUseCase removeMemberUseCase;
   final DeleteGroupUseCase deleteGroupUseCase;
   final UpdateGroupDetailsUseCase updateGroupDetailsUseCase;
   final NetworkManager networkManager;
@@ -82,13 +81,13 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
-
+      emit(state.copyWith(state: CubitState.loading));
       print('toggling privacy');
       print(state);
       final updatedGroup = state.group!.copyWith(privacy: val);
       print(updatedGroup.privacy);
 
-      emit(state.copyWith(group: updatedGroup));
+      emit(state.copyWith(group: updatedGroup, state: CubitState.success));
 
       print('mmmmmmmmmmmmmmmmmmmm');
       await updateGroupDetailsUseCase(
@@ -99,6 +98,7 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
+      
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,

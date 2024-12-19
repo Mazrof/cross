@@ -90,6 +90,7 @@ class ChannelSettingRemoteDataSourceImpl
 
   @override
   Future<void> updateChannelDetails(int channelId, ChannelModel channel) async {
+    print('Updating channel details...' + channel.toJson().toString());
     await apiService.patch(
       endPoint: 'channels/$channelId',
       data: channel.toJson(),

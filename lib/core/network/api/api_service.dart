@@ -176,6 +176,7 @@ class ApiService {
       }
     } catch (e) {
       if (e is DioException) {
+        print(e);
         throw ServerFailure.fromDioError(e);
       } else {
         throw _handleError(e);

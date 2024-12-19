@@ -85,26 +85,7 @@ class ChannelSettingScreen extends StatelessWidget {
                 ),
               ),
               // Group Information
-              SizedBox(
-                height: 20,
-              ),
 
-              SwitchListTile(
-                activeColor: AppColors.primaryColor,
-                activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
-                inactiveThumbColor: AppColors.grey,
-                inactiveTrackColor: AppColors.grey.withOpacity(0.5),
-                title: Text(
-                  'Mute Notifications',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                value:
-                    state.isMuted, // This should reflect the current mute state
-                onChanged: (value) {
-                  sl<GroupCubit>().toggleNotifications(channelId, value);
-                },
-              ),
-              const Divider(),
               SwitchListTile(
                 activeColor: AppColors.primaryColor,
                 activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
@@ -116,7 +97,7 @@ class ChannelSettingScreen extends StatelessWidget {
                 ),
                 value: state.channel!.privacy, //TODO: Get value from cubit
                 onChanged: (value) {
-                  sl<GroupCubit>().togglePrivacy(channelId, value);
+                  sl<ChannelSettingCubit>().togglePrivacy(channelId, value);
                 },
               ),
               const Divider(),
@@ -126,6 +107,7 @@ class ChannelSettingScreen extends StatelessWidget {
                   onPressed: () {
                     GoRouter.of(context).push(AppRouter.kAddMoreSubscribers,
                         extra: state.channel);
+                    sl<ChannelSettingCubit>().fetchChannelDetails(channelId);
                   },
                   icon: const Icon(Icons.add, color: AppColors.primaryColor),
                   label: const Text(
@@ -189,8 +171,9 @@ class ChannelSettingScreen extends StatelessWidget {
                         color: const Color.fromARGB(255, 198, 217, 238),
                         onSelected: (value) {
                           if (value == 'editPermissions') {
-                            GoRouter.of(context)
-                                .push(AppRouter.kUserPermission, extra: member);
+                            GoRouter.of(context).push(
+                                AppRouter.kEditChannelPermission,
+                                extra: member);
                           } else if (value == 'remove') {
                             sl<ChannelSettingCubit>()
                                 .removeMember(channelId, member.userId);
@@ -200,7 +183,10 @@ class ChannelSettingScreen extends StatelessWidget {
                                 userId: member.userId,
                                 role: 'admin',
                                 hasDownloadPermissions:
-                                    member.hasDownloadPermissions, channelId: channelId, active:true, username: '' ,
+                                    member.hasDownloadPermissions,
+                                channelId: channelId,
+                                active: true,
+                                username: '',
                               ),
                             );
                           }
