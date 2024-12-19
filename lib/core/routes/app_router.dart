@@ -170,6 +170,7 @@ final route = GoRouter(
       path: AppRouter.kChannelSetting,
       builder: (context, state) {
         final int channelID = state.extra as int;
+        print('channel id is $channelID');
         return BlocProvider.value(
           value: sl<ChannelSettingCubit>()..fetchChannelDetails(channelID),
           child: ChannelSettingScreen(

@@ -41,7 +41,7 @@ class ChannelSettingRemoteDataSourceImpl
     return channel;
   }
 
-@override
+  @override
   Future<List<MembershipChannelModel>> fetchChannelMembers(
       int channelId) async {
     print('Fetching channel members...');
@@ -60,9 +60,11 @@ class ChannelSettingRemoteDataSourceImpl
             MembershipChannelModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
   @override
   Future<void> updateMemberRole(
       int channelId, MembershipChannelModel member) async {
+    print('Updating member role...in data source ');
     await apiService.patch(
       endPoint: 'channels/$channelId/members/${member.userId}',
       data: {

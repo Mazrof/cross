@@ -20,7 +20,7 @@ import 'package:telegram/feature/home/presentation/controller/home/home_cubit.da
 class ChannelSettingCubit extends Cubit<ChannelSettingState> {
   ChannelSettingCubit(
     this.fetchChannelDetailsUseCase,
-    this.updateMemberRoleUseCase,
+    this.updateSubscriberRoleUseCase,
     this.removeMemberUseCase,
     this.deleteChannelUseCase,
     this.updateChannelDetailsUseCase,
@@ -34,7 +34,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         ));
 
   final FetchChannelDetailsUseCase fetchChannelDetailsUseCase;
-  final UpdateSubscriberRoleUseCase updateMemberRoleUseCase;
+  final UpdateSubscriberRoleUseCase updateSubscriberRoleUseCase;
   final RemoveSubscriberUseCase removeMemberUseCase;
   final DeleteChannelUseCase deleteChannelUseCase;
   final UpdateChannelDetailsUseCase updateChannelDetailsUseCase;
@@ -97,11 +97,11 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
   }
 
   void fetchChannelDetails(int channelId) async {
-    final int id = HiveCash.read(boxName: "register_info", key: "id");
-    List<chatTileData> members = convertChatModelToChatTileData(
-        sl<HomeCubit>().state.contacts, id.toString());
+    // final int id = HiveCash.read(boxName: "register_info", key: "id");
+    // List<chatTileData> members = convertChatModelToChatTileData(
+    //     sl<HomeCubit>().state.contacts, id.toString());
 
-    emit(state.copyWith(state: CubitState.loading));
+    emit(state.copyWith(state: CubitState.loading, members: [], channel: null));
 
     if (networkManager.isConnected() == false) {
       emit(state.copyWith(
@@ -138,15 +138,10 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
       }
 
       emit(state.copyWith(state: CubitState.loading));
-      await updateMemberRoleUseCase(state.channel!.id, member);
+      print('updating member role');
 
-      final updatedMembers = state.members.map((m) {
-        if (m.userId == member.userId) {
-          return m.copyWith(role: member.role);
-        }
-        return m;
-      }).toList();
-      emit(state.copyWith(members: updatedMembers));
+      await updateSubscriberRoleUseCase(member.channelId, member);
+
       fetchChannelDetails(state.channel!.id);
     } catch (e) {
       emit(state.copyWith(

@@ -21,7 +21,7 @@ class SubscribersCubit extends Cubit<SubscribersState> {
           selectedSubscribers: [],
         ));
 
-  final AddSubscribersUseCase addSubscribersUseCase;
+  final AddMoreSubscribersUseCase addSubscribersUseCase;
   final NetworkManager networkManager;
 
   List<chatTileData> convertChatModelToChatTileData(
@@ -37,11 +37,19 @@ class SubscribersCubit extends Cubit<SubscribersState> {
   }
 
   void loadContacts(ChannelModel channel) async {
+    emit(SubscribersState(
+
+      state: CubitState.loading,
+      allSubscribers: [],
+      selectedSubscribers: [],
+    ));
+
     final int id = HiveCash.read(boxName: "register_info", key: "id");
     List<chatTileData> subscribers = convertChatModelToChatTileData(
         sl<HomeCubit>().state.contacts, id.toString());
 
-    emit(SubscribersState(
+    emit(state.copyWith(
+      state: CubitState.initial,
       allSubscribers: subscribers,
       selectedSubscribers: [],
       channel: channel,
@@ -76,7 +84,7 @@ class SubscribersCubit extends Cubit<SubscribersState> {
           state.selectedSubscribers.map((e) {
             return SubscriberModel(
               userId: e.id,
-              role: 'subscriber',
+              role: 'member',
               hasDownloadPermissions: true,
             );
           }).toList());

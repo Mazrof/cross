@@ -35,6 +35,7 @@ import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart'
 import 'package:telegram/feature/channels/channel_setting/data/data_source/channel_data_source.dart';
 import 'package:telegram/feature/channels/channel_setting/data/repository/channel_repository.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/repo/channel_repo.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/add_subscripers_use_case.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/delete_channel_use_case.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/fetch_channel_data_use_case.dart';
 import 'package:telegram/feature/channels/channel_setting/domain/use_case/fetch_channel_subscriber_use_case.dart';
@@ -356,7 +357,8 @@ class ServiceLocator {
           sl(),
         ));
 
-    sl.registerLazySingleton(() => FetchChannelSubscriberUseCase(sl()));
+    sl.registerLazySingleton(()=>AddMoreSubscribersUseCase(sl()));
+    
   }
 
   static void registerRepositories() {

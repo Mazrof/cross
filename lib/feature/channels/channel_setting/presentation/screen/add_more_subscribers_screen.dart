@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/capp_bar.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -130,7 +131,11 @@ class AddMoreSubscribersScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         onPressed: () {
           sl<SubscribersCubit>().addSubscribers();
-          GoRouter.of(context).pop();
+          if (sl<SubscribersCubit>().state.state == CubitState.success) {
+            CSnackBar.showSuccessSnackBar(
+                context, 'Sucess', ' Subscribers Added Successfully');
+          }
+          GoRouter.of(context).pop(); 
         },
         child: const Icon(Icons.check),
       ),

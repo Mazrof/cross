@@ -33,7 +33,8 @@ class ChannelScreen extends StatelessWidget {
             ],
           ),
           onTap: () {
-            GoRouter.of(context).push(AppRouter.kChannelSetting, extra: 4);
+            GoRouter.of(context)
+                .push(AppRouter.kChannelSetting, extra: channelData.id);
           },
         ),
       ),

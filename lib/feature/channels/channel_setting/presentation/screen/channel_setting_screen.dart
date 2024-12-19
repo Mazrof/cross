@@ -12,6 +12,7 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/channels/channel_setting/data/model/membership_channel_model.dart';
 import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_cubit.dart';
 import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_state.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
@@ -191,15 +192,15 @@ class ChannelSettingScreen extends StatelessWidget {
                             GoRouter.of(context)
                                 .push(AppRouter.kUserPermission, extra: member);
                           } else if (value == 'remove') {
-                            sl<GroupCubit>()
+                            sl<ChannelSettingCubit>()
                                 .removeMember(channelId, member.userId);
                           } else if (value == 'admin') {
-                            sl<GroupCubit>().updateMemberRole(
-                              MemberModel(
+                            sl<ChannelSettingCubit>().updateMemberRole(
+                              MembershipChannelModel(
                                 userId: member.userId,
                                 role: 'admin',
                                 hasDownloadPermissions:
-                                    member.hasDownloadPermissions,
+                                    member.hasDownloadPermissions, channelId: channelId, active:true, username: '' ,
                               ),
                             );
                           }
