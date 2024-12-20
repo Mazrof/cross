@@ -88,22 +88,22 @@ class MockRegisterUseCase extends _i1.Mock implements _i5.RegisterUseCase {
       ) as _i2.SignUpRepository);
 
   @override
-  _i4.Future<_i3.Either<_i6.Failure, String>> call(
+  _i4.Future<_i3.Either<_i6.Failure, void>> call(
           _i7.SignUpBodyModel? parameter) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [parameter],
         ),
-        returnValue: _i4.Future<_i3.Either<_i6.Failure, String>>.value(
-            _FakeEither_1<_i6.Failure, String>(
+        returnValue: _i4.Future<_i3.Either<_i6.Failure, void>>.value(
+            _FakeEither_1<_i6.Failure, void>(
           this,
           Invocation.method(
             #call,
             [parameter],
           ),
         )),
-      ) as _i4.Future<_i3.Either<_i6.Failure, String>>);
+      ) as _i4.Future<_i3.Either<_i6.Failure, void>>);
 }
 
 /// A class which mocks [SaveRegisterInfoUseCase].

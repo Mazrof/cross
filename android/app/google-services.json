@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "334041601489",
-    "project_id": "telegram-clone-a4785",
-    "storage_bucket": "telegram-clone-a4785.firebasestorage.app"
+    "project_number": "400971744673",
+    "project_id": "mazroof-c8919",
+    "storage_bucket": "mazroof-c8919.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:334041601489:android:ed4d7077901269eb5dbcf0",
+        "mobilesdk_app_id": "1:400971744673:android:b71d09c7a062c4d36fb7e0",
         "android_client_info": {
           "package_name": "com.example.telegram"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "334041601489-fjfq70lqrlvh3stn3j3qjjkl0443sgn6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.telegram",
-            "certificate_hash": "a6c8f28ae8c06cc2717a00de17ca40c2d6feff3f"
-          }
-        },
-        {
-          "client_id": "334041601489-n8p368dodpbqfdlg4t46kju2j01i2du0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCkhTIwsKqLmyh1X47dKmXBylHBsvaRQio"
+          "current_key": "AIzaSyDtEGIPOOEoMONTv-g0N41Zzvset4WvbIw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "334041601489-n8p368dodpbqfdlg4t46kju2j01i2du0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
