@@ -6,6 +6,10 @@ import 'package:telegram/feature/settings/datasettings/models/user_settings_mode
 abstract class UserSettingsRemoteDataSource {
   Future<UserSettingsBodyModel> fetchSettings();
   Future<void> updateSettings(UserSettingsBodyModel newSetting);
+  Future<UserSettingsBodyModel> getBlocked();
+  Future<UserSettingsBodyModel> getContacts();
+  Future<void> blockUser(int blockedId);
+  Future<void> unBlockUser(int blockedId);
 }
 
 class UserSettingsRemoteDataSourceImpl extends UserSettingsRemoteDataSource {
@@ -34,5 +38,29 @@ class UserSettingsRemoteDataSourceImpl extends UserSettingsRemoteDataSource {
     if (response.statusCode != 200) {
       throw Exception("Failed to update settings on MockAPI");
     }
+  }
+
+  @override
+  Future<UserSettingsBodyModel> getBlocked() {
+    // TODO: implement getBlocked
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSettingsBodyModel> getContacts() {
+    // TODO: implement getContacts
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> blockUser(int blockedId) {
+    // TODO: implement blockUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> unBlockUser(int blockedId) {
+    // TODO: implement unBlockUser
+    throw UnimplementedError();
   }
 }

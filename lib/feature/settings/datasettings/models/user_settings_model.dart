@@ -1,32 +1,38 @@
 import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 
 class UserSettingsBodyModel extends UserSettingsEntity {
-  final String profileImage;
-  final String screenName;
-  final String userName;
-  final String phoneNumber;
-  final String bio;
-  final String status;
-  final String autoDeleteTimer;
-  final String lastSeenPrivacy;
-  final String profilePhotoPrivacy;
-  final bool enableReadReceipt;
-  final List<String> blockedUsers;
-  final List<String> contacts;
+  final String? profileImage;
+  final String? screenName;
+  final String? userName;
+  final String? phoneNumber;
+  final String? bio;
+  final String? status;
+  final String? autoDeleteTimer;
+  final String? lastSeenPrivacy;
+  final String? profilePhotoPrivacy;
+  final String? enableReadReceipt;
+  final String? storyVisibility;
+  final int? maxFileSize;
+  final int? maxDownloadSize;
+  final List<BlockedUser>? blockedUsers;
+  final List<BlockableContacts>? contacts;
 
   UserSettingsBodyModel({
-    required this.profileImage,
-    required this.screenName,
-    required this.userName,
-    required this.phoneNumber,
-    required this.bio,
-    required this.status,
-    required this.autoDeleteTimer,
-    required this.lastSeenPrivacy,
-    required this.profilePhotoPrivacy,
-    required this.enableReadReceipt,
-    required this.blockedUsers,
-    required this.contacts,
+    this.profileImage,
+    this.screenName,
+    this.userName,
+    this.phoneNumber,
+    this.bio,
+    this.status,
+    this.autoDeleteTimer,
+    this.lastSeenPrivacy,
+    this.profilePhotoPrivacy,
+    this.enableReadReceipt,
+    this.blockedUsers,
+    this.contacts,
+    this.storyVisibility,
+    this.maxFileSize,
+    this.maxDownloadSize,
   }) : super(
           profileImage: profileImage,
           screenName: screenName,
@@ -40,24 +46,54 @@ class UserSettingsBodyModel extends UserSettingsEntity {
           enableReadReceipt: enableReadReceipt,
           blockedUsers: blockedUsers,
           contacts: contacts,
+          storyVisibility: storyVisibility,
+          maxFileSize: maxFileSize,
+          maxDownloadSize: maxDownloadSize,
         );
 
   Map<String, dynamic> toJson() {
-    final body = {
-      'profile_image': profileImage,
-      'screen_name': screenName,
-      'user_name': userName,
-      'phone_number': phoneNumber,
-      'bio': bio,
-      'status': status,
-      'auto_del_timer': autoDeleteTimer,
-      'last_seen_privacy': lastSeenPrivacy,
-      'profile_photo_privacy': profilePhotoPrivacy,
-      'enable_read_receipt': enableReadReceipt,
-      'blocked_users': blockedUsers,
-      'contacts': contacts,
-    };
-    return body;
+    final Map<String, dynamic> json = {};
+
+    String? mapToApi(String? value) {
+      switch (value) {
+        case 'Everybody':
+          return 'everyone';
+        case 'Nobody':
+          return 'nobody';
+        case 'My Contacts':
+          return 'contacts';
+        default:
+          return value;
+      }
+    }
+
+    if (profileImage != null) json['photo'] = profileImage;
+    if (screenName != null) json['screenName'] = screenName;
+    if (userName != null) json['username'] = userName;
+    if (phoneNumber != null) json['phone'] = phoneNumber;
+    if (bio != null) json['bio'] = bio;
+    // if (status != null) json['status'] = status;
+    // if (autoDeleteTimer != null) json['auto_del_timer'] = autoDeleteTimer;
+    if (lastSeenPrivacy != null) {
+      json['lastSeenVisibility'] = mapToApi(lastSeenPrivacy);
+    }
+    if (profilePhotoPrivacy != null) {
+      json['profilePicVisibility'] = mapToApi(profilePhotoPrivacy);
+    }
+    if (enableReadReceipt != null) {
+      json['readReceiptsEnabled'] = mapToApi(enableReadReceipt);
+    }
+    // if (blockedUsers != null) json['blocked_users'] = blockedUsers;
+    // if (contacts != null) json['contacts'] = contacts;
+    if (storyVisibility != null) {
+      json['storyVisibility'] = mapToApi(storyVisibility);
+    }
+    if (maxFileSize != null) json['maxLimitFileSize'] = maxFileSize;
+    if (maxDownloadSize != null) {
+      json['autoDownloadSizeLimit'] = maxDownloadSize;
+    }
+
+    return json;
   }
 
   UserSettingsEntity toEntity() {
@@ -74,6 +110,9 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       enableReadReceipt: enableReadReceipt,
       blockedUsers: blockedUsers,
       contacts: contacts,
+      storyVisibility: storyVisibility,
+      maxFileSize: maxFileSize,
+      maxDownloadSize: maxDownloadSize,
     );
   }
 
@@ -91,24 +130,86 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       enableReadReceipt: entity.enableReadReceipt,
       blockedUsers: entity.blockedUsers,
       contacts: entity.contacts,
+      storyVisibility: entity.storyVisibility,
+      maxFileSize: entity.maxFileSize,
+      maxDownloadSize: entity.maxDownloadSize,
     );
   }
   factory UserSettingsBodyModel.fromJson(Map<String, dynamic> json) {
+    final userJson = json['data']?['user'] as Map<String, dynamic>? ?? {};
+
+    String? mapToUser(String? value) {
+      switch (value) {
+        case 'everyone':
+          return 'Everybody';
+        case 'nobody':
+          return 'Nobody';
+        case 'contacts':
+          return 'My Contacts';
+        default:
+          return value;
+      }
+    }
+
     return UserSettingsBodyModel(
-      profileImage: json['profile_image'],
-      screenName: json['screen_name'],
-      userName: json['user_name'],
-      phoneNumber: json['phone_number'],
-      bio: json['bio'],
-      status: json['status'],
-      autoDeleteTimer: json['auto_del_timer'],
-      lastSeenPrivacy: json['last_seen_privacy'],
-      profilePhotoPrivacy: json['profile_photo_privacy'],
-      enableReadReceipt: json['enable_read_receipt'],
-      blockedUsers: List<String>.from(json['blocked_users']),
-      contacts: List<String>.from(json['contacts']),
+      profileImage: userJson['photo'],
+      screenName: userJson['screenName'],
+      userName: userJson['username'],
+      phoneNumber: userJson['phone'],
+      bio: userJson['bio'],
+      status: null,
+      autoDeleteTimer: null,
+      lastSeenPrivacy: mapToUser(userJson['lastSeenVisibility']),
+      profilePhotoPrivacy: mapToUser(userJson['profilePicVisibility']),
+      enableReadReceipt: mapToUser(userJson['readReceiptsEnabled']),
+      blockedUsers: [],
+      contacts: [],
+      storyVisibility: mapToUser(userJson['storyVisibility']),
+      maxFileSize: userJson['maxLimitFileSize'],
+      maxDownloadSize: userJson['autoDownloadSizeLimit'],
     );
   }
+  factory UserSettingsBodyModel.blockedUsersFromJson(
+      Map<String, dynamic> json) {
+    final blockList = (json['data']?['blockList'] as List<dynamic>?)
+        ?.map((entry) {
+          final blockedId = entry['blockedId'] as int?;
+          final blockedUser = entry['blockedUser'] as Map<String, dynamic>?;
+          final username = blockedUser?['username'] as String?;
+
+          if (blockedId != null && username != null) {
+            return BlockedUser(id: blockedId, username: username);
+          }
+          return null;
+        })
+        .where((blockedUser) => blockedUser != null)
+        .cast<BlockedUser>()
+        .toList();
+
+    return UserSettingsBodyModel(blockedUsers: blockList);
+  }
+  factory UserSettingsBodyModel.contactsFromJson(List<dynamic> json) {
+    final contactsList = json
+        .map((chat) {
+          final secondUser = chat['secondUser'] as Map<String, dynamic>?;
+
+          if (secondUser != null) {
+            final id = secondUser['id'] as int?;
+            final username = secondUser['username'] as String?;
+
+            if (id != null && username != null) {
+              return BlockableContacts(id: id, username: username);
+            }
+          }
+          return null;
+        })
+        .where((contact) => contact != null)
+        .cast<BlockableContacts>()
+        .toList();
+
+    return UserSettingsBodyModel(contacts: contactsList);
+  }
+
   static empty() {
     return UserSettingsBodyModel(
       profileImage: "",
@@ -120,7 +221,10 @@ class UserSettingsBodyModel extends UserSettingsEntity {
       autoDeleteTimer: "",
       lastSeenPrivacy: "",
       profilePhotoPrivacy: "",
-      enableReadReceipt: true,
+      enableReadReceipt: '',
+      storyVisibility: '',
+      maxFileSize: 0,
+      maxDownloadSize: 0,
       blockedUsers: [],
       contacts: [],
     );

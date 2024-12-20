@@ -5,6 +5,12 @@ import 'package:telegram/feature/settings/datasettings/models/user_settings_mode
 import 'package:telegram/feature/settings/domainsettings/entities/user_settings_entity.dart';
 import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
 
+class GeneralFailure extends Failure {
+  final String message;
+
+  GeneralFailure({required this.message}) : super(message: message);
+}
+
 class UserSettingsRepoImpl extends UserSettingsRepo {
   final UserSettingsRemoteDataSource remoteDataSource;
 
@@ -16,7 +22,7 @@ class UserSettingsRepoImpl extends UserSettingsRepo {
       final settingsModel = await remoteDataSource.fetchSettings();
       return right(settingsModel.toEntity());
     } catch (error) {
-      return left(error as Failure);
+      return left(GeneralFailure(message: error.toString()));
     }
   }
 
@@ -28,7 +34,47 @@ class UserSettingsRepoImpl extends UserSettingsRepo {
       await remoteDataSource.updateSettings(model);
       return right("User Settings saved");
     } catch (error) {
-      return left(error as Failure);
+      return left(GeneralFailure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserSettingsEntity>> getBlocked() async {
+    try {
+      final settingsModel = await remoteDataSource.getBlocked();
+      return right(settingsModel.toEntity());
+    } catch (error) {
+      return left(GeneralFailure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserSettingsEntity>> getContacts() async {
+    try {
+      final settingsModel = await remoteDataSource.getContacts();
+      return right(settingsModel.toEntity());
+    } catch (error) {
+      return left(GeneralFailure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> blockUser(int blockedID) async {
+    try {
+      await remoteDataSource.blockUser(blockedID);
+      return right("User blocked");
+    } catch (error) {
+      return left(GeneralFailure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> unBlockUser(int blockedID) async {
+    try {
+      await remoteDataSource.unBlockUser(blockedID);
+      return right("User unblocked");
+    } catch (error) {
+      return left(GeneralFailure(message: error.toString()));
     }
   }
 }

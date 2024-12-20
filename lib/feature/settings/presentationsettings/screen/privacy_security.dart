@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
+import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
-import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
-import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_state.dart';
 
 class PrivacySecurityScreen extends StatelessWidget {
   const PrivacySecurityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserSettingsCubit, UserSettingsState>(
+    return BlocBuilder<PrivacyCubit, PrivacyState>(
       builder: (context, state) {
-        if (state.state == CubitState.failure) {
+        if (state.state == CubitState.loading) {
+          // return LogoLoader();
+        } else if (state.state == CubitState.failure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
           });
@@ -31,7 +34,7 @@ class PrivacySecurityScreen extends StatelessWidget {
 }
 
 class PrivacySecurityPage extends StatelessWidget {
-  final UserSettingsState state;
+  final PrivacyState state;
   const PrivacySecurityPage({super.key, required this.state});
 
   @override
@@ -73,10 +76,6 @@ class PrivacySecurityPage extends StatelessWidget {
             title: Text(
               AppStrings.blockedUsers,
               style: Theme.of(context).textTheme.titleMedium,
-            ),
-            subtitle: Text(
-              state.blockedUsers.length.toString(),
-              style: Theme.of(context).textTheme.bodySmall,
             ),
             onTap: () {
               context.go(AppRouter.kblockedUsers);
@@ -128,30 +127,30 @@ class PrivacySecurityPage extends StatelessWidget {
               context.go(AppRouter.kprofilePhotoSecurity);
             },
           ),
-          SwitchListTile(
+          ListTile(
             title: Text(
-              AppStrings.enableReadReceipts,
+              AppStrings.storyVisibility,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            activeColor: AppColors.lightBlueColor,
-            value: state.enableReadReceipt,
-            onChanged: (bool newValue) async {
-              final cubit = context.read<UserSettingsCubit>();
-              await cubit.saveSettings(
-                state.profileImage,
-                state.screenName,
-                state.userName,
-                state.phoneNumber,
-                state.bio,
-                "Online",
-                state.autoDeleteTimer,
-                state.lastSeenPrivacy,
-                state.profilePhotoPrivacy,
-                newValue,
-                state.blockedUsers,
-                state.contacts,
-              );
-              cubit.loadSettings();
+            subtitle: Text(
+              state.storyVisibility,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            onTap: () {
+              context.go(AppRouter.kstoryVisibility);
+            },
+          ),
+          ListTile(
+            title: Text(
+              AppStrings.readReceipts,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              state.enableReadReceipt,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            onTap: () {
+              context.go(AppRouter.kreadReceiptSetting);
             },
           ),
         ],
