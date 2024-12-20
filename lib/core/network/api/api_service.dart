@@ -12,7 +12,7 @@ import '../../error/faliure.dart';
 class ApiService {
   final PersistCookieJar cookieJar;
   static const String baseUrl = "http://192.168.100.3:3000/api/v1";
-    // static const String baseUrl = "http://10.0.2.2:3000/api/v1";
+  // static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
@@ -38,7 +38,8 @@ class ApiService {
     dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(InterceptorsWrapper(
       onError: (DioError error, ErrorInterceptorHandler handler) async {
-        if (error.response?.statusCode == 401) {
+        final apiService = ApiService._internal(cookieJar, dio);
+        if (error.response?.statusCode == 401 || await apiService._isCookieJarEmpty()) {
           final apiService = ApiService._internal(cookieJar, dio);
           await apiService._retryWithHowAmI();
           final options = error.requestOptions;
@@ -58,6 +59,12 @@ class ApiService {
     ));
 
     return ApiService._internal(cookieJar, dio);
+  }
+
+  /// Checks if the cookie jar is empty
+  Future<bool> _isCookieJarEmpty() async {
+    final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+    return cookies.isEmpty;
   }
 
   /// Handles retry on 401 with a single login attempt

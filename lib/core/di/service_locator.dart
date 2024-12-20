@@ -215,7 +215,7 @@ class ServiceLocator {
         ));
 
     // group cubit
-    sl.registerFactory(() => GroupsCubit(
+    sl.registerLazySingleton(() => GroupsCubit(
           networkManager: sl(),
           getGroupsUseCase: sl(),
           applyFilterUseCase: sl(),
@@ -357,8 +357,7 @@ class ServiceLocator {
           sl(),
         ));
 
-    sl.registerLazySingleton(()=>AddMoreSubscribersUseCase(sl()));
-    
+    sl.registerLazySingleton(() => AddMoreSubscribersUseCase(sl()));
   }
 
   static void registerRepositories() {
