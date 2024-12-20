@@ -56,18 +56,10 @@ class BlockUserPage extends StatelessWidget {
               return ContactTile(
                 imageUrl:
                     "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
-                contactName: contact,
+                contactName: contact.username,
                 onTap: () async {
-                  var newBlockedList = List<String>.from(state.blockedUsers);
-                  newBlockedList.add(contact);
-                  var newContacts = List<String>.from(state.contacts);
-                  newContacts.remove(contact);
-
                   final cubit = context.read<BlockCubit>();
-                  await cubit.updateBlockedData(
-                    newBlockedUsers: newBlockedList,
-                    newContacts: newContacts,
-                  );
+                  await cubit.blockUser(contact.id);
 
                   cubit.loadBlockedData();
                 },

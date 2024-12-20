@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
@@ -19,6 +20,10 @@ class EditProfileScreen extends StatelessWidget {
       builder: (context, state) {
         if (state.state == CubitState.loading) {
           return LogoLoader();
+        } else if (state.state == CubitState.failure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
+          });
         }
         return EditProfilePage(
           state: state,
@@ -49,7 +54,6 @@ class EditProfilePage extends StatelessWidget {
         newPhoneNumber: phoneNumberController.text,
         newBio: bioController.text,
       );
-      cubit.loadSettings();
     }
 
     return Scaffold(
@@ -63,7 +67,6 @@ class EditProfilePage extends StatelessWidget {
           IconButton(
               onPressed: () {
                 saveSettings();
-                context.go(AppRouter.ksettings);
               },
               icon: const Icon(Icons.check)),
         ],
@@ -131,8 +134,10 @@ class EditProfilePage extends StatelessWidget {
             const SizedBox(height: 8),
             TextField(
               controller: phoneNumberController,
-              maxLength: 11,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              maxLength: 13,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\+?\d*'))
+              ],
             )
           ],
         ),

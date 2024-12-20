@@ -96,10 +96,15 @@ import 'package:telegram/feature/auth/verify_mail/domain/repo/verify_mail_base_r
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/send_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/domain/use_case/verify_otp_use_case.dart';
 import 'package:telegram/feature/auth/verify_mail/presetnation/controller/verfiy_mail_cubit.dart';
+import 'package:telegram/feature/settings/datasettings/datasource/remotedata/settings_remote_data_source.dart';
 import 'package:telegram/feature/settings/datasettings/datasource/remotedata/user_settings_remote_data_source.dart';
 import 'package:telegram/feature/settings/datasettings/repos/user_settings_repo_impl.dart';
 import 'package:telegram/feature/settings/domainsettings/repos/user_settings_repo.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/block_user_use_case.dart';
 import 'package:telegram/feature/settings/domainsettings/usecases/fetch_settings_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/get_blocked_users_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/get_contacts_use_case.dart';
+import 'package:telegram/feature/settings/domainsettings/usecases/unblock_user_use_case.dart';
 import 'package:telegram/feature/settings/domainsettings/usecases/update_settings_use_case.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/block_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
@@ -221,8 +226,10 @@ class ServiceLocator {
           updateSettingsUseCase: sl(),
         ));
     sl.registerLazySingleton(() => BlockCubit(
-          fetchSettingsUseCase: sl(),
-          updateSettingsUseCase: sl(),
+          getBlockedUsersUseCase: sl(),
+          getContactsUseCase: sl(),
+          blockUserUseCase: sl(),
+          unblockUserUseCase: sl(),
         ));
     //groups and channels
 
@@ -294,6 +301,18 @@ class ServiceLocator {
           sl(),
         ));
     sl.registerLazySingleton(() => UpdateSettingsUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => GetBlockedUsersUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => GetContactsUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => BlockUserUseCase(
+          sl(),
+        ));
+    sl.registerLazySingleton(() => UnblockUserUseCase(
           sl(),
         ));
 
@@ -396,7 +415,7 @@ class ServiceLocator {
         () => DashboardDataSourceImpl());
     //settings
     sl.registerLazySingleton<UserSettingsRemoteDataSource>(
-      () => UserSettingsRemoteDataSourceImpl(),
+      () => SettingsRemoteDataSourceImplm(apiService: sl()),
     );
 
     //  groups and channels

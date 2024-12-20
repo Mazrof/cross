@@ -47,7 +47,7 @@ class ServerFailure extends Failure {
   factory ServerFailure.fromDioResponse(int statusCode, dynamic response) {
     if (statusCode == 404 || statusCode == 400) {
       return ServerFailure(
-        message: response['message'] ?? AppStrings.badResponseMessage,
+        message: response.data['message'] ?? AppStrings.badResponseMessage,
       );
     } else if (statusCode == 500) {
       return const ServerFailure(

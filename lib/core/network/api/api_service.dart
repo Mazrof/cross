@@ -111,12 +111,14 @@ class ApiService {
 
   Future<Response> post({
     required String endPoint,
+    Map<String, dynamic>? queryParameters,
     Object? data,
   }) async {
     try {
       await _loadCookies();
       String url = '$baseUrl/$endPoint';
-      final response = await dio.post(url, data: data);
+      final response =
+          await dio.post(url, data: data, queryParameters: queryParameters);
       print(response.data);
       print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -162,11 +164,13 @@ class ApiService {
 
   Future<Response> delete({
     required String endPoint,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
       await _loadCookies();
       Response response = await dio.delete(
         '$baseUrl/$endPoint',
+        queryParameters: queryParameters,
       );
       print(response.data);
       print(response.statusCode);

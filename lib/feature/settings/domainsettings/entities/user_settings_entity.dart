@@ -1,3 +1,15 @@
+class BlockedUser {
+  int id;
+  String username;
+  BlockedUser({required this.id, required this.username});
+}
+
+class BlockableContacts {
+  int id;
+  String username;
+  BlockableContacts({required this.id, required this.username});
+}
+
 class UserSettingsEntity {
   final String? profileImage;
   final String? screenName;
@@ -12,8 +24,8 @@ class UserSettingsEntity {
   final String? storyVisibility;
   final int? maxFileSize;
   final int? maxDownloadSize;
-  final List<String>? blockedUsers;
-  final List<String>? contacts;
+  final List<BlockedUser>? blockedUsers;
+  final List<BlockableContacts>? contacts;
 
   UserSettingsEntity({
     this.profileImage,

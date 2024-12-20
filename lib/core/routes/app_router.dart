@@ -130,7 +130,7 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  initialLocation: AppRouter.keditProfilePic,
+  initialLocation: AppRouter.kHome,
   routes: [
     GoRoute(
       path: AppRouter.kAddSubscribers,
@@ -414,7 +414,7 @@ final route = GoRouter(
       path: AppRouter.kblockUser,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<BlockCubit>()..loadBlockedData(),
+          value: sl<BlockCubit>()..loadContacts(),
           child: BlockUserScreen(),
         );
       },
