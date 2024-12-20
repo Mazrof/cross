@@ -124,6 +124,10 @@ class AppStrings {
   static const String afterOneMonth = "After 1 month";
   static const String autoDelMessageDescription =
       'If enabled, all new messages in chats you start will be automatically deleted for everyone at some point after they are sent.';
+  static const String storyVisibility = "Story Visibility";
+  static const String readReceipts = "Read Receipts";
+  static const String editProfilePicture = "Edit Profile Picture";
+
   static const String chats = "Chats";
   static const String channels = "Channels";
   static const String contacts = "Contacts";
@@ -164,7 +168,6 @@ class AppStrings {
   static const String endCall = "End Call";
   static const String deleteAllCalls = "Delete All Calls";
 
-
   //home
   static const String search = 'Search';
   static const String weSentYouAnSms =
@@ -174,13 +177,9 @@ class AppStrings {
   static const String cacheError = 'Cache Error';
   static const String refreshToken = 'refreshToken';
 
-
-
-
   /// Dashboard
   static const String dashboard = 'Dashboard';
-  static const String users='Users';
-  static const String BanedUsers='Baned Users';
-  static const String Groubs='Groubs';
-
+  static const String users = 'Users';
+  static const String BanedUsers = 'Baned Users';
+  static const String Groubs = 'Groubs';
 }

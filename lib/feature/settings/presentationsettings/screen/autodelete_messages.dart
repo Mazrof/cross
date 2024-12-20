@@ -7,6 +7,9 @@ import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/block_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_state.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 import 'package:telegram/feature/settings/presentationsettings/widget/radio_tile.dart';
@@ -16,7 +19,7 @@ class AutodelMessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserSettingsCubit, UserSettingsState>(
+    return BlocBuilder<PrivacyCubit, PrivacyState>(
       builder: (context, state) {
         if (state.state == CubitState.failure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -32,29 +35,18 @@ class AutodelMessagesScreen extends StatelessWidget {
 }
 
 class AutodelMessages extends StatelessWidget {
-  final UserSettingsState state;
+  final PrivacyState state;
   const AutodelMessages({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
     void saveSettings(String? value) async {
-      final cubit = context.read<UserSettingsCubit>();
+      final cubit = context.read<PrivacyCubit>();
 
-      await cubit.saveSettings(
-        state.profileImage,
-        state.screenName,
-        state.userName,
-        state.phoneNumber,
-        state.bio,
-        "Online",
-        value!,
-        state.lastSeenPrivacy,
-        state.profilePhotoPrivacy,
-        state.enableReadReceipt,
-        state.blockedUsers,
-        state.contacts,
+      await cubit.updatePrivacySettings(
+        newAutoDeleteTimer: value,
       );
-      cubit.loadSettings();
+      cubit.loadPrivacySettings();
     }
 
     return Scaffold(

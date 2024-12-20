@@ -288,6 +288,18 @@ class HomeContent extends StatelessWidget {
                             ? group.lastMessage!.createdAt.hour.toString()
                             : '',
                         onTap: () {
+
+                          GoRouter.of(context).push(
+                            AppRouter.kGroupScreen,
+                            extra: GroupModel(
+                              id: group.id,
+                              name: group.name,
+                              privacy: group.privacy,
+                              groupSize: group.groupSize!,
+                              imageUrl: group.imageUrl ?? '',
+                            ),
+                          );
+
                           // GoRouter.of(context).push(
                           //   AppRouter.kGroupScreen,
                           //   extra: GroupModel(

@@ -41,6 +41,7 @@ class CinputBar extends StatelessWidget {
               blurRadius: 5,
             ),
           ],
+
         ),
         child: Row(
           children: [

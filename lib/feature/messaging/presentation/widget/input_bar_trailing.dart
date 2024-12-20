@@ -145,8 +145,10 @@ class InputBarTrailing extends StatelessWidget {
                           .contacts[sl<ChatCubit>().state.chatIndex!]
                           .id
                           .toString(),
+
                       isPinned: false,
                       isDraft: false,
+
                     );
 
                     sl<ChatCubit>().sendMessage(newMessage);
