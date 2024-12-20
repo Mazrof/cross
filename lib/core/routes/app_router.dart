@@ -129,7 +129,7 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  initialLocation: AppRouter.kHome,
+  initialLocation: AppRouter.kSplash,
   routes: [
     GoRoute(
       path: AppRouter.kAddSubscribers,

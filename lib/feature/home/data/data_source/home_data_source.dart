@@ -71,7 +71,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         "type": "personalChat",
       },
     );
-    // print("contacts:" + response.data);
+
+    print(response.data);
     List<dynamic> data = response.data as List<dynamic>;
 
     return data.map((json) => ChatModel.fromJson(json)).toList();

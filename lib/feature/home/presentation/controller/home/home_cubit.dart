@@ -1,6 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/asymmetric/oaep.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -40,6 +47,7 @@ class HomeCubit extends Cubit<HomeState> {
         fetchChannels(),
         fetchContacts(),
         fetchDraftedMessages(),
+        fetchSentMessages(),
       ]);
 
       final stories = responses[0] as List<StoryModel>;
@@ -47,7 +55,11 @@ class HomeCubit extends Cubit<HomeState> {
       final channels = responses[2] as List<ChannelDataModel>;
       final contacts = responses[3] as List<ChatModel>;
 
+      // String myId =
+      //     HiveCash.read(boxName: 'register_info', key: 'id').toString();
+
       final draftedMessages = responses[4] as List<Message>;
+      final sentMessages = responses[5] as List<Message>;
 
       print('formt the cubit ${contacts}');
 
@@ -62,6 +74,7 @@ class HomeCubit extends Cubit<HomeState> {
           channels: channels,
           contacts: contacts,
           draftedMessages: draftedMessages,
+          sentMessages: sentMessages,
         ),
       );
     } catch (e) {
@@ -147,13 +160,24 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<List<Message>> fetchDraftedMessages() async {
-    List<dynamic> temp =
+    var temp =
         await HiveCash.read(boxName: "messages", key: 'drafted_messages');
 
     if (temp == null) {
       return [];
     } else {
       return temp.map((item) => item as Message).toList();
+    }
+  }
+
+  Future<List<Message>> fetchSentMessages() async {
+    var temp = await HiveCash.read(boxName: "messages", key: 'sent_messages');
+
+    if (temp == null) {
+      return [];
+    } else {
+      return (temp.map<Message>((item) => item as Message).toList())
+          as List<Message>;
     }
   }
 }
