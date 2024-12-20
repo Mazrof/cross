@@ -4,7 +4,7 @@ class TAppFormatter {
   static String formatDate(DateTime? date) {
     date ??= DateTime.now();
 
-    return DateFormat('dd-MM-yyyy').format(date);
+    return DateFormat('HH:mm').format(date);
   }
 
   static String FormateCurrency(double value) {
@@ -34,5 +34,4 @@ class TAppFormatter {
     //return the formated phone number
     return '$countryCode ${formatePhoneNumber(phoneNumber)}';
   }
-
 }

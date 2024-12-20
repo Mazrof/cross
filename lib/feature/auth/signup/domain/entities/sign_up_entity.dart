@@ -3,6 +3,7 @@ class SignUpEntity {
   final String phone;
   final String email;
   final String password;
+  final String publicKey;
   String id;
 
   SignUpEntity({
@@ -11,5 +12,6 @@ class SignUpEntity {
     required this.phone,
     required this.email,
     required this.password,
+    required this.publicKey,
   });
 }

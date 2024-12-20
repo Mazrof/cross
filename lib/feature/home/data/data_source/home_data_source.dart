@@ -34,7 +34,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
     // Extract and cast the list
     List<dynamic> data = response.data as List<dynamic>;
-    print('Raw Data: ${data[0]}');
+    // print('Raw Data: ${data[0]}');
 
     // Map the response to a list of GroupDataModel
     List<GroupDataModel> groups = data
@@ -71,7 +71,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         "type": "personalChat",
       },
     );
-    print(response.data);
+    // print("contacts:" + response.data);
     List<dynamic> data = response.data as List<dynamic>;
 
     return data.map((json) => ChatModel.fromJson(json)).toList();

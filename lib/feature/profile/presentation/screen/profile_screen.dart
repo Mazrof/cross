@@ -17,12 +17,18 @@ class ProfileScreen extends StatelessWidget {
           SliverAppBar(
             actions: [
               IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
-              const PopupMenu([
-                {'icon': Icons.edit, 'value': 'Edit'},
-                {'icon': Icons.photo_camera_back, 'value': 'Set Profile Photo'},
-                {'icon': Icons.color_lens, 'value': 'Change profile color'},
-                {'icon': Icons.person, 'value': 'Set username'},
-              ]),
+              const PopupMenu(
+                [
+                  {'icon': Icons.edit, 'value': 'Edit'},
+                  {
+                    'icon': Icons.photo_camera_back,
+                    'value': 'Set Profile Photo'
+                  },
+                  {'icon': Icons.color_lens, 'value': 'Change profile color'},
+                  {'icon': Icons.person, 'value': 'Set username'},
+                ],
+                actions: [],
+              ),
             ],
             expandedHeight: 150.0,
             collapsedHeight: 80,

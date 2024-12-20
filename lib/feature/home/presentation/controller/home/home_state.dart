@@ -6,6 +6,7 @@ import 'package:telegram/feature/home/data/model/channel_data_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/data/model/group_data_model.dart';
 import 'package:telegram/feature/home/data/model/story_model.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 
 class HomeState extends Equatable {
   final CubitState state;
@@ -13,6 +14,7 @@ class HomeState extends Equatable {
   final List<GroupDataModel> groups;
   final List<ChannelDataModel> channels;
   final List<ChatModel> contacts;
+  final List<Message> draftedMessages;
   final String errorMessage;
 
   HomeState({
@@ -21,6 +23,7 @@ class HomeState extends Equatable {
     this.groups = const [],
     this.channels = const [],
     this.contacts = const [],
+    this.draftedMessages = const [],
     this.errorMessage = '',
   });
 
@@ -31,6 +34,7 @@ class HomeState extends Equatable {
     List<ChannelDataModel>? channels,
     List<ChatModel>? contacts,
     String? errorMessage,
+    List<Message>? draftedMessages,
   }) {
     return HomeState(
       state: state ?? this.state,
@@ -39,11 +43,19 @@ class HomeState extends Equatable {
       channels: channels ?? this.channels,
       contacts: contacts ?? this.contacts,
       errorMessage: errorMessage ?? this.errorMessage,
+      draftedMessages: draftedMessages ?? this.draftedMessages,
     );
   }
 
   @override
   // TODO: implement props
-  List<Object?> get props =>
-      [state, stories, groups, channels, contacts, errorMessage];
+  List<Object?> get props => [
+        state,
+        stories,
+        groups,
+        channels,
+        contacts,
+        errorMessage,
+        draftedMessages,
+      ];
 }

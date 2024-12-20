@@ -208,7 +208,7 @@ final route = GoRouter(
         }),
     GoRoute(
       path: AppRouter.kHome,
-      builder: (context, state) { 
+      builder: (context, state) {
         return HomeScreen();
       },
     ),

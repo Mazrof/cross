@@ -1,3 +1,4 @@
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -23,26 +24,103 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
 import 'package:go_router/go_router.dart';
 
+class StringWrapper {
+  String value;
+  StringWrapper(this.value);
+}
+
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
 
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  // String receiverId = "";
+  StringWrapper textInput = StringWrapper("");
 
   @override
   Widget build(BuildContext context) {
+    void _scrollToIndex() {
+      print(sl<ChatCubit>().state.pinnedIndex!);
+      _scrollController.animateTo(
+        (sl<ChatCubit>().state.pinnedIndex!) * 50.0,
+        duration: Duration(seconds: 1),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    void setDestructTime() async {
+      Duration? resultingDuration = await showDurationPicker(
+        context: context,
+        initialTime: Duration(minutes: 3),
+      );
+
+      if (resultingDuration != null) {
+        sl<ChatCubit>().setDestructTime(resultingDuration.inMinutes);
+      }
+    }
+
+    Widget getPinnedMessage() {
+      GestureDetector pinnedMessage = GestureDetector();
+
+      int index = -1;
+
+      for (int i = 0; i < sl<ChatCubit>().state.messages.length; i++) {
+        if (sl<ChatCubit>().state.messages[i].isPinned) {
+          // pinnedMessages.add(
+          //   Container(
+          //     height: 30,
+          //     width: 100,
+          //     child: Text(
+          //       sl<ChatCubit>().state.messages[i].content,
+          //     ),
+          //   ),
+          // );
+
+          pinnedMessage = GestureDetector(
+            onTap: () {
+              _scrollToIndex();
+            },
+            child: Container(
+              height: 30,
+              width: 300,
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.push_pin),
+                  Text(
+                    sl<ChatCubit>().state.messages[i].content,
+                    style: TextStyle(
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+
+          index = i;
+        }
+      }
+
+      sl<ChatCubit>().updateEmitIndex(index);
+
+      return pinnedMessage;
+    }
+
     Future<String?> showContactModal() async {
       // get the contacts names to show them
       // get them from the contacts list
 
+      // final members = sl<ChatCubit>().state.chatType == ChatType.Group ? sl<HomeCubit>().state.groups[ sl<ChatCubit>().state.chatIndex!].;
       final contacts = sl<HomeCubit>().state.contacts;
 
       List contactNames = [];
 
       for (var contact in contacts) {
-        contactNames.add(contact.participants[0].name);
+        contactNames.add(contact.secondUser.username);
       }
 
       return await showModalBottomSheet<String>(
@@ -58,7 +136,7 @@ class ChatScreen extends StatelessWidget {
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(contacts[index].participants[0].name),
+                title: Text(contacts[index].secondUser.username),
                 onTap: () {
                   // setState(() {
                   //   _controller.text = '@${_contacts[index]} ';
@@ -67,7 +145,7 @@ class ChatScreen extends StatelessWidget {
                   if (sl<ChatCubit>().state.selectionState) {
                     // if selected then return participantId
 
-                    Navigator.pop(context, contacts[index].chatId);
+                    Navigator.pop(context, contacts[index].id.toString());
                   }
                 },
               );
@@ -83,24 +161,15 @@ class ChatScreen extends StatelessWidget {
         //   _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         // });
 
-        // Hard Code the Ids
         String myId =
             HiveCash.read(boxName: 'register_info', key: 'id').toString();
-
-        // if (myId == "100") {
-        //   receiverId = "102";
-        // } else {
-        //   receiverId = "100";
-        // }
-
-        // print(receiverId);
 
         return state.messagesLoadedState
             ? Scaffold(
                 appBar: state.selectionState == false &&
                         state.editingState == false
                     ? CAppBar(
-                        onLeadingTap: () {
+                        onLeadingTap: () async {
                           // WidgetsBinding.instance.addPostFrameCallback(
                           //   (_) {
                           //     context.read<ChatCubit>().close();
@@ -108,21 +177,25 @@ class ChatScreen extends StatelessWidget {
                           // );
                           // sl<SocketService>().socket!.close();
 
+                          // If Text is not empty draft it
+
+                          await sl<ChatCubit>().draftMessage(textInput.value);
+
                           context.go(AppRouter.kHome);
                         },
                         title: RecieverDetails(
                           userName: sl<HomeCubit>()
                               .state
                               .contacts[sl<ChatCubit>().state.chatIndex!]
-                              .participants[0]
-                              .name,
+                              .secondUser
+                              .username,
                           state: AppStrings.waitingInternet,
                           avatar: Avatar(
                             imageUrl: sl<HomeCubit>()
                                 .state
                                 .contacts[sl<ChatCubit>().state.chatIndex!]
-                                .participants[0]
-                                .imageUrl,
+                                .secondUser
+                                .username,
                           ),
                         ),
                         showBackButton: true,
@@ -132,13 +205,32 @@ class ChatScreen extends StatelessWidget {
                             color: AppColors.whiteColor,
                             onPressed: () {},
                           ),
-                          const PopupMenu([
-                            {'icon': Icons.volume_up, 'value': 'Mute'},
-                            {'icon': Icons.search, 'value': 'Search'},
-                            {'icon': Icons.copy, 'value': 'Change Background'},
-                            {'icon': Icons.clear, 'value': 'Clear History'},
-                            {'icon': Icons.delete, 'value': 'Delete Chat'},
-                          ]),
+                          PopupMenu(
+                            [
+                              {
+                                'icon': sl<ChatCubit>().state.isMuted
+                                    ? Icons.volume_down
+                                    : Icons.volume_up,
+                                'value': 'Mute'
+                              },
+                              {'icon': Icons.search, 'value': 'Search'},
+                              {
+                                'icon': Icons.copy,
+                                'value': 'Change Background'
+                              },
+                              {'icon': Icons.timer, 'value': 'Timer'},
+                              {'icon': Icons.clear, 'value': 'Clear History'},
+                              {'icon': Icons.delete, 'value': 'Delete Chat'},
+                            ],
+                            actions: [
+                              () => {sl<ChatCubit>().muteChat()},
+                              () => {},
+                              () => {},
+                              () => setDestructTime(),
+                              () => {},
+                              () => {},
+                            ],
+                          ),
                         ],
                       )
                     : CAppBar(
@@ -183,6 +275,8 @@ class ChatScreen extends StatelessWidget {
                                 isReply: false,
                                 isForward: true,
                                 participantId: participantId,
+                                isPinned: false,
+                                isDraft: false,
                               );
 
                               sl<ChatCubit>().sendMessage(newMessage);
@@ -202,6 +296,21 @@ class ChatScreen extends StatelessWidget {
                               // sl<ChatCubit>().replyToMessage(state.id);
                             },
                             icon: const Icon(Icons.reply),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              sl<ChatCubit>().editMessage(
+                                sl<ChatCubit>().state.id,
+                                sl<ChatCubit>().state.index,
+                                sl<ChatCubit>()
+                                    .state
+                                    .messages[sl<ChatCubit>().state.index]
+                                    .content,
+                                true,
+                              );
+                              // sl<ChatCubit>().replyToMessage(state.id);
+                            },
+                            icon: const Icon(Icons.push_pin),
                           ),
                           IconButton(
                             icon: const Icon(Icons.edit_outlined),
@@ -238,9 +347,47 @@ class ChatScreen extends StatelessWidget {
                             scrollController: _scrollController,
                           ),
                         ),
-                        CinputBar(showContactModal: showContactModal),
+                        CinputBar(
+                          showContactModal: showContactModal,
+                          textInput: textInput,
+                        ),
                       ],
                     ),
+                    if (sl<ChatCubit>().state.pinnedIndex != null)
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                          child: GestureDetector(
+                            onTap: () {
+                              _scrollToIndex();
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.push_pin),
+                                  Text(
+                                    sl<ChatCubit>()
+                                        .state
+                                        .messages[
+                                            sl<ChatCubit>().state.pinnedIndex!]
+                                        .content,
+                                    style: TextStyle(
+                                      color: AppColors.blackColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               )

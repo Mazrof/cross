@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/home/data/model/channel_data_model.dart';
@@ -11,6 +12,7 @@ import 'package:telegram/feature/home/domain/use_cases/fetch_channels_use_case.d
 import 'package:telegram/feature/home/domain/use_cases/fetch_contacts_use_case.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_groups_use_case.dart';
 import 'package:telegram/feature/home/domain/use_cases/fetch_story_use_case.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -37,24 +39,31 @@ class HomeCubit extends Cubit<HomeState> {
         fetchGroups(),
         fetchChannels(),
         fetchContacts(),
+        fetchDraftedMessages(),
       ]);
 
       final stories = responses[0] as List<StoryModel>;
       final groups = responses[1] as List<GroupDataModel>;
       final channels = responses[2] as List<ChannelDataModel>;
       final contacts = responses[3] as List<ChatModel>;
-      print('formt the cubit ${groups}');
+
+      final draftedMessages = responses[4] as List<Message>;
+
+      print('formt the cubit ${contacts}');
 
       // Sort stories by `isSeen` to display unseen stories first
       stories.sort((a, b) => a.isSeen ? 1 : -1);
 
-      emit(state.copyWith(
-        state: CubitState.success,
-        stories: stories,
-        groups: groups,
-        channels: channels,
-        contacts: contacts,
-      ));
+      emit(
+        state.copyWith(
+          state: CubitState.success,
+          stories: stories,
+          groups: groups,
+          channels: channels,
+          contacts: contacts,
+          draftedMessages: draftedMessages,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -134,6 +143,17 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       print('error from cubit $e');
       return [];
+    }
+  }
+
+  Future<List<Message>> fetchDraftedMessages() async {
+    List<dynamic> temp =
+        await HiveCash.read(boxName: "messages", key: 'drafted_messages');
+
+    if (temp == null) {
+      return [];
+    } else {
+      return temp.map((item) => item as Message).toList();
     }
   }
 }

@@ -1,15 +1,24 @@
 import 'package:hive_flutter/adapters.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 
 class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
+
+    registerAdapter(MessageAdapter());
+
     await openBox("register_info"); // Ensure this is awaited
+    await openBox("messages");
   }
 
   static Future<void> openBox(String boxName) async {
     if (!Hive.isBoxOpen(boxName)) {
       await Hive.openBox(boxName); // Open the box only if it's not already open
     }
+  }
+
+  static registerAdapter(dynamic adapter) {
+    Hive.registerAdapter<Message>(MessageAdapter());
   }
 
   static Future<void> write<T>({
@@ -26,7 +35,6 @@ class HiveCash {
     required String boxName,
     required String key,
   }) {
-    
     final box = Hive.box(
         boxName); // Directly accessing the box, assuming it's already open
     return box.get(key);
