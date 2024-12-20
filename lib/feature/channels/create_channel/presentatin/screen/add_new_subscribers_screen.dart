@@ -135,7 +135,9 @@ class AddNewSubscribersScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         onPressed: () {
           // Create the group with selected members
+
           GoRouter.of(context).push(AppRouter.kNewChannel);
+          
         },
         child: const Icon(Icons.check),
       ),

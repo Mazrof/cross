@@ -18,12 +18,15 @@ class DashboardRemoteRepoImpl implements DashboardRepo {
     try {
       bool val = await sl<NetworkManager>().isConnected();
       if (!val) {
-        final data = HiveCash.read(boxName: "users_dash", key: "users_dash");
+        final data = HiveCash.read(boxName: "users_dash", key: "users_dash")
+            as List<dynamic>?;
 
         if (data == null) {
           return Right([]);
         }
-        final users = data.map((json) => UserModel.fromJson(json)).toList();
+        List<UserModel> users = data
+            .map((json) => UserModel.fromJson(Map<String, dynamic>.from(json)))
+            .toList();
 
         return Right(users);
       } else {
@@ -65,12 +68,15 @@ class DashboardRemoteRepoImpl implements DashboardRepo {
     try {
       bool val = await sl<NetworkManager>().isConnected();
       if (!val) {
-        final data = HiveCash.read(boxName: "groups_dash", key: "groups_dash");
+        final data = HiveCash.read(boxName: "groups_dash", key: "groups_dash")
+            as List<dynamic>?;
 
         if (data == null) {
           return Right([]);
         }
-        final groups = data.map((json) => GroupModel.fromJson(json)).toList();
+        List<GroupModel> groups = data
+            .map((json) => GroupModel.fromJson(Map<String, dynamic>.from(json)))
+            .toList();
 
         return Right(groups);
       } else {

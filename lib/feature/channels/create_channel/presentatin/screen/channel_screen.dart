@@ -39,7 +39,7 @@ class ChannelScreen extends StatelessWidget {
         ),
       ),
       body: const Center(
-        child: Text('Group Screen'),
+        child: Text('channel Screen'),
       ),
     );
   }

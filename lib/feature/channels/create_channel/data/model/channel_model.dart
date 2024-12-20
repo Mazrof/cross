@@ -61,6 +61,7 @@ class ChannelModel extends Channel {
     bool? privacy,
     bool? canAddComments,
     String? imageUrl,
+    String? invitationLink,
   }) {
     return ChannelModel(
       id: id ?? this.id,
@@ -68,6 +69,7 @@ class ChannelModel extends Channel {
       privacy: privacy ?? this.privacy,
       canAddComments: canAddComments ?? this.canAddComments,
       imageUrl: imageUrl ?? this.imageUrl,
+      invitationLink: invitationLink ?? this.invitationLink,
     );
   }
 }

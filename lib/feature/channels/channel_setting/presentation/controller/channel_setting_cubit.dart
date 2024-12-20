@@ -117,6 +117,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
           state: CubitState.failure, error: 'No Internet Connection'));
       return;
     }
+    
 
     try {
       print('start getting channel details in the cubit ');

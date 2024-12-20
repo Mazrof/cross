@@ -139,24 +139,7 @@ class ChannelInfoPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // if (state.privacy)
-                  //   Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       const TextField(
-                  //         decoration: InputDecoration(
-                  //           labelText: 'Public Link',
-                  //           prefixText: 't.me/',
-                  //         ),
-                  //       ),
-                  //       const SizedBox(height: 8),
-                  //       const Text(
-                  //         'If you set a public link, other people will be able to find and join your channel.\nYou can use a–z, 0–9, and underscores. Minimum length is 5 characters.',
-                  //         style: TextStyle(fontSize: 12, color: Colors.grey),
-                  //       ),
-                  //       const SizedBox(height: 16),
-                  //     ],
-                  //   ),
+                 
                 ],
               ),
             ],
@@ -166,7 +149,9 @@ class ChannelInfoPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
-        onPressed: cubit.createChannel,
+        onPressed: () {
+          cubit.createChannel();
+        },
         child: const Icon(Icons.check),
       ),
     );

@@ -75,4 +75,15 @@ class MembershipChannelModel extends Equatable {
       imageURL: imageURL ?? this.imageURL,
     );
   }
+  //empty object
+  static MembershipChannelModel empty() {
+    return MembershipChannelModel(
+      userId: 0,
+      channelId: 0,
+      active: false,
+      hasDownloadPermissions: false,
+      role: '',
+      username: '',
+    );
+  }
 }
