@@ -20,11 +20,7 @@ class GroupsCubit extends Cubit<GroupsState> {
   void fetchGroups() async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
-      bool connection = await networkManager.isConnected();
-      if (!connection) {
-        emit(state.copyWith(currState: CubitState.success, errorMessage: null));
-        return;
-      }
+    
       print('fetchGroups');
 
       final result = await getGroupsUseCase.call();

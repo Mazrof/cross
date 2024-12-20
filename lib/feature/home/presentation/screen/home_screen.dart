@@ -102,9 +102,9 @@ class ShimmerLoadingContent extends StatelessWidget {
           color: AppColors.primaryColor,
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
-              height: ScreenHelper.getScreenHeight(context) * .11,
+              height: ScreenHelper.getScreenHeight(context) * .14,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 5, // Number of placeholder items
@@ -124,7 +124,7 @@ class ShimmerLoadingContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: ScreenHelper.getScreenHeight(context) * .5,
+          height: ScreenHelper.getScreenHeight(context) * .3,
           child: ListView.builder(
             itemCount: 10, // Number of placeholder items
             itemBuilder: (context, index) => Shimmer.fromColors(
@@ -178,15 +178,14 @@ class HomeContent extends StatelessWidget {
                 ),
                 expandedTitleScale: 1,
                 title: SizedBox(
-                  height: ScreenHelper.getScreenHeight(context) * .2,
+                  height: ScreenHelper.getScreenHeight(context) * .5,
                   child: ListView(
                     children: [
                       // Stories Section
                       Container(
                         color: AppColors.primaryColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SizedBox(
                             height: ScreenHelper.getScreenHeight(context) * .13,
                             child: ListView(

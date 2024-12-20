@@ -86,7 +86,7 @@ class AppRouter {
   static const String kVerifyMail = '/verify_mail';
   static const String kPreVerify = '/pre_verify';
   static const String kForgetPassword = '/forget_password';
-  static const String kResetPassword = '/reset';
+  static const String kResetPassword = '/reset-password';
 
   static const String kprofilePhotoSecurity = '/profile_photo_security';
   static const String keditProfile = '/edit_profile';
@@ -133,8 +133,11 @@ class AppRouter {
 }
 
 final route = GoRouter(
+  
   initialLocation: AppRouter.kSplash,
   routes: [
+
+
     GoRoute(
       path: AppRouter.kAddMoreSubscribers,
       builder: (context, state) {
@@ -260,9 +263,10 @@ final route = GoRouter(
     GoRoute(
         path: AppRouter.kResetPassword,
         builder: (context, state) {
+          final token = state.extra as String;
           return BlocProvider.value(
             value: sl<ResetPasswordCubit>(),
-            child: ResetPasswordScreen(),
+            child: ResetPasswordScreen(token: token),
           );
         }),
     GoRoute(

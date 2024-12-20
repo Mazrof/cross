@@ -14,7 +14,10 @@ import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
+import 'package:uni_links5/uni_links.dart';
 import 'core/di/service_locator.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   try {
@@ -79,6 +82,7 @@ class App extends StatelessWidget {
             return BlocBuilder<NightModeCubit, bool>(
               builder: (context, isNightMode) {
                 return MaterialApp.router(
+                  
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
@@ -87,6 +91,7 @@ class App extends StatelessWidget {
                   // themeMode: ThemeMode.light,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
+                  
                 );
               },
             );
@@ -103,5 +108,35 @@ class MyHttpOverrides extends HttpOverrides {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+Future<void> _handleDeepLink() async {
+  try {
+    final initialLink = await getInitialLink();
+    _parseDeepLink(initialLink);
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error handling deep link: $e");
+    }
+  }
+
+  linkStream.listen((String? link) {
+    _parseDeepLink(link);
+  });
+}
+
+void _parseDeepLink(String? link) {
+  if (link != null) {
+    Uri uri = Uri.parse(link);
+    if (uri.scheme == "yourappscheme" && uri.host == "reset-password") {
+      final token = uri.queryParameters['token'];
+      if (token != null) {
+        // Redirect to the Reset Password screen with the token
+        print("Redirecting to Reset Password with token: $token");
+        navigatorKey.currentState
+            ?.pushNamed(AppRouter.kResetPassword, arguments: token);
+      }
+    }
   }
 }

@@ -15,7 +15,8 @@ import 'package:telegram/feature/auth/forget_password/presentataion/controller/r
 import 'package:telegram/feature/auth/forget_password/presentataion/controller/reset_passwrod_controller/reset_password_state.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
+  const ResetPasswordScreen({super.key, required this.token});
+  final  String token;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class ResetPasswordScreen extends StatelessWidget {
           });
         }
         // Handle other states if necessary
-        return ResetPasswordPage(state: state);
+        return ResetPasswordPage(state: state, token: token);
       },
     );
   }
@@ -44,8 +45,10 @@ class ResetPasswordPage extends StatelessWidget {
   const ResetPasswordPage({
     required this.state,
     super.key,
+    required this.token,
   });
   final state;
+  final String token;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +139,7 @@ class ResetPasswordPage extends StatelessWidget {
                             .formKey
                             .currentState!
                             .validate()) {
-                          sl<ResetPasswordCubit>().resetPassword();
+                          sl<ResetPasswordCubit>().resetPassword(token);
                         }
                       },
                       child: const Text(AppStrings.resetPassword),

@@ -3,7 +3,15 @@ import 'package:hive_flutter/adapters.dart';
 class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
-    await openBox("register_info"); // Ensure this is awaited
+    await Future.wait([
+      openBox("register_info"),
+      openBox("channels"),
+      openBox("stories"),
+      openBox("groups"),
+      openBox("contacts"),
+      openBox("groups_dash"),
+      openBox("users_dash"),
+    ]);
   }
 
   static Future<void> openBox(String boxName) async {
@@ -26,7 +34,6 @@ class HiveCash {
     required String boxName,
     required String key,
   }) {
-    
     final box = Hive.box(
         boxName); // Directly accessing the box, assuming it's already open
     return box.get(key);

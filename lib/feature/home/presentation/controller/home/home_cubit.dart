@@ -32,18 +32,10 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       // Simultaneously fetch all required data
-      final responses = await Future.wait([
-        fetchStories(),
-        fetchGroups(),
-        fetchChannels(),
-        fetchContacts(),
-      ]);
-
-      final stories = responses[0] as List<StoryModel>;
-      final groups = responses[1] as List<GroupDataModel>;
-      final channels = responses[2] as List<ChannelDataModel>;
-      final contacts = responses[3] as List<ChatModel>;
-      print('formt the cubit ${groups}');
+      final groups = await fetchGroups();
+      final contacts = await fetchContacts();
+      final stories = await fetchStories();
+      final channels = await fetchChannels();
 
       // Sort stories by `isSeen` to display unseen stories first
       stories.sort((a, b) => a.isSeen ? 1 : -1);
@@ -67,12 +59,6 @@ class HomeCubit extends Cubit<HomeState> {
     // Replace with your API call
 
     try {
-      if (networkManager.isConnected() == 'false') {
-        emit(state.copyWith(
-            state: CubitState.failure, errorMessage: 'No internet connection'));
-        return [];
-      }
-
       final stories = await fetchStoriesUseCase();
       return stories;
     } catch (e) {
@@ -86,12 +72,6 @@ class HomeCubit extends Cubit<HomeState> {
     print('fetching groups');
 
     try {
-      if (networkManager.isConnected() == 'false') {
-        emit(state.copyWith(
-            state: CubitState.failure, errorMessage: 'No internet connection'));
-        return [];
-      }
-
       final groups = await fetchGroupsUseCase();
       print('groups from cubit ${groups}');
       return groups;
@@ -105,12 +85,6 @@ class HomeCubit extends Cubit<HomeState> {
     // Replace with your API call
     print('fetching channels');
     try {
-      if (networkManager.isConnected() == 'false') {
-        emit(state.copyWith(
-            state: CubitState.failure, errorMessage: 'No internet connection'));
-        return [];
-      }
-
       final channels = await fetchChannelsUseCase();
       return channels;
     } catch (e) {
@@ -123,12 +97,6 @@ class HomeCubit extends Cubit<HomeState> {
     print('fetching contacts');
     // Replace with your API call
     try {
-      if (networkManager.isConnected() == 'false') {
-        emit(state.copyWith(
-            state: CubitState.failure, errorMessage: 'No internet connection'));
-        return [];
-      }
-
       final contacts = await fetchContactsUseCase();
       return contacts;
     } catch (e) {

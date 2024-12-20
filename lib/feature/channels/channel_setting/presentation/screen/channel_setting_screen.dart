@@ -28,68 +28,69 @@ class ChannelSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user_id = HiveCash.read(boxName: 'register_info', key: 'id');
-    return Scaffold(
-      appBar: CAppBar(
-        leadingIcon: Icons.arrow_back,
-        onLeadingTap: () {
-          Navigator.of(context).pop();
-        },
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              if (user_id ==
-                      sl<ChannelSettingCubit>()
-                          .state
-                          .members
-                          .firstWhere((element) => element.role == 'admin')
-                          .userId &&
-                  sl<ChannelSettingCubit>().state.members.length == 1) {
-                CSnackBar.showErrorDialog(context,
-                    'Group will be deleted if you did not set another admin',
-                    () {
-                  sl<ChannelSettingCubit>().deleteChannel(channelId);
-
-                  GoRouter.of(context).pop();
-                });
-                return;
-              } else {
-                CSnackBar.showErrorDialog(
-                    context, 'are you sure you want to leave group', () {
-                  sl<ChannelSettingCubit>().leaveChannel(channelId,
-                      HiveCash.read(boxName: 'register_info', key: 'id'));
-
-                  GoRouter.of(context).pop();
-                });
-              }
-              GoRouter.of(context).pop();
-            },
-          ),
-          if (sl<ChannelSettingCubit>()
-                  .state
-                  .members
-                  .firstWhere((element) => element.role == 'admin')
-                  .userId ==
-              user_id)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                CSnackBar.showErrorDialog(
-                    context, 'Are you sure you want to delete this group?', () {
-                  sl<ChannelSettingCubit>().deleteChannel(channelId);
-                  GoRouter.of(context).pop();
-                });
-              },
-            ),
-        ],
-      ),
-      body: BlocBuilder<ChannelSettingCubit, ChannelSettingState>(
+    return BlocBuilder<ChannelSettingCubit, ChannelSettingState>(
         builder: (context, state) {
-          if (state.state == CubitState.loading) {
-            return ShimmerLoadingWidget();
-          }
+      if (state.state == CubitState.loading) {
+        return ShimmerLoadingWidget();
+      }
 
-          return Column(
+      return Scaffold(
+          appBar: CAppBar(
+            leadingIcon: Icons.arrow_back,
+            onLeadingTap: () {
+              Navigator.of(context).pop();
+            },
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.exit_to_app),
+                onPressed: () {
+                  if (user_id ==
+                          sl<ChannelSettingCubit>()
+                              .state
+                              .members
+                              .firstWhere((element) => element.role == 'admin')
+                              .userId &&
+                      sl<ChannelSettingCubit>().state.members.length == 1) {
+                    CSnackBar.showErrorDialog(context,
+                        'Group will be deleted if you did not set another admin',
+                        () {
+                      sl<ChannelSettingCubit>().deleteChannel(channelId);
+
+                      GoRouter.of(context).pop();
+                    });
+                    return;
+                  } else {
+                    CSnackBar.showErrorDialog(
+                        context, 'are you sure you want to leave group', () {
+                      sl<ChannelSettingCubit>().leaveChannel(channelId,
+                          HiveCash.read(boxName: 'register_info', key: 'id'));
+
+                      GoRouter.of(context).pop();
+                    });
+                  }
+                  GoRouter.of(context).pop();
+                },
+              ),
+              if (sl<ChannelSettingCubit>()
+                      .state
+                      .members
+                      .firstWhere((element) => element.role == 'admin')
+                      .userId ==
+                  user_id)
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    CSnackBar.showErrorDialog(
+                        context, 'Are you sure you want to delete this group?',
+                        () {
+                      sl<ChannelSettingCubit>().deleteChannel(channelId);
+                      GoRouter.of(context).pop();
+                    });
+                  },
+                ),
+            ],
+          ),
+          body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -170,24 +171,38 @@ class ChannelSettingScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        state.channel!.invitationLink ?? 'No invitation link',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
+                      child: GestureDetector(
+                        onTap: () {
+                          final invitationLink = state.channel?.invitationLink;
+                          if (invitationLink != null) {
+                            GoRouter.of(context)
+                                .push(Uri.parse(invitationLink).toString());
+                          }
+                        },
+                        child: Text(
+                          state.channel?.invitationLink ?? 'No invitation link',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  decoration: TextDecoration.underline),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     IconButton(
                       icon:
                           const Icon(Icons.copy, color: AppColors.primaryColor),
                       onPressed: () {
-                        if (state.channel!.invitationLink != null) {
-                          Clipboard.setData(ClipboardData(
-                              text: state.channel!.invitationLink ?? ""));
+                        final invitationLink = state.channel?.invitationLink;
+                        if (invitationLink != null) {
+                          Clipboard.setData(
+                              ClipboardData(text: invitationLink));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('Invitation link copied to clipboard'),
-                            ),
+                            const SnackBar(
+                                content: Text(
+                                    'Invitation link copied to clipboard')),
                           );
                         }
                       },
@@ -195,6 +210,7 @@ class ChannelSettingScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
               const Divider(),
               // Members List
               Column(
@@ -288,9 +304,7 @@ class ChannelSettingScreen extends StatelessWidget {
                 ],
               ),
             ],
-          );
-        },
-      ),
-    );
+          ));
+    });
   }
 }

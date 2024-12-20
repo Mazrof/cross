@@ -81,6 +81,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   firebase_core: ^3.8.1
   firebase_messaging: ^15.1.6
+  uni_links5: ^0.5.4
 
   # webview_flutter_plus: ^0.3.0
 
