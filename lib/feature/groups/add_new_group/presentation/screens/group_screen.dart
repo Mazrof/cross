@@ -5,10 +5,11 @@ import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({required this.groupData});
-  final GroupsModel groupData;
+  final GroupModel groupData;
 
   @override
   Widget build(BuildContext context) {

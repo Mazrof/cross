@@ -55,15 +55,11 @@ class AddMembersCubit extends Cubit<AddMembersState> {
   List<chatTileData> convertChatModelToChatTileData(
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
-      final participant = chat.participants.first.userId == currentUserId
-          ? chat.participants.last
-          : chat.participants.first;
-
       return chatTileData(
-        id: int.parse(participant.userId),
-        name: participant.name,
-        imageUrl: "", // Assuming imageUrl is not available in ChatModel
-        lastSeen: participant.lastSeen,
+        id: chat.id,
+        name: chat.secondUser.username,
+        imageUrl: chat.secondUser.photo ?? '',
+        lastSeen: chat.secondUser.lastSeen.toString(),
       );
     }).toList();
   }
@@ -116,8 +112,8 @@ class AddMembersCubit extends Cubit<AddMembersState> {
       final group = GroupsModel(
         id: 0,
         name: nameController.text.trim(),
-        imageUrl: state.groupImageUrl ?? '',
-        groupSize: 100,
+        imageUrl: "",
+        groupSize: 1,
         privacy: true,
       );
       print(group.toJson());

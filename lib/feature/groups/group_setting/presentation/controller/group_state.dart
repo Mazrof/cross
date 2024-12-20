@@ -20,7 +20,7 @@ class GroupState extends Equatable {
     this.errorMessage,
     required this.allMembers,
     required this.selectedMembers,
-    required this.ismute,
+     this.ismute=false,
   });
 
   GroupState copyWith({

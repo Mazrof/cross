@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
     return BlocBuilder<UserSettingsCubit, UserSettingsState>(
       builder: (context, state) {
         if (state.state == CubitState.loading) {
-          return const LogoLoader();
+          return LogoLoader();
         } else if (state.state == CubitState.failure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             CSnackBar.showErrorSnackBar(context, 'Error', state.errorMessage!);
@@ -39,6 +42,14 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Uint8List? imageBytes;
+
+    if (state.profilePicture.isNotEmpty) {
+      final base64String = state.profilePicture.split(',').last;
+
+      imageBytes = base64Decode(base64String);
+    }
+
     return Scaffold(
       appBar: CAppBar(
         leadingIcon: Icons.arrow_back,
@@ -51,7 +62,8 @@ class SettingsPage extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(state.profileImage),
+                backgroundImage:
+                    imageBytes != null ? MemoryImage(imageBytes) : null,
               ),
               const SizedBox(
                 width: 8.0,
@@ -67,7 +79,7 @@ class SettingsPage extends StatelessWidget {
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      state.status,
+                      "Online",
                       style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
@@ -81,6 +93,8 @@ class SettingsPage extends StatelessWidget {
             onSelected: (value) {
               if (value == 'edit_profile') {
                 context.go(AppRouter.keditProfile);
+              } else if (value == 'change_profile_picture') {
+                context.go(AppRouter.keditProfilePic);
               }
             },
             itemBuilder: (BuildContext context) {
@@ -88,7 +102,11 @@ class SettingsPage extends StatelessWidget {
                 const PopupMenuItem<String>(
                   value: 'edit_profile',
                   child: Text(AppStrings.editInfo),
-                )
+                ),
+                PopupMenuItem<String>(
+                  value: 'change_profile_picture',
+                  child: Text("Change Profile Picture"),
+                ),
               ];
             },
           ),
@@ -169,6 +187,53 @@ class SettingsPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             onTap: () {},
+          ),
+          const Divider(),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            child: Text(
+              'Data Settings',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Maximum File Size Limit: ${state.maxFileSize} MB',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          Slider(
+            value: state.maxFileSize.toDouble(),
+            min: 0,
+            max: 100,
+            divisions: 10,
+            label: 'Maximum File Size Limit',
+            onChanged: (value) async {
+              final cubit = context.read<UserSettingsCubit>();
+
+              await cubit.saveSettings(newMaxFileSize: value.toInt());
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Auto download Size Limit: ${state.maxDownloadSize} MB',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          Slider(
+            value: state.maxDownloadSize.toDouble(),
+            min: 0,
+            max: 100,
+            divisions: 10,
+            label: 'Auto download Size Limit',
+            onChanged: (value) async {
+              final cubit = context.read<UserSettingsCubit>();
+
+              await cubit.saveSettings(newMaxDownloadSize: value.toInt());
+            },
           ),
         ],
       ),

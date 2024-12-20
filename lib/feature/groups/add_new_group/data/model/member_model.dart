@@ -18,13 +18,12 @@ class MemberModel extends Member {
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': userId,
+      'memberId': userId,
       'role': role,
       'hasDownloadPermissions': hasDownloadPermissions,
       'hasMessagePermissions': hasMessagePermissions,
     };
   }
-
 
   @override
   bool operator ==(Object other) =>
@@ -33,11 +32,13 @@ class MemberModel extends Member {
           runtimeType == other.runtimeType &&
           userId == other.userId &&
           role == other.role &&
-          hasDownloadPermissions == other.hasDownloadPermissions&&
-          hasMessagePermissions == other.hasMessagePermissions
-          ;
+          hasDownloadPermissions == other.hasDownloadPermissions &&
+          hasMessagePermissions == other.hasMessagePermissions;
 
   @override
   int get hashCode =>
-      userId.hashCode ^ role.hashCode ^ hasDownloadPermissions.hashCode ^ hasMessagePermissions.hashCode;
+      userId.hashCode ^
+      role.hashCode ^
+      hasDownloadPermissions.hashCode ^
+      hasMessagePermissions.hashCode;
 }

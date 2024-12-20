@@ -38,5 +38,9 @@ class ApiConstants {
   static const updateMemberRole = 'groups/:id/members/:id';
   static const deleteMember = 'groups/:id/members/:id';
 
+//settings
+  static const profileSetting = 'profile/';
+  static const blockedUsers = 'user/block';
+  static const contacts = 'chats/my-chats';
   static const globalSearchQuery = "search";
 }
