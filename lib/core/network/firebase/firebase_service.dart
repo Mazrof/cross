@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:telegram/core/local/hive.dart';
 
 Future<void> handler(RemoteMessage message) async {
-  print('title${(message.data)!}');
+  print('title${(message.notification?.body)}');
 }
 
 class FirebaseService {
@@ -14,13 +15,11 @@ class FirebaseService {
       final notificationSettings =
           await FirebaseMessaging.instance.requestPermission(provisional: true);
       // final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-      // APNS token is available, make FCM plugin API requests...
+
       final fcmToken = await FirebaseMessaging.instance.getToken();
       print(fcmToken);
 
-      // if (apnsToken != null) {
-      //   print(apnsToken);
-      // }
+      HiveCash.write(boxName: "register_info", key: 'fcm', value: fcmToken);
 
       // background
       FirebaseMessaging.onMessageOpenedApp.listen(handler);

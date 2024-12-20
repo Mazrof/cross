@@ -3,9 +3,10 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class PopupMenu extends StatelessWidget {
-  const PopupMenu(this._popupList, {super.key});
+  const PopupMenu(this._popupList, {super.key, required this.actions});
 
   final List<dynamic> _popupList;
+  final List<dynamic> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class PopupMenu extends StatelessWidget {
               leading: Icon(_popupList[i]['icon']),
               title: Text(_popupList[i]['value']),
             ),
+            onTap: actions[i],
           ),
       ],
       constraints: const BoxConstraints(maxWidth: 200),

@@ -2,6 +2,9 @@ class ApiConstants {
   static String register = "auth/signup";
 
   static const login = 'auth/login';
+  static const subscribe = "notifications/subscripe";
+  static const sendNotification = "notifications/sendall";
+  static const muteNotification = "notifications/mute";
 
   static const sendOtpMial = 'auth/send-code';
   static const sendOtpPhone = 'auth/send-code-sms';
@@ -37,6 +40,7 @@ class ApiConstants {
   static const addMembers = 'groups/:id/members';
   static const updateMemberRole = 'groups/:id/members/:id';
   static const deleteMember = 'groups/:id/members/:id';
+
 
 //settings
   static const profileSetting = 'profile/';
