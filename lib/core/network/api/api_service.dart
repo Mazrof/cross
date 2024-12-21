@@ -88,13 +88,25 @@ class ApiService {
 
   Future<Response> get({
     required String endPoint,
+    String? base,
     Map<String, dynamic>? queryParameters,
+    Options? options,
   }) async {
     try {
       await _loadCookies();
+
+      String url = "";
+
+      if (base != null) {
+        url = '$base/$endPoint';
+      } else {
+        url = '$baseUrl/$endPoint';
+      }
+
       Response response = await dio.get(
-        '$baseUrl/$endPoint',
+        url,
         queryParameters: queryParameters,
+        // options: options,
       );
 
       print(response.data);
@@ -120,14 +132,25 @@ class ApiService {
 
   Future<Response> post({
     required String endPoint,
+    String? base,
     Map<String, dynamic>? queryParameters,
     Object? data,
+    Options? options,
   }) async {
     try {
       await _loadCookies();
-      String url = '$baseUrl/$endPoint';
-      final response =
-          await dio.post(url, data: data, queryParameters: queryParameters);
+
+      String url;
+
+      if (base != null) {
+        url = '$base/$endPoint';
+      } else {
+        url = '$baseUrl/$endPoint';
+      }
+
+      final response = await dio.post(url,
+          data: data, queryParameters: queryParameters, options: options);
+
       print(response.data);
       print(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -161,7 +184,6 @@ class ApiService {
         return response;
       } else {
         throw ServerFailure(message: response.data['message']);
-      
       }
     } catch (e) {
       if (e is DioException) {

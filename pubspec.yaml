@@ -84,6 +84,7 @@ dependencies:
   pointycastle: ^3.4.0
   duration_picker: ^1.2.0
   giphy_picker: ^3.0.2
+  audio_waveforms: ^1.2.0
   # webview_flutter_plus: ^0.3.0
 
 dependency_overrides:

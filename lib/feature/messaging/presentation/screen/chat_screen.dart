@@ -1,3 +1,4 @@
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,7 @@ class StringWrapper {
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
 
+  final RecorderController recorderController = RecorderController();
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -189,7 +191,14 @@ class ChatScreen extends StatelessWidget {
                               .contacts[sl<ChatCubit>().state.chatIndex!]
                               .secondUser
                               .username,
-                          state: AppStrings.waitingInternet,
+                          state: "Last Seen at: ${DateFormat('HH:mm').format(
+                            sl<HomeCubit>()
+                                .state
+                                .contacts[sl<ChatCubit>().state.chatIndex!]
+                                .secondUser
+                                .lastSeen!,
+                          )}",
+                          // AppStrings.waitingInternet,
                           avatar: Avatar(
                             imageUrl: sl<HomeCubit>()
                                 .state
@@ -350,6 +359,7 @@ class ChatScreen extends StatelessWidget {
                         CinputBar(
                           showContactModal: showContactModal,
                           textInput: textInput,
+                          recorderController: recorderController,
                         ),
                       ],
                     ),
