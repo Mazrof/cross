@@ -18,6 +18,11 @@ class ChatState extends Equatable {
   final bool replyState;
   final bool error;
   final String errorMessage;
+  final bool isMuted;
+  final String text;
+  final int destructDuration;
+  // final String? draftedMessage;
+  int? pinnedIndex;
   int? chatIndex;
   ChatType? chatType;
   // int participantId;
@@ -39,6 +44,11 @@ class ChatState extends Equatable {
     required this.replyState,
     required this.error,
     required this.errorMessage,
+    required this.isMuted,
+    required this.text,
+    required this.destructDuration,
+    // this.draftedMessage,
+    this.pinnedIndex,
     this.chatIndex,
     this.chatType,
     // required this.chatType,
@@ -64,6 +74,11 @@ class ChatState extends Equatable {
     bool? replyState,
     ChatType? chatType,
     int? chatIndex,
+    bool? isMuted,
+    int? pinnedIndex,
+    String? text,
+    int? destructDuration,
+    // String? draftedMessage,
     // int? participantId,
     // List? members,
   }) {
@@ -85,6 +100,11 @@ class ChatState extends Equatable {
       replyState: replyState ?? this.replyState,
       chatType: chatType ?? this.chatType,
       chatIndex: chatIndex ?? this.chatIndex,
+      isMuted: isMuted ?? this.isMuted,
+      pinnedIndex: pinnedIndex ?? this.pinnedIndex,
+      text: text ?? this.text,
+      destructDuration: destructDuration ?? this.destructDuration,
+      // draftedMessage: draftedMessage ?? this.draftedMessage,
       // participantId: participantId ?? this.participantId,
       // chatType: chatType ?? this.chatType,
       // members: members ?? this.members,
@@ -109,7 +129,11 @@ class ChatState extends Equatable {
         errorMessage,
         replyState,
         chatType,
-        chatIndex
+        chatIndex,
+        pinnedIndex,
+        text,
+        destructDuration,
+        // draftedMessage,
         // participantId,
         // members,
       ];

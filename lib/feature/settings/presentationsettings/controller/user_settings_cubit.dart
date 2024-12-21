@@ -35,57 +35,50 @@ class UserSettingsCubit extends Cubit<UserSettingsState> {
       (failure) => emit(state.copyWith(
           state: CubitState.failure, errorMessage: failure.message)),
       (settings) => emit(state.copyWith(
-        state: CubitState.success,
-        profileImage: settings.profileImage,
-        screenName: settings.screenName,
-        userName: settings.userName,
-        phoneNumber: settings.phoneNumber,
-        bio: settings.bio,
-        status: settings.status,
-        autoDeleteTimer: settings.autoDeleteTimer,
-        lastSeenPrivacy: settings.lastSeenPrivacy,
-        profilePhotoPrivacy: settings.profilePhotoPrivacy,
-        enableReadReceipt: settings.enableReadReceipt,
-        blockedUsers: settings.blockedUsers,
-        contacts: settings.contacts,
-      )),
+          state: CubitState.success,
+          screenName: settings.screenName,
+          userName: settings.userName,
+          phoneNumber: settings.phoneNumber,
+          bio: settings.bio,
+          profilePicture: settings.profileImage,
+          maxFileSize: settings.maxFileSize,
+          maxDownloadSize: settings.maxDownloadSize)),
     );
   }
 
-  Future<void> saveSettings(
-    String newProfileImage,
-    String newScreenName,
-    String newUserName,
-    String newPhoneNumber,
-    String newBio,
-    String newStatus,
-    String newAutoDeleteTimer,
-    String newLastSeenPrivacy,
-    String newProfilePhotoPrivacy,
-    bool newEnableReadReceipt,
-    List<String> newBlockedUsers,
-    List<String> newContacts,
-  ) async {
+  Future<void> saveSettings({
+    String? newScreenName,
+    String? newUserName,
+    String? newPhoneNumber,
+    String? newBio,
+    String? newProfilePicture,
+    int? newMaxFileSize,
+    int? newMaxDownloadSize,
+  }) async {
     emit(state.copyWith(state: CubitState.loading));
     final updatedSettings = UserSettingsEntity(
-      profileImage: newProfileImage,
       screenName: newScreenName,
       userName: newUserName,
       phoneNumber: newPhoneNumber,
       bio: newBio,
-      status: newStatus,
-      autoDeleteTimer: newAutoDeleteTimer,
-      lastSeenPrivacy: newLastSeenPrivacy,
-      profilePhotoPrivacy: newProfilePhotoPrivacy,
-      enableReadReceipt: newEnableReadReceipt,
-      blockedUsers: newBlockedUsers,
-      contacts: newContacts,
+      profileImage: newProfilePicture,
+      maxFileSize: newMaxFileSize,
+      maxDownloadSize: newMaxDownloadSize,
     );
     final result = await updateSettingsUseCase(updatedSettings);
     result.fold(
       (failure) => emit(state.copyWith(
           state: CubitState.failure, errorMessage: failure.message)),
-      (_) => emit(state.copyWith(state: CubitState.success)),
+      (_) => emit(state.copyWith(
+        state: CubitState.success,
+        screenName: newScreenName,
+        bio: newBio,
+        userName: newUserName,
+        phoneNumber: newPhoneNumber,
+        profilePicture: newProfilePicture,
+        maxFileSize: newMaxFileSize,
+        maxDownloadSize: newMaxDownloadSize,
+      )),
     );
   }
 }

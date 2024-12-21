@@ -1,8 +1,10 @@
 import 'package:hive_flutter/adapters.dart';
+import 'package:telegram/feature/messaging/data/model/message.dart';
 
 class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
+
     await Future.wait([
       openBox("register_info"),
       openBox("channels"),
@@ -12,12 +14,20 @@ class HiveCash {
       openBox("groups_dash"),
       openBox("users_dash"),
     ]);
+
+
+    registerAdapter(MessageAdapter());
+
   }
 
   static Future<void> openBox(String boxName) async {
     if (!Hive.isBoxOpen(boxName)) {
       await Hive.openBox(boxName); // Open the box only if it's not already open
     }
+  }
+
+  static registerAdapter(dynamic adapter) {
+    Hive.registerAdapter<Message>(MessageAdapter());
   }
 
   static Future<void> write<T>({

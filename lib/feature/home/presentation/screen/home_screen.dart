@@ -229,7 +229,7 @@ class HomeContent extends StatelessWidget {
                         messageStatus: MessageStatus.delivered,
                         onTap: () {
                           GoRouter.of(context).push(
-                            '${AppRouter.kMessaging}/$index/channel',
+                            '${AppRouter.kMessaging}/$index/PersonalChat',
                           );
                         },
                         lastSeen: chat.secondUser.lastSeen.toString(),
@@ -258,6 +258,7 @@ class HomeContent extends StatelessWidget {
                             : '',
                         onTap: () {
                           GoRouter.of(context).push(
+
                             AppRouter.kChannelScreen,
                             extra: ChannelModel(
                               id: channel.id,
@@ -267,6 +268,7 @@ class HomeContent extends StatelessWidget {
                               imageUrl: channel.imageUrl ?? '',
                               invitationLink: channel.invitationLink ?? '',
                             ),
+
                           );
                           // GoRouter.of(context).push(
                           //   '${AppRouter.kMessaging}/$index/channel',
@@ -298,6 +300,7 @@ class HomeContent extends StatelessWidget {
                             ? group.lastMessage!.createdAt.hour.toString()
                             : '',
                         onTap: () {
+
                           GoRouter.of(context).push(
                             AppRouter.kGroupScreen,
                             extra: GroupModel(
@@ -308,9 +311,20 @@ class HomeContent extends StatelessWidget {
                               imageUrl: group.imageUrl ?? '',
                             ),
                           );
+
                           // GoRouter.of(context).push(
-                          //   '${AppRouter.kMessaging}/$index/group',
+                          //   AppRouter.kGroupScreen,
+                          //   extra: GroupModel(
+                          //     id: group.id,
+                          //     name: group.name,
+                          //     privacy: group.privacy,
+                          //     groupSize: group.groupSize!,
+                          //     imageUrl: group.imageUrl ?? '',
+                          //   ),
                           // );
+                          GoRouter.of(context).push(
+                            '${AppRouter.kMessaging}/$index/Group',
+                          );
                         },
                         lastSeen: '',
                       );

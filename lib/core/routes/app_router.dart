@@ -58,16 +58,21 @@ import 'package:telegram/feature/auth/verify_mail/presetnation/screen/verify_mai
 import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/block_cubit.dart';
+import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
 
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/block_user.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/blocked_users.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/edit_picture.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/edit_profile.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/lastseen_online.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/privacy_security.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/profile_photo_security.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/read_receipts.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/settings.dart';
+import 'package:telegram/feature/settings/presentationsettings/screen/story_visibility.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/screen/splash_screen.dart';
 import 'package:telegram/feature/voice/Presentation/Screen/call_contact.dart';
@@ -110,6 +115,9 @@ class AppRouter {
   static const String kcallLog = '/call_log';
   static const String kvoiceCall = '/voice_call';
   static const String kcallContact = '/call_contact';
+  static const String kreadReceiptSetting = '/read_receipt';
+  static const String kstoryVisibility = '/story_visibility';
+  static const String keditProfilePic = '/edit_profile_pic';
   static const String kNavBar = '/nav_bar';
 
   //groups
@@ -134,7 +142,7 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  initialLocation: AppRouter.kSplash,
+  initialLocation: AppRouter.kHome,
   routes: [
     GoRoute(
       path: AppRouter.kAddMoreSubscribers,
@@ -313,7 +321,7 @@ final route = GoRouter(
       path: AppRouter.kprivacyAndSecurity,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<PrivacyCubit>()..loadPrivacySettings(),
           child: PrivacySecurityScreen(),
         );
       },
@@ -401,7 +409,7 @@ final route = GoRouter(
       path: AppRouter.kautoDeleteMessages,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<PrivacyCubit>(),
           child: AutodelMessagesScreen(),
         );
       },
@@ -410,7 +418,7 @@ final route = GoRouter(
       path: AppRouter.keditProfile,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>()..loadSettings(),
+          value: sl<UserSettingsCubit>(),
           child: EditProfileScreen(),
         );
       },
@@ -425,7 +433,7 @@ final route = GoRouter(
       path: AppRouter.klastSeenOnline,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<PrivacyCubit>(),
           child: LastseenOnlineScreen(),
         );
       },
@@ -434,7 +442,7 @@ final route = GoRouter(
       path: AppRouter.kblockedUsers,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<BlockCubit>()..loadBlockedData(),
           child: BlockedUsersScreen(),
         );
       },
@@ -443,8 +451,35 @@ final route = GoRouter(
       path: AppRouter.kprofilePhotoSecurity,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<PrivacyCubit>(),
           child: ProfilePhotoSecurityScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kstoryVisibility,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<PrivacyCubit>(),
+          child: StoryVisibilityScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kreadReceiptSetting,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<PrivacyCubit>(),
+          child: ReadReceiptsScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.keditProfilePic,
+      builder: (context, state) {
+        return BlocProvider.value(
+          value: sl<UserSettingsCubit>(),
+          child: EditPictureScreen(),
         );
       },
     ),
@@ -452,7 +487,7 @@ final route = GoRouter(
       path: AppRouter.kblockUser,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<UserSettingsCubit>(),
+          value: sl<BlockCubit>()..loadContacts(),
           child: BlockUserScreen(),
         );
       },

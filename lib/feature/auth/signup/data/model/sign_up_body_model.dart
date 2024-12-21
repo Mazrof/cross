@@ -9,6 +9,8 @@ class SignUpBodyModel extends SignUpEntity {
   final String email;
   @override
   final String password;
+  @override
+  final String publicKey;
   String id;
 
   SignUpBodyModel({
@@ -17,11 +19,13 @@ class SignUpBodyModel extends SignUpEntity {
     required this.phone,
     required this.email,
     required this.password,
+    required this.publicKey,
   }) : super(
           username: username,
           phone: phone,
           email: email,
           password: password,
+          publicKey: publicKey,
         );
 
   Map<String, dynamic> toJson() {
@@ -31,6 +35,7 @@ class SignUpBodyModel extends SignUpEntity {
       'email': email,
       'password': password,
       'id': id,
+      'publicKey': publicKey,
     };
     return body;
   }
@@ -41,6 +46,7 @@ class SignUpBodyModel extends SignUpEntity {
       phone: entity.phone,
       email: entity.email,
       password: entity.password,
+      publicKey: entity.publicKey,
     );
   }
   static empty() {
@@ -49,6 +55,7 @@ class SignUpBodyModel extends SignUpEntity {
       phone: '',
       email: '',
       password: '',
+      publicKey: '',
     );
   }
 
@@ -60,7 +67,8 @@ class SignUpBodyModel extends SignUpEntity {
         other.username == username &&
         other.phone == phone &&
         other.email == email &&
-        other.password == password;
+        other.password == password &&
+        other.publicKey == publicKey;
   }
 
   @override
@@ -68,7 +76,8 @@ class SignUpBodyModel extends SignUpEntity {
     return username.hashCode ^
         phone.hashCode ^
         email.hashCode ^
-        password.hashCode;
+        password.hashCode ^
+        publicKey.hashCode;
   }
 
   SignUpBodyModel copyWith({
@@ -77,12 +86,14 @@ class SignUpBodyModel extends SignUpEntity {
     String? phone,
     String? email,
     String? password,
+    String? publicKey,
   }) {
     return SignUpBodyModel(
       username: username ?? this.username,
       phone: phone ?? this.phone,
       email: email ?? this.email,
       password: password ?? this.password,
+      publicKey: publicKey ?? this.publicKey,
     );
   }
 
@@ -93,6 +104,7 @@ class SignUpBodyModel extends SignUpEntity {
       phone: phone,
       email: email,
       password: password,
+      publicKey: publicKey,
     );
   }
 
@@ -102,6 +114,7 @@ class SignUpBodyModel extends SignUpEntity {
       phone: json['phone'],
       email: json['email'],
       password: json['password'],
+      publicKey: json['publicKey'],
     );
   }
 }

@@ -1,5 +1,14 @@
+import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/key_generators/api.dart';
+import 'package:pointycastle/key_generators/rsa_key_generator.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
@@ -107,11 +116,52 @@ class SignUpCubit extends Cubit<SignupState> {
         // }
         print('signUp2');
 
+        // generate a private and public keys
+
+        // final keyGen = RSAKeyGenerator()
+        //   ..init(
+        //     ParametersWithRandom(
+        //       RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
+        //       SecureRandom('Fortuna')
+        //         ..seed(
+        //           KeyParameter(
+        //             Uint8List.fromList(
+        //               utf8.encode('seed'),
+        //             ),
+        //           ),
+        //         ),
+        //     ),
+        //   );
+
+        var keyParams =
+            new RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 5);
+
+        var secureRandom = new FortunaRandom();
+        var random = new Random.secure();
+
+        List<int> seeds = [];
+        for (int i = 0; i < 32; i++) {
+          seeds.add(random.nextInt(255));
+        }
+
+        secureRandom.seed(new KeyParameter(new Uint8List.fromList(seeds)));
+
+        var rngParams = new ParametersWithRandom(keyParams, secureRandom);
+        var k = new RSAKeyGenerator();
+        k.init(rngParams);
+
+        var keys = k.generateKeyPair();
+
+        // store them locally and on the db
+
+        print("keys ${(keys.publicKey as RSAPublicKey).modulus!.toString()}");
+
         emitSignUpStates(SignUpBodyModel(
           username: usernameController.text.trim(),
           email: emailController.text.trim(),
           phone: phoneController.text.trim(),
           password: passwordController.text.trim(),
+          publicKey: (keys.publicKey as RSAPublicKey).modulus!.toString(),
         ));
       }
     } else {
@@ -132,7 +182,6 @@ class SignUpCubit extends Cubit<SignupState> {
       ));
     }, (unit) async {
       // Call the save data use case here
-      
 
       await saveRegisterInfoUseCase
           .call(
