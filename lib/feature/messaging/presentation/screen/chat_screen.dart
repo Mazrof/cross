@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
@@ -253,8 +254,14 @@ class ChatScreen extends StatelessWidget {
                   .secondUser
                   .username,
               state: AppStrings.waitingInternet,
-              avatar: Avatar(
+              avatar: GeneralImage(
                 imageUrl: sl<HomeCubit>()
+                        .state
+                        .contacts[sl<ChatCubit>().state.chatIndex!]
+                        .secondUser
+                        .photo ??
+                    "",
+                username: sl<HomeCubit>()
                     .state
                     .contacts[sl<ChatCubit>().state.chatIndex!]
                     .secondUser
