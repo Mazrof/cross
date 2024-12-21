@@ -584,4 +584,38 @@ class ChatCubit extends Cubit<ChatState> {
           state.copyWith(error: true, errorMessage: "Failed to load messages"));
     }
   }
+
+  void setSearchMode(bool searchMode) {
+    emit(state.copyWith(isSearching: searchMode));
+  }
+
+  void searchMessages(String query) {
+    final List<int> matchingIndices;
+    if (query.isEmpty) {
+      matchingIndices = [];
+    } else {
+      final lowerCaseQuery = query.toLowerCase();
+      matchingIndices = state.messages
+          .asMap()
+          .entries
+          .where((entry) =>
+              entry.value.content.toLowerCase().contains(lowerCaseQuery))
+          .map((entry) => entry.key)
+          .toList();
+    }
+    print(matchingIndices);
+    emit(state.copyWith(searchResultIndices: matchingIndices, searchPtr: 0));
+  }
+
+  Future<void> incSearchPtr() async {
+    emit(state.copyWith(searchPtr: state.searchPtr + 1));
+  }
+
+  Future<void> decSearchPtr() async {
+    emit(state.copyWith(searchPtr: state.searchPtr - 1));
+  }
+
+  Future<void> resetSearch() async {
+    emit(state.copyWith(searchPtr: 0, searchResultIndices: []));
+  }
 }
