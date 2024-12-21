@@ -22,17 +22,18 @@ class AddMembersCubit extends Cubit<AddMembersState> {
     this.networkManager,
     this.addMembersUseCase,
   ) : super(AddMembersState(
-          groupName: '',
-          selectedMembers: [],
-          state: GroupStatus.initial,
-          errorMessage: '',
-        ));
+            groupName: '',
+            selectedMembers: [],
+            state: GroupStatus.initial,
+            errorMessage: '',
+            group: GroupsModel.empty()));
 
   final NetworkManager networkManager;
   final CreateGroupUseCase createGroupUseCase;
   final AddMembersUseCase addMembersUseCase;
   final ImagePicker _picker = ImagePicker();
   final formKey = GlobalKey<FormState>();
+  final sizeController = TextEditingController();
   final nameController = TextEditingController();
   void loadMembers() {
     print('loading members');
@@ -43,12 +44,14 @@ class AddMembersCubit extends Cubit<AddMembersState> {
         sl<HomeCubit>().state.contacts, id.toString());
 
     nameController.clear();
+    sizeController.clear();
     emit(AddMembersState(
       groupName: '',
       selectedMembers: [],
       state: GroupStatus.initial,
       errorMessage: '',
       allMembers: members,
+      group: GroupsModel.empty(),
     ));
   }
 
@@ -56,7 +59,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
       return chatTileData(
-        id: chat.id,
+        id: chat.secondUser.id,
         name: chat.secondUser.username,
         imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),
@@ -79,7 +82,12 @@ class AddMembersCubit extends Cubit<AddMembersState> {
   }
 
   void setGroupName(String groupName) {
-    emit(state.copyWith(groupName: nameController.text.trim()));
+    emit(state.copyWith(group: state.group!.copyWith(name: groupName)));
+  }
+
+  void setGroupSize(String groupSize) {
+    emit(state.copyWith(
+        group: state.group!.copyWith(groupSize: int.parse(groupSize))));
   }
 
   Future<void> selectGroupImage() async {
@@ -109,15 +117,24 @@ class AddMembersCubit extends Cubit<AddMembersState> {
       }
       print('creating group');
 
-      final group = GroupsModel(
-        id: 0,
-        name: nameController.text.trim(),
-        imageUrl: "",
-        groupSize: 100,
+      final group = state.group!.copyWith(
+        imageUrl: " ",
         privacy: true,
       );
       print(group.toJson());
       print('group going');
+      if (group.name.isEmpty) {
+        emit(state.copyWith(
+            errorMessage: 'Group name cannot be empty',
+            state: GroupStatus.failure));
+        return;
+      }
+      if (group.groupSize <= 0) {
+        emit(state.copyWith(
+            errorMessage: 'Group size cannot be empty',
+            state: GroupStatus.failure));
+        return;
+      }
 
       final GroupsModel? result = await createGroupUseCase(group);
       print(result);

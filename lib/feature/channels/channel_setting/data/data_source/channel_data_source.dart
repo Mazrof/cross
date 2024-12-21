@@ -55,6 +55,7 @@ class ChannelSettingRemoteDataSourceImpl
     final members = response.data['data']['members'] as List<dynamic>;
 
     // Map each member to a MembershipChannelModel
+    print('Members: $members');
     return members
         .map((json) =>
             MembershipChannelModel.fromJson(json as Map<String, dynamic>))

@@ -55,6 +55,8 @@ class LoginDataSourceImp implements LoginDataSource {
             .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));
         print('Cookies: $cookies');
 
+        await CacheHelper.write(key: 'cookies', value: cookies.join('; '));
+
         final directory = await getApplicationDocumentsDirectory();
         // Specify the file path (you can change the file name or extension)
         final file = File('${directory.path}/my_file.txt');

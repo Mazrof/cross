@@ -13,8 +13,6 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_state.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
-import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_state.dart';
 
 class NewChannelScreen extends StatelessWidget {
   @override
@@ -25,8 +23,18 @@ class NewChannelScreen extends StatelessWidget {
           return const LogoLoader();
         } else if (state.state == CubitState.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            GoRouter.of(context).pop();
+//             final channel = sl<AddChannelCubit>().state.channel;
+//             final chatIndex = channel!.id; // Assuming channel.id is the index
+//             final chatType =
+//                 ChatType.Channel; // Assuminwg ChatType.channel is the type
+// print(channel);
+//             GoRouter.of(context).pop();
+//             GoRouter.of(context).pop();
+//             GoRouter.of(context).push(
+//               '${AppRouter.kMessaging}/$chatIndex/Channel',
+//             );
 
+            GoRouter.of(context).pop();
             GoRouter.of(context).pushReplacement(AppRouter.kChannelScreen,
                 extra: sl<AddChannelCubit>().state.channel);
           });
@@ -139,7 +147,6 @@ class ChannelInfoPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                 
                 ],
               ),
             ],

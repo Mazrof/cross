@@ -5,6 +5,7 @@ import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
@@ -16,9 +17,8 @@ class EditPermissionsScreen extends StatelessWidget {
   final MembershipModel member;
 
   const EditPermissionsScreen({
-    Key? key,
     required this.member,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +134,8 @@ class EditPermissionsScreen extends StatelessWidget {
         onPressed: () {
           sl<PermisionCubit>().editMemberData();
           GoRouter.of(context).pop();
+          GoRouter.of(context)
+              .pushReplacement(AppRouter.kGroupSetting, extra: member.groupId);
         },
         child: const Icon(
           Icons.done,

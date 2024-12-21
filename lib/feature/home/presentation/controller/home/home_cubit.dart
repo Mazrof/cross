@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/feature/channels/create_channel/domain/entity/channel_entity.dart';
 import 'package:telegram/feature/home/data/model/channel_data_model.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
 import 'package:telegram/feature/home/data/model/group_data_model.dart';
@@ -35,13 +36,11 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       // Simultaneously fetch all required data
 
-      final groups = await fetchGroups();
-      final contacts = await fetchContacts();
-      final stories = await fetchStories();
-      final channels = await fetchChannels();
+      final stories = await fetchStoriesUseCase();
+      final groups = await fetchGroupsUseCase();
+      final channels = await fetchChannelsUseCase();
+      final contacts = await fetchContactsUseCase();
 
-
-      // Sort stories by `isSeen` to display unseen stories first
       stories.sort((a, b) => a.isSeen ? 1 : -1);
 
       emit(
@@ -51,9 +50,16 @@ class HomeCubit extends Cubit<HomeState> {
           groups: groups,
           channels: channels,
           contacts: contacts,
-          draftedMessages: draftedMessages,
+          draftedMessages: [],
         ),
       );
+      // final draftedMessages = await fetchDraftedMessages();
+      // emit(
+      //   state.copyWith(
+      //     draftedMessages: draftedMessages,
+      //   ),
+      // );
+      // Sort stories by `isSeen` to display unseen stories first
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,

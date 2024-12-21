@@ -48,7 +48,7 @@ class GroupCubit extends Cubit<GroupState> {
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
       return chatTileData(
-        id: chat.id,
+        id: chat.secondUser.id,
         name: chat.secondUser.username,
         imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),
@@ -65,7 +65,7 @@ class GroupCubit extends Cubit<GroupState> {
       }
 
       emit(state.copyWith(ismute: isMuted));
-      // await muteUseCase(groupId, isMuted);  //waiting back-end
+      await muteUseCase(groupId, isMuted); //waiting back-end
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -98,8 +98,6 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
-          
-      
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -109,6 +107,11 @@ class GroupCubit extends Cubit<GroupState> {
   }
 
   void fetchGroupDetails(int groupId) async {
+    emit(GroupState(
+      state: CubitState.loading,
+      ismute: false,
+      group: GroupModel.empty(),
+    ));
     final int id = HiveCash.read(boxName: "register_info", key: "id");
     List<chatTileData> members = convertChatModelToChatTileData(
         sl<HomeCubit>().state.contacts, id.toString());
@@ -162,16 +165,11 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
+      emit(state.copyWith(state: CubitState.loading));
       await updateMemberRoleUseCase(state.group!.id, member);
       //edit the member role
 
-      final updatedMembers = state.members.map((m) {
-        if (m.userId == member.userId) {
-          return m.copyWith(role: member.role);
-        }
-        return m;
-      }).toList();
-      emit(state.copyWith(members: updatedMembers));
+      fetchGroupDetails(state.group!.id);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -188,9 +186,9 @@ class GroupCubit extends Cubit<GroupState> {
         return;
       }
       await removeMemberUseCase(groupId, memberId);
-      final updatedMembers =
-          state.members.where((m) => m.userId != memberId).toList();
-      emit(state.copyWith(members: updatedMembers));
+      emit(state.copyWith(state: CubitState.loading));
+
+      fetchGroupDetails(state.group!.id);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -206,6 +204,7 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
+      emit(state.copyWith(state: CubitState.loading));
       await removeMemberUseCase(groupId, memberId);
 
       // Handle leaving the group, e.g., navigate to another screen
@@ -224,6 +223,7 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
+      emit(state.copyWith(state: CubitState.loading));
       await deleteGroupUseCase(groupId);
       // Handle group deletion, e.g., navigate to another screen
     } catch (e) {
@@ -241,18 +241,25 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
+      emit(state.copyWith(state: CubitState.loading));
       await updateGroupDetailsUseCase(groupId, data);
-      final updatedGroup = state.group!.copyWith(
+      state.group!.copyWith(
         name: data.name,
         privacy: data.privacy,
         imageUrl: data.imageUrl,
       );
-      emit(state.copyWith(group: updatedGroup));
+      fetchGroupDetails(groupId);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
         errorMessage: e.toString(),
       ));
     }
+  }
+
+  @override
+  Future<void> close() async {
+    // Prevent closing the cubit
+    print("Close method called, but prevented from closing.");
   }
 }

@@ -24,7 +24,7 @@ class GroupScreen extends StatelessWidget {
             children: [
               GeneralImage(
                 username: groupData.name,
-                imageUrl: 'https://via.placeholder.com/150',
+                imageUrl: groupData.imageUrl??"",
               ),
               Column(
                 children: [

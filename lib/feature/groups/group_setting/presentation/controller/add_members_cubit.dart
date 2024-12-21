@@ -28,7 +28,7 @@ class MembersCubit extends Cubit<MembersState> {
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
       return chatTileData(
-        id: chat.id,
+        id: chat.secondUser.id,
         name: chat.secondUser.username,
         imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),

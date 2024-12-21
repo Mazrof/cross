@@ -13,22 +13,25 @@ import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
-import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/membership_model.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_cubit.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/controller/group_state.dart';
 import 'package:telegram/feature/groups/group_setting/presentation/widget/shimmer_loading_widget._group_setting.dart';
-import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 
 class GroupSettingsScreen extends StatelessWidget {
   final int groupId;
 
-  const GroupSettingsScreen({Key? key, required this.groupId})
-      : super(key: key);
+  const GroupSettingsScreen({required this.groupId});
 
   @override
   Widget build(BuildContext context) {
     final user_id = HiveCash.read(boxName: 'register_info', key: 'id');
+    int count = 0;
     return BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
+      final adminMember = sl<GroupCubit>().state.members.firstWhere(
+            (element) => element.role == 'admin',
+            orElse: () => MembershipModel.empty(),
+          );
       if (state.state == CubitState.loading) {
         return ShimmerLoadingWidget();
       }
@@ -43,13 +46,19 @@ class GroupSettingsScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.exit_to_app),
               onPressed: () {
-                if (user_id ==
+                for (final member in state.members) {
+                  if (member.role == 'admin') {
+                    count = count + 1;
+                  }
+                }
+                if (adminMember != MembershipModel.empty() &&
+                    user_id ==
                         sl<GroupCubit>()
                             .state
                             .members
                             .firstWhere((element) => element.role == 'admin')
                             .userId &&
-                    sl<GroupCubit>().state.members.length == 1) {
+                    count == 1) {
                   CSnackBar.showErrorDialog(context,
                       'Group will be deleted if you did not set another admin',
                       () {
@@ -70,12 +79,13 @@ class GroupSettingsScreen extends StatelessWidget {
                 GoRouter.of(context).pop();
               },
             ),
-            if (sl<GroupCubit>()
-                    .state
-                    .members
-                    .firstWhere((element) => element.role == 'admin')
-                    .userId ==
-                user_id)
+            if (adminMember != MembershipModel.empty() &&
+                sl<GroupCubit>()
+                        .state
+                        .members
+                        .firstWhere((element) => element.role == 'admin')
+                        .userId ==
+                    user_id)
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
@@ -139,12 +149,13 @@ class GroupSettingsScreen extends StatelessWidget {
                 sl<GroupCubit>().toggleNotifications(groupId, value);
               },
             ),
-            if (user_id ==
-                sl<GroupCubit>()
-                    .state
-                    .members
-                    .firstWhere((element) => element.role == 'admin')
-                    .userId)
+            if (adminMember != MembershipModel.empty() &&
+                user_id ==
+                    sl<GroupCubit>()
+                        .state
+                        .members
+                        .firstWhere((element) => element.role == 'admin')
+                        .userId)
               Column(
                 children: [
                   const Divider(),
@@ -164,13 +175,15 @@ class GroupSettingsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            if (user_id ==
-                sl<GroupCubit>()
-                    .state
-                    .members
-                    .firstWhere((element) => element.role == 'admin')
-                    .userId)
+            if (adminMember != MembershipModel.empty() &&
+                user_id ==
+                    sl<GroupCubit>()
+                        .state
+                        .members
+                        .firstWhere((element) => element.role == 'admin')
+                        .userId)
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(),
                   Padding(
@@ -209,13 +222,14 @@ class GroupSettingsScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: AppColors.grey,
                             )),
-                    trailing: user_id ==
-                            sl<GroupCubit>()
-                                .state
-                                .members
-                                .firstWhere(
-                                    (element) => element.role == 'admin')
-                                .userId
+                    trailing: adminMember != MembershipModel.empty() &&
+                            user_id ==
+                                sl<GroupCubit>()
+                                    .state
+                                    .members
+                                    .firstWhere(
+                                        (element) => element.role == 'admin')
+                                    .userId
                         ? PopupMenuButton<String>(
                             color: const Color.fromARGB(255, 198, 217, 238),
                             onSelected: (value) {

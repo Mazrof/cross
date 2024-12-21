@@ -72,4 +72,19 @@ class MembershipModel extends MembershipEntity {
       imageUrl: imageUrl ?? this.imageUrl,
     );
   }
+
+  //empty object
+
+  static MembershipModel empty() {
+    return MembershipModel(
+      groupId: 0,
+      userId: 0,
+      role: '',
+      active: false,
+      hasDownloadPermissions: false,
+      hasMessagePermissions: false,
+      username: '',
+      imageUrl: '',
+    );
+  }
 }

@@ -25,6 +25,7 @@ class ChannelSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user_id = HiveCash.read(boxName: 'register_info', key: 'id');
+    int count=0;
     return BlocBuilder<ChannelSettingCubit, ChannelSettingState>(
         builder: (context, state) {
       if (state.state == CubitState.loading) {
@@ -47,9 +48,17 @@ class ChannelSettingScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.exit_to_app),
               onPressed: () {
+                //check if he the only admin count admins
+                for (final member in state.members) {
+                  if (member.role == 'admin') {
+                  
+                      count=count+1;
+                    }
+                  }
+                
                 if (adminMember != null &&
                     user_id == adminMember.userId &&
-                    state.members.length == 1) {
+                    count == 1) {
                   CSnackBar.showErrorDialog(context,
                       'Group will be deleted if you did not set another admin',
                       () {
@@ -107,6 +116,24 @@ class ChannelSettingScreen extends StatelessWidget {
                 ],
               ),
             ),
+            if (adminMember != null && user_id == adminMember.userId) ...[
+              SwitchListTile(
+                activeColor: AppColors.primaryColor,
+                activeTrackColor: AppColors.primaryColor.withOpacity(0.5),
+                inactiveThumbColor: AppColors.grey,
+                inactiveTrackColor: AppColors.grey.withOpacity(0.5),
+                title: Text(
+                  'can add comments',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: state.channel?.canAddComments ?? false,
+                onChanged: (value) {
+                  sl<ChannelSettingCubit>().toggleComments(channelId, value);
+                },
+              ),
+              const Divider(),
+            ],
+
             if (adminMember != null && user_id == adminMember.userId) ...[
               SwitchListTile(
                 activeColor: AppColors.primaryColor,
@@ -187,7 +214,7 @@ class ChannelSettingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Channel Members',
+                  '    Channel Members',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: AppColors.grey,
                       ),

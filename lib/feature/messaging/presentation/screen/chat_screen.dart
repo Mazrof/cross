@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/popup_menu.dart';
+import 'package:telegram/core/component/shimmer_chat.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/socket/socket_service.dart';
 import 'package:telegram/core/routes/app_router.dart';
+import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/forget_password_screen.dart';
 import 'package:telegram/feature/home/data/model/chat_model.dart';
@@ -183,19 +186,40 @@ class ChatScreen extends StatelessWidget {
 
                           context.go(AppRouter.kHome);
                         },
-                        title: RecieverDetails(
-                          userName: sl<HomeCubit>()
-                              .state
-                              .contacts[sl<ChatCubit>().state.chatIndex!]
-                              .secondUser
-                              .username,
-                          state: AppStrings.waitingInternet,
-                          avatar: Avatar(
-                            imageUrl: sl<HomeCubit>()
+                        title: GestureDetector(
+                          onTap: () {
+                            if (sl<ChatCubit>().state.chatType ==
+                                ChatType.Channel) {
+                              GoRouter.of(context).push(
+                                  AppRouter.kChannelSetting,
+                                  extra: sl<ChatCubit>().state.chatIndex);
+                            } else if (sl<ChatCubit>().state.chatType ==
+                                ChatType.Group)
+                              // ignore: curly_braces_in_flow_control_structures
+                              GoRouter.of(context).push(AppRouter.kGroupSetting,
+                                  extra: sl<ChatCubit>().state.chatIndex);
+                          },
+                          child: RecieverDetails(
+                            userName: sl<HomeCubit>()
                                 .state
                                 .contacts[sl<ChatCubit>().state.chatIndex!]
                                 .secondUser
                                 .username,
+                            state: AppStrings.waitingInternet,
+                            avatar: GeneralImage(
+                              imageUrl: sl<HomeCubit>()
+                                      .state
+                                      .contacts[
+                                          sl<ChatCubit>().state.chatIndex!]
+                                      .secondUser
+                                      .photo ??
+                                  "",
+                              username: sl<HomeCubit>()
+                                  .state
+                                  .contacts[sl<ChatCubit>().state.chatIndex!]
+                                  .secondUser
+                                  .username,
+                            ),
                           ),
                         ),
                         showBackButton: true,
@@ -391,7 +415,7 @@ class ChatScreen extends StatelessWidget {
                   ],
                 ),
               )
-            : const LogoLoader();
+            : LogoLoader();
       },
     );
   }

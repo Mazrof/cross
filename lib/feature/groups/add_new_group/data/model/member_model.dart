@@ -25,6 +25,17 @@ class MemberModel extends Member {
     };
   }
 
+  //empty object
+
+   MemberModel empty() {
+    return MemberModel(
+      userId: 0,
+      role: '',
+      hasDownloadPermissions: false,
+      hasMessagePermissions: false,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -41,4 +52,6 @@ class MemberModel extends Member {
       role.hashCode ^
       hasDownloadPermissions.hashCode ^
       hasMessagePermissions.hashCode;
+
+  //empty object
 }
