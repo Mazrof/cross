@@ -40,6 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
       final stories = await fetchStories();
       final channels = await fetchChannels();
 
+      final draftedMessages = await fetchDraftedMessages();
 
       // Sort stories by `isSeen` to display unseen stories first
       stories.sort((a, b) => a.isSeen ? 1 : -1);
