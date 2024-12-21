@@ -5,6 +5,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:telegram/core/component/avatar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/popup_menu.dart';
@@ -238,179 +239,172 @@ class ChatScreen extends StatelessWidget {
         } else if (state.selectionState == false &&
             state.editingState == false) {
           appBar = CAppBar(
-                        onLeadingTap: () async {
-                          // WidgetsBinding.instance.addPostFrameCallback(
-                          //   (_) {
-                          //     context.read<ChatCubit>().close();
-                          //   },
-                          // );
-                          // sl<SocketService>().socket!.close();
+            onLeadingTap: () async {
+              // WidgetsBinding.instance.addPostFrameCallback(
+              //   (_) {
+              //     context.read<ChatCubit>().close();
+              //   },
+              // );
+              // sl<SocketService>().socket!.close();
 
-                          // If Text is not empty draft it
+              // If Text is not empty draft it
 
-                          await sl<ChatCubit>().draftMessage(textInput.value);
+              await sl<ChatCubit>().draftMessage(textInput.value);
 
-                          GoRouter.of(context).pop();
-                        },
-                        title: RecieverDetails(
-                          userName: sl<HomeCubit>()
-                              .state
-                              .contacts[sl<ChatCubit>().state.chatIndex!]
-                              .secondUser
-                              .username,
-                          state:
-                              "Last Seen at: ${DateFormat('HH:mm').format(sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!].secondUser.lastSeen ?? DateTime.now())}",
-                          // AppStrings.waitingInternet,
-                          avatar: Avatar(
-                            imageUrl: sl<HomeCubit>()
-                                .state
-                                .contacts[sl<ChatCubit>().state.chatIndex!]
-                                .secondUser
-                                .username,
-                          ),
-                        ),
-                        showBackButton: true,
-                        actions: [
-                          IconButton(
-                            icon: const Icon(Icons.call),
-                            color: AppColors.whiteColor,
-                            onPressed: () {},
-                          ),
-                          PopupMenu(
-                            [
-                              {
-                                'icon': sl<ChatCubit>().state.isMuted
-                                    ? Icons.volume_down
-                                    : Icons.volume_up,
-                                'value': 'Mute'
-                              },
-                              {'icon': Icons.search, 'value': 'Search'},
-                              {
-                                'icon': Icons.copy,
-                                'value': 'Change Background'
-                              },
-                              {'icon': Icons.timer, 'value': 'Timer'},
-                              {'icon': Icons.clear, 'value': 'Clear History'},
-                              {'icon': Icons.delete, 'value': 'Delete Chat'},
-                            ],
-                            actions: [
-                              () => {sl<ChatCubit>().muteChat()},
-                              () => {},
-                              () => {},
-                              () => setDestructTime(),
-                              () => {},
-                              () => {},
-                            ],
-                          ),
-                        ],
-                      );
-                      
-                              } else {
+              GoRouter.of(context).pop();
+            },
+            title: RecieverDetails(
+              userName: sl<HomeCubit>()
+                  .state
+                  .contacts[sl<ChatCubit>().state.chatIndex!]
+                  .secondUser
+                  .username,
+              state:
+                  "Last Seen at: ${DateFormat('HH:mm').format(sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!].secondUser.lastSeen ?? DateTime.now())}",
+              // AppStrings.waitingInternet,
+              avatar: GeneralImage(
+                imageUrl: sl<HomeCubit>()
+                    .state
+                    .contacts[sl<ChatCubit>().state.chatIndex!]
+                    .secondUser
+                    .username,
+                username: '',
+              ),
+            ),
+            showBackButton: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.call),
+                color: AppColors.whiteColor,
+                onPressed: () {},
+              ),
+              PopupMenu(
+                [
+                  {
+                    'icon': sl<ChatCubit>().state.isMuted
+                        ? Icons.volume_down
+                        : Icons.volume_up,
+                    'value': 'Mute'
+                  },
+                  {'icon': Icons.search, 'value': 'Search'},
+                  {'icon': Icons.copy, 'value': 'Change Background'},
+                  {'icon': Icons.timer, 'value': 'Timer'},
+                  {'icon': Icons.clear, 'value': 'Clear History'},
+                  {'icon': Icons.delete, 'value': 'Delete Chat'},
+                ],
+                actions: [
+                  () => {sl<ChatCubit>().muteChat()},
+                  () => {},
+                  () => {},
+                  () => setDestructTime(),
+                  () => {},
+                  () => {},
+                ],
+              ),
+            ],
+          );
+        } else {
           appBar = CAppBar(
-                        onLeadingTap: () {
-                          sl<ChatCubit>().unselectMessage();
-                          // if (controller.text.isNotEmpty) {
-                          //   sl<ChatCubit>().typingMessage();
-                          // } else {
-                          //   sl<ChatCubit>().defaultState();
-                          // }
-                        },
-                        leadingIcon: Icons.close,
-                        title: const Text("1"),
-                        actions: [
-                          IconButton(
-                            icon: const Icon(Icons.copy),
-                            color: AppColors.whiteColor,
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.forward_outlined),
-                            color: AppColors.whiteColor,
-                            onPressed: () async {
-                              // forward the message
-                              // but showContactsModal to select from
+            onLeadingTap: () {
+              sl<ChatCubit>().unselectMessage();
+              // if (controller.text.isNotEmpty) {
+              //   sl<ChatCubit>().typingMessage();
+              // } else {
+              //   sl<ChatCubit>().defaultState();
+              // }
+            },
+            leadingIcon: Icons.close,
+            title: const Text("1"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.copy),
+                color: AppColors.whiteColor,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.forward_outlined),
+                color: AppColors.whiteColor,
+                onPressed: () async {
+                  // forward the message
+                  // but showContactsModal to select from
 
-                              String? participantId =
-                                  (await showContactModal());
+                  String? participantId = (await showContactModal());
 
-                              if (participantId != null) {
-                                Message newMessage = Message(
-                                  content: sl<ChatCubit>()
-                                      .state
-                                      .messages[sl<ChatCubit>().state.index]
-                                      .content,
-                                  isDate: false,
-                                  isGIF: false,
-                                  id: -1,
-                                  sender: myId,
-                                  time: DateFormat('HH:mm')
-                                      .format(DateTime.now())
-                                      .toString(),
-                                  isReply: false,
-                                  isForward: true,
-                                  participantId: participantId,
-                                  isPinned: false,
-                                  isDraft: false,
-                                );
+                  if (participantId != null) {
+                    Message newMessage = Message(
+                      content: sl<ChatCubit>()
+                          .state
+                          .messages[sl<ChatCubit>().state.index]
+                          .content,
+                      isDate: false,
+                      isGIF: false,
+                      id: -1,
+                      sender: myId,
+                      time:
+                          DateFormat('HH:mm').format(DateTime.now()).toString(),
+                      isReply: false,
+                      isForward: true,
+                      participantId: participantId,
+                      isPinned: false,
+                      isDraft: false,
+                    );
 
-                                sl<ChatCubit>().sendMessage(newMessage);
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete_outlined),
-                            color: AppColors.whiteColor,
-                            onPressed: () {
-                              sl<ChatCubit>()
-                                  .deleteMessage(state.id, state.index);
-                            },
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              sl<ChatCubit>().replyingToMessage();
-                              // sl<ChatCubit>().replyToMessage(state.id);
-                            },
-                            icon: const Icon(Icons.reply),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              sl<ChatCubit>().editMessage(
-                                sl<ChatCubit>().state.id,
-                                sl<ChatCubit>().state.index,
-                                sl<ChatCubit>()
-                                    .state
-                                    .messages[sl<ChatCubit>().state.index]
-                                    .content,
-                                true,
-                              );
-                              // controller.text = sl<ChatCubit>()
-                              //     .state
-                              //     .messages[sl<ChatCubit>().state.index]
-                              //     .content;
-                              // sl<ChatCubit>().replyToMessage(state.id);
-                            },
-                            icon: const Icon(Icons.push_pin),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit_outlined),
-                            color: AppColors.whiteColor,
-                            onPressed: () {
-                              String t = jsonDecode(state
-                                  .messages[state.index].content)['content'];
-                              controller.text = t;
-                              sl<ChatCubit>().editingMessage(
-                                state.index,
-                                state.id,
-                              );
-                            },
-                          ),
-                        ],
-                      );
+                    sl<ChatCubit>().sendMessage(newMessage);
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outlined),
+                color: AppColors.whiteColor,
+                onPressed: () {
+                  sl<ChatCubit>().deleteMessage(state.id, state.index);
+                },
+              ),
+              IconButton(
+                onPressed: () {
+                  sl<ChatCubit>().replyingToMessage();
+                  // sl<ChatCubit>().replyToMessage(state.id);
+                },
+                icon: const Icon(Icons.reply),
+              ),
+              IconButton(
+                onPressed: () {
+                  sl<ChatCubit>().editMessage(
+                    sl<ChatCubit>().state.id,
+                    sl<ChatCubit>().state.index,
+                    sl<ChatCubit>()
+                        .state
+                        .messages[sl<ChatCubit>().state.index]
+                        .content,
+                    true,
+                  );
+                  // controller.text = sl<ChatCubit>()
+                  //     .state
+                  //     .messages[sl<ChatCubit>().state.index]
+                  //     .content;
+                  // sl<ChatCubit>().replyToMessage(state.id);
+                },
+                icon: const Icon(Icons.push_pin),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                color: AppColors.whiteColor,
+                onPressed: () {
+                  String t = jsonDecode(
+                      state.messages[state.index].content)['content'];
+                  controller.text = t;
+                  sl<ChatCubit>().editingMessage(
+                    state.index,
+                    state.id,
+                  );
+                },
+              ),
+            ],
+          );
         }
 
         return state.messagesLoadedState
             ? Scaffold(
-
                 appBar: PreferredSize(
                   preferredSize: Size.fromHeight(kToolbarHeight),
                   child: appBar,

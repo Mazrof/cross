@@ -5,6 +5,8 @@ class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
 
+    registerAdapter(MessageAdapter());
+
     await Future.wait([
       openBox("register_info"),
       openBox("channels"),
@@ -13,11 +15,8 @@ class HiveCash {
       openBox("contacts"),
       openBox("groups_dash"),
       openBox("users_dash"),
+      openBox("messages"),
     ]);
-
-
-    registerAdapter(MessageAdapter());
-
   }
 
   static Future<void> openBox(String boxName) async {
