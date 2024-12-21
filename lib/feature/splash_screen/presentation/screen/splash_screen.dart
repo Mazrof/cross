@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/local/hive.dart';
-import 'package:telegram/core/utililes/app_assets/assets_strings.dart'; // Adjust as necessary
-import 'package:telegram/core/utililes/app_colors/app_colors.dart'; // Adjust as necessary
+import 'package:telegram/core/utililes/app_assets/assets_strings.dart';
+import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_cubit.dart';
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_state.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routes/app_router.dart'; // Import GoRouter
+import '../../../../core/routes/app_router.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -20,35 +20,44 @@ class SplashScreen extends StatelessWidget {
       body: Center(
         child: BlocBuilder<SplashCubit, SplashState>(
           builder: (context, state) {
+            print(state);
             if (state is SplashInitial || state is SplashLoading) {
               return const LogoLoader();
             } else if (state is SplashFirstTime) {
-              // Navigate to onboarding screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go(AppRouter.kOnBoarding);
               });
               return Container();
             } else if (state is SplashAuthenticated) {
-              // Navigate to authenticated screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (HiveCash.read(boxName: 'register_info', key: 'user_type') ==
                     'user') {
-                  GoRouter.of(context).go(AppRouter.kHome);
-                  print('user');
-                } else
-                  GoRouter.of(context).go(AppRouter.kNavBar);
+                  context.go(AppRouter.kHome);
+                } else if (HiveCash.read(
+                        boxName: 'register_info', key: 'user_type') ==
+                    'admin') {
+                  context.go(AppRouter.kNavBar);
+                } else {
+                  context.go(AppRouter.kOnBoarding);
+                }
               });
               return Container();
             } else if (state is SplashUnauthenticated) {
-              // Navigate to unauthenticated screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                GoRouter.of(context).go(AppRouter.kLogin);
+                context.go(AppRouter.kLogin);
               });
               return Container();
             } else if (state is SplashEmailVerificationRequired) {
-              // Navigate to email verification screen
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                GoRouter.of(context).go(AppRouter.kPreVerify);
+                context.go(AppRouter.kPreVerify);
+              });
+              return Container();
+            } else if (state is SplashNavigateToResetPassword) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go(AppRouter.kResetPassword, extra: {
+                  'token': state.token,
+                  'id': state.id,
+                });
               });
               return Container();
             } else if (state is AnimationInProgress ||

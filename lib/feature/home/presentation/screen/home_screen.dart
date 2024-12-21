@@ -11,6 +11,7 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
+import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/widget/shimmer_loading_list.dart';
 import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
@@ -100,10 +101,9 @@ class ShimmerLoadingContent extends StatelessWidget {
         Container(
           color: AppColors.primaryColor,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
-              height: ScreenHelper.getScreenHeight(context) * .11,
+              height: ScreenHelper.getScreenHeight(context) * .14,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 5, // Number of placeholder items
@@ -111,7 +111,7 @@ class ShimmerLoadingContent extends StatelessWidget {
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
                   child: const StoryWidget(
-                    userName: 'Loading...',
+                    userName: '',
                     storyUrl: '',
                     isSeen: false,
                     userImage: '',
@@ -123,9 +123,9 @@ class ShimmerLoadingContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: ScreenHelper.getScreenHeight(context) * .5,
+          height: ScreenHelper.getScreenHeight(context) * .6,
           child: ListView.builder(
-            itemCount: 10, // Number of placeholder items
+            itemCount: 80, // Number of placeholder items
             itemBuilder: (context, index) => Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -177,15 +177,14 @@ class HomeContent extends StatelessWidget {
                 ),
                 expandedTitleScale: 1,
                 title: SizedBox(
-                  height: ScreenHelper.getScreenHeight(context) * .2,
+                  height: ScreenHelper.getScreenHeight(context) * .5,
                   child: ListView(
                     children: [
                       // Stories Section
                       Container(
                         color: AppColors.primaryColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SizedBox(
                             height: ScreenHelper.getScreenHeight(context) * .13,
                             child: ListView(
@@ -259,8 +258,21 @@ class HomeContent extends StatelessWidget {
                             : '',
                         onTap: () {
                           GoRouter.of(context).push(
-                            '${AppRouter.kMessaging}/$index/Channel',
+
+                            AppRouter.kChannelScreen,
+                            extra: ChannelModel(
+                              id: channel.id,
+                              name: channel.name,
+                              privacy: channel.privacy,
+                              canAddComments: channel.canAddComments,
+                              imageUrl: channel.imageUrl ?? '',
+                              invitationLink: channel.invitationLink ?? '',
+                            ),
+
                           );
+                          // GoRouter.of(context).push(
+                          //   '${AppRouter.kMessaging}/$index/channel',
+                          // );
                         },
                         lastSeen: '',
                       );

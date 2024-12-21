@@ -6,6 +6,7 @@ class Channel extends Equatable {
   final bool privacy;
   final bool canAddComments;
   final String? imageUrl;
+  final String? invitationLink;
 
   Channel({
     required this.id,
@@ -13,9 +14,11 @@ class Channel extends Equatable {
     required this.privacy,
     required this.canAddComments,
     this.imageUrl,
+    this.invitationLink,
   });
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id, name, privacy, canAddComments, imageUrl];
+  List<Object?> get props =>
+      [id, name, privacy, canAddComments, imageUrl, invitationLink];
 }

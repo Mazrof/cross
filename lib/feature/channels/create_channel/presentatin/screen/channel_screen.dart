@@ -6,7 +6,7 @@ import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 
 class ChannelScreen extends StatelessWidget {
-  const ChannelScreen({required this.channelData});
+  const ChannelScreen({super.key, required this.channelData});
   final ChannelModel channelData;
 
   @override
@@ -22,7 +22,7 @@ class ChannelScreen extends StatelessWidget {
             children: [
               GeneralImage(
                 username: channelData.name,
-                imageUrl: 'https://via.placeholder.com/150',
+                imageUrl: '',
               ),
               Column(
                 children: [
@@ -34,12 +34,12 @@ class ChannelScreen extends StatelessWidget {
           ),
           onTap: () {
             GoRouter.of(context)
-                .push(AppRouter.KChannelSetting, extra: channelData.id);
+                .push(AppRouter.kChannelSetting, extra: channelData.id);
           },
         ),
       ),
       body: const Center(
-        child: Text('Group Screen'),
+        child: Text('channel Screen'),
       ),
     );
   }

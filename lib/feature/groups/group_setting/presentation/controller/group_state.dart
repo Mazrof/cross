@@ -9,17 +9,15 @@ class GroupState extends Equatable {
   final List<MembershipModel> members;
   final String? errorMessage;
   final CubitState state;
-  final List<chatTileData> allMembers;
-  final List<chatTileData> selectedMembers;
+
   final bool ismute;
 
   GroupState({
-    this.group,
+     this.group ,
     this.members = const [],
     this.state = CubitState.initial,
     this.errorMessage,
-    required this.allMembers,
-    required this.selectedMembers,
+
      this.ismute=false,
   });
 
@@ -37,8 +35,7 @@ class GroupState extends Equatable {
       members: members ?? this.members,
       state: state ?? this.state,
       errorMessage: errorMessage ?? this.errorMessage,
-      allMembers: allMembers ?? this.allMembers,
-      selectedMembers: selectedMembers ?? this.selectedMembers,
+
       ismute: ismute ?? this.ismute,
     );
   }
@@ -49,8 +46,7 @@ class GroupState extends Equatable {
         members,
         state,
         errorMessage,
-        allMembers,
-        selectedMembers,
+    
         ismute
       ];
 }

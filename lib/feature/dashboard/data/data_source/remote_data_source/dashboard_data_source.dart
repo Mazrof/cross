@@ -93,12 +93,14 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   @override
   Future<bool> applyFilter(String groupId) async {
     String endpoint = 'admins';
+    print('applying filter');
     final response = await apiService.post(
       endPoint: '$endpoint/$groupId',
       data: {
         'adminId': 1,
       },
     );
+    print(response.data);
     return response.statusCode == 200;
   }
 }

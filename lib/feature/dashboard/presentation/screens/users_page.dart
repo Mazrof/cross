@@ -108,18 +108,8 @@ class UsersContent extends StatelessWidget {
                 size: 35,
               ),
               onPressed: () async {
-                Future<bool> result = sl<UsersCubit>().banUser(user.id);
-                if (await result) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'User ${user.username ?? 'Unknown'} banned',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      backgroundColor: AppColors.primaryColor.withOpacity(.5),
-                    ),
-                  );
-                }
+                 sl<UsersCubit>().banUser(user.id);
+                
               },
             ),
           ),

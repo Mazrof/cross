@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/error_screen.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -11,8 +12,18 @@ import 'package:telegram/feature/auth/forget_password/presentataion/screen/forge
 import 'package:telegram/feature/auth/forget_password/presentataion/screen/reset_password_screen.dart';
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/data/model/membership_channel_model.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_state.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/add_more_subscribers_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/cahnnel_permision_screen.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/screen/channel_setting_screen.dart';
+import 'package:telegram/feature/channels/create_channel/data/model/channel_model.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/controller/add_channel_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/presentatin/screen/add_new_subscribers_screen.dart';
+import 'package:telegram/feature/channels/create_channel/presentatin/screen/channel_screen.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/groups_model.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/controller/add_group_cubit.dart';
 import 'package:telegram/feature/groups/add_new_group/presentation/screens/group_info.dart';
@@ -82,7 +93,7 @@ class AppRouter {
   static const String kVerifyMail = '/verify_mail';
   static const String kPreVerify = '/pre_verify';
   static const String kForgetPassword = '/forget_password';
-  static const String kResetPassword = '/reset';
+  static const String kResetPassword = '/reset-password';
 
   static const String kprofilePhotoSecurity = '/profile_photo_security';
   static const String keditProfile = '/edit_profile';
@@ -122,7 +133,9 @@ class AppRouter {
   static const String kNewChannel = '/new_channel';
   static const String kAddSubscribers = '/add_sub';
   static const String kChannelScreen = '/channel_screen';
-  static const String KChannelSetting = 'channel_setting';
+  static const String kChannelSetting = '/channel_setting';
+  static const String kAddMoreSubscribers = '/add_more_sub';
+  static const String kEditChannelPermission = '/edit_permission';
 
   static String buildRoute({required String base, required String route}) {
     return "$base/$route";
@@ -133,9 +146,56 @@ final route = GoRouter(
   initialLocation: AppRouter.kSplash,
   routes: [
     GoRoute(
+      path: AppRouter.kAddMoreSubscribers,
+      builder: (context, state) {
+        final channel = state.extra as ChannelModel;
+        return BlocProvider.value(
+          value: sl<SubscribersCubit>()..loadContacts(channel),
+          child: AddMoreSubscribersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kEditChannelPermission,
+      builder: (context, state) {
+        final member = state.extra as MembershipChannelModel;
+        return BlocProvider.value(
+          value: sl<ChannelPermissionCubit>()..addData(member),
+          child: EditPermissionsChannelScreen(
+            member: member,
+          ),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRouter.kAddSubscribers,
       builder: (context, state) {
-        return AddNewSubscribersScreen();
+        return BlocProvider.value(
+          value: sl<AddChannelCubit>()..loadSubscribers(),
+          child: AddNewSubscribersScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kChannelSetting,
+      builder: (context, state) {
+        final int channelID = state.extra as int;
+        print('channel id is $channelID');
+        return BlocProvider.value(
+          value: sl<ChannelSettingCubit>()..fetchChannelDetails(channelID),
+          child: ChannelSettingScreen(
+            channelId: channelID,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.kChannelScreen,
+      builder: (context, state) {
+        final channel = state.extra as ChannelModel;
+        return ChannelScreen(
+          channelData: channel,
+        );
       },
     ),
     GoRoute(
@@ -207,14 +267,15 @@ final route = GoRouter(
         );
       },
     ),
-    GoRoute(
-        path: AppRouter.kResetPassword,
-        builder: (context, state) {
-          return BlocProvider.value(
-            value: sl<ResetPasswordCubit>(),
-            child: ResetPasswordScreen(),
-          );
-        }),
+    // GoRoute(
+    //     path: AppRouter.kResetPassword,
+    //     builder: (context, state) {
+    //       final token = state.extra as String;
+    //       return BlocProvider.value(
+    //         value: sl<ResetPasswordCubit>(),
+    //         child: ResetPasswordScreen(token: token),
+    //       );
+    //     }),
     GoRoute(
       path: AppRouter.kHome,
       builder: (context, state) {
@@ -243,7 +304,7 @@ final route = GoRouter(
       path: AppRouter.kLogin,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<LoginCubit>(),
+          value: sl<LoginCubit>()..init(),
           child: const LoginScreen(),
         );
       },
@@ -266,20 +327,40 @@ final route = GoRouter(
         );
       },
     ),
+    // GoRoute(
+    //   path: AppRouter.kResetPassword, // Define the route path
+    //   builder: (context, state) {
+    //     final token = state.extra
+    //         as String; // Extract the token from the extra ma
+    //     final id =
+    //         state.extra as String; // Extract the token from the extra ma
+    //     if (token.isEmpty) {
+    //       // Redirect to an error screen or handle invalid token
+    //       return const ErrorScreen();
+    //     }
+    //     return BlocProvider.value(
+    //       value: sl<ResetPasswordCubit>(), // Provide the ResetPasswordCubit
+    //       child: ResetPasswordScreen(token: token,id :id),
+    //     );
+    //   },
+    // ),
     GoRoute(
-      path: AppRouter.kVerifyMail,
+      path: AppRouter.kResetPassword, // Define the route path
       builder: (context, state) {
-        final param = state.extra as Map<String, dynamic>;
+        final extra =
+            state.extra as Map<String, String>; // Extract the map from extra
+        final token = extra['token'] ?? ''; // Extract the token from the map
+        final id = extra['id'] ?? ''; // Extract the id from the map
+
+        if (token.isEmpty || id.isEmpty) {
+          // Redirect to an error screen or handle invalid token
+          return const ErrorScreen();
+        }
+
         return BlocProvider.value(
-            value: sl<VerifyMailCubit>()
-              ..sendVerificationMail(
-                  param['method'] as String,
-                  HiveCash.read(
-                      boxName: "register_info",
-                      key: param['method'] as String)!),
-            child: VerifyMailScreen(
-              method: param['method'] as String,
-            ));
+          value: sl<ResetPasswordCubit>(), // Provide the ResetPasswordCubit
+          child: ResetPasswordScreen(token: token, id: id),
+        );
       },
     ),
     GoRoute(
@@ -303,7 +384,7 @@ final route = GoRouter(
       builder: (context, state) {
         return BlocProvider.value(
           value: sl<AddChannelCubit>(),
-          child: NewGroupScreen(),
+          child: NewChannelScreen(),
         );
       },
     ),
