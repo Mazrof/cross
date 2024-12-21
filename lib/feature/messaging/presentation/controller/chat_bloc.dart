@@ -90,6 +90,61 @@ class ChatCubit extends Cubit<ChatState> {
     emit(state.copyWith(isMuted: true));
   }
 
+  String encrypt(String content) {
+    if (sl<ChatCubit>().state.chatType == ChatType.PersonalChat) {
+      // encrypt
+
+      String key = sl<HomeCubit>()
+          .state
+          .contacts[sl<ChatCubit>().state.chatIndex!]
+          .secondUser
+          .publicKey;
+
+      Map<String, dynamic> publicKeyMap = jsonDecode(key);
+
+      BigInt modulus = BigInt.parse(publicKeyMap['modulus']);
+      BigInt exponent = BigInt.parse(publicKeyMap['exponent']);
+
+      RSAPublicKey publicKey = RSAPublicKey(modulus, exponent);
+
+      final encryptor = OAEPEncoding(RSAEngine())
+        ..init(true, PublicKeyParameter<RSAPublicKey>(publicKey));
+
+      Uint8List encrypted = encryptor.process(utf8.encode(content));
+      content = base64Encode(encrypted);
+    }
+
+    return content;
+  }
+
+  String decrypt(String content) {
+    if (state.chatType == ChatType.PersonalChat) {
+      String key = HiveCash.read(boxName: 'register_info', key: 'privateKey');
+
+      Map<String, dynamic> privateKeyMap = jsonDecode(key);
+
+      BigInt modulus = BigInt.parse(privateKeyMap['modulus']);
+      BigInt exponent = BigInt.parse(privateKeyMap['privateExponent']);
+      BigInt p = BigInt.parse(privateKeyMap['p']);
+      BigInt q = BigInt.parse(privateKeyMap['q']);
+
+      RSAPrivateKey privateKey = RSAPrivateKey(modulus, exponent, p, q);
+
+      print(content.length);
+
+      var decryptor = OAEPEncoding(RSAEngine())
+        ..init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+      Uint8List encryptedBytes = base64Decode(content);
+
+      Uint8List decrypted = decryptor.process(encryptedBytes);
+
+      content = utf8.decode(decrypted);
+    }
+
+    return content;
+  }
+
   Future<void> draftMessage(String textInput) async {
     if (textInput.trim() != "") {
       var myId = HiveCash.read(boxName: 'register_info', key: 'id').toString();
@@ -162,25 +217,29 @@ class ChatCubit extends Cubit<ChatState> {
     print("Edit Message");
 
     // var updatedMessages = state.messages;
+    Map<String, dynamic> m = {'content': newContent, 'type': 'text'};
+
+    String content = encrypt(jsonEncode(m));
 
     if (isPinned) {
       state.messages[index].isPinned = true;
+
       sl<SocketService>().socket!.emit(
         "message:edit",
         {
           "id": id,
-          "content": newContent,
+          "content": content,
           "status": "pinned",
         },
       );
     } else {
-      state.messages[index].content = newContent;
+      state.messages[index].content = jsonEncode(m);
 
       sl<SocketService>().socket!.emit(
         "message:edit",
         {
           "id": id,
-          "content": newContent,
+          "content": content,
         },
       );
     }
@@ -195,12 +254,9 @@ class ChatCubit extends Cubit<ChatState> {
         width: -1,
         xCoordiate: -1,
         yCoordiate: -1,
-        pinnedIndex: isPinned ? index : -1,
+        pinnedIndex: isPinned ? index : null,
       ),
     );
-
-    // TODO
-    // Uncomment when available
   }
 
   void messageEdited(dynamic data) {
@@ -232,7 +288,9 @@ class ChatCubit extends Cubit<ChatState> {
       for (int i = 0; i < updatedMessages.length; i++) {
         if (updatedMessages[i].id == data['id']) {
           // edit the message
-          updatedMessages[i].content = data['content'];
+          // decrypt the message
+
+          updatedMessages[i].content = decrypt(data['content']);
           break;
         }
       }
@@ -320,10 +378,6 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> sendMessage(
     Message newMessage,
   ) async {
-    // TODO
-    // Generate a unique id for each message
-    // Send it to the backend
-
     if (newMessage.content.trim() != "") {
       print(newMessage.toString());
 
@@ -372,19 +426,18 @@ class ChatCubit extends Cubit<ChatState> {
         },
       );
 
-      // final currentState = state as TypingMessage;
-
-      // todo
-      // sl<ApiService>().post(
-      //   endPoint: ApiConstants.sendNotification,
-      //   data: {
-      //     'participantId':
-      //         sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!].id,
-      //     'title': 'New Message',
-      //     'body': newMessage.content,
-      //     // 'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
-      //   },
-      // );
+      sl<ApiService>().post(
+        endPoint: ApiConstants.sendNotification,
+        data: {
+          'participantId': sl<HomeCubit>()
+              .state
+              .contacts[sl<ChatCubit>().state.chatIndex!]
+              .id,
+          'title': 'New Message',
+          'body': jsonDecode(newMessage.content)['content'],
+          // 'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
+        },
+      );
 
       final updatedMessages = List<Message>.from(state.messages);
       if (!newMessage.isForward) {
@@ -418,10 +471,12 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void replyToMessage(Message replyMessage) {
+    String content = encrypt(replyMessage.content);
+
     sl<SocketService>().socket!.emit(
       "message:sent",
       {
-        "content": replyMessage.content,
+        "content": content,
         "status": "pinned", //or null
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
@@ -445,7 +500,7 @@ class ChatCubit extends Cubit<ChatState> {
       }
     }
 
-    replyMessage.replyMessage = replyMessageText;
+    replyMessage.replyMessage = jsonDecode(replyMessageText)['content'];
 
     updatedMessages.add(replyMessage);
 
@@ -493,12 +548,9 @@ class ChatCubit extends Cubit<ChatState> {
   void receiveMessage(dynamic message) async {
     print(message);
 
-    // TODO
-    // userId == my id -> update id with backend id - else - add to messages list
+    //
 
     var updatedMessages = List<Message>.from(state.messages);
-
-    // print(updatedMessages[updatedMessages.length - 1]);
 
     int myId = HiveCash.read(boxName: "register_info", key: 'id');
 
@@ -513,6 +565,13 @@ class ChatCubit extends Cubit<ChatState> {
       await HiveCash.write(
           boxName: 'messages', key: 'sent_messages', value: messages);
     } else {
+      // if message exists do not add it again
+      for (Message m in updatedMessages) {
+        if (m.id == message["id"]) {
+          return;
+        }
+      }
+
       final DateTime dateTime = DateTime.parse(message["createdAt"]);
       final DateFormat formatter = DateFormat('HH:mm');
 
@@ -584,8 +643,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<dynamic> getMessages() async {
     List<Message> messages = [];
 
-    final chat =
-        sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!];
+    final chat = sl<HomeCubit>().state.contacts[state.chatIndex!];
 
     try {
       // emit(const ChatLoading());

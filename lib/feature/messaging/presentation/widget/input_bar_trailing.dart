@@ -15,6 +15,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/home/presentation/controller/home/home_cubit.dart';
 import 'package:telegram/feature/messaging/data/model/message.dart';
 import 'package:telegram/feature/messaging/presentation/controller/chat_bloc.dart';
+import 'package:telegram/feature/messaging/presentation/controller/chat_state.dart';
 
 class InputBarTrailing extends StatelessWidget {
   final TextEditingController controller;
@@ -53,8 +54,13 @@ class InputBarTrailing extends StatelessWidget {
                     final DateTime now = DateTime.now();
                     final DateFormat formatter = DateFormat('HH:mm');
 
+                    Map<String, String> message = {
+                      'content': controller.text,
+                      'type': 'text',
+                    };
+
                     Message replyMessage = Message(
-                      content: controller.text,
+                      content: jsonEncode(message),
                       isDate: false,
                       isGIF: false,
                       id: -1,
@@ -74,6 +80,7 @@ class InputBarTrailing extends StatelessWidget {
                     sl<ChatCubit>().replyToMessage(replyMessage);
                   } else if (sl<ChatCubit>().state.editingState) {
                     // Edit the message
+
                     sl<ChatCubit>().editMessage(sl<ChatCubit>().state.id,
                         sl<ChatCubit>().state.index, controller.text, false);
                   } else {

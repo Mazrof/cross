@@ -22,6 +22,7 @@ class CinputBar extends StatelessWidget {
     required this.showContactModal,
     required this.textInput,
     required this.recorderController,
+    required this.controller,
   });
 
   final void Function() showContactModal;
@@ -29,9 +30,10 @@ class CinputBar extends StatelessWidget {
 
   StringWrapper textInput;
 
-  final TextEditingController controller = TextEditingController(
-    text: sl<ChatCubit>().state.text,
-  );
+  final TextEditingController controller;
+  // = TextEditingController(
+  //     // text: sl<ChatCubit>().state.text,
+  //     );
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -185,6 +187,8 @@ class CinputBar extends StatelessWidget {
                               showContactModal();
                             }
                           }
+
+                          // controller.text = text;
                         },
                         controller: controller,
                       ),

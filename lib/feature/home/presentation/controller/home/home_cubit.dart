@@ -166,7 +166,8 @@ class HomeCubit extends Cubit<HomeState> {
     if (temp == null) {
       return [];
     } else {
-      return temp.map((item) => item as Message).toList();
+      return (temp.map<Message>((item) => item as Message).toList())
+          as List<Message>;
     }
   }
 

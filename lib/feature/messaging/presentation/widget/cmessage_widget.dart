@@ -272,7 +272,7 @@ class ChatMessage extends StatelessWidget {
                           ),
                         ],
                       ),
-                    getMessageWidget(),
+                    if (message != "") getMessageWidget(),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

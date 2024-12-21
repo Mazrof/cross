@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +95,8 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.push_pin),
                   Text(
-                    sl<ChatCubit>().state.messages[i].content,
+                    jsonDecode(
+                        sl<ChatCubit>().state.messages[i].content)['content'],
                     style: TextStyle(
                       color: AppColors.blackColor,
                     ),
@@ -183,7 +186,7 @@ class ChatScreen extends StatelessWidget {
 
                           await sl<ChatCubit>().draftMessage(textInput.value);
 
-                          context.go(AppRouter.kHome);
+                          GoRouter.of(context).pop();
                         },
                         title: RecieverDetails(
                           userName: sl<HomeCubit>()
@@ -191,13 +194,8 @@ class ChatScreen extends StatelessWidget {
                               .contacts[sl<ChatCubit>().state.chatIndex!]
                               .secondUser
                               .username,
-                          state: "Last Seen at: ${DateFormat('HH:mm').format(
-                            sl<HomeCubit>()
-                                .state
-                                .contacts[sl<ChatCubit>().state.chatIndex!]
-                                .secondUser
-                                .lastSeen!,
-                          )}",
+                          state:
+                              "Last Seen at: ${DateFormat('HH:mm').format(sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!].secondUser.lastSeen ?? DateTime.now())}",
                           // AppStrings.waitingInternet,
                           avatar: Avatar(
                             imageUrl: sl<HomeCubit>()
@@ -266,29 +264,31 @@ class ChatScreen extends StatelessWidget {
                               // forward the message
                               // but showContactsModal to select from
 
-                              String participantId =
-                                  (await showContactModal())!;
+                              String? participantId =
+                                  (await showContactModal());
 
-                              Message newMessage = Message(
-                                content: sl<ChatCubit>()
-                                    .state
-                                    .messages[sl<ChatCubit>().state.index]
-                                    .content,
-                                isDate: false,
-                                isGIF: false,
-                                id: -1,
-                                sender: myId,
-                                time: DateFormat('HH:mm')
-                                    .format(DateTime.now())
-                                    .toString(),
-                                isReply: false,
-                                isForward: true,
-                                participantId: participantId,
-                                isPinned: false,
-                                isDraft: false,
-                              );
+                              if (participantId != null) {
+                                Message newMessage = Message(
+                                  content: sl<ChatCubit>()
+                                      .state
+                                      .messages[sl<ChatCubit>().state.index]
+                                      .content,
+                                  isDate: false,
+                                  isGIF: false,
+                                  id: -1,
+                                  sender: myId,
+                                  time: DateFormat('HH:mm')
+                                      .format(DateTime.now())
+                                      .toString(),
+                                  isReply: false,
+                                  isForward: true,
+                                  participantId: participantId,
+                                  isPinned: false,
+                                  isDraft: false,
+                                );
 
-                              sl<ChatCubit>().sendMessage(newMessage);
+                                sl<ChatCubit>().sendMessage(newMessage);
+                              }
                             },
                           ),
                           IconButton(
@@ -317,6 +317,10 @@ class ChatScreen extends StatelessWidget {
                                     .content,
                                 true,
                               );
+                              // controller.text = sl<ChatCubit>()
+                              //     .state
+                              //     .messages[sl<ChatCubit>().state.index]
+                              //     .content;
                               // sl<ChatCubit>().replyToMessage(state.id);
                             },
                             icon: const Icon(Icons.push_pin),
@@ -325,8 +329,9 @@ class ChatScreen extends StatelessWidget {
                             icon: const Icon(Icons.edit_outlined),
                             color: AppColors.whiteColor,
                             onPressed: () {
-                              controller.text =
-                                  state.messages[state.index].content;
+                              String t = jsonDecode(state
+                                  .messages[state.index].content)['content'];
+                              controller.text = t;
                               sl<ChatCubit>().editingMessage(
                                 state.index,
                                 state.id,
@@ -360,6 +365,7 @@ class ChatScreen extends StatelessWidget {
                           showContactModal: showContactModal,
                           textInput: textInput,
                           recorderController: recorderController,
+                          controller: controller,
                         ),
                       ],
                     ),
