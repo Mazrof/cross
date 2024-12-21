@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -92,8 +94,14 @@ class InputBarTrailing extends StatelessWidget {
                           .id
                           .toString();
                     }
+
+                    Map<String, String> message = {
+                      'content': controller.text,
+                      'type': 'text',
+                    };
+
                     Message newMessage = Message(
-                      content: controller.text,
+                      content: jsonEncode(message),
                       isDate: false,
                       isGIF: false,
                       id: -1,
@@ -112,50 +120,50 @@ class InputBarTrailing extends StatelessWidget {
                   // clean the controller text
                   controller.text = "";
 
-                  if (sl<ChatCubit>().state.editingState) {
-                    // Edit the message
-                    sl<ChatCubit>().editMessage(
-                      sl<ChatCubit>().state.id,
-                      sl<ChatCubit>().state.index,
-                      controller.text,
-                      false,
-                    );
-                  } else {
-                    // Send The Message
-                    // Make New Message Object
+                  // if (sl<ChatCubit>().state.editingState) {
+                  //   // Edit the message
+                  //   sl<ChatCubit>().editMessage(
+                  //     sl<ChatCubit>().state.id,
+                  //     sl<ChatCubit>().state.index,
+                  //     controller.text,
+                  //     false,
+                  //   );
+                  // } else {
+                  //   // Send The Message
+                  //   // Make New Message Object
 
-                    String myId =
-                        HiveCash.read(boxName: "register_info", key: 'id')
-                            .toString();
+                  //   String myId =
+                  //       HiveCash.read(boxName: "register_info", key: 'id')
+                  //           .toString();
 
-                    final DateTime now = DateTime.now();
-                    final DateFormat formatter = DateFormat('HH:mm');
+                  //   final DateTime now = DateTime.now();
+                  //   final DateFormat formatter = DateFormat('HH:mm');
 
-                    Message newMessage = Message(
-                      content: controller.text,
-                      isDate: false,
-                      isGIF: false,
-                      id: -1,
-                      sender: myId,
-                      time: formatter.format(now).toString(),
-                      isReply: false,
-                      isForward: false,
-                      participantId: sl<HomeCubit>()
-                          .state
-                          .contacts[sl<ChatCubit>().state.chatIndex!]
-                          .id
-                          .toString(),
+                  //   Message newMessage = Message(
+                  //     content: controller.text,
+                  //     isDate: false,
+                  //     isGIF: false,
+                  //     id: -1,
+                  //     sender: myId,
+                  //     time: formatter.format(now).toString(),
+                  //     isReply: false,
+                  //     isForward: false,
+                  //     participantId: sl<HomeCubit>()
+                  //         .state
+                  //         .contacts[sl<ChatCubit>().state.chatIndex!]
+                  //         .id
+                  //         .toString(),
 
-                      isPinned: false,
-                      isDraft: false,
+                  //     isPinned: false,
+                  //     isDraft: false,
 
-                    );
+                  //   );
 
-                    sl<ChatCubit>().sendMessage(newMessage);
-                  }
+                  //   sl<ChatCubit>().sendMessage(newMessage);
+                  // }
 
-                  // clean the controller text
-                  controller.text = "";
+                  // // clean the controller text
+                  // controller.text = "";
                 },
               ),
             ],

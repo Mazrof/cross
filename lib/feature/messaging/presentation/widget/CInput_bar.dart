@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
+import 'package:giphy_picker/giphy_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
@@ -41,7 +44,6 @@ class CinputBar extends StatelessWidget {
               blurRadius: 5,
             ),
           ],
-
         ),
         child: Row(
           children: [
@@ -49,7 +51,48 @@ class CinputBar extends StatelessWidget {
               icon: const Icon(Icons.emoji_emotions_outlined),
               iconSize: AppSizes.iconMd,
               color: AppColors.grey,
-              onPressed: () {},
+              onPressed: () async {
+                // show GIFs and Stickers picker
+                final gif = await GiphyPicker.pickGif(
+                  context: context,
+                  // YOUR GIPHY APIKEY HERE
+                  apiKey: "cT82h8t2IZnnLbrCbS4LP98ZY5t3K9V6",
+                  showPreviewPage: false,
+                );
+
+                String myId = HiveCash.read(boxName: "register_info", key: 'id')
+                    .toString();
+                final DateTime now = DateTime.now();
+
+                if (gif != null) {
+                  Map<String, String> message = {
+                    'content': gif!.images.original!.url!,
+                    'type': 'GIF',
+                  };
+
+                  Message newMessage = Message(
+                    content: jsonEncode(message),
+                    id: -1,
+                    isDate: false,
+                    isGIF: true,
+                    sender: myId,
+                    time: now.toString(),
+                    isReply: false,
+                    isDraft: false,
+                    isForward: false,
+                    isPinned: false,
+                    participantId: sl<HomeCubit>()
+                        .state
+                        .contacts[sl<ChatCubit>().state.chatIndex!]
+                        .id
+                        .toString(),
+                  );
+
+                  sl<ChatCubit>().sendMessage(
+                    newMessage,
+                  );
+                }
+              },
             ),
             Expanded(
               child: Padding(

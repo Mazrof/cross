@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,19 +165,21 @@ class ChatMessage extends StatelessWidget {
                           ),
                         ],
                       ),
-                    isGIF
-                        ? Image.asset(
-                            "assets/gif/success.gif",
-                            width: 100,
-                            height: 100,
-                          )
-                        : Text(
-                            state.messages[index].content,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
+                    if (message != "")
+                      (jsonDecode(message)['type'] == 'GIF')
+                          ? Image.network(
+                              jsonDecode(message)['content'],
+                              headers: {'accept': 'image/*'},
+                              height: 200,
+                              width: 200,
+                            )
+                          : Text(
+                              jsonDecode(message)['content'],
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

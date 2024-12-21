@@ -83,7 +83,12 @@ dependencies:
   firebase_messaging: ^15.1.6
   pointycastle: ^3.4.0
   duration_picker: ^1.2.0
+  giphy_picker: ^3.0.2
   # webview_flutter_plus: ^0.3.0
+
+dependency_overrides:
+  http: ^1.2.1
+  js: ^0.7.1
 
 dev_dependencies:
   mockito: ^5.4.4
