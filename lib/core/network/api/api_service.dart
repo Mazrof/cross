@@ -143,6 +143,7 @@ class ApiService {
 
   Future<Response> post({
     required String endPoint,
+
     Object? data,
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -153,8 +154,10 @@ class ApiService {
       print(data);
       final response =
           await dio.post(url, data: data, queryParameters: queryParameters);
+
       print(response.statusCode);
       print(response.data);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {

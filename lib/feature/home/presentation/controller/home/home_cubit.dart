@@ -36,10 +36,15 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       // Simultaneously fetch all required data
 
+
       final stories = await fetchStoriesUseCase();
       final groups = await fetchGroupsUseCase();
       final channels = await fetchChannelsUseCase();
       final contacts = await fetchContactsUseCase();
+
+
+//       final draftedMessages = await fetchDraftedMessages();
+
 
       stories.sort((a, b) => a.isSeen ? 1 : -1);
 
@@ -119,7 +124,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<List<Message>> fetchDraftedMessages() async {
-    List<dynamic> temp =
+    var temp =
         await HiveCash.read(boxName: "messages", key: 'drafted_messages');
 
     if (temp == null) {
