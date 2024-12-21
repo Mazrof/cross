@@ -43,22 +43,16 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       // Simultaneously fetch all required data
 
-
-
       // String myId =
       //     HiveCash.read(boxName: 'register_info', key: 'id').toString();
-
-      final draftedMessages = await fetchDraftedMessages();
-      final sentMessages = fetchSentMessages();
 
       final stories = await fetchStoriesUseCase();
       final groups = await fetchGroupsUseCase();
       final channels = await fetchChannelsUseCase();
       final contacts = await fetchContactsUseCase();
 
-
-
-
+      final draftedMessages = await fetchDraftedMessages();
+      final sentMessages = await fetchSentMessages();
       stories.sort((a, b) => a.isSeen ? 1 : -1);
 
       emit(
@@ -70,7 +64,6 @@ class HomeCubit extends Cubit<HomeState> {
           contacts: contacts,
           draftedMessages: draftedMessages,
           sentMessages: sentMessages,
-
         ),
       );
       // final draftedMessages = await fetchDraftedMessages();
