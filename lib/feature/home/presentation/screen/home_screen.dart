@@ -101,8 +101,7 @@ class ShimmerLoadingContent extends StatelessWidget {
         Container(
           color: AppColors.primaryColor,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
               height: ScreenHelper.getScreenHeight(context) * .14,
               child: ListView.builder(
@@ -124,9 +123,9 @@ class ShimmerLoadingContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: ScreenHelper.getScreenHeight(context) * .3,
+          height: ScreenHelper.getScreenHeight(context) * .6,
           child: ListView.builder(
-            itemCount: 10, // Number of placeholder items
+            itemCount: 80, // Number of placeholder items
             itemBuilder: (context, index) => Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/error_screen.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -133,11 +134,8 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  
   initialLocation: AppRouter.kSplash,
   routes: [
-
-
     GoRoute(
       path: AppRouter.kAddMoreSubscribers,
       builder: (context, state) {
@@ -260,15 +258,15 @@ final route = GoRouter(
         );
       },
     ),
-    GoRoute(
-        path: AppRouter.kResetPassword,
-        builder: (context, state) {
-          final token = state.extra as String;
-          return BlocProvider.value(
-            value: sl<ResetPasswordCubit>(),
-            child: ResetPasswordScreen(token: token),
-          );
-        }),
+    // GoRoute(
+    //     path: AppRouter.kResetPassword,
+    //     builder: (context, state) {
+    //       final token = state.extra as String;
+    //       return BlocProvider.value(
+    //         value: sl<ResetPasswordCubit>(),
+    //         child: ResetPasswordScreen(token: token),
+    //       );
+    //     }),
     GoRoute(
       path: AppRouter.kHome,
       builder: (context, state) {
@@ -297,7 +295,7 @@ final route = GoRouter(
       path: AppRouter.kLogin,
       builder: (context, state) {
         return BlocProvider.value(
-          value: sl<LoginCubit>(),
+          value: sl<LoginCubit>()..init(),
           child: const LoginScreen(),
         );
       },
@@ -320,20 +318,40 @@ final route = GoRouter(
         );
       },
     ),
+    // GoRoute(
+    //   path: AppRouter.kResetPassword, // Define the route path
+    //   builder: (context, state) {
+    //     final token = state.extra
+    //         as String; // Extract the token from the extra ma
+    //     final id =
+    //         state.extra as String; // Extract the token from the extra ma
+    //     if (token.isEmpty) {
+    //       // Redirect to an error screen or handle invalid token
+    //       return const ErrorScreen();
+    //     }
+    //     return BlocProvider.value(
+    //       value: sl<ResetPasswordCubit>(), // Provide the ResetPasswordCubit
+    //       child: ResetPasswordScreen(token: token,id :id),
+    //     );
+    //   },
+    // ),
     GoRoute(
-      path: AppRouter.kVerifyMail,
+      path: AppRouter.kResetPassword, // Define the route path
       builder: (context, state) {
-        final param = state.extra as Map<String, dynamic>;
+        final extra =
+            state.extra as Map<String, String>; // Extract the map from extra
+        final token = extra['token'] ?? ''; // Extract the token from the map
+        final id = extra['id'] ?? ''; // Extract the id from the map
+
+        if (token.isEmpty || id.isEmpty) {
+          // Redirect to an error screen or handle invalid token
+          return const ErrorScreen();
+        }
+
         return BlocProvider.value(
-            value: sl<VerifyMailCubit>()
-              ..sendVerificationMail(
-                  param['method'] as String,
-                  HiveCash.read(
-                      boxName: "register_info",
-                      key: param['method'] as String)!),
-            child: VerifyMailScreen(
-              method: param['method'] as String,
-            ));
+          value: sl<ResetPasswordCubit>(), // Provide the ResetPasswordCubit
+          child: ResetPasswordScreen(token: token, id: id),
+        );
       },
     ),
     GoRoute(

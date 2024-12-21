@@ -38,8 +38,7 @@ class ApiService {
     dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(InterceptorsWrapper(
       onError: (DioError error, ErrorInterceptorHandler handler) async {
-        final apiService = ApiService._internal(cookieJar, dio);
-        if (error.response?.statusCode == 401 || await apiService._isCookieJarEmpty()) {
+        if (error.response?.statusCode == 401) {
           final apiService = ApiService._internal(cookieJar, dio);
           await apiService._retryWithHowAmI();
           final options = error.requestOptions;
@@ -59,12 +58,6 @@ class ApiService {
     ));
 
     return ApiService._internal(cookieJar, dio);
-  }
-
-  /// Checks if the cookie jar is empty
-  Future<bool> _isCookieJarEmpty() async {
-    final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
-    return cookies.isEmpty;
   }
 
   /// Handles retry on 401 with a single login attempt
@@ -124,8 +117,9 @@ class ApiService {
     Object? data,
   }) async {
     try {
-      await _loadCookies();
+      // await _loadCookies();
       String url = '$baseUrl/$endPoint';
+      print(data);
       final response = await dio.post(url, data: data);
 
       if (response.statusCode == 200 || response.statusCode == 201) {

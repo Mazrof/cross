@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/cnight_mode_switch.dart';
+import 'package:telegram/core/component/csnack_bar.dart';
 import 'package:telegram/core/component/general_image.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/helper/user_status_helper.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
+import 'package:telegram/feature/auth/forget_password/domain/usecase/log_out_use_case.dart';
 
 class CAppDrawer extends StatelessWidget {
   const CAppDrawer({super.key});
@@ -42,7 +46,6 @@ class CAppDrawer extends StatelessWidget {
               imageUrl: '',
             ),
           ),
-
           DrawerListTile(
             iconData: Icons.group,
             title: 'New Group',
@@ -102,26 +105,27 @@ class CAppDrawer extends StatelessWidget {
             title: 'Telegram FAQ',
             onTilePressed: () {},
           ),
-
           Divider(),
           DrawerListTile(
             iconData: Icons.exit_to_app,
             title: 'Logout',
             onTilePressed: () {
+              // CSnackBar.showErrorDialog(context, '', );
               // HiveCash.deleteAllBoxes();
+              // CSnackBar.showErrorDialog(context, );
+
+              // CSnackBar.showErrorDialog(
+              //     context, "are you sure you want to logout from all devieces ",
+              //     () {
+              //   sl<LogOutUseCase>().call();
+              //   UserStatusHelper.setRegisteredNotVerified();
+              //   GoRouter.of(context).go(AppRouter.kSplash);
+              // });
+
               CacheHelper.write(key: 'loged', value: 'false');
               GoRouter.of(context).go(AppRouter.kLogin);
             },
           ),
-
-          // SwitchListTile(
-          //   title: Text('Night Mode',
-          //       style: Theme.of(context).textTheme.bodyMedium),
-          //   value: sl<NightModeCubit>().state,
-          //   onChanged: (value) {
-          //     sl<NightModeCubit>().toggleNightMode();
-          //   },
-          // ),
         ],
       ),
     );

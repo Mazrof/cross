@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,6 +54,7 @@ Future<void> _initializeApp() async {
   Bloc.observer = MyBlocObserver();
 
   await _clearCacheIfFirstLaunch();
+  await _handleDeepLink();
 }
 
 Future<void> _clearCacheIfFirstLaunch() async {
@@ -91,7 +93,6 @@ class App extends StatelessWidget {
                   // themeMode: ThemeMode.light,
                   themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
-                  
                 );
               },
             );
@@ -132,10 +133,12 @@ void _parseDeepLink(String? link) {
     if (uri.scheme == "yourappscheme" && uri.host == "reset-password") {
       final token = uri.queryParameters['token'];
       if (token != null) {
-        // Redirect to the Reset Password screen with the token
         print("Redirecting to Reset Password with token: $token");
-        navigatorKey.currentState
-            ?.pushNamed(AppRouter.kResetPassword, arguments: token);
+
+        // Use GoRouter's navigation method if applicable
+        navigatorKey.currentState?.context.go(
+          '${AppRouter.kResetPassword}?token=$token',
+        );
       }
     }
   }

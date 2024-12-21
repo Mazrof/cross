@@ -89,126 +89,128 @@ class _VerifyMailPageState extends State<VerifyMailPage> {
           context.go(AppRouter.kPreVerify);
         },
       ),
-      body: Form(
-        key: sl<VerifyMailCubit>().formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.padding),
-          child: Center(
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(AppSizes.padding),
-                  child: Icon(
-                    Icons.email_outlined,
-                    size: 150,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(AppSizes.padding),
-                  child: Column(
-                    children: [
-                      if (widget.method == 'email')
-                        Text(
-                          AppStrings.verifyByMail,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      if (widget.method == 'phone')
-                        Text(
-                          AppStrings.verifyByPhone,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                    ],
-                  ),
-                ),
-                if (widget.method == 'email')
-                  Text(
-                    AppStrings.weSentYouAnEmail,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                if (widget.method == 'phone')
-                  Text(
-                    AppStrings.weSentYouAnSms,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                Text(
-                  widget.method == 'email' ? maskEmail(mail) : '',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .apply(color: AppColors.grey),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(AppSizes.verifyPadding),
-                  child: PinCodeTextField(
-                    appContext: context,
-                    length: 6,
-                    controller: otpController,
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.borderRadiusMd),
-                      inactiveColor: AppColors.grey.withOpacity(.8),
-                      selectedColor: AppColors.primaryColor,
+      body: SingleChildScrollView(
+        child: Form(
+          key: sl<VerifyMailCubit>().formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.padding),
+            child: Center(
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(AppSizes.padding),
+                    child: Icon(
+                      Icons.email_outlined,
+                      size: 150,
+                      color: AppColors.primaryColor,
                     ),
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) {
-                      print(value);
-                    },
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final otpCode = otpController.text.trim();
-                      if (otpCode.isEmpty) {
-                        CSnackBar.showErrorSnackBar(
-                            context, 'Error', 'Please enter the OTP code.');
-                        return;
-                      }
-                      sl<VerifyMailCubit>().verifyOtp(
-                        widget.method,
-                        mail,
-                        otpCode,
-                      );
-                    },
-                    child: const Text(AppStrings.verify),
+                  Padding(
+                    padding: const EdgeInsets.all(AppSizes.padding),
+                    child: Column(
+                      children: [
+                        if (widget.method == 'email')
+                          Text(
+                            AppStrings.verifyByMail,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        if (widget.method == 'phone')
+                          Text(
+                            AppStrings.verifyByPhone,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () {
-                      sl<VerifyMailCubit>()
-                          .sendVerificationMail(widget.method, mail);
-                    },
-                    child: Text(AppStrings.resendCode,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .apply(color: AppColors.primaryColor)),
+                  if (widget.method == 'email')
+                    Text(
+                      AppStrings.weSentYouAnEmail,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (widget.method == 'phone')
+                    Text(
+                      AppStrings.weSentYouAnSms,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  Text(
+                    widget.method == 'email' ? maskEmail(mail) : '',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .apply(color: AppColors.grey),
                   ),
-                ),
-                SizedBox(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      BlocBuilder<VerifyMailCubit, VerifyMailState>(
-                        builder: (context, state) {
-                          return Text(
-                            state.remainingTime.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .apply(color: AppColors.primaryColor),
-                          );
-                        },
+                  Container(
+                    margin: const EdgeInsets.all(AppSizes.verifyPadding),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      controller: otpController,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.borderRadiusMd),
+                        inactiveColor: AppColors.grey.withOpacity(.8),
+                        selectedColor: AppColors.primaryColor,
                       ),
-                    ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) {
+                        print(value);
+                      },
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final otpCode = otpController.text.trim();
+                        if (otpCode.isEmpty) {
+                          CSnackBar.showErrorSnackBar(
+                              context, 'Error', 'Please enter the OTP code.');
+                          return;
+                        }
+                        sl<VerifyMailCubit>().verifyOtp(
+                          widget.method,
+                          mail,
+                          otpCode,
+                        );
+                      },
+                      child: const Text(AppStrings.verify),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () {
+                        sl<VerifyMailCubit>()
+                            .sendVerificationMail(widget.method, mail);
+                      },
+                      child: Text(AppStrings.resendCode,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .apply(color: AppColors.primaryColor)),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        BlocBuilder<VerifyMailCubit, VerifyMailState>(
+                          builder: (context, state) {
+                            return Text(
+                              state.remainingTime.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .apply(color: AppColors.primaryColor),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

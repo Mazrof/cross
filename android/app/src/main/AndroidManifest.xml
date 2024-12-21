@@ -39,8 +39,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- This is your custom scheme URL -->
-                <data android:scheme="com.example.telegram" android:host="reset-password" 
-                 />
+                 <data android:scheme="http" android:host="localhost" android:port="3001" />
             </intent-filter>
 
             <intent-filter>

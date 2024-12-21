@@ -1,16 +1,37 @@
 import 'package:bloc/bloc.dart';
 import 'package:telegram/core/helper/user_status_helper.dart';
 import 'dart:async';
+import 'package:uni_links5/uni_links.dart'; // For deep links
 import 'package:telegram/feature/splash_screen/presentation/controller/splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
-  SplashCubit() : super(SplashInitial());
+  SplashCubit() : super(SplashInitial()) {
+    // _initialize();
+  }
+
+  // void _initialize() async {
+  //   emit(SplashLoading());
+  //   await _handleDeepLink();
+  // }
+
+  Future<void> _handleDeepLink() async {
+    try {
+      final deepLink = await getInitialLink();
+      if (deepLink != null) {
+        handleDeepLink(deepLink);
+      } else {
+        checkAuthentication();
+      }
+    } catch (_) {
+      checkAuthentication();
+    }
+  }
 
   void startAnimation() {
     emit(AnimationInProgress());
     Future.delayed(const Duration(milliseconds: 500), () {
       emit(AnimationMoved());
-      _startTypewriterEffect('Your World is Just One Chat Away !', 0);
+      _startTypewriterEffect('Your World is Just One Chat Away!', 0);
     });
   }
 
@@ -23,20 +44,22 @@ class SplashCubit extends Cubit<SplashState> {
       } else {
         timer.cancel();
         emit(TypewriterEffectCompleted());
-        checkAuthentication(); // Check authentication after typewriter effect is completed
+        _handleDeepLink(); // Check authentication after typewriter effect is completed
       }
     });
   }
 
   void checkAuthentication() async {
-     emit(SplashLoading());
+    emit(SplashLoading());
 
     // Check user status using UserStatusHelper
     String status = await UserStatusHelper.checkUserStatus();
+    print(status);
 
     switch (status) {
       case 'onbording':
         emit(SplashFirstTime());
+        print(state);
         break;
       case 'login':
         emit(SplashUnauthenticated());
@@ -50,5 +73,18 @@ class SplashCubit extends Cubit<SplashState> {
     }
   }
 
-
+  void handleDeepLink(String? deepLink) {
+    if (deepLink != null) {
+      Uri uri = Uri.parse(deepLink);
+      if (uri.path == '/reset-password') {
+        final token = uri.queryParameters['token'];
+        final id = uri.queryParameters['id'];
+        if (token != null && id != null) {
+          emit(SplashNavigateToResetPassword(token, id));
+          return;
+        }
+      }
+    }
+    checkAuthentication();
+  }
 }

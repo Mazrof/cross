@@ -26,3 +26,11 @@ class TypewriterEffectInProgress extends SplashState {
 }
 
 class TypewriterEffectCompleted extends SplashState {}
+
+// Add a new state for navigating to reset password
+class SplashNavigateToResetPassword extends SplashState {
+  final String token;
+  final String id;
+
+  SplashNavigateToResetPassword(this.token, this.id);
+}

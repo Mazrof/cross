@@ -43,7 +43,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
         errorMessage: ''));
   }
 
-  void resetPassword(String token) async {
+  void resetPassword(String token,int id) async {
     if (appValidator.isFormValid(formKey)) {
       if (passwordController.text != confirmPasswordController.text) {
         emit(state.copyWith(
@@ -55,7 +55,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
       final response = await networkManager.isConnected();
       if (response) {
         final result =
-            await resetPasswordUsecase(token, passwordController.text.trim());
+            await resetPasswordUsecase(token, passwordController.text.trim(),id);
         result.fold(
             (failure) => emit(state.copyWith(
                 state: CubitState.failure,
