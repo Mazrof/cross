@@ -4,6 +4,7 @@ import 'package:telegram/feature/messaging/data/model/message.dart';
 
 class ChatState extends Equatable {
   final List<Message> messages;
+  final List<int> searchResultIndices;
   final int index;
   final int id;
   final double xCoordiate;
@@ -17,6 +18,8 @@ class ChatState extends Equatable {
   final bool receivedState;
   final bool replyState;
   final bool error;
+  final bool isSearching;
+  final int searchPtr;
   final String errorMessage;
   final bool isMuted;
   final String text;
@@ -51,10 +54,13 @@ class ChatState extends Equatable {
     this.pinnedIndex,
     this.chatIndex,
     this.chatType,
+    this.isSearching = false,
+    this.searchPtr = 0,
+    List<int>? searchResultIndices,
     // required this.chatType,
     // required this.participantId,
     // required this.members,
-  });
+  }) : searchResultIndices = searchResultIndices ?? [];
 
   ChatState copyWith({
     List<Message>? messages,
@@ -78,6 +84,9 @@ class ChatState extends Equatable {
     int? pinnedIndex,
     String? text,
     int? destructDuration,
+    bool? isSearching,
+    int? searchPtr,
+    List<int>? searchResultIndices,
     // String? draftedMessage,
     // int? participantId,
     // List? members,
@@ -104,6 +113,9 @@ class ChatState extends Equatable {
       pinnedIndex: pinnedIndex ?? this.pinnedIndex,
       text: text ?? this.text,
       destructDuration: destructDuration ?? this.destructDuration,
+      isSearching: isSearching ?? this.isSearching,
+      searchResultIndices: searchResultIndices ?? this.searchResultIndices,
+      searchPtr: searchPtr ?? this.searchPtr,
       // draftedMessage: draftedMessage ?? this.draftedMessage,
       // participantId: participantId ?? this.participantId,
       // chatType: chatType ?? this.chatType,
@@ -133,6 +145,9 @@ class ChatState extends Equatable {
         pinnedIndex,
         text,
         destructDuration,
+        isSearching,
+        searchResultIndices,
+        searchPtr,
         // draftedMessage,
         // participantId,
         // members,

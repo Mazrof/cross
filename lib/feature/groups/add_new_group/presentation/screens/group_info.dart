@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
@@ -113,7 +114,23 @@ class GroupInfoPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSizes.md),
+              const SizedBox(height: AppSizes.xl),
+              TextField(
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: cubit.sizeController,
+                style: Theme.of(context).textTheme.bodyMedium,
+                decoration: const InputDecoration(
+                  hintText: "Group Size",
+                  hintStyle: TextStyle(color: AppColors.grey),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primaryColor),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primaryColor),
+                  ),
+                ),
+                onChanged: cubit.setGroupSize,
+              ),
             ],
           ),
         ),

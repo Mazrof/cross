@@ -61,4 +61,22 @@ class LastMessage extends Equatable {
         durationInMinutes,
         status
       ];
+
+  //TO JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'createdAt': createdAt.toIso8601String(),
+      'isAnnouncement': isAnnouncement,
+      'isForward': isForward,
+      'updatedAt': updatedAt.toIso8601String(),
+      'content': content,
+      'url': url,
+      'senderId': senderId,
+      'replyTo': replyTo,
+      'participantId': participantId,
+      'durationInMinutes': durationInMinutes,
+      'status': status,
+    };
+  }
 }

@@ -44,6 +44,12 @@ class NewGroupScreen extends StatelessWidget {
             child: ShimmerLoadingList(), // This widget will show shimmer effect
           );
         }
+        if (state.state == CubitState.failure) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            CSnackBar.showErrorSnackBar(
+                context, 'Error', state.errorMessage ?? 'An error occurred');
+          });
+        }
 
         return Column(
           children: [

@@ -5,7 +5,8 @@ import 'package:telegram/core/network/api/api_service.dart';
 
 abstract class ForgetPasswordDataSource {
   Future<Either<Failure, void>> forgetPassword(String email);
-  Future<Either<Failure, void>> resetPassword(String token, String newPassword);
+  Future<Either<Failure, void>> resetPassword(
+      String token, String newPassword, int id);
   Future<Either<Failure, void>> logoutFromAllDevices();
 }
 
@@ -15,12 +16,14 @@ class ForgetPasswordDataSourceImp implements ForgetPasswordDataSource {
 
   @override
   Future<Either<Failure, void>> forgetPassword(String email) async {
-    print('ForgetPasswordDataSourceImp: forgetPassword');
     String endpoint = 'auth/request-password-reset';
     try {
       final response = await apiService.post(
         endPoint: endpoint,
-        data: {'email': email},
+        data: {
+          'email': email,
+          'type': 'mobile',
+        },
       );
       // Assuming a successful response returns an empty right value
       if (response.statusCode == 200) {
@@ -36,15 +39,11 @@ class ForgetPasswordDataSourceImp implements ForgetPasswordDataSource {
 
   @override
   Future<Either<Failure, void>> resetPassword(
-      String token, String newPassword) async {
+      String token, String newPassword, int id) async {
     try {
       final response = await apiService.post(
         endPoint: 'auth/reset-password',
-        data: {
-          'token': token,
-          'newPassword': newPassword,
-          'userId': HiveCash.read(boxName: 'register_info', key: 'id')
-        },
+        data: {'token': token, 'newPassword': newPassword, 'userId': id},
       );
 
       // Assuming a successful response returns an empty right value
@@ -62,6 +61,7 @@ class ForgetPasswordDataSourceImp implements ForgetPasswordDataSource {
   @override
   Future<Either<Failure, void>> logoutFromAllDevices() async {
     try {
+      print('logoutFromAllDevices');
       final response = await apiService.post(
         endPoint: 'auth/logout',
         data: {},

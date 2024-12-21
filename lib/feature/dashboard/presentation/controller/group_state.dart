@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
+import 'package:telegram/feature/dashboard/data/model/group_model.dart';
 import 'package:telegram/feature/dashboard/domain/entity/group.dart';
 
 class GroupsState extends Equatable {
-  final List<Group> groups;
+  final List<GroupModel> groups;
   final CubitState currState;
   final String? errorMessage;
 
@@ -14,7 +15,7 @@ class GroupsState extends Equatable {
   });
 
   GroupsState copyWith({
-    List<Group>? groups,
+    List<GroupModel>? groups,
     CubitState? currState,
     String? errorMessage,
   }) {
@@ -28,4 +29,7 @@ class GroupsState extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [groups, currState, errorMessage];
+
+ 
+
 }

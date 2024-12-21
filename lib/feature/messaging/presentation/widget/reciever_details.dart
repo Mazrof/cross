@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 
 class RecieverDetails extends StatelessWidget {
   final String userName;
   final String state;
-  final Avatar avatar;
+  final GeneralImage avatar;
   const RecieverDetails(
       {super.key,
       required this.userName,

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:telegram/core/local/cache_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,10 @@ import 'package:telegram/core/observer/bloc_observer.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/theme/app_theme.dart';
 import 'package:telegram/feature/night_mode/presentation/controller/night_mode_cubit.dart';
+import 'package:uni_links5/uni_links.dart';
 import 'core/di/service_locator.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   try {
@@ -50,6 +54,7 @@ Future<void> _initializeApp() async {
   Bloc.observer = MyBlocObserver();
 
   await _clearCacheIfFirstLaunch();
+  await _handleDeepLink();
 }
 
 Future<void> _clearCacheIfFirstLaunch() async {
@@ -79,13 +84,14 @@ class App extends StatelessWidget {
             return BlocBuilder<NightModeCubit, bool>(
               builder: (context, isNightMode) {
                 return MaterialApp.router(
+                  
                   locale: DevicePreview.locale(context),
                   builder: DevicePreview.appBuilder,
                   debugShowCheckedModeBanner: false,
                   theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
-                  // themeMode: ThemeMode.light,
-                  themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
+                  themeMode: ThemeMode.light,
+                  // themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );
               },
@@ -103,5 +109,37 @@ class MyHttpOverrides extends HttpOverrides {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+Future<void> _handleDeepLink() async {
+  try {
+    final initialLink = await getInitialLink();
+    _parseDeepLink(initialLink);
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error handling deep link: $e");
+    }
+  }
+
+  linkStream.listen((String? link) {
+    _parseDeepLink(link);
+  });
+}
+
+void _parseDeepLink(String? link) {
+  if (link != null) {
+    Uri uri = Uri.parse(link);
+    if (uri.scheme == "yourappscheme" && uri.host == "reset-password") {
+      final token = uri.queryParameters['token'];
+      if (token != null) {
+        print("Redirecting to Reset Password with token: $token");
+
+        // Use GoRouter's navigation method if applicable
+        navigatorKey.currentState?.context.go(
+          '${AppRouter.kResetPassword}?token=$token',
+        );
+      }
+    }
   }
 }

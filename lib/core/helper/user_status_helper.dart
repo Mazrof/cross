@@ -25,8 +25,8 @@ class UserStatusHelper {
   }
 
   static Future<void> setRegisteredNotVerified() async {
-    await CacheHelper.write(key: firstTimeKey, value: 'false');
-    await CacheHelper.write(key: 'registered', value: 'true');
+    await CacheHelper.write(key: firstTimeKey, value: 'true');
+    await CacheHelper.write(key: 'registered', value: 'false');
     await CacheHelper.write(key: 'loged', value: 'false');
   }
 }

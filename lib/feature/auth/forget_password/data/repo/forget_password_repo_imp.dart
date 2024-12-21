@@ -15,13 +15,12 @@ class ForgetPasswordRepositoryImpl implements ForgetPasswordRepository {
 
   @override
   Future<Either<Failure, void>> resetPassword(
-      String token, String newPassword) async {
-    return forgetPasswordRemoteDataSource.resetPassword(token, newPassword);
+      String token, String newPassword, int id) async {
+    return forgetPasswordRemoteDataSource.resetPassword(token, newPassword, id);
   }
 
-    @override
+  @override
   Future<Either<Failure, void>> logoutFromAllDevices() async {
     return forgetPasswordRemoteDataSource.logoutFromAllDevices();
   }
-
 }

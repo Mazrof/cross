@@ -81,10 +81,16 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   firebase_core: ^3.8.1
   firebase_messaging: ^15.1.6
+
+  uni_links5: ^0.5.4
+
+
   pointycastle: ^3.4.0
   duration_picker: ^1.2.0
+
   giphy_picker: ^3.0.2
   audio_waveforms: ^1.2.0
+
   # webview_flutter_plus: ^0.3.0
 
 dependency_overrides:

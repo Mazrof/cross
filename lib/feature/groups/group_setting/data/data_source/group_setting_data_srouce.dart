@@ -55,9 +55,9 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   //     ],
   //   );
   // }
-  
+
   @override
-   Future<void> addMember(int id, List<MemberModel> members) async {
+  Future<void> addMember(int id, List<MemberModel> members) async {
     print('members: $members');
     print('adding members to group with id:');
     await Future.wait(
@@ -73,7 +73,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<void> removeMember(int groupId, int memberId) async {
     await apiService.delete(
-      endPoint: 'groups/$groupId/members/$memberId/remove',
+      endPoint: 'groups/$groupId/members/$memberId',
     );
   }
 
@@ -112,12 +112,15 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
 
   @override
   Future<void> muteToggle(int groupId, bool isMuted) async {
-    await apiService.post(
-      endPoint: 'notifications/mute',
-      data: {
-        'chat_id': groupId,
-        'mute': isMuted,
-      },
-    );
+    if (isMuted) {
+      await apiService.post(
+        endPoint: 'notifications/mute',
+        data: {'participantId': groupId, 'duration': "forever"},
+      );
+    } else
+      await apiService.post(
+        endPoint: 'notifications/unmute',
+        data: {'participantId': groupId},
+      );
   }
 }

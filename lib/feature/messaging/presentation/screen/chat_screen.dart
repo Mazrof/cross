@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
@@ -43,10 +44,10 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _scrollToIndex() {
-      print(sl<ChatCubit>().state.pinnedIndex!);
+    void _scrollToIndex(int index) {
+      // print(sl<ChatCubit>().state.pinnedIndex!);
       _scrollController.animateTo(
-        (sl<ChatCubit>().state.pinnedIndex!) * 50.0,
+        (index) * 50.0,
         duration: Duration(seconds: 1),
         curve: Curves.easeInOut,
       );
@@ -82,7 +83,7 @@ class ChatScreen extends StatelessWidget {
 
           pinnedMessage = GestureDetector(
             onTap: () {
-              _scrollToIndex();
+              _scrollToIndex(sl<ChatCubit>().state.pinnedIndex!);
             },
             child: Container(
               height: 30,
@@ -165,15 +166,78 @@ class ChatScreen extends StatelessWidget {
         // WidgetsBinding.instance.addPostFrameCallback((_) {
         //   _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         // });
+        PreferredSizeWidget appBar;
 
         String myId =
             HiveCash.read(boxName: 'register_info', key: 'id').toString();
+        TextEditingController searchController = TextEditingController();
 
-        return state.messagesLoadedState
-            ? Scaffold(
-                appBar: state.selectionState == false &&
-                        state.editingState == false
-                    ? CAppBar(
+        if (state.isSearching) {
+          appBar = CAppBar(
+            showBackButton: true,
+            onLeadingTap: () {
+              sl<ChatCubit>().setSearchMode(false);
+              sl<ChatCubit>().resetSearch();
+            },
+            title: TextField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search messages...',
+                border: InputBorder.none,
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () async {
+                  context
+                      .read<ChatCubit>()
+                      .searchMessages(searchController.text);
+
+                  if (context
+                      .read<ChatCubit>()
+                      .state
+                      .searchResultIndices
+                      .isNotEmpty) {
+                    _scrollToIndex(
+                        context.read<ChatCubit>().state.searchResultIndices[
+                            context.read<ChatCubit>().state.searchPtr]);
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_upward),
+                onPressed: () async {
+                  if (!(context.read<ChatCubit>().state.searchPtr >=
+                      context
+                              .read<ChatCubit>()
+                              .state
+                              .searchResultIndices
+                              .length -
+                          1)) {
+                    await context.read<ChatCubit>().incSearchPtr();
+                    _scrollToIndex(
+                        context.read<ChatCubit>().state.searchResultIndices[
+                            context.read<ChatCubit>().state.searchPtr]);
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_downward),
+                onPressed: () async {
+                  if (!(context.read<ChatCubit>().state.searchPtr <= 0)) {
+                    await context.read<ChatCubit>().decSearchPtr();
+                    _scrollToIndex(
+                        context.read<ChatCubit>().state.searchResultIndices[
+                            context.read<ChatCubit>().state.searchPtr]);
+                  }
+                },
+              ),
+            ],
+          );
+        } else if (state.selectionState == false &&
+            state.editingState == false) {
+          appBar = CAppBar(
                         onLeadingTap: () async {
                           // WidgetsBinding.instance.addPostFrameCallback(
                           //   (_) {
@@ -239,8 +303,10 @@ class ChatScreen extends StatelessWidget {
                             ],
                           ),
                         ],
-                      )
-                    : CAppBar(
+                      );
+                      
+                              } else {
+          appBar = CAppBar(
                         onLeadingTap: () {
                           sl<ChatCubit>().unselectMessage();
                           // if (controller.text.isNotEmpty) {
@@ -339,7 +405,16 @@ class ChatScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                      ),
+                      );
+        }
+
+        return state.messagesLoadedState
+            ? Scaffold(
+
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(kToolbarHeight),
+                  child: appBar,
+                ),
                 body: Stack(
                   children: [
                     Container(
@@ -376,7 +451,8 @@ class ChatScreen extends StatelessWidget {
                         child: Container(
                           child: GestureDetector(
                             onTap: () {
-                              _scrollToIndex();
+                              _scrollToIndex(
+                                  sl<ChatCubit>().state.pinnedIndex!);
                             },
                             child: Container(
                               height: 30,

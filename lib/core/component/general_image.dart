@@ -1,7 +1,9 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class GeneralImage extends StatelessWidget {
-  final String? imageUrl; // Nullable for cases where the image URL isn't set
+  final String? imageUrl; // Accepts either an image URL or a Base64 string
   final String username;
   final double radius;
 
@@ -18,20 +20,55 @@ class GeneralImage extends StatelessWidget {
       radius: radius,
       backgroundColor: _getBackgroundColor(username), // Background color
       child: ClipOval(
-        child: imageUrl != null && imageUrl!.isNotEmpty
-            ? Image.network(
-                imageUrl!,
-                fit: BoxFit.cover,
-                width: radius * 2,
-                height: radius * 2,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback to initials if image fails to load
-                  return _buildInitials();
-                },
-              )
-            : _buildInitials(), // Fallback to initials when no image URL
+        child: _buildImage(),
       ),
     );
+  }
+
+  /// Decides whether to display a Base64 image, a network image, or initials
+  Widget _buildImage() {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      if (_isBase64(imageUrl!)) {
+        // Handle Base64 image
+        Uint8List? imageBytes = _decodeBase64(imageUrl!);
+        if (imageBytes != null) {
+          return Image.memory(
+            imageBytes,
+            fit: BoxFit.cover,
+            width: radius * 2,
+            height: radius * 2,
+          );
+        }
+      } else {
+        // Handle network image
+        return Image.network(
+          imageUrl!,
+          fit: BoxFit.cover,
+          width: radius * 2,
+          height: radius * 2,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildInitials(); // Fallback to initials if image fails to load
+          },
+        );
+      }
+    }
+    // Fallback to initials when no valid image is provided
+    return _buildInitials();
+  }
+
+  /// Helper method to decode Base64 string
+  Uint8List? _decodeBase64(String base64String) {
+    try {
+      return base64Decode(base64String);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Helper method to check if a string is a valid Base64 encoded string
+  bool _isBase64(String str) {
+    final base64Regex = RegExp(r'^[A-Za-z0-9+/]+={0,2}$');
+    return base64Regex.hasMatch(str);
   }
 
   /// Helper method to create initials widget

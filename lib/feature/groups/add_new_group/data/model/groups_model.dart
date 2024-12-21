@@ -29,6 +29,16 @@ class GroupsModel extends Group {
     };
   }
 
+  //empty
+  static GroupsModel empty() {
+    return GroupsModel(
+      name: '',
+      privacy: false,
+      groupSize: 0,
+      imageUrl: '', id: 0,
+    );
+  }
+
   @override
   String toString() {
     return 'GroupsModel{name: $name, privacy: $privacy, groupSize: $groupSize, }';

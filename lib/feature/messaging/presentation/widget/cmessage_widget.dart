@@ -247,7 +247,9 @@ class ChatMessage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          replyMessage!,
+
+                          replyMessage??"",
+
                           style: const TextStyle(
                             color: AppColors.whiteColor,
                             fontSize: 14,
