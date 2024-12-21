@@ -1,9 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/helper/screen_helper.dart';
+import 'package:telegram/core/network/api/api_service.dart';
 import 'package:telegram/core/utililes/app_colors/app_colors.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/core/utililes/constant/constants.dart';
@@ -24,6 +33,8 @@ class ChatMessage extends StatelessWidget {
   final bool isForward;
   String? replyMessage;
 
+  final PlayerController playerController = PlayerController();
+
   ChatMessage({
     super.key,
     required this.message,
@@ -42,6 +53,104 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<String> saveFile(String binaryData, String fileName) async {
+      try {
+        print(binaryData);
+        // Get the directory to save the file
+        final directory = await getApplicationDocumentsDirectory();
+        final filePath = '${directory.path}/$fileName';
+        // Create the file and write the binary data
+        final file = File(filePath);
+
+        Uint8List temp = Uint8List.fromList(utf8.encode(binaryData));
+
+        file.writeAsBytesSync(temp);
+
+        print('File saved at $filePath');
+        return filePath;
+      } catch (e) {
+        print('Error saving file: $e');
+        return "";
+      }
+    }
+
+    Future<Widget> fetchRecord() async {
+      Response response = await sl<ApiService>().get(
+        endPoint: (jsonDecode(message)['content'] as String).substring(1),
+        base: "https://upcdn.io/FW25cKj/raw",
+        options: Options(
+          headers: {
+            'Authorization': "Bearer public_FW25cKjAvB4jbgD9VvPnb7hGiLA1",
+          },
+        ),
+      );
+      try {
+        // Save the file
+        String path = await saveFile(
+            response.data, 'audio_${Random().nextInt(10000)}.m4a');
+
+        playerController.preparePlayer(path: path);
+
+        return AudioFileWaveforms(
+          size: Size(300, 50),
+          playerController: playerController,
+        );
+      } on Exception {
+        //
+        return Text(
+          "This is an Audio File",
+          style: TextStyle(
+            color: AppColors.grey,
+          ),
+        );
+      }
+    }
+
+    Widget getMessageWidget() {
+      switch (jsonDecode(message)['type']) {
+        case 'GIF':
+          return Image.network(
+            jsonDecode(message)['content'],
+            headers: {'accept': 'image/*'},
+            height: 200,
+            width: 200,
+          );
+        case 'text':
+          return Text(
+            jsonDecode(message)['content'],
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+            ),
+          );
+
+        case 'audio':
+          return Text(
+            "This is an Audio File",
+            style: TextStyle(
+              color: AppColors.grey,
+            ),
+          );
+        //  FutureBuilder<Widget>(
+        //   future: fetchRecord(),
+        //   builder: (context, snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return CircularProgressIndicator();
+        //       // Show a loading indicator while waiting
+        //     } else if (snapshot.hasError) {
+        //       return Text(
+        //           'Error: ${snapshot.error}'); // Show error message if there's an error
+        //     } else {
+        //       return snapshot.data!;
+        //     }
+        //   },
+        // );
+
+        default:
+          return Container(); // Default case to handle unexpected types
+      }
+    }
+
     Color getMessageBackGroundColor() {
       Color backgroundColor = Colors.white;
 
@@ -165,19 +274,7 @@ class ChatMessage extends StatelessWidget {
                           ),
                         ],
                       ),
-                    isGIF
-                        ? Image.asset(
-                            "assets/gif/success.gif",
-                            width: 100,
-                            height: 100,
-                          )
-                        : Text(
-                            state.messages[index].content,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
-                          ),
+                    if (message != "") getMessageWidget(),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -211,34 +308,34 @@ class ChatMessage extends StatelessWidget {
   }
 
   IconData _getStatusIcon() {
-    if (isSeen) {
-      return Icons.done_all;
-    } else if (isDelivered) {
-      return Icons.done;
-    } else {
-      return Icons.error;
-    }
+    return Icons.done_all;
+    // if (isSeen) {
+    //   return Icons.done_all;
+    // } else if (isDelivered) {
+    //   return Icons.done;
+    // } else {
+    //   return Icons.error;
+    // }
   }
 
   Color _getStatusColor() {
-    if (isSeen) {
-      return Colors.blue;
-    } else if (isDelivered) {
-      return Colors.white70;
-    } else {
-      return Colors.red;
-    }
+    return Colors.blue;
+    // if (isSeen) {
+    // } else if (isDelivered) {
+    //   return Colors.white70;
+    // } else {
+    //   return Colors.red;
+    // }
   }
 }
 
-              // if replying to message
-              // child: BubbleSpecialOne(
-              //   text: message,
-              //   color:
-              //       isSender ? AppColors.lightBlueColor : AppColors.whiteColor,
-              //   delivered: isDelivered,
-              //   seen: isSeen,
-              //   isSender: isSender,
-              //   sent: true, // to be changed according to network status
-              // ),
-
+// if replying to message
+// child: BubbleSpecialOne(
+//   text: message,
+//   color:
+//       isSender ? AppColors.lightBlueColor : AppColors.whiteColor,
+//   delivered: isDelivered,
+//   seen: isSeen,
+//   isSender: isSender,
+//   sent: true, // to be changed according to network status
+// ),

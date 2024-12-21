@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/asymmetric/oaep.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
 import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/api/api_constants.dart';
@@ -85,6 +90,61 @@ class ChatCubit extends Cubit<ChatState> {
     emit(state.copyWith(isMuted: true));
   }
 
+  String encrypt(String content) {
+    if (sl<ChatCubit>().state.chatType == ChatType.PersonalChat) {
+      // encrypt
+
+      String key = sl<HomeCubit>()
+          .state
+          .contacts[sl<ChatCubit>().state.chatIndex!]
+          .secondUser
+          .publicKey;
+
+      Map<String, dynamic> publicKeyMap = jsonDecode(key);
+
+      BigInt modulus = BigInt.parse(publicKeyMap['modulus']);
+      BigInt exponent = BigInt.parse(publicKeyMap['exponent']);
+
+      RSAPublicKey publicKey = RSAPublicKey(modulus, exponent);
+
+      final encryptor = OAEPEncoding(RSAEngine())
+        ..init(true, PublicKeyParameter<RSAPublicKey>(publicKey));
+
+      Uint8List encrypted = encryptor.process(utf8.encode(content));
+      content = base64Encode(encrypted);
+    }
+
+    return content;
+  }
+
+  String decrypt(String content) {
+    if (state.chatType == ChatType.PersonalChat) {
+      String key = HiveCash.read(boxName: 'register_info', key: 'privateKey');
+
+      Map<String, dynamic> privateKeyMap = jsonDecode(key);
+
+      BigInt modulus = BigInt.parse(privateKeyMap['modulus']);
+      BigInt exponent = BigInt.parse(privateKeyMap['privateExponent']);
+      BigInt p = BigInt.parse(privateKeyMap['p']);
+      BigInt q = BigInt.parse(privateKeyMap['q']);
+
+      RSAPrivateKey privateKey = RSAPrivateKey(modulus, exponent, p, q);
+
+      print(content.length);
+
+      var decryptor = OAEPEncoding(RSAEngine())
+        ..init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+      Uint8List encryptedBytes = base64Decode(content);
+
+      Uint8List decrypted = decryptor.process(encryptedBytes);
+
+      content = utf8.decode(decrypted);
+    }
+
+    return content;
+  }
+
   Future<void> draftMessage(String textInput) async {
     if (textInput.trim() != "") {
       var myId = HiveCash.read(boxName: 'register_info', key: 'id').toString();
@@ -157,25 +217,29 @@ class ChatCubit extends Cubit<ChatState> {
     print("Edit Message");
 
     // var updatedMessages = state.messages;
+    Map<String, dynamic> m = {'content': newContent, 'type': 'text'};
+
+    String content = encrypt(jsonEncode(m));
 
     if (isPinned) {
       state.messages[index].isPinned = true;
+
       sl<SocketService>().socket!.emit(
         "message:edit",
         {
           "id": id,
-          "content": newContent,
+          "content": content,
           "status": "pinned",
         },
       );
     } else {
-      state.messages[index].content = newContent;
+      state.messages[index].content = jsonEncode(m);
 
       sl<SocketService>().socket!.emit(
         "message:edit",
         {
           "id": id,
-          "content": newContent,
+          "content": content,
         },
       );
     }
@@ -190,12 +254,9 @@ class ChatCubit extends Cubit<ChatState> {
         width: -1,
         xCoordiate: -1,
         yCoordiate: -1,
-        pinnedIndex: isPinned ? index : -1,
+        pinnedIndex: isPinned ? index : null,
       ),
     );
-
-    // TODO
-    // Uncomment when available
   }
 
   void messageEdited(dynamic data) {
@@ -227,7 +288,9 @@ class ChatCubit extends Cubit<ChatState> {
       for (int i = 0; i < updatedMessages.length; i++) {
         if (updatedMessages[i].id == data['id']) {
           // edit the message
-          updatedMessages[i].content = data['content'];
+          // decrypt the message
+
+          updatedMessages[i].content = decrypt(data['content']);
           break;
         }
       }
@@ -315,87 +378,105 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> sendMessage(
     Message newMessage,
   ) async {
-    // TODO
-    // Generate a unique id for each message
-    // Send it to the backend
+    if (newMessage.content.trim() != "") {
+      print(newMessage.toString());
 
-    print(newMessage.toString());
+      String content = newMessage.content;
 
-    sl<SocketService>().socket!.emit(
-      "message:sent",
-      {
-        "content": newMessage.content,
-        "status": newMessage.isDraft ? "drafted" : "usual",
-        "durationInMinutes":
-            state.destructDuration != 0 ? state.destructDuration : null,
-        "isAnnouncement": false, // for group announcement
-        "isForward": newMessage.isForward,
-        "participantId": int.parse(newMessage.participantId),
-        "senderId":
-            int.parse(newMessage.sender) // Will be deleted after mirging auth,
-      },
-    );
+      if (state.chatType == ChatType.PersonalChat) {
+        // encrypt using the public key of the other user
+        String key = sl<HomeCubit>()
+            .state
+            .contacts[sl<ChatCubit>().state.chatIndex!]
+            .secondUser
+            .publicKey;
 
-    // final currentState = state as TypingMessage;
+        Map<String, dynamic> publicKeyMap = jsonDecode(key);
 
-    // todo
-    // sl<ApiService>().post(
-    //   endPoint: ApiConstants.sendNotification,
-    //   data: {
-    //     'participantId':
-    //         sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!].id,
-    //     'title': 'New Message',
-    //     'body': newMessage.content,
-    //     // 'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
-    //   },
-    // );
+        BigInt modulus = BigInt.parse(publicKeyMap['modulus']);
+        BigInt exponent = BigInt.parse(publicKeyMap['exponent']);
 
-    if (!newMessage.isForward) {
-      if (state.destructDuration != 0) {
-        // set timer
+        RSAPublicKey publicKey = RSAPublicKey(modulus, exponent);
 
-        final updatedMessages = List<Message>.from(state.messages);
+        final encryptor = OAEPEncoding(RSAEngine())
+          ..init(true, PublicKeyParameter<RSAPublicKey>(publicKey));
 
-        // Schedule the deletion
-        Timer(
-          Duration(minutes: state.destructDuration),
-          () {
-            // todo
-            final messages = List<Message>.from(state.messages);
-            for (int i = 0; i < messages.length; i++) {
-              if (messages[i].content == newMessage.content) {
-                messages.removeAt(i);
+        // Uint8List list = Uint8List.fromList(content.codeUnits);
 
-                emit(state.copyWith(
-                    messages: messages, messagesLoadedState: true));
+        // content = utf8.decode(encryptor.process(list));
+
+        Uint8List encrypted = encryptor.process(utf8.encode(content));
+        content = base64Encode(encrypted);
+
+        print(content);
+      }
+
+      sl<SocketService>().socket!.emit(
+        "message:sent",
+        {
+          "content": content,
+          "status": newMessage.isDraft ? "drafted" : "usual",
+          "durationInMinutes":
+              state.destructDuration != 0 ? state.destructDuration : null,
+          "isAnnouncement": false, // for group announcement
+          "isForward": newMessage.isForward,
+          "participantId": int.parse(newMessage.participantId),
+          "senderId": int.parse(
+              newMessage.sender) // Will be deleted after mirging auth,
+        },
+      );
+
+      sl<ApiService>().post(
+        endPoint: ApiConstants.sendNotification,
+        data: {
+          'participantId': sl<HomeCubit>()
+              .state
+              .contacts[sl<ChatCubit>().state.chatIndex!]
+              .id,
+          'title': 'New Message',
+          'body': jsonDecode(newMessage.content)['content'],
+          // 'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
+        },
+      );
+
+      final updatedMessages = List<Message>.from(state.messages);
+      if (!newMessage.isForward) {
+        if (state.destructDuration != 0) {
+          // Schedule the deletion
+          Timer(
+            Duration(minutes: state.destructDuration),
+            () {
+              // todo
+              final messages = List<Message>.from(state.messages);
+              for (int i = 0; i < messages.length; i++) {
+                if (messages[i].content == newMessage.content) {
+                  messages.removeAt(i);
+
+                  emit(state.copyWith(
+                      messages: messages, messagesLoadedState: true));
+                }
               }
-            }
-            // if (indexToDelete >= 0 && indexToDelete < myList.length) {
-            //   myList.removeAt(indexToDelete);
-            //   // Print the list after deletion
-            //   print('After deletion: $myList');
-            // } else {
-            //   print('Invalid index');
-            // }
-          },
-        );
-
+            },
+          );
+        }
         updatedMessages.add(
           newMessage,
         );
         emit(state.copyWith(
             messages: updatedMessages, messagesLoadedState: true));
+      } else {
+        unselectMessage();
       }
-    } else {
-      unselectMessage();
     }
   }
 
   void replyToMessage(Message replyMessage) {
+    String content = encrypt(replyMessage.content);
+
     sl<SocketService>().socket!.emit(
       "message:sent",
       {
-        "content": replyMessage.content,
+        "content": content,
         "status": "pinned", //or null
         "durationInMinutes": null, // can be null
         "isAnnouncement": true, // for group announcement
@@ -419,7 +500,7 @@ class ChatCubit extends Cubit<ChatState> {
       }
     }
 
-    replyMessage.replyMessage = replyMessageText;
+    replyMessage.replyMessage = jsonDecode(replyMessageText)['content'];
 
     updatedMessages.add(replyMessage);
 
@@ -464,21 +545,33 @@ class ChatCubit extends Cubit<ChatState> {
     ));
   }
 
-  void receiveMessage(dynamic message) {
+  void receiveMessage(dynamic message) async {
     print(message);
 
-    // TODO
-    // userId == my id -> update id with backend id - else - add to messages list
+    //
 
     var updatedMessages = List<Message>.from(state.messages);
-
-    // print(updatedMessages[updatedMessages.length - 1]);
 
     int myId = HiveCash.read(boxName: "register_info", key: 'id');
 
     if (myId == message["senderId"]) {
       updatedMessages[updatedMessages.length - 1].setId(message["id"]);
+      // store it locally to get it later without decryption
+
+      List<Message> messages = sl<HomeCubit>().state.sentMessages;
+
+      messages.add(updatedMessages[updatedMessages.length - 1]);
+
+      await HiveCash.write(
+          boxName: 'messages', key: 'sent_messages', value: messages);
     } else {
+      // if message exists do not add it again
+      for (Message m in updatedMessages) {
+        if (m.id == message["id"]) {
+          return;
+        }
+      }
+
       final DateTime dateTime = DateTime.parse(message["createdAt"]);
       final DateFormat formatter = DateFormat('HH:mm');
 
@@ -497,12 +590,40 @@ class ChatCubit extends Cubit<ChatState> {
         }
       }
 
+      // decrypt the message content
+
+      String content = message["content"];
+
+      if (state.chatType == ChatType.PersonalChat) {
+        String key = HiveCash.read(boxName: 'register_info', key: 'privateKey');
+
+        Map<String, dynamic> privateKeyMap = jsonDecode(key);
+
+        BigInt modulus = BigInt.parse(privateKeyMap['modulus']);
+        BigInt exponent = BigInt.parse(privateKeyMap['privateExponent']);
+        BigInt p = BigInt.parse(privateKeyMap['p']);
+        BigInt q = BigInt.parse(privateKeyMap['q']);
+
+        RSAPrivateKey privateKey = RSAPrivateKey(modulus, exponent, p, q);
+
+        print(content.length);
+
+        var decryptor = OAEPEncoding(RSAEngine())
+          ..init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+        Uint8List encryptedBytes = base64Decode(content);
+
+        Uint8List decrypted = decryptor.process(encryptedBytes);
+
+        content = utf8.decode(decrypted);
+      }
+
       updatedMessages.add(
         Message(
           id: message["id"],
           isDate: false,
           sender: message['senderId'].toString(),
-          content: message["content"],
+          content: content,
           time: formatter.format(dateTime),
           isGIF: false,
           isReply: message['replyTo'].toString() != 'null',
@@ -522,8 +643,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<dynamic> getMessages() async {
     List<Message> messages = [];
 
-    final chat =
-        sl<HomeCubit>().state.contacts[sl<ChatCubit>().state.chatIndex!];
+    final chat = sl<HomeCubit>().state.contacts[state.chatIndex!];
 
     try {
       // emit(const ChatLoading());
@@ -536,12 +656,59 @@ class ChatCubit extends Cubit<ChatState> {
 
       List data = res.data;
 
-      messages = (data.map(
-        (e) => Message(
+      String myId =
+          HiveCash.read(boxName: 'register_info', key: 'id').toString();
+      // String myId = HiveCash.read(boxName: 'register_info',  key: 'id').toString();
+
+      messages = (data.map((e) {
+        String content = e['content'];
+
+        if (state.chatType == ChatType.PersonalChat) {
+          if ((e['senderId']).toString() != myId) {
+            String key =
+                HiveCash.read(boxName: 'register_info', key: 'privateKey');
+
+            Map<String, dynamic> privateKeyMap = jsonDecode(key);
+
+            BigInt modulus = BigInt.parse(privateKeyMap['modulus']);
+            BigInt exponent = BigInt.parse(privateKeyMap['privateExponent']);
+            BigInt p = BigInt.parse(privateKeyMap['p']);
+            BigInt q = BigInt.parse(privateKeyMap['q']);
+
+            RSAPrivateKey privateKey = RSAPrivateKey(modulus, exponent, p, q);
+
+            var decryptor = OAEPEncoding(RSAEngine())
+              ..init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
+
+            Uint8List encryptedBytes = base64Decode(content);
+            int maxElement = encryptedBytes
+                .reduce((curr, next) => curr > next ? curr : next);
+            print("Max element: $maxElement");
+
+            print(maxElement);
+
+            Uint8List decrypted = decryptor.process(encryptedBytes);
+
+            content = utf8.decode(decrypted);
+          } else {
+            // get from the local storage
+
+            List<Message> sentMessages = sl<HomeCubit>().state.sentMessages;
+
+            for (Message m in sentMessages) {
+              if (m.id == e["id"]) {
+                content = m.content;
+                break;
+              }
+            }
+          }
+        }
+
+        return Message(
           isGIF: false,
           isDate: false,
           sender: (e['senderId']).toString(),
-          content: e['content'],
+          content: content,
           time: DateFormat('HH:mm').format(DateTime.parse(e['createdAt'])),
           id: e["id"],
           isReply: e['replyTo'] != null,
@@ -550,15 +717,12 @@ class ChatCubit extends Cubit<ChatState> {
           isPinned: e['status'] == "pinned",
           isDraft: false,
           //todo
-        ),
-      )).toList();
+        );
+      })).toList();
 
       // load the drafted message if exist
 
       List<Message> draftedMessages = sl<HomeCubit>().state.draftedMessages;
-
-      String myId =
-          HiveCash.read(boxName: 'register_info', key: 'id').toString();
 
       String draftedMessage = "";
 

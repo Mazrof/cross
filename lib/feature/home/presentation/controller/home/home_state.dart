@@ -15,6 +15,7 @@ class HomeState extends Equatable {
   final List<ChannelDataModel> channels;
   final List<ChatModel> contacts;
   final List<Message> draftedMessages;
+  final List<Message> sentMessages;
   final String errorMessage;
 
   HomeState({
@@ -24,6 +25,7 @@ class HomeState extends Equatable {
     this.channels = const [],
     this.contacts = const [],
     this.draftedMessages = const [],
+    this.sentMessages = const [],
     this.errorMessage = '',
   });
 
@@ -35,6 +37,7 @@ class HomeState extends Equatable {
     List<ChatModel>? contacts,
     String? errorMessage,
     List<Message>? draftedMessages,
+    List<Message>? sentMessages,
   }) {
     return HomeState(
       state: state ?? this.state,
@@ -44,6 +47,7 @@ class HomeState extends Equatable {
       contacts: contacts ?? this.contacts,
       errorMessage: errorMessage ?? this.errorMessage,
       draftedMessages: draftedMessages ?? this.draftedMessages,
+      sentMessages: sentMessages ?? this.sentMessages,
     );
   }
 
@@ -57,5 +61,6 @@ class HomeState extends Equatable {
         contacts,
         errorMessage,
         draftedMessages,
+        sentMessages,
       ];
 }

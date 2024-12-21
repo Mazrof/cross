@@ -221,8 +221,10 @@ class HomeContent extends StatelessWidget {
                         id: chat.id,
                         imageUrl: "",
                         title: chat.secondUser.username,
-                        subtitle: chat.lastMessage!.content,
-                        time: chat.lastMessage!.createdAt.toString(),
+                        subtitle: "",
+                        // chat.lastMessage!.content
+                        time: "",
+                        // chat.lastMessage!.createdAt.toString(),
                         messageStatus: MessageStatus.delivered,
                         onTap: () {
                           GoRouter.of(context).push(

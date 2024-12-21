@@ -9,6 +9,7 @@ import 'package:pointycastle/asymmetric/api.dart';
 import 'package:pointycastle/key_generators/api.dart';
 import 'package:pointycastle/key_generators/rsa_key_generator.dart';
 import 'package:pointycastle/random/fortuna_random.dart';
+import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/validator/app_validator.dart';
@@ -154,15 +155,47 @@ class SignUpCubit extends Cubit<SignupState> {
 
         // store them locally and on the db
 
-        print("keys ${(keys.publicKey as RSAPublicKey).modulus!.toString()}");
+        Map<String, String> publicKeyMap = {
+          'modulus': (keys.publicKey as RSAPublicKey).modulus!.toString(),
+          'exponent': (keys.publicKey as RSAPublicKey).exponent!.toString(),
+        };
 
-        emitSignUpStates(SignUpBodyModel(
-          username: usernameController.text.trim(),
-          email: emailController.text.trim(),
-          phone: phoneController.text.trim(),
-          password: passwordController.text.trim(),
-          publicKey: (keys.publicKey as RSAPublicKey).modulus!.toString(),
-        ));
+        print("Public Key: ${jsonEncode(publicKeyMap)}");
+
+        Map<String, String> privateKeyMap = {
+          'modulus': (keys.privateKey as RSAPrivateKey).modulus!.toString(),
+          'privateExponent':
+              (keys.privateKey as RSAPrivateKey).privateExponent!.toString(),
+          'p': (keys.privateKey as RSAPrivateKey).p!.toString(),
+          'q': (keys.privateKey as RSAPrivateKey).q!.toString(),
+        };
+
+        print("Private Key: ${jsonEncode(privateKeyMap)}");
+
+        // store the private and public keys locally to use them for encryption and decryption
+
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'publicKey',
+          value: jsonEncode(publicKeyMap),
+        );
+
+        HiveCash.write(
+          boxName: 'register_info',
+          key: 'privateKey',
+          value: jsonEncode(privateKeyMap),
+        );
+
+        emitSignUpStates(
+          SignUpBodyModel(
+            username: usernameController.text.trim(),
+            email: emailController.text.trim(),
+            phone: phoneController.text.trim(),
+            password: passwordController.text.trim(),
+            publicKey: jsonEncode(publicKeyMap),
+            privateKey: jsonEncode(privateKeyMap),
+          ),
+        );
       }
     } else {
       emit(state.copyWith(

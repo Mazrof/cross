@@ -1,6 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/asymmetric/oaep.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
+import 'package:telegram/core/di/service_locator.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/network/network_manager.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
@@ -37,13 +44,19 @@ class HomeCubit extends Cubit<HomeState> {
       // Simultaneously fetch all required data
 
 
+
+      // String myId =
+      //     HiveCash.read(boxName: 'register_info', key: 'id').toString();
+
+      final draftedMessages = await fetchDraftedMessages();
+      final sentMessages = fetchSentMessages();
+
       final stories = await fetchStoriesUseCase();
       final groups = await fetchGroupsUseCase();
       final channels = await fetchChannelsUseCase();
       final contacts = await fetchContactsUseCase();
 
 
-//       final draftedMessages = await fetchDraftedMessages();
 
 
       stories.sort((a, b) => a.isSeen ? 1 : -1);
@@ -55,7 +68,9 @@ class HomeCubit extends Cubit<HomeState> {
           groups: groups,
           channels: channels,
           contacts: contacts,
-          draftedMessages: [],
+          draftedMessages: draftedMessages,
+          sentMessages: sentMessages,
+
         ),
       );
       // final draftedMessages = await fetchDraftedMessages();
@@ -130,7 +145,19 @@ class HomeCubit extends Cubit<HomeState> {
     if (temp == null) {
       return [];
     } else {
-      return temp.map((item) => item as Message).toList();
+      return (temp.map<Message>((item) => item as Message).toList())
+          as List<Message>;
+    }
+  }
+
+  Future<List<Message>> fetchSentMessages() async {
+    var temp = await HiveCash.read(boxName: "messages", key: 'sent_messages');
+
+    if (temp == null) {
+      return [];
+    } else {
+      return (temp.map<Message>((item) => item as Message).toList())
+          as List<Message>;
     }
   }
 }

@@ -4,6 +4,7 @@ class SignUpEntity {
   final String email;
   final String password;
   final String publicKey;
+  final String privateKey;
   String id;
 
   SignUpEntity({
@@ -13,5 +14,6 @@ class SignUpEntity {
     required this.email,
     required this.password,
     required this.publicKey,
+    required this.privateKey,
   });
 }

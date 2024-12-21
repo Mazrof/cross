@@ -46,7 +46,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    const context = null; // Replace null with the appropriate context variable
+    // const context = null; // Replace null with the appropriate context variable
     return Size.fromHeight(DeviceUtiles.getAppBarHeight());
   }
 }
