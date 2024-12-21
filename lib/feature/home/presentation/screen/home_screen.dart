@@ -44,10 +44,7 @@ class HomeScreen extends StatelessWidget {
             body: ShimmerLoadingContent(),
           );
         } else if (state.state == CubitState.failure) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            CSnackBar.showErrorSnackBar(
-                context, 'Error', 'Failed to load data');
-          });
+          print('Error: ${state.errorMessage}');
         }
 
         // Success State
@@ -258,7 +255,6 @@ class HomeContent extends StatelessWidget {
                             : '',
                         onTap: () {
                           GoRouter.of(context).push(
-
                             AppRouter.kChannelScreen,
                             extra: ChannelModel(
                               id: channel.id,
@@ -268,7 +264,6 @@ class HomeContent extends StatelessWidget {
                               imageUrl: channel.imageUrl ?? '',
                               invitationLink: channel.invitationLink ?? '',
                             ),
-
                           );
                           // GoRouter.of(context).push(
                           //   '${AppRouter.kMessaging}/$index/channel',
@@ -300,7 +295,6 @@ class HomeContent extends StatelessWidget {
                             ? group.lastMessage!.createdAt.hour.toString()
                             : '',
                         onTap: () {
-
                           GoRouter.of(context).push(
                             AppRouter.kGroupScreen,
                             extra: GroupModel(
@@ -322,9 +316,9 @@ class HomeContent extends StatelessWidget {
                           //     imageUrl: group.imageUrl ?? '',
                           //   ),
                           // );
-                          GoRouter.of(context).push(
-                            '${AppRouter.kMessaging}/$index/Group',
-                          );
+                          // GoRouter.of(context).push(
+                          //   '${AppRouter.kMessaging}/$index/Group',
+                          // );
                         },
                         lastSeen: '',
                       );

@@ -19,25 +19,37 @@ class AddChannelCubit extends Cubit<AddChannelState> {
     this.createChannelUseCase,
     this.networkManager,
     this.addSubscribersUseCase,
-  ) : super(AddChannelState.initial());
+  ) : super(AddChannelState.initial()) {
+    nameController = TextEditingController();
+    _picker = ImagePicker();
+  }
 
   final NetworkManager networkManager;
   final CreateChannelUseCase createChannelUseCase;
   final AddSubscribersUseCase addSubscribersUseCase;
-  final ImagePicker _picker = ImagePicker();
-  final nameController = TextEditingController();
-
+  late ImagePicker _picker;
+  var nameController;
   void loadSubscribers() {
-    AddChannelState.initial();
+    emit(AddChannelState(
+        state: CubitState.initial,
+        errorMessage: '',
+        selectedSubscribers: [],
+        allSubscribers: [],
+        channelName: '',
+        channelImageUrl: null));
+
     List<ChatModel> members = sl<HomeCubit>().state.contacts;
     List<chatTileData> sub = members.map((chat) {
       return chatTileData(
-        id: chat.id,
+        id: chat.secondUser.id,
         name: chat.secondUser.username,
         imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),
       );
     }).toList();
+     nameController .clear();
+    
+
 
     emit(state.copyWith(allSubscribers: sub));
   }

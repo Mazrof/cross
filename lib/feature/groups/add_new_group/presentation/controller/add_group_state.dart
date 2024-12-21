@@ -13,6 +13,7 @@ class AddMembersState extends Equatable {
   final String errorMessage;
   final String? groupImageUrl;
   final GroupsModel? group;
+  
 
   const AddMembersState({
     this.groupImageUrl,

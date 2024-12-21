@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/local/cache_helper.dart';
 import 'package:telegram/core/local/hive.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/auth/login/data/data_source/login_data_source.dart';
@@ -30,15 +31,42 @@ class ApiService {
     final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
     final dio = Dio(BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 5),
-      sendTimeout: const Duration(seconds: 5),
+      connectTimeout: const Duration(seconds: 15), // Increase timeout duration
+      receiveTimeout: const Duration(seconds: 15), // Increase timeout duration
+      sendTimeout: const Duration(seconds: 15), // Increase timeout duration
     ));
 
     dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(InterceptorsWrapper(
-      onError: (DioError error, ErrorInterceptorHandler handler) async {
-        if (error.response?.statusCode == 401) {
+      onRequest: (options, handler) async {
+        // Load cookies from cookie jar
+        final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+        if (cookies.isEmpty) {
+          // If cookies are empty, load from CacheHelper
+          final cachedCookies = await CacheHelper.read(key: 'cookies');
+          if (cachedCookies != null) {
+            options.headers['Cookie'] = cachedCookies;
+          }
+        } else {
+          // If cookies are not empty, set them in the headers
+          options.headers['Cookie'] =
+              cookies.map((cookie) => cookie.toString()).join('; ');
+        }
+        return handler.next(options);
+      },
+      onResponse: (response, handler) async {
+        // Save cookies to secure storage
+        final cookies = response.headers['set-cookie'];
+        if (cookies != null) {
+          await CacheHelper.write(key: 'cookies', value: cookies.join('; '));
+        }
+        return handler.next(response);
+      },
+      onError: (DioError error, handler) async {
+        if ((error.response?.statusCode == 401 ||
+                error.type == DioErrorType.connectionTimeout) &&
+            error.requestOptions.path != '/login' &&
+            error.requestOptions.path != '/register') {
           final apiService = ApiService._internal(cookieJar, dio);
           await apiService._retryWithHowAmI();
           final options = error.requestOptions;
@@ -97,7 +125,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
       );
-
+      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -114,8 +143,9 @@ class ApiService {
 
   Future<Response> post({
     required String endPoint,
-    Map<String, dynamic>? queryParameters,
+
     Object? data,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
       // await _loadCookies();
@@ -124,6 +154,9 @@ class ApiService {
       print(data);
       final response =
           await dio.post(url, data: data, queryParameters: queryParameters);
+
+      print(response.statusCode);
+      print(response.data);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
@@ -149,7 +182,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: body,
       );
-
+      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -174,7 +208,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
       );
-
+      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
@@ -201,7 +236,8 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
-
+      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {

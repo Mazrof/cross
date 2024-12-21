@@ -45,7 +45,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
       List<ChatModel> chats, String currentUserId) {
     return chats.map((chat) {
       return chatTileData(
-        id: chat.id,
+        id: chat.secondUser.id,
         name: chat.secondUser.username,
         imageUrl: chat.secondUser.photo ?? '',
         lastSeen: chat.secondUser.lastSeen.toString(),
@@ -53,18 +53,30 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
     }).toList();
   }
 
-  void toggleNotifications(int channelId, bool isMuted) async {
+  void toggleComments(int channelId, bool val) async {
     try {
       if (networkManager.isConnected() == false) {
         emit(state.copyWith(
             state: CubitState.failure, error: 'No Internet Connection'));
         return;
       }
-
       emit(state.copyWith(state: CubitState.loading));
+      print('toggling coments');
+      print(state);
+      final updatedGroup = state.channel!.copyWith(canAddComments: val);
+      
 
-      emit(state.copyWith(isMuted: isMuted, state: CubitState.success));
-      // await muteUseCase(channelId, isMuted);  //waiting back-end
+      emit(state.copyWith(channel: updatedGroup, state: CubitState.success));
+
+      await updateChannelDetailsUseCase(
+          channelId,
+          ChannelModel(
+            id: channelId,
+            name: state.channel!.name,
+            privacy: val,
+            imageUrl: state.channel!.imageUrl,
+            canAddComments: state.channel!.canAddComments,
+          ));
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -147,7 +159,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         return;
       }
 
-      emit(state.copyWith(state: CubitState.loading));
+      // emit(state.copyWith(state: CubitState.loading));
       print('updating member role');
 
       await updateSubscriberRoleUseCase(member.channelId, member);
@@ -169,12 +181,13 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         return;
       }
 
-      emit(state.copyWith(state: CubitState.loading));
-      await removeMemberUseCase(channelId, memberId);
+      // emit(state.copyWith(state: CubitState.loading));
+      await removeMemberUseCase(state.channel!.id, memberId);
       final updatedMembers =
           state.members.where((m) => m.userId != memberId).toList();
       emit(state.copyWith(members: updatedMembers));
-      fetchChannelDetails(channelId);
+
+      fetchChannelDetails(state.channel!.id);
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -231,7 +244,7 @@ class ChannelSettingCubit extends Cubit<ChannelSettingState> {
         return;
       }
 
-      emit(state.copyWith(state: CubitState.loading));
+      // emit(state.copyWith(state: CubitState.loading));
       await updateChannelDetailsUseCase(channelId, data);
       final updatedChannel = state.channel!.copyWith(
         name: data.name,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telegram/core/component/avatar.dart';
+import 'package:telegram/core/component/general_image.dart';
 import 'package:telegram/core/component/popup_menu.dart';
 import 'package:telegram/core/utililes/app_sizes/app_sizes.dart';
 import 'package:telegram/feature/messaging/presentation/widget/reciever_details.dart';
@@ -42,9 +43,10 @@ class ProfileScreen extends StatelessWidget {
               title: RecieverDetails(
                 userName: "Kiro Baghdad",
                 state: "Online",
-                avatar: Avatar(
+                avatar: GeneralImage(
                   imageUrl:
                       "https://images.rawpixel.com/image_png_social_square/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvMzY2LW1ja2luc2V5LTIxYTc3MzYtZm9uLWwtam9iNjU1LnBuZw.png",
+                  username: "Kiro Baghdad",
                 ),
               ),
             ),
