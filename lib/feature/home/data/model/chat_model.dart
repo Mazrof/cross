@@ -18,15 +18,48 @@ class ChatModel extends Equatable {
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
-    return ChatModel(
-      id: json['id'],
-      type: json['type'],
-      lastMessage: json['lastMessage'] != null
-          ? LastMessage.fromJson(json['lastMessage'])
-          : null,
-      messagesCount: json['messagesCount'],
-      secondUser: SecondUser.fromJson(json['secondUser']),
-    );
+    print('Parsing ChatModel from: $json');
+
+    if (json['secondUser'] != null && json['secondUser'] is Map) {
+      // When 'secondUser' exists and is a Map, parse it.
+      final secondUser = Map<String, dynamic>.from(json['secondUser']);
+      return ChatModel(
+        id: json['id'],
+        type: json['type'],
+        lastMessage: json['lastMessage'] != null
+            ? LastMessage.fromJson(
+                Map<String, dynamic>.from(json['lastMessage']))
+            : null,
+        messagesCount: json['messagesCount'],
+        secondUser: SecondUser.fromJson(secondUser),
+      );
+    } else if (json['secondUser'] == null) {
+      // When 'secondUser' is missing, assume flat structure.
+      return ChatModel(
+        id: json['id'],
+        type: json['type'],
+        lastMessage: json['lastMessage'] != null
+            ? LastMessage.fromJson(
+                Map<String, dynamic>.from(json['lastMessage']))
+            : null,
+        messagesCount: json['messagesCount'],
+        secondUser: SecondUser.fromJson(json),
+      );
+    } else {
+      throw FormatException(
+          "Invalid JSON: 'secondUser' field is missing or not a Map.");
+    }
+  }
+
+  //to json
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'lastMessage': lastMessage?.toJson(),
+      'messagesCount': messagesCount,
+      'secondUser': secondUser.toJson(),
+    };
   }
 
   @override
@@ -65,11 +98,25 @@ class SecondUser extends Equatable {
       lastSeen:
           json['lastSeen'] != null ? DateTime.parse(json['lastSeen']) : null,
       activeNow: json['activeNow'],
-
     );
+  }
+  //to json
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'photo': photo,
+      'screenName': screenName,
+      'phone': phone,
+      'publicKey': publicKey,
+      'lastSeen': lastSeen?.toIso8601String(),
+      'activeNow': activeNow,
+    };
   }
 
   @override
   List<Object?> get props =>
       [id, username, photo, screenName, phone, publicKey, lastSeen, activeNow];
+
+  //to json
 }

@@ -11,7 +11,8 @@ import '../../error/faliure.dart';
 
 class ApiService {
   final PersistCookieJar cookieJar;
-  static const String baseUrl = "http://10.0.2.2:3000/api/v1";
+  static const String baseUrl = "http://192.168.100.3:3000/api/v1";
+  // static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";
   static const String mockUrl =
@@ -97,17 +98,10 @@ class ApiService {
         queryParameters: queryParameters,
       );
 
-      print(response.data);
-      print(response.statusCode);
-      print('iam here');
-      print(response.data);
-      print(response.statusCode);
-      print('iam here');
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
-        ;
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -120,21 +114,20 @@ class ApiService {
 
   Future<Response> post({
     required String endPoint,
-    Map<String, dynamic>? queryParameters,
+  
     Object? data,
   }) async {
     try {
-      await _loadCookies();
+      // await _loadCookies();
       String url = '$baseUrl/$endPoint';
-      final response =
-          await dio.post(url, data: data, queryParameters: queryParameters);
-      print(response.data);
-      print(response.statusCode);
+
+      print(data);
+      final response = await dio.post(url, data: data);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data);
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -155,13 +148,11 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: body,
       );
-      print(response.data);
-      print(response.statusCode);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
-      
+        throw response;
       }
     } catch (e) {
       if (e is DioException) {
@@ -182,16 +173,16 @@ class ApiService {
         '$baseUrl/$endPoint',
         queryParameters: queryParameters,
       );
-      print(response.data);
-      print(response.statusCode);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
         ;
       }
     } catch (e) {
       if (e is DioException) {
+        print(e);
         throw ServerFailure.fromDioError(e);
       } else {
         throw _handleError(e);
@@ -209,12 +200,11 @@ class ApiService {
         '$baseUrl/$endPoint',
         data: data,
       );
-      print(response.data);
-      print(response.statusCode);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else {
-        throw ServerFailure(message: response.data['message']);
+        throw response;
         ;
       }
     } catch (e) {

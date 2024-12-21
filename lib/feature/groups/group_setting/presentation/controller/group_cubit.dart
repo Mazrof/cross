@@ -6,6 +6,7 @@ import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/feature/groups/add_new_group/data/model/member_model.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/entity/chat_tile_data.dart';
 import 'package:telegram/feature/groups/add_new_group/domain/use_case/add_members_use_case.dart';
+import 'package:telegram/feature/groups/group_setting/data/model/group_setting_model.dart';
 import 'package:telegram/feature/groups/group_setting/domain/entity/group_update_data.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/delete_group_use_case.dart';
 import 'package:telegram/feature/groups/group_setting/domain/use_case/fetch_group_details_use_case.dart';
@@ -22,7 +23,6 @@ class GroupCubit extends Cubit<GroupState> {
   GroupCubit(
     this.fetchGroupDetailsUseCase,
     this.updateMemberRoleUseCase,
-    this.addMemberUseCase,
     this.removeMemberUseCase,
     this.deleteGroupUseCase,
     this.updateGroupDetailsUseCase,
@@ -31,14 +31,12 @@ class GroupCubit extends Cubit<GroupState> {
     this.muteUseCase,
   ) : super(GroupState(
           state: CubitState.initial,
-          allMembers: [],
-          selectedMembers: [],
           ismute: false,
+          group: GroupModel.empty(),
         ));
 
   final FetchGroupDetailsUseCase fetchGroupDetailsUseCase;
   final UpdateMemberRoleUseCase updateMemberRoleUseCase;
-  final AddMembersUseCase addMemberUseCase;
   final RemoveMemberUseCase removeMemberUseCase;
   final DeleteGroupUseCase deleteGroupUseCase;
   final UpdateGroupDetailsUseCase updateGroupDetailsUseCase;
@@ -67,7 +65,7 @@ class GroupCubit extends Cubit<GroupState> {
       }
 
       emit(state.copyWith(ismute: isMuted));
-      // await muteUseCase(groupId, isMuted);  //waiting back-end 
+      // await muteUseCase(groupId, isMuted);  //waiting back-end
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -83,13 +81,13 @@ class GroupCubit extends Cubit<GroupState> {
             state: CubitState.failure, errorMessage: 'No Internet Connection'));
         return;
       }
-
+      emit(state.copyWith(state: CubitState.loading));
       print('toggling privacy');
       print(state);
       final updatedGroup = state.group!.copyWith(privacy: val);
       print(updatedGroup.privacy);
 
-      emit(state.copyWith(group: updatedGroup));
+      emit(state.copyWith(group: updatedGroup, state: CubitState.success));
 
       print('mmmmmmmmmmmmmmmmmmmm');
       await updateGroupDetailsUseCase(
@@ -100,6 +98,8 @@ class GroupCubit extends Cubit<GroupState> {
             imageUrl: updatedGroup.imageUrl,
             groupSize: updatedGroup.groupSize,
           ));
+          
+      
     } catch (e) {
       emit(state.copyWith(
         state: CubitState.failure,
@@ -142,18 +142,18 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  void toggleMember(chatTileData member) {
-    final selectedMembers = List<chatTileData>.from(state.selectedMembers);
+  // void toggleMember(chatTileData member) {
+  //   final selectedMembers = List<chatTileData>.from(state.selectedMembers);
 
-    if (selectedMembers.contains(member)) {
-      selectedMembers.remove(member);
-    } else {
-      selectedMembers.add(member);
-    }
+  //   if (selectedMembers.contains(member)) {
+  //     selectedMembers.remove(member);
+  //   } else {
+  //     selectedMembers.add(member);
+  //   }
 
-    emit(state.copyWith(
-        selectedMembers: selectedMembers, state: CubitState.initial));
-  }
+  //   emit(state.copyWith(
+  //       selectedMembers: selectedMembers, state: CubitState.initial));
+  // }
 
   void updateMemberRole(MemberModel member) async {
     try {

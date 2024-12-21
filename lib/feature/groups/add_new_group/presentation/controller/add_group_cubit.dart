@@ -113,7 +113,7 @@ class AddMembersCubit extends Cubit<AddMembersState> {
         id: 0,
         name: nameController.text.trim(),
         imageUrl: "",
-        groupSize: 1,
+        groupSize: 100,
         privacy: true,
       );
       print(group.toJson());

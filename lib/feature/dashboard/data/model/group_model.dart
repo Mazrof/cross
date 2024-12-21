@@ -15,14 +15,51 @@ class GroupModel extends Group {
           hasFilter: hasFilter, // Add status field
         );
 
+  // factory GroupModel.fromJson(Map<String, dynamic> json) {
+  //   return GroupModel(
+  //     id: json['id'].toString(),
+  //     groupSize: json['groupSize'],
+  //     name: json['community']['name'],
+  //     privacy: json['community']['privacy'],
+  //     hasFilter: json['hasFilter'],
+  //   );
+  // }
+
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'id': id,
+  //     'groupSize': groupSize,
+  //     'name': name,
+  //     'privacy': privacy,
+  //     'hasFilter': hasFilter, // Add status field
+  //   };
+  // }
   factory GroupModel.fromJson(Map<String, dynamic> json) {
-    return GroupModel(
-      id: json['id'].toString(),
-      groupSize: json['groupSize'],
-      name: json['community']['name'],
-      privacy: json['community']['privacy'],
-      hasFilter: json['hasFilter'],
-    );
+    print('Parsing GroupModel from: $json');
+
+    if (json['community'] != null && json['community'] is Map) {
+      // When 'community' exists and is a Map, parse it.
+      final community = Map<String, dynamic>.from(json['community']);
+      return GroupModel(
+        id: json['id'].toString(),
+        groupSize: json['groupSize'],
+        name: community['name'],
+        privacy: community['privacy'],
+        hasFilter: json['hasFilter'],
+      );
+    } else if (json['community'] == null) {
+      // When 'community' is missing, assume flat structure.
+      return GroupModel(
+        id: json['id'].toString(),
+        groupSize: json['groupSize'],
+        name: json['name'],
+        privacy: json['privacy'],
+        hasFilter: json['hasFilter'],
+      );
+    } else {
+      throw FormatException(
+          "Invalid JSON: 'community' field is missing or not a Map.");
+    }
   }
 
   Map<String, dynamic> toJson() {

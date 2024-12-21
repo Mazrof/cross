@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reset Password</title>
+    <script>
+        // Extract the token from the URL and redirect to the app
+        function redirectToApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');  // Get token from the URL query string
+
+            if (token) {
+                // Use your app's custom URL scheme to open the app
+                const appLink = `com.example.telegram://reset-password?token=${token}`;
+
+                // Fallback link to a web page (replace with your actual web page link)
+                const fallbackLink = `https://mazrof-back.work.gd/backend/reset-password-web?token=${token}`;
+
+                // Try opening the app using the custom URL scheme
+                window.location.href = appLink;
+
+                // Set a timeout to redirect to the fallback URL after 3 seconds
+                setTimeout(() => {
+                    window.location.href = fallbackLink;
+                }, 3000); // 3 seconds delay for fallback redirect
+            } else {
+                document.body.innerHTML = "<h1>Invalid or missing token.</h1>";
+            }
+        }
+    </script>
+</head>
+
+<body onload="redirectToApp()">
+    <h1>Redirecting to the app...</h1>
+</body>
+
+</html>

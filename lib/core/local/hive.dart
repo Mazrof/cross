@@ -5,10 +5,19 @@ class HiveCash {
   static Future<void> init() async {
     await Hive.initFlutter();
 
+    await Future.wait([
+      openBox("register_info"),
+      openBox("channels"),
+      openBox("stories"),
+      openBox("groups"),
+      openBox("contacts"),
+      openBox("groups_dash"),
+      openBox("users_dash"),
+    ]);
+
+
     registerAdapter(MessageAdapter());
 
-    await openBox("register_info"); // Ensure this is awaited
-    await openBox("messages");
   }
 
   static Future<void> openBox(String boxName) async {

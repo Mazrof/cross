@@ -32,6 +32,19 @@ import 'package:telegram/feature/auth/login/domain/use_cases/login_with_google_u
 import 'package:telegram/feature/auth/login/presentation/controller/login_cubit.dart';
 import 'package:telegram/feature/auth/signup/domain/use_cases/check_recaptcha_tocken.dart';
 import 'package:telegram/feature/auth/signup/presentation/widget/not_robot.dart';
+import 'package:telegram/feature/channels/channel_setting/data/data_source/channel_data_source.dart';
+import 'package:telegram/feature/channels/channel_setting/data/repository/channel_repository.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/repo/channel_repo.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/add_subscripers_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/delete_channel_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/fetch_channel_data_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/fetch_channel_subscriber_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/remove_subscriber_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/updatae_subscriber_role_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/domain/use_case/update_channel_use_case.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/add_subscribers_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/channel_setting_cubit.dart';
+import 'package:telegram/feature/channels/channel_setting/presentation/controller/edit_permission_cubit.dart';
 import 'package:telegram/feature/channels/create_channel/data/data_source/add_channel_data_source.dart';
 import 'package:telegram/feature/channels/create_channel/data/repo/add_channel_repository.dart';
 import 'package:telegram/feature/channels/create_channel/domain/repository/add_channel_repo.dart';
@@ -209,7 +222,7 @@ class ServiceLocator {
         ));
 
     // group cubit
-    sl.registerFactory(() => GroupsCubit(
+    sl.registerLazySingleton(() => GroupsCubit(
           networkManager: sl(),
           getGroupsUseCase: sl(),
           applyFilterUseCase: sl(),
@@ -249,7 +262,6 @@ class ServiceLocator {
           sl(),
           sl(),
           sl(),
-          sl(),
         ));
 
     sl.registerLazySingleton(() => PermisionCubit(
@@ -263,6 +275,19 @@ class ServiceLocator {
           sl(),
           sl(),
         ));
+
+    sl.registerLazySingleton(() => ChannelSettingCubit(
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+        ));
+    sl.registerLazySingleton(() => SubscribersCubit(sl(), sl()));
+
+    sl.registerLazySingleton(() => ChannelPermissionCubit(sl(), sl()));
   }
 
   static void registerUseCases() {
@@ -346,6 +371,21 @@ class ServiceLocator {
     sl.registerLazySingleton(() => MuteUseCase(
           sl(),
         ));
+
+    //channel-setting
+    sl.registerLazySingleton(() => FetchChannelDetailsUseCase(sl()));
+    sl.registerLazySingleton(() => FetchChannelSubscriberUseCase(sl()));
+    sl.registerLazySingleton(() => RemoveSubscriberUseCase(sl()));
+    sl.registerLazySingleton(() => UpdateChannelDetailsUseCase(sl()));
+    sl.registerLazySingleton(() => UpdateSubscriberRoleUseCase(
+          sl(),
+        ));
+
+    sl.registerLazySingleton(() => DeleteChannelUseCase(
+          sl(),
+        ));
+
+    sl.registerLazySingleton(() => AddMoreSubscribersUseCase(sl()));
   }
 
   static void registerRepositories() {
@@ -392,6 +432,10 @@ class ServiceLocator {
 
     sl.registerLazySingleton<HomeRepository>(
         () => HomeRepositoryImpl(remoteDataSource: sl()));
+
+    // channel-setting
+    sl.registerLazySingleton<ChannelSettingRepository>(
+        () => ChannelSettingRepositoryImpl(sl()));
   }
 
   static void registerDataSources() {
@@ -438,6 +482,10 @@ class ServiceLocator {
     // Data sources
     sl.registerLazySingleton<HomeRemoteDataSource>(
         () => HomeRemoteDataSourceImpl());
+
+    // channel-setting
+    sl.registerLazySingleton<ChannelSettingRemoteDataSource>(
+        () => ChannelSettingRemoteDataSourceImpl());
   }
 
   static void registerSingletons() {

@@ -9,17 +9,19 @@ abstract class ChannelRemoteDataSource {
 }
 
 class ChannelRemoteDataSourceImpl implements ChannelRemoteDataSource {
-  final ApiService apiService=sl<ApiService>();
+  final ApiService apiService = sl<ApiService>();
 
   ChannelRemoteDataSourceImpl();
 
   @override
   Future<ChannelModel> createChannel(ChannelModel channel) async {
+    print(channel.toJson());
     final response = await apiService.post(
       endPoint: 'channels',
       data: channel.toJson(),
     );
-    return ChannelModel.fromJson(response.data);
+    print(response.data);
+    return ChannelModel.fromJson(response.data['data']['channel']);
   }
 
   @override
@@ -27,8 +29,12 @@ class ChannelRemoteDataSourceImpl implements ChannelRemoteDataSource {
       int channelId, List<SubscriberModel> subscribers) async {
     for (final subscriber in subscribers) {
       await apiService.post(
-        endPoint: 'channels/$channelId/subscribers',
-        data: subscriber.toJson(),
+        endPoint: 'channels/$channelId/members',
+        data: {
+          'userId': subscriber.userId,
+          'role': subscriber.role,
+          'hasDownloadPermissions': subscriber.hasDownloadPermissions,
+        },
       );
     }
   }

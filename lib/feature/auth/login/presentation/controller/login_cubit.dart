@@ -43,6 +43,9 @@ class LoginCubit extends Cubit<LoginState> {
       }
     }
   }
+  init() {
+    emit(LoginState());
+  }
 
   Timer? _timer;
   final Duration timerDuration = const Duration(seconds: 1);

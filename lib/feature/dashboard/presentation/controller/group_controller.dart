@@ -14,32 +14,26 @@ class GroupsCubit extends Cubit<GroupsState> {
 
   GetGroupsUseCase getGroupsUseCase;
   NetworkManager networkManager;
- 
   ApplyFilterUseCase applyFilterUseCase;
-
   void fetchGroups() async {
     emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
-        emit(state.copyWith(currState: CubitState.success, errorMessage: null));
-        return;
+        emit(state.copyWith(
+            currState: CubitState.failure,
+            errorMessage: 'No Internet Connection'));
+        return; // Don't continue fetching if no connection
       }
-      print('fetchGroups');
 
       final result = await getGroupsUseCase.call();
-      print(result);
-
       result.fold(
         (failure) {
           emit(state.copyWith(
               currState: CubitState.failure, errorMessage: failure.message));
         },
         (groups) {
-          // saveGroupsUseCase.call(groups);
-          //sort groups from the sorted to unfiltered
           groups.sort((a, b) => a.hasFilter ? 1 : -1);
-
           emit(state.copyWith(
               groups: groups,
               currState: CubitState.success,
@@ -52,8 +46,9 @@ class GroupsCubit extends Cubit<GroupsState> {
     }
   }
 
-  Future<bool> filterGroups(String filter) async {
-    emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
+  Future<bool> filterGroups(String id) async {
+    // emit(state.copyWith(currState: CubitState.loading, errorMessage: null));
+    print(state);
     try {
       bool connection = await networkManager.isConnected();
       if (!connection) {
@@ -63,7 +58,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         return false;
       }
 
-      final result = await applyFilterUseCase.call(filter);
+      final result = await applyFilterUseCase.call(id);
 
       result.fold(
         (failure) {

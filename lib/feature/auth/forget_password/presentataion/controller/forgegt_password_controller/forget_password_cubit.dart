@@ -31,11 +31,9 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
           status: CubitState.loading, email: emailController.text, errorMessage: ''));
       final response = await networkManager.isConnected();
       if (response) {
-        print('Email: ${emailController.text}');
         final result = await forgetPasswordUseCase(emailController.text);
         result.fold(
           (failure) {
-            print('Error: ${failure.message}');
             emit(state.copyWith(
                 status: CubitState.failure,
                 errorMessage: failure.message));

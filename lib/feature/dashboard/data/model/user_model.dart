@@ -19,16 +19,48 @@ class UserModel extends User {
           phone: phone,
         );
 
+  // factory UserModel.fromJson(Map<String, dynamic> json) {
+  //   return UserModel(
+  //     id: json['id'].toString(),
+  //     username: json['username'] as String?,
+  //     status: json['status'] as bool?,
+  //     email: json['email'] as String?,
+  //     bio: json['bio'] as String?,
+  //     activeNow: json['activeNow'] as bool?,
+  //     phone: json['phone'] as String?,
+  //   );
+  // }
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'].toString(),
-      username: json['username'] as String?,
-      status: json['status'] as bool?,
-      email: json['email'] as String?,
-      bio: json['bio'] as String?,
-      activeNow: json['activeNow'] as bool?,
-      phone: json['phone'] as String?,
-    );
+    print('Parsing UserModel from: $json');
+
+    if (json['user'] != null && json['user'] is Map) {
+      // When 'user' exists and is a Map, parse it.
+      final user = Map<String, dynamic>.from(json['user']);
+      return UserModel(
+        id: user['id'].toString(),
+        username: user['username'] as String?,
+        status: user['status'] as bool?,
+        email: user['email'] as String?,
+        bio: user['bio'] as String?,
+        activeNow: user['activeNow'] as bool?,
+        phone: user['phone'] as String?,
+      );
+    } else if (json['user'] == null) {
+      // When 'user' is missing, assume flat structure.
+      return UserModel(
+        id: json['id'].toString(),
+        username: json['username'] as String?,
+        status: json['status'] as bool?,
+        email: json['email'] as String?,
+        bio: json['bio'] as String?,
+        activeNow: json['activeNow'] as bool?,
+        phone: json['phone'] as String?,
+      );
+    } else {
+      throw FormatException(
+          "Invalid JSON: 'user' field is missing or not a Map.");
+    }
   }
 
   Map<String, dynamic> toJson() {
