@@ -60,6 +60,7 @@ import 'package:telegram/feature/home/presentation/screen/home_screen.dart';
 import 'package:telegram/feature/search/Presentation/Screen/global_search.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/block_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/privacy_cubit.dart';
+import 'package:telegram/feature/search/Presentation/controller/global_search_cubit.dart';
 
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/screen/autodelete_messages.dart';
@@ -142,7 +143,7 @@ class AppRouter {
 }
 
 final route = GoRouter(
-  initialLocation: AppRouter.kHome,
+  initialLocation: AppRouter.kSplash,
   routes: [
     GoRoute(
       path: AppRouter.kAddMoreSubscribers,
@@ -525,7 +526,10 @@ final route = GoRouter(
     GoRoute(
       path: AppRouter.kglobalSearch,
       builder: (context, state) {
-        return GlobalSearchScreen(isTyping: true);
+        return BlocProvider(
+          create: (context) => sl<GlobalSearchCubit>(),
+          child: GlobalSearchScreen(),
+        );
       },
     ),
     GoRoute(

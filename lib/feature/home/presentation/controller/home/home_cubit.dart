@@ -114,7 +114,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<List<Message>> fetchDraftedMessages() async {
-    List<dynamic> temp =
+    var temp =
         await HiveCash.read(boxName: "messages", key: 'drafted_messages');
 
     if (temp == null) {

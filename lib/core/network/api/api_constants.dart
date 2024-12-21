@@ -46,4 +46,5 @@ class ApiConstants {
   static const profileSetting = 'profile/';
   static const blockedUsers = 'user/block';
   static const contacts = 'chats/my-chats';
+  static const globalSearchQuery = "search";
 }
