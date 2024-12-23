@@ -325,9 +325,6 @@ public class settingsTesting {
 			 nobodyRR.click();
 			 Thread.sleep(2000);
 			 
-			 goBack.click();
-			 Thread.sleep(2000);
-			 
 			 System.out.println("Privacy and Policy functionalities test case passed");
 			 assertTrue(true);
 			 
