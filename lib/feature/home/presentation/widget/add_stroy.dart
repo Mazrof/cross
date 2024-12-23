@@ -23,6 +23,7 @@ class AddStoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final username =
         HiveCash.read(boxName: 'register_info', key: 'username') ?? '';
+    final photo = HiveCash.read(boxName: 'register_info', key: 'photo') ?? '';
     final ImagePicker _picker = ImagePicker();
 
     return BlocProvider.value(
@@ -41,7 +42,7 @@ class AddStoryWidget extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      GeneralImage(username: username, imageUrl: ''),
+                      GeneralImage(username: username, imageUrl: photo),
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -96,7 +97,7 @@ class AddStoryWidget extends StatelessWidget {
                   children: [
                     Stack(
                       children: [
-                        GeneralImage(username: username, imageUrl: ''),
+                        GeneralImage(username: username, imageUrl: photo),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -127,7 +128,7 @@ class AddStoryWidget extends StatelessWidget {
           } else {
             // Show the selected story and allow caption input
             return StoryWidget(
-              userImage: '',
+              userImage: photo,
               userName: 'My Story',
               isSeen: true,
               storyUrl: storyPath,

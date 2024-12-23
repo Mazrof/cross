@@ -345,6 +345,22 @@ final route = GoRouter(
     //   },
     // ),
     GoRoute(
+      path: AppRouter.kVerifyMail,
+      builder: (context, state) {
+        final param = state.extra as Map<String, dynamic>;
+        return BlocProvider.value(
+            value: sl<VerifyMailCubit>()
+              ..sendVerificationMail(
+                  param['method'] as String,
+                  HiveCash.read(
+                      boxName: "register_info", key: param['method'] as String)!),
+            child: VerifyMailScreen(
+              method: param['method'] as String,
+          ));
+     },
+    ),
+    
+    GoRoute(
       path: AppRouter.kResetPassword, // Define the route path
       builder: (context, state) {
         final extra =

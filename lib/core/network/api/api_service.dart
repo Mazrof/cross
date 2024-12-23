@@ -12,7 +12,7 @@ import '../../error/faliure.dart';
 
 class ApiService {
   final PersistCookieJar cookieJar;
-  static const String baseUrl = "http://10.0.2.2:3000/api/v1";
+  static const String baseUrl = "http://192.168.1.253:3000/api/v1";
   // static const String baseUrl = "http://10.0.2.2:3000/api/v1";
   static const String endPointPro =
       "https://MAZROF.com/api/v1 - production server";

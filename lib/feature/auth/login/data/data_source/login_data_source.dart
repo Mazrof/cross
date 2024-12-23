@@ -41,15 +41,15 @@ class LoginDataSourceImp implements LoginDataSource {
       print('Login Response: ${response.data}');
       if (response.statusCode == 201 || response.statusCode == 200) {
         // subscribe to notifications
-
-        final res = await _apiService.post(
-          endPoint: ApiConstants.subscribe,
-          data: {
-            'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
-          },
-        );
-
-        print("Subscribe Result$res");
+        if (HiveCash.read(boxName: "register_info", key: 'fcm') == null) {
+          final res = await _apiService.post(
+            endPoint: ApiConstants.subscribe,
+            data: {
+              'fcmToken': HiveCash.read(boxName: "register_info", key: 'fcm'),
+            },
+          );
+        }
+        // print("Subscribe Result$res");
 
         final cookies = await _apiService.cookieJar
             .loadForRequest(Uri.parse('${ApiService.baseUrl}/auth/login'));

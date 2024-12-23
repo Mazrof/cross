@@ -34,7 +34,7 @@ void main() async {
 
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       tools: const [
         ...DevicePreview.defaultTools,
       ],
@@ -90,8 +90,8 @@ class App extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: TAppTheme.lightTheme,
                   darkTheme: TAppTheme.darkTheme,
-                  themeMode: ThemeMode.light,
-                  // themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
+                  //themeMode: ThemeMode.light,
+                  themeMode: isNightMode ? ThemeMode.dark : ThemeMode.light,
                   routerConfig: route,
                 );
               },

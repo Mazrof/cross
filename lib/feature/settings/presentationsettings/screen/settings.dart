@@ -7,9 +7,12 @@ import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/Capp_bar.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/di/service_locator.dart';
+import 'package:telegram/core/helper/user_status_helper.dart';
 import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
+import 'package:telegram/feature/auth/forget_password/domain/usecase/log_out_use_case.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_cubit.dart';
 import 'package:telegram/feature/settings/presentationsettings/controller/user_settings_state.dart';
 
@@ -183,10 +186,20 @@ class SettingsPage extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.devices_rounded),
             title: Text(
-              AppStrings.devices,
+              "LogOut form all devices",
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            onTap: () {},
+            onTap: () {
+              CSnackBar.showErrorDialog(
+                  context, "are you sure you want to logout from all devieces ",
+                  () {
+                sl<LogOutUseCase>().call();
+
+                GoRouter.of(context).go(AppRouter.kSplash);
+
+                UserStatusHelper.setRegisteredNotVerified();
+              });
+            },
           ),
           const Divider(),
           Padding(
