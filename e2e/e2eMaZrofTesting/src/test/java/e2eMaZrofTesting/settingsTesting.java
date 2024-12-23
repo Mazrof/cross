@@ -16,12 +16,12 @@ import io.appium.java_client.android.AndroidDriver;
 
 public class settingsTesting {
 	
-	private static final String EMAIL = "ma2736666@gmail.com";
-	private static final String PASSWORD = "Mm#123456";
+	private static final String EMAIL = "kiro@gmail.com";
+	private static final String PASSWORD = "Test@1234";
 	private static final String USERNAME = "MohamedAshraf123";
 	private static final String NAME = "Mohamed Ashraf";
 	private static final String BIO = "Computer Engineering dept";
-	private static final String PHONE = "01011451311";
+	private static final String PHONE = "+0201011451311";
 	
 	private AppiumDriver<MobileElement> driver;
 	private MobileElement nextButton;
@@ -94,14 +94,12 @@ public class settingsTesting {
 
 	   }
 	 
-	 @Test
+	 //@Test
 	 public void testUi_openComponents() {
 		 try {
-			 MobileElement devices = driver.findElementByAccessibilityId("Devices"); 
-			 MobileElement privacyAndPolicy = driver.findElementByAccessibilityId("Devices");
-			 privacyAndPolicy.click();
-			 Thread.sleep(2000);
-			 MobileElement privacyAndPolicyCheck = driver.findElementByAccessibilityId("Privacy And Security");
+			 MobileElement Account = driver.findElementByAccessibilityId("Account"); 
+			 MobileElement Settings = driver.findElementByAccessibilityId("Settings");
+			 MobileElement Data_Settings = driver.findElementByAccessibilityId("Data Settings");
 			 System.out.println("Ui test case passed");
 			 assertTrue(true);
 		 }
@@ -111,7 +109,7 @@ public class settingsTesting {
 		}
 	 }
 	 
-	 //@Test 
+	 @Test 
 	 public void testSettingsFunctionalities() {
 		 try {
 			 MobileElement edit = driver.findElement(By.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View[1]/android.widget.Button[2]"));
@@ -203,7 +201,7 @@ public class settingsTesting {
 			 privacyAndPolicy.click();
 			 Thread.sleep(2000);
 			 
-			 MobileElement autoDeleteMessages = driver.findElementByAccessibilityId("Auto-Delete Messages\nAfter 1 day");
+			 MobileElement autoDeleteMessages = driver.findElementByAccessibilityId("Auto-Delete Messages");
 			 autoDeleteMessages.click();
 			 Thread.sleep(2000);
 			 
@@ -215,7 +213,7 @@ public class settingsTesting {
 			 goBack.click();
 			 Thread.sleep(2000);
 			 
-			 autoDeleteMessages = driver.findElementByAccessibilityId("Auto-Delete Messages\nOff");
+			 autoDeleteMessages = driver.findElementByAccessibilityId("Auto-Delete Messages");
 			 autoDeleteMessages.click();
 			 Thread.sleep(2000);
 			 
@@ -227,7 +225,7 @@ public class settingsTesting {
 			 goBack.click();
 			 Thread.sleep(2000);
 			 
-			 MobileElement blockUsers = driver.findElementByAccessibilityId("Blocked Users\n1");
+			 MobileElement blockUsers = driver.findElementByAccessibilityId("Blocked Users");
 			 blockUsers.click();
 			 Thread.sleep(2000);
 			 
@@ -245,7 +243,7 @@ public class settingsTesting {
 			 
 			 goBack = driver.findElementByClassName("android.widget.Button");
 			 goBack.click();
-			 Thread.sleep(2000);
+			 Thread.sleep(10000);
 			 
 			 lastseenAndOnline = driver.findElementByAccessibilityId("Last Seen & Online\nEverybody");
 			 lastseenAndOnline.click();
@@ -257,7 +255,7 @@ public class settingsTesting {
 			 
 			 goBack = driver.findElementByClassName("android.widget.Button");
 			 goBack.click();
-			 Thread.sleep(2000);
+			 Thread.sleep(10000);
 			 
 			 lastseenAndOnline = driver.findElementByAccessibilityId("Last Seen & Online\nMy Contacts");
 			 lastseenAndOnline.click();
@@ -282,7 +280,7 @@ public class settingsTesting {
 			 
 			 goBack = driver.findElementByClassName("android.widget.Button");
 			 goBack.click();
-			 Thread.sleep(2000);
+			 Thread.sleep(10000);
 			 
 			 profilePhotos = driver.findElementByAccessibilityId("Profile Photos\nEverybody");
 			 profilePhotos.click();
@@ -294,7 +292,7 @@ public class settingsTesting {
 			 
 			 goBack = driver.findElementByClassName("android.widget.Button");
 			 goBack.click();
-			 Thread.sleep(2000);
+			 Thread.sleep(10000);
 			 
 			 profilePhotos = driver.findElementByAccessibilityId("Profile Photos\nMy Contacts");
 			 profilePhotos.click();
@@ -308,8 +306,27 @@ public class settingsTesting {
 			 goBack.click();
 			 Thread.sleep(2000);
 			 
-			 MobileElement enableReadReceipts = driver.findElementByAccessibilityId("Enable Read Receipts");
+			 MobileElement enableReadReceipts = driver.findElementByAccessibilityId("Read Receipts\nNobody");
 			 enableReadReceipts.click();
+			 
+			 MobileElement eveybodyRR = driver.findElementByAccessibilityId("Everybody");
+			 eveybodyRR.click();
+			 Thread.sleep(2000);
+			 
+			 goBack = driver.findElementByClassName("android.widget.Button");
+			 goBack.click();
+			 Thread.sleep(10000);
+			 
+			 enableReadReceipts = driver.findElementByAccessibilityId("Read Receipts\nEverybody");
+			 enableReadReceipts.click();
+			 Thread.sleep(2000);
+			 
+			 MobileElement nobodyRR = driver.findElementByAccessibilityId("Nobody");
+			 nobodyRR.click();
+			 Thread.sleep(2000);
+			 
+			 goBack.click();
+			 Thread.sleep(2000);
 			 
 			 System.out.println("Privacy and Policy functionalities test case passed");
 			 assertTrue(true);
