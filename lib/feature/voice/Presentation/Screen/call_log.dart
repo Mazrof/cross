@@ -14,7 +14,9 @@ class CallLogScreen extends StatelessWidget {
     return Scaffold(
         appBar: CAppBar(
           leadingIcon: Icons.arrow_back,
-          onLeadingTap: () {},
+          onLeadingTap: () {
+            context.go(AppRouter.kHome);
+          },
           title: const Text(AppStrings.callLog),
           actions: [
             PopupMenuButton<String>(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram/core/component/clogo_loader.dart';
 import 'package:telegram/core/component/csnack_bar.dart';
+import 'package:telegram/core/routes/app_router.dart';
 import 'package:telegram/core/utililes/app_enum/app_enum.dart';
 import 'package:telegram/core/utililes/app_strings/app_strings.dart';
 import 'package:telegram/feature/search/Presentation/Widget/search_result_tile.dart';
@@ -44,7 +46,9 @@ class GlobalSearchPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.brown),
-          onPressed: () {},
+          onPressed: () {
+            context.go(AppRouter.kHome);
+          },
         ),
         title: TextField(
           controller: searchInputController,
@@ -141,7 +145,7 @@ class GlobalSearchPage extends StatelessWidget {
             return SearchResultTile(
               leading: const CircleAvatar(child: Icon(Icons.person)),
               searchTitle: user.name,
-              searchSubtitle: Text("ID ${user.id}"),
+              // searchSubtitle: Text("ID ${user.id}"),
               trailing: const Text("16.04.23"),
             );
           },
@@ -154,7 +158,7 @@ class GlobalSearchPage extends StatelessWidget {
             return SearchResultTile(
               leading: const CircleAvatar(child: Icon(Icons.chat)),
               searchTitle: channel.name,
-              searchSubtitle: Text("ID ${channel.id}"),
+              // searchSubtitle: Text("ID ${channel.id}"),
             );
           },
         );
@@ -166,7 +170,7 @@ class GlobalSearchPage extends StatelessWidget {
             return SearchResultTile(
               leading: const CircleAvatar(child: Icon(Icons.group)),
               searchTitle: group.name,
-              searchSubtitle: Text("ID ${group.id}"),
+              // searchSubtitle: Text("ID ${group.id}"),
             );
           },
         );

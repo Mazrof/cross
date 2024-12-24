@@ -30,24 +30,26 @@ class GlobalSearchModel extends GlobalSearchEntity {
 
     final users = (data['users'] as List<dynamic>? ?? []).map((userJson) {
       return UserSearchResult(
-        id: userJson['id'] as int,
-        name: userJson['name'] as String,
-        picVisibility: userJson['profilepicvisibility'] as String,
+        id: userJson['id'] as int? ?? 0,
+        name: userJson['username'] as String? ?? "",
+        picVisibility: userJson['lastSeen'] as String? ?? "",
       );
     }).toList();
 
     final channels =
         (data['channels'] as List<dynamic>? ?? []).map((channelJson) {
+      final community = channelJson['community'] ?? {};
       return ChannelSearchResult(
-        id: channelJson['id'] as int,
-        name: channelJson['name'] as String,
+        id: channelJson['id'] as int? ?? 0,
+        name: community['name'] as String? ?? 'Unknown',
       );
     }).toList();
 
     final groups = (data['groups'] as List<dynamic>? ?? []).map((groupJson) {
+      final community = groupJson['community'] ?? {};
       return GroupSearchResult(
-        id: groupJson['id'] as int,
-        name: groupJson['name'] as String,
+        id: groupJson['id'] as int? ?? 0,
+        name: community['name'] as String? ?? 'Unknown',
       );
     }).toList();
 

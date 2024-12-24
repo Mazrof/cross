@@ -65,12 +65,16 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Mazrof'),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: const Icon(
-              Icons.search,
-              size: 30,
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  context.go(AppRouter.kglobalSearch);
+                },
+                icon: Icon(
+                  Icons.search,
+                  size: 30,
+                ),
+              )),
         ],
         onLeadingTap: () {
           _scaffoldKey.currentState?.openDrawer();

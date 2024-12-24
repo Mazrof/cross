@@ -75,7 +75,9 @@ class CAppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.phone,
             title: 'Calls',
-            onTilePressed: () {},
+            onTilePressed: () {
+              context.go(AppRouter.kcallLog);
+            },
           ),
           DrawerListTile(
             iconData: Icons.bookmark,
